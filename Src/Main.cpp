@@ -17,7 +17,6 @@ int WINAPI WinMain(
 	_In_ LPSTR lpCmdLine,
 	_In_ int nShowCmd)
 {
-	int a = 0;
 	PokarinEngine::Engine engine;
 	return engine.Run();
 }
