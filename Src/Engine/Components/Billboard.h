@@ -1,0 +1,44 @@
+/**
+* @file Billboard.h
+*/
+#ifndef BILLBOARD_H_INCLUDED
+#define BILLBOARD_H_INCLUDED
+
+#include "Component.h"
+#include "../Engine.h"
+
+namespace PokarinEngine
+{
+	/**
+	* ビルボード化コンポーネント
+	*/
+	class Billboard : public Component
+	{
+	public: // コンストラクタ・デストラクタ
+
+		Billboard() = default;
+		virtual ~Billboard() = default;
+
+	public: // イベント関数
+
+		/// <summary>
+		/// 更新イベント
+		/// </summary>
+		/// <param name="deltaTime"> 前回の更新からの経過時間(秒) </param>
+		virtual void Update(float deltaTime) override
+		{
+			/* 常にカメラの方を向くようにメッセージオブジェクトの向きを調整 */
+
+			// 持ち主からエンジンを取得
+			const GameObject& owner = GetOwner(); // 持ち主
+			const Engine& engine = owner.GetEngine(); // エンジン
+
+			// カメラの角度と持ち主の角度を合わせる
+			const GameObject& mainCamera = engine.GetCurrentScene().GetMainCamera();
+			owner.transform->rotation.y = mainCamera.transform->rotation.y;
+		}
+	};
+
+} // namespace PokarinEngine
+
+#endif // !BILLBOARD_H_INCLUDED

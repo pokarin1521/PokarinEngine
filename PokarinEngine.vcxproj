@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{5252580E-4053-415B-8147-EE256142BF2B}</ProjectGuid>
+    <RootNamespace>OpenGLStudy</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>PokarinEngine</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IntDir>.\x64\Debug/</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IntDir>.\x64\Debug/</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IntDir>.\x64\Debug/</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IntDir>.\x64\Debug/</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)IMGUI_IMPL_OPENGL_LOADER_GLAD</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\デスクトップ\OpenGL\PokarinEngine\Src\glad\include;C:\デスクトップ\OpenGL\PokarinEngine\Src\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)IMGUI_IMPL_OPENGL_LOADER_GLAD</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\デスクトップ\OpenGL\PokarinEngine\Src\glad\include;C:\デスクトップ\OpenGL\PokarinEngine\Src\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)IMGUI_IMPL_OPENGL_LOADER_GLAD</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\デスクトップ\OpenGL\PokarinEngine\Src\glad\include;C:\デスクトップ\OpenGL\PokarinEngine\Src\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)IMGUI_IMPL_OPENGL_LOADER_GLAD</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\デスクトップ\OpenGL\PokarinEngine\Src\glad\include;C:\デスクトップ\OpenGL\PokarinEngine\Src\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Src\Engine\Collision.cpp" />
+    <ClCompile Include="Src\Engine\Components\Light.cpp" />
+    <ClCompile Include="Src\Engine\Components\Rigidbody.cpp" />
+    <ClCompile Include="Src\Engine\Components\Transform.cpp" />
+    <ClCompile Include="Src\Engine\Components\UILayout.cpp" />
+    <ClCompile Include="Src\Engine\Debug.cpp" />
+    <ClCompile Include="Src\Engine\EasyAudio\EasyAudio.cpp" />
+    <ClCompile Include="Src\Engine\Engine.cpp" />
+    <ClCompile Include="Src\Engine\FramebufferObject.cpp" />
+    <ClCompile Include="Src\Engine\GameObject.cpp" />
+    <ClCompile Include="Src\Engine\InputManager.cpp" />
+    <ClCompile Include="Src\Engine\LightManager.cpp" />
+    <ClCompile Include="Src\Engine\MainEditor\GameView.cpp" />
+    <ClCompile Include="Src\Engine\MainEditor\Hierarchy.cpp" />
+    <ClCompile Include="Src\Engine\MainEditor\Inspector.cpp" />
+    <ClCompile Include="Src\Engine\MainEditor\MainEditor.cpp" />
+    <ClCompile Include="Src\Engine\MainEditor\RenderView.cpp" />
+    <ClCompile Include="Src\Engine\MainEditor\SceneView.cpp" />
+    <ClCompile Include="Src\Engine\Mesh.cpp" />
+    <ClCompile Include="Src\Engine\NodeScript\NodeEditor.cpp" />
+    <ClCompile Include="Src\Engine\NodeScript\NodeScript.cpp" />
+    <ClCompile Include="Src\Engine\Random.cpp" />
+    <ClCompile Include="Src\Engine\RenderbufferObject.cpp" />
+    <ClCompile Include="Src\Engine\Scene.cpp" />
+    <ClCompile Include="Src\Engine\Shader\Shader.cpp" />
+    <ClCompile Include="Src\Engine\Texture.cpp" />
+    <ClCompile Include="Src\Engine\Window.cpp" />
+    <ClCompile Include="Src\glad\src\glad.c" />
+    <ClCompile Include="Src\ImGui\ImGui\imgui.cpp" />
+    <ClCompile Include="Src\ImGui\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="Src\ImGui\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="Src\ImGui\ImGui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="Src\ImGui\ImGui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="Src\ImGui\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="Src\ImGui\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="Src\ImGui\ImGui\imnodes.cpp" />
+    <ClCompile Include="Src\Main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="Res\Shader\Standard.frag" />
+    <None Include="Res\Shader\Standard.vert" />
+    <None Include="Res\Shader\Unlit.frag" />
+    <None Include="Res\Shader\Unlit.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Src\AudioSettings.h" />
+    <ClInclude Include="Src\Engine\BufferObject.h" />
+    <ClInclude Include="Src\Engine\Collision.h" />
+    <ClInclude Include="Src\Engine\Color.h" />
+    <ClInclude Include="Src\Engine\Components\Billboard.h" />
+    <ClInclude Include="Src\Engine\Components\Colliders\AabbCollider.h" />
+    <ClInclude Include="Src\Engine\Components\Colliders\Collider.h" />
+    <ClInclude Include="Src\Engine\Components\Colliders\SphereCollider.h" />
+    <ClInclude Include="Src\Engine\Components\Component.h" />
+    <ClInclude Include="Src\Engine\Components\Light.h" />
+    <ClInclude Include="Src\Engine\Components\Rigidbody.h" />
+    <ClInclude Include="Src\Engine\Components\Transform.h" />
+    <ClInclude Include="Src\Engine\Components\UILayout.h" />
+    <ClInclude Include="Src\Engine\Debug.h" />
+    <ClInclude Include="Src\Engine\EasyAudio\EasyAudio.h" />
+    <ClInclude Include="Src\Engine\Engine.h" />
+    <ClInclude Include="Src\Engine\FramebufferObject.h" />
+    <ClInclude Include="Src\Engine\GameObject.h" />
+    <ClInclude Include="Src\Engine\InputManager.h" />
+    <ClInclude Include="Src\Engine\LightManager.h" />
+    <ClInclude Include="Src\Engine\MainEditor\GameView.h" />
+    <ClInclude Include="Src\Engine\MainEditor\Hierarchy.h" />
+    <ClInclude Include="Src\Engine\MainEditor\Inspector.h" />
+    <ClInclude Include="Src\Engine\MainEditor\MainEditor.h" />
+    <ClInclude Include="Src\Engine\MainEditor\RenderView.h" />
+    <ClInclude Include="Src\Engine\MainEditor\SceneView.h" />
+    <ClInclude Include="Src\Engine\Mesh.h" />
+    <ClInclude Include="Src\Engine\NodeScript\NodeEditor.h" />
+    <ClInclude Include="Src\Engine\NodeScript\NodeScript.h" />
+    <ClInclude Include="Src\Engine\NodeScript\Nodes\EventNode.h" />
+    <ClInclude Include="Src\Engine\NodeScript\Nodes\Node.h" />
+    <ClInclude Include="Src\Engine\Random.h" />
+    <ClInclude Include="Src\Engine\RenderbufferObject.h" />
+    <ClInclude Include="Src\Engine\Scene.h" />
+    <ClInclude Include="Src\Engine\Shader\Shader.h" />
+    <ClInclude Include="Src\Engine\Texture.h" />
+    <ClInclude Include="Src\Engine\UsingNames\UsingGameObject.h" />
+    <ClInclude Include="Src\Engine\UsingNames\UsingMesh.h" />
+    <ClInclude Include="Src\Engine\UsingNames\UsingNodeEditor.h" />
+    <ClInclude Include="Src\Engine\VecMath.h" />
+    <ClInclude Include="Src\Engine\VertexArrayObject.h" />
+    <ClInclude Include="Src\Engine\Window.h" />
+    <ClInclude Include="Src\glad\include\glad\glad.h" />
+    <ClInclude Include="Src\glad\include\KHR\khrplatform.h" />
+    <ClInclude Include="Src\ImGui\ImGui\imconfig.h" />
+    <ClInclude Include="Src\ImGui\ImGui\imgui.h" />
+    <ClInclude Include="Src\ImGui\ImGui\imgui_impl_glfw.h" />
+    <ClInclude Include="Src\ImGui\ImGui\imgui_impl_opengl3.h" />
+    <ClInclude Include="Src\ImGui\ImGui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="Src\ImGui\ImGui\imgui_internal.h" />
+    <ClInclude Include="Src\ImGui\ImGui\imnodes.h" />
+    <ClInclude Include="Src\ImGui\ImGui\imnodes_internal.h" />
+    <ClInclude Include="Src\ImGui\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="Src\ImGui\ImGui\imstb_textedit.h" />
+    <ClInclude Include="Src\ImGui\ImGui\imstb_truetype.h" />
+    <ClInclude Include="Src\MapObject.h" />
+    <ClInclude Include="Src\MeshSettings.h" />
+    <ClInclude Include="Src\ShaderSettings.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="packages\glfw.3.3.9\build\native\glfw.targets" Condition="Exists('packages\glfw.3.3.9\build\native\glfw.targets')" />
+  </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\glfw.3.3.9\build\native\glfw.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\glfw.3.3.9\build\native\glfw.targets'))" />
+  </Target>
+</Project>
