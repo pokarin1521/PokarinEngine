@@ -11,7 +11,7 @@
 
 #include "../InputManager.h"
 
-#include "../../MeshSettings.h"
+#include "../Settings/MeshSettings.h"
 
 namespace PokarinEngine
 {

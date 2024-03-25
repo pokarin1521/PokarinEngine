@@ -5,7 +5,7 @@
 #define SCENE_H_INCLUDED
 
 #include "Shader/Shader.h"
-#include "../MeshSettings.h"
+#include "Settings/MeshSettings.h"
 
 #include "UsingNames/UsingGameObject.h"
 #include "GameObject.h"

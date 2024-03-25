@@ -7,7 +7,7 @@
 #include "Random.h"
 #include "Debug.h"
 
-#include "../ShaderSettings.h"
+#include "Settings/ShaderSettings.h"
 
 #include <algorithm>
 

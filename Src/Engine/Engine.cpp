@@ -14,7 +14,7 @@
 #include "Components/Colliders/AabbCollider.h"
 #include "Components/Colliders/SphereCollider.h"
 
-#include "../ShaderSettings.h"
+#include "Settings/ShaderSettings.h"
 
 #include "MainEditor/RenderView.h"
 

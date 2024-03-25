@@ -9,7 +9,8 @@
 #include "../Engine.h"
 #include "../GameObject.h"
 #include "../Debug.h"
-#include "../MeshSettings.h"
+
+#include "../Settings/MeshSettings.h"
 
 #include "../Window.h"
 #include "../InputManager.h"

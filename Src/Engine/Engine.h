@@ -16,7 +16,7 @@
 
 #include "MainEditor/MainEditor.h"
 
-#include "../MeshSettings.h"
+#include "Settings/MeshSettings.h"
 
 #include <GLFW/glfw3.h>
 #include <string>
