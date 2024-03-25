@@ -30,7 +30,7 @@ namespace PokarinEngine
 {
 
 #pragma region CopyParameter
-	
+
 	/// <summary>
 	/// カメラのパラメータをGPUにコピー
 	/// </summary>
@@ -234,7 +234,7 @@ namespace PokarinEngine
 		{
 			currentScene = Scene::Create(*this, "SampleScene");
 		}
-		
+
 		// -----------------------------------------------
 		// ノードスクリプトを初期化する
 		// -----------------------------------------------
@@ -300,8 +300,7 @@ namespace PokarinEngine
 		// --------------------------
 
 		// バックバッファをクリアするときの色を指定
-		//glClearColor(0.0f, 1.0f, 0.8f, 1.0f);
-		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+		glClearColor(0, 0, 0, 0);
 
 		// バックバッファをクリア
 		// 今回はカラーバッファと深度バッファを指定

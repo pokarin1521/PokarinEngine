@@ -9,10 +9,12 @@
 #include "ImGui/imgui_impl_opengl3.h"
 #include "ImGui/imnodes.h"
 
+#include "NodeEditor.h"
+
 #include "../Window.h"
 #include "../InputManager.h"
 
-#include "NodeEditor.h"
+#include "../Color.h"
 
 #include <GLFW/glfw3.h>
 #include <unordered_map>
@@ -62,7 +64,7 @@ namespace PokarinEngine
 		/// </summary>
 		/// <param name="style"> 色を設定したい項目 </param>
 		/// <param name="styleColor"> 設定する色 </param>
-		void PushStyleColor(ImGuiCol style, const ImVec4& styleColor)
+		void PushStyleColor(ImGuiCol style, const Color& styleColor)
 		{
 			ImGui::PushStyleColor(style, styleColor);
 			pushColorCount++;
@@ -174,25 +176,27 @@ namespace PokarinEngine
 			ImGui_ImplOpenGL3_NewFrame();
 			ImGui::NewFrame();
 
+			// ------------------------------------
+			// ImGuiの色設定
+			// ------------------------------------
+
+			PushStyleColor(ImGuiCol_::ImGuiCol_Tab, BasicColor::gray);
+			PushStyleColor(ImGuiCol_::ImGuiCol_TitleBgActive, BasicColor::gray);
+
 			// -----------------------------------------------------------------------
 			// ウィンドウ全体でウィンドウをドッキング出来るようにする
 			// -----------------------------------------------------------------------
 
 			// ドッキングの機能
 			ImGuiDockNodeFlags dockFlags = ImGuiDockNodeFlags_::ImGuiDockNodeFlags_NoSplit |
-				ImGuiDockNodeFlags_::ImGuiDockNodeFlags_NoUndocking;
+				ImGuiDockNodeFlags_::ImGuiDockNodeFlags_NoUndocking |
+				ImGuiDockNodeFlagsPrivate_::ImGuiDockNodeFlags_NoWindowMenuButton |
+				ImGuiDockNodeFlagsPrivate_::ImGuiDockNodeFlags_NoCloseButton;
 
 			// ドッキングスペースの識別番号
 			ImGuiID dockSpaceID = ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), dockFlags);
 
 			/* ここ以下で作成されるImGuiウィンドウがドッキング可能になる */
-
-			// ------------------------------------
-			// ImGuiの色設定
-			// ------------------------------------
-
-			PushStyleColor(ImGuiCol_::ImGuiCol_Tab, ImVec4(0, 0, 0, 1));
-			PushStyleColor(ImGuiCol_::ImGuiCol_Tab, ImVec4(0, 0, 0, 1));
 
 			// ------------------------------------
 			// ノードエディタを更新
@@ -203,6 +207,7 @@ namespace PokarinEngine
 			{
 				// ImGuiウィンドウが最初からドッキングされるように設定
 				ImGui::DockBuilderDockWindow(nodeEditor->GetName(), dockSpaceID);
+
 
 				// ノードエディタの更新
 				if (nodeEditor->Update())
@@ -239,7 +244,7 @@ namespace PokarinEngine
 			// ----------------------------------------
 
 			// カラーバッファをクリアするときの色を設定
-			glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+			glClearColor(0, 0, 0, 0);
 
 			// バックバッファをクリア
 			// 今回はカラーバッファを指定

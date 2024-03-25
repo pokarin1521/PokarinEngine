@@ -13,6 +13,8 @@
 
 #include "../UsingNames/UsingMesh.h"
 
+#include "../Color.h"
+
 #include <memory>
 #include <vector>
 
@@ -92,10 +94,10 @@ namespace PokarinEngine
 		/// </summary>
 		/// <param name="style"> 色を設定したい項目 </param>
 		/// <param name="styleColor"> 設定する色 </param>
-		void PushStyleColor(ImGuiCol style, const ImVec4& styleColor)
+		void PushStyleColor(ImGuiCol style, const Color& styleColor)
 		{
 			// 色設定を開始
-			ImGui::PushStyleColor(style , styleColor);
+			ImGui::PushStyleColor(style, styleColor);
 
 			// 設定数をカウント
 			pushColorCount++;
@@ -117,14 +119,6 @@ namespace PokarinEngine
 
 		// GLSLのバージョン
 		const char* glslVersion = "#version 450";
-
-	private: // --------------------------- 描画用 -------------------------------
-
-		// 灰色
-		const ImVec4 gray = { 0.2f, 0.2f, 0.2f, 1.0f };
-
-		// 黒色
-		const ImVec4 black = { 0, 0, 0, 1.0f };
 
 	private: // ------------------------- 描画用ビュー ---------------------------
 

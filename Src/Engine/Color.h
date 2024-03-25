@@ -43,7 +43,24 @@ namespace PokarinEngine
 
 		float& operator[](size_t i) { return *(&r + i); }
 		float operator[](size_t i)const { return *(&r + i); }
+
+		// ------------------------
+		// •ÏŠ·
+		// ------------------------
+
+		operator ImVec4() { return ImVec4(r, g, b, a); }
+
+		operator const ImVec4() const { return ImVec4(r, g, b, a); }
 	};
+
+	namespace BasicColor
+	{
+		// ŠDF
+		inline constexpr Color gray = { 0.2f, 0.2f, 0.2f, 1.0f };
+
+		// •F
+		inline constexpr Color black = { 0, 0, 0, 1.0f };
+	}
 
 #pragma region Operator
 

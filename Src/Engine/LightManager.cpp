@@ -3,7 +3,7 @@
 */
 #include "LightManager.h"
 
-#include "../../ShaderSettings.h"
+#include "Settings/ShaderSettings.h"
 
 #include <algorithm>
 

@@ -125,10 +125,10 @@ namespace PokarinEngine
 		// ウィンドウの背景色を設定
 		// -------------------------------------
 
-		PushStyleColor(ImGuiCol_::ImGuiCol_WindowBg, gray);
-		PushStyleColor(ImGuiCol_::ImGuiCol_Tab, gray);
-		PushStyleColor(ImGuiCol_::ImGuiCol_TabUnfocusedActive, gray);
-		PushStyleColor(ImGuiCol_::ImGuiCol_TitleBgActive, black);
+		PushStyleColor(ImGuiCol_::ImGuiCol_WindowBg, BasicColor::gray);
+		PushStyleColor(ImGuiCol_::ImGuiCol_Tab, BasicColor::gray);
+		PushStyleColor(ImGuiCol_::ImGuiCol_TabUnfocusedActive, BasicColor::gray);
+		PushStyleColor(ImGuiCol_::ImGuiCol_TitleBgActive, BasicColor::black);
 
 		// --------------------------------------------------------------
 		// 画面全体でウィンドウをドッキングできるようにする
