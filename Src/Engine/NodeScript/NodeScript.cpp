@@ -49,9 +49,34 @@ namespace PokarinEngine
 		// 選択中のノードエディタ
 		NodeEditorPtr selectEditor;
 
+		// ImGuiの色設定の回数
+		int pushColorCount = 0;
+
 		// -------------------------------------------
 		// 関数
 		// -------------------------------------------
+
+		/// ここでしか使わないので、cppのみに書く
+		/// <summary>
+		/// ImGuiの色設定を開始する
+		/// </summary>
+		/// <param name="style"> 色を設定したい項目 </param>
+		/// <param name="styleColor"> 設定する色 </param>
+		void PushStyleColor(ImGuiCol style, const ImVec4& styleColor)
+		{
+			ImGui::PushStyleColor(style, styleColor);
+			pushColorCount++;
+		}
+
+		/// ここでしか使わないので、cppのみに書く
+		/// <summary>
+		/// ImGuiの色設定を終了する
+		/// </summary>
+		void PopStyleColor()
+		{
+			ImGui::PopStyleColor(pushColorCount);
+			pushColorCount = 0;
+		}
 
 		/// ここでしか使わないので、cppのみに書く
 		/// <summary>
@@ -62,11 +87,15 @@ namespace PokarinEngine
 			// 閉じているノードエディタを配列から削除
 			openEditorList.erase(closedEditor);
 
-			// 開いているノードエディタがなくなったら
-			// 選択中のノードエディタの所有権を放棄する
+			// 開いているノードエディタがなくなった場合
 			if (openEditorList.empty())
 			{
+				// 所有権を放棄
 				selectEditor.reset();
+
+				// 表示する意味がないので
+				// ウィンドウを閉じる
+				Window::CloseWindow(WindowID::NodeScript);
 			}
 
 			// 選択中のノードエディタが閉じられた場合
@@ -162,7 +191,8 @@ namespace PokarinEngine
 			// ImGuiの色設定
 			// ------------------------------------
 
-			ImGui::PushStyleColor(ImGuiCol_::ImGuiCol_Tab, ImVec4(0, 0, 0, 1));
+			PushStyleColor(ImGuiCol_::ImGuiCol_Tab, ImVec4(0, 0, 0, 1));
+			PushStyleColor(ImGuiCol_::ImGuiCol_Tab, ImVec4(0, 0, 0, 1));
 
 			// ------------------------------------
 			// ノードエディタを更新
@@ -202,7 +232,7 @@ namespace PokarinEngine
 			// ImGuiの色設定を終了する
 			// -------------------------------------
 
-			ImGui::PopStyleColor();
+			PopStyleColor();
 
 			// ----------------------------------------
 			// カラーバッファをクリアする
@@ -254,11 +284,10 @@ namespace PokarinEngine
 		{
 			// 管理用配列に追加
 			// 追加済みならfalseになる
-			if (!openEditorList.emplace(nodeEditor).second)
-			{
-				// 既に追加されているので、フォーカスする
-				imGuiContext->NavWindow = &nodeEditor->GetImGuiWindow();
-			}
+			openEditorList.emplace(nodeEditor);
+
+			// 既に追加されているので、フォーカスする
+			imGuiContext->NavWindow = &nodeEditor->GetImGuiWindow();
 		}
 
 	} // namespace NodeScript

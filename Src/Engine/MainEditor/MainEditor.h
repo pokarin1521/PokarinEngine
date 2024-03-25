@@ -90,12 +90,12 @@ namespace PokarinEngine
 		/// <summary>
 		/// ImGuiの色設定を開始する
 		/// </summary>
-		/// <param name="target"> 設定対象 </param>
-		/// <param name="styleColor"> 色 </param>
-		void PushStyleColor(ImGuiCol target, const ImVec4& styleColor)
+		/// <param name="style"> 色を設定したい項目 </param>
+		/// <param name="styleColor"> 設定する色 </param>
+		void PushStyleColor(ImGuiCol style, const ImVec4& styleColor)
 		{
 			// 色設定を開始
-			ImGui::PushStyleColor(target, styleColor);
+			ImGui::PushStyleColor(style , styleColor);
 
 			// 設定数をカウント
 			pushColorCount++;

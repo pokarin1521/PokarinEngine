@@ -291,11 +291,11 @@ namespace PokarinEngine
 
 #pragma region Vec2_Operator
 
-// -------
-// 単項
-// -------
-
-// --------- Vec2の -演算子 -----------
+	// -------
+	// 単項
+	// -------
+	
+	// --------- Vec2の -演算子 -----------
 
 	inline Vec2 operator-(const Vec2& a)
 	{

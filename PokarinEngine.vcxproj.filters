@@ -280,15 +280,6 @@
     <ClInclude Include="Src\Engine\EasyAudio\EasyAudio.h">
       <Filter>Src\Engine\EasyAudio</Filter>
     </ClInclude>
-    <ClInclude Include="Src\MeshSettings.h">
-      <Filter>Src\Settings</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\AudioSettings.h">
-      <Filter>Src\Settings</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\ShaderSettings.h">
-      <Filter>Src\Settings</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Engine\Components\Billboard.h">
       <Filter>Src\Engine\Components</Filter>
     </ClInclude>
@@ -414,6 +405,15 @@
     </ClInclude>
     <ClInclude Include="Src\Engine\UsingNames\UsingNodeEditor.h">
       <Filter>Src\Engine\UsingNames</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\Settings\AudioSettings.h">
+      <Filter>Src\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\Settings\MeshSettings.h">
+      <Filter>Src\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\Settings\ShaderSettings.h">
+      <Filter>Src\Settings</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

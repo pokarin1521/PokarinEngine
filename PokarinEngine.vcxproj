@@ -194,7 +194,6 @@
     <None Include="Res\Shader\Unlit.vert" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Src\AudioSettings.h" />
     <ClInclude Include="Src\Engine\BufferObject.h" />
     <ClInclude Include="Src\Engine\Collision.h" />
     <ClInclude Include="Src\Engine\Color.h" />
@@ -228,6 +227,9 @@
     <ClInclude Include="Src\Engine\Random.h" />
     <ClInclude Include="Src\Engine\RenderbufferObject.h" />
     <ClInclude Include="Src\Engine\Scene.h" />
+    <ClInclude Include="Src\Engine\Settings\AudioSettings.h" />
+    <ClInclude Include="Src\Engine\Settings\MeshSettings.h" />
+    <ClInclude Include="Src\Engine\Settings\ShaderSettings.h" />
     <ClInclude Include="Src\Engine\Shader\Shader.h" />
     <ClInclude Include="Src\Engine\Texture.h" />
     <ClInclude Include="Src\Engine\UsingNames\UsingGameObject.h" />
@@ -250,8 +252,6 @@
     <ClInclude Include="Src\ImGui\ImGui\imstb_textedit.h" />
     <ClInclude Include="Src\ImGui\ImGui\imstb_truetype.h" />
     <ClInclude Include="Src\MapObject.h" />
-    <ClInclude Include="Src\MeshSettings.h" />
-    <ClInclude Include="Src\ShaderSettings.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

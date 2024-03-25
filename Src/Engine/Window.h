@@ -43,6 +43,12 @@ namespace PokarinEngine
 		void OpenWindow(WindowID windowID, const char* windowTitle);
 
 		/// <summary>
+		/// ウィンドウを閉じる
+		/// </summary>
+		/// <param name="windowID"> ウィンドウ識別番号 </param>
+		void CloseWindow(WindowID windowID);
+
+		/// <summary>
 		/// ウィンドウの使用を開始する
 		/// </summary>
 		/// <param name="windowID"> 使用するウィンドウ識別番号 </param>

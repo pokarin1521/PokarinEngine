@@ -20,7 +20,7 @@ namespace PokarinEngine
 		// ウィンドウオブジェクト
 		// ------------------------------------
 
-		// ウィンドウ管理用配列<ウィンドウ番号, ウィンドウオブジェクト>
+		// ウィンドウ管理用配列<ウィンドウ識別番号, ウィンドウオブジェクト>
 		std::unordered_map<WindowID, GLFWwindow*> windowList;
 
 		// ------------------------------------
@@ -328,7 +328,7 @@ namespace PokarinEngine
 		/// <param name="[out] h"> ウィンドウの高さ </param>
 		void GetWindowSize(WindowID windowID, GLsizei& w, GLsizei& h)
 		{
-			if (!IsCreated(windowID))
+			if (IsCreated(windowID))
 			{
 				glfwGetFramebufferSize(windowList[windowID], &w, &h);
 			}

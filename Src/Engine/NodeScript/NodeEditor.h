@@ -60,6 +60,10 @@ namespace PokarinEngine
 		/// </returns>
 		bool Update();
 
+	public: // --------------------- ƒm[ƒh‚Ì’Ç‰Á ----------------------
+
+		//void AddNode();
+	
 	public: // ---------------------- î•ñ‚Ìæ“¾ -----------------------
 
 		/// <summary>
