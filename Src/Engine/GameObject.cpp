@@ -6,6 +6,8 @@
 #include "NodeScript/NodeScript.h"
 #include "NodeScript/NodeEditor.h"
 
+#include "Scene.h"
+
 #include <algorithm>
 
 namespace PokarinEngine
@@ -135,7 +137,6 @@ namespace PokarinEngine
 	void GameObject::OpenNodeEditor() const
 	{
 		NodeScript::OpenNodeEditor(nodeEditor);
-		nodeEditor->OpenEditor();
 	}
 
 } // namespace PokarinEngine

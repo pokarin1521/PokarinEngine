@@ -8,7 +8,10 @@
 #include "Settings/MeshSettings.h"
 
 #include "UsingNames/UsingGameObject.h"
+
 #include "GameObject.h"
+
+#include "Components/Camera.h"
 
 #include <string>
 #include <memory>
@@ -32,7 +35,7 @@ namespace PokarinEngine
 
 	using ScenePtr = std::shared_ptr<Scene>;
 	using SceneList = std::vector<ScenePtr>;
-	
+
 	/// <summary>
 	/// シーン管理クラス
 	/// </summary>
@@ -88,8 +91,7 @@ namespace PokarinEngine
 		/// ゲームオブジェクトを複製する
 		/// </summary>
 		/// <param name="copyObject"> 複製元のゲームオブジェクト </param>
-		/// <returns> 複製したゲームオブジェクト </returns>
-		GameObjectPtr CopyGameObject(GameObjectPtr object);
+		void CopyGameObject(GameObjectPtr object);
 
 	public: // ------------------- ゲームオブジェクト制御 -------------------
 
@@ -142,10 +144,19 @@ namespace PokarinEngine
 		/// <summary>
 		/// メインカメラを取得する
 		/// </summary>
-		/// <returns></returns>
+		/// <returns> メインカメラ </returns>
 		const GameObject& GetMainCamera() const
 		{
 			return *mainCamera;
+		}
+
+		/// <summary>
+		/// メインカメラの情報を取得する
+		/// </summary>
+		/// <returns> カメラ情報を管理するコンポーネント </returns>
+		const Camera& GetCameraInfo() const
+		{
+			return *cameraInfo;
 		}
 
 		/// <summary>
@@ -211,6 +222,9 @@ namespace PokarinEngine
 
 		// メインカメラ
 		GameObjectPtr mainCamera;
+
+		// メインカメラの情報
+		CameraPtr cameraInfo;
 
 		// ゲームオブジェクトの最大数
 		// 余裕を持てるように少なめに設定

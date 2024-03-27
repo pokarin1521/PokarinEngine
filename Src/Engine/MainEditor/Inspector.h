@@ -32,11 +32,6 @@ namespace PokarinEngine
 	public: // ---------------------------- 制御 -----------------------------
 
 		/// <summary>
-		/// 初期化
-		/// </summary>
-		void Initialize(Engine& e);
-
-		/// <summary>
 		/// 更新
 		/// </summary>
 		/// <param name="selectObject"> ヒエラルキーで選択中のオブジェクト </param>
@@ -46,10 +41,6 @@ namespace PokarinEngine
 
 		// 選択中のオブジェクトの名前
 		std::string selectObjectName = "";
-
-	private: // -------------------------- エンジン --------------------------
-
-		Engine* engine = nullptr;
 	};
 
 } // namespace PokarinEngine

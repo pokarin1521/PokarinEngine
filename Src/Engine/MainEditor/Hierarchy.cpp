@@ -196,7 +196,7 @@ namespace PokarinEngine
 				{
 					// 選択中オブジェクトの要素番号を設定
 					selectObjectIndex = i;
-					
+
 					// 選択中のオブジェクトを設定
 					selectObject = gameObjectList[i];
 				}
@@ -248,16 +248,12 @@ namespace PokarinEngine
 
 		if (Input::GetKey(KeyCode::Delete))
 		{
-			// カメラ以外を選択した場合
-			if (selectObject.get() != &currentScene.GetMainCamera())
-			{
-				// 選択中のオブジェクトを削除
-				currentScene.DestroyObject(selectObject);
+			// 選択中のオブジェクトを削除
+			currentScene.DestroyObject(selectObject);
 
-				// 非選択状態にする
-				selectObjectIndex = unselected;
-				selectObject.reset();
-			}
+			// 非選択状態にする
+			selectObjectIndex = unselected;
+			selectObject.reset();
 		}
 	}
 

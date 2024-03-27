@@ -7,7 +7,9 @@
 #include "ImGui/imgui_internal.h"
 #include "ImGui/imgui_impl_glfw.h"
 #include "ImGui/imgui_impl_opengl3.h"
+
 #include "ImGui/imnodes.h"
+#include "ImGui/imnodes_internal.h"
 
 #include "NodeEditor.h"
 
@@ -41,6 +43,9 @@ namespace PokarinEngine
 
 		// ImGui用コンテキスト
 		ImGuiContext* imGuiContext = nullptr;
+
+		// ImNodes用コンテキスト
+		ImNodesContext* imNodesContext = nullptr;
 
 		// 開いているノードエディタ配列
 		OpenEditorList openEditorList;
@@ -139,7 +144,7 @@ namespace PokarinEngine
 			ImGui::SetCurrentContext(imGuiContext);
 
 			// ImNodesコンテキストを作成
-			ImNodes::CreateContext();
+			imNodesContext = ImNodes::CreateContext();
 
 			// ---------------------------------------
 			// ドッキングウィンドウの有効化
@@ -177,6 +182,13 @@ namespace PokarinEngine
 			ImGui::NewFrame();
 
 			// ------------------------------------
+			// ImGuiの丸み設定
+			// ------------------------------------
+
+			// タブの丸みを無くす
+			ImGui::PushStyleVar(ImGuiStyleVar_::ImGuiStyleVar_TabRounding, 0);
+
+			// ------------------------------------
 			// ImGuiの色設定
 			// ------------------------------------
 
@@ -208,7 +220,6 @@ namespace PokarinEngine
 				// ImGuiウィンドウが最初からドッキングされるように設定
 				ImGui::DockBuilderDockWindow(nodeEditor->GetName(), dockSpaceID);
 
-
 				// ノードエディタの更新
 				if (nodeEditor->Update())
 				{
@@ -232,6 +243,12 @@ namespace PokarinEngine
 			{
 				EraseClosedEditor();
 			}
+
+			// --------------------------------------
+			// ImGuiの丸み設定を終了する
+			// --------------------------------------
+
+			ImGui::PopStyleVar();
 
 			// -------------------------------------
 			// ImGuiの色設定を終了する
@@ -266,11 +283,15 @@ namespace PokarinEngine
 		/// </summary>
 		void Finalize()
 		{
-			if (ImNodes::GetCurrentContext())
+			// ImNodesコンテキストを削除
+			if (imNodesContext)
 			{
-				ImNodes::DestroyContext();
+				ImNodes::SetCurrentContext(imNodesContext);
+
+				ImNodes::DestroyContext(imNodesContext);
 			}
 
+			// ImGuiコンテキストを削除
 			if (imGuiContext)
 			{
 				ImGui::SetCurrentContext(imGuiContext);
@@ -287,6 +308,9 @@ namespace PokarinEngine
 		/// <param name="nodeEditor"> ノードエディタ </param>
 		void OpenNodeEditor(const NodeEditorPtr nodeEditor)
 		{
+			// ノードエディタを開く
+			nodeEditor->OpenEditor();
+
 			// 管理用配列に追加
 			// 追加済みならfalseになる
 			openEditorList.emplace(nodeEditor);

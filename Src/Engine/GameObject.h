@@ -108,7 +108,7 @@ namespace PokarinEngine
 		/// <typeparam name="T"> 取得するコンポーネント </typeparam>
 		/// <returns> 検索したコンポーネント </returns>
 		template<typename T>
-		std::shared_ptr<T> GetComponent()
+		std::shared_ptr<T> GetComponent() const 
 		{
 			// コンポーネント
 			for (auto& e : components)
@@ -124,7 +124,6 @@ namespace PokarinEngine
 					// 見つけたコンポーネントを返す
 					return p;
 				}
-
 			}
 
 			// コンポーネントが見つからなかったので、
@@ -190,12 +189,21 @@ namespace PokarinEngine
 	public: // --------------------------- 情報の取得 ---------------------------
 
 		/// <summary>
-		/// エンジンの機能を取得する
+		/// シーンを取得する
 		/// </summary>
-		/// <returns></returns>
-		const Engine& GetEngine() const
+		/// <returns> このゲームオブジェクトを管理しているシーン </returns>
+		const Scene& GetScene() const
 		{
-			return *engine;
+			return *scene;
+		}
+		
+		/// <summary>
+		/// シーンを取得する
+		/// </summary>
+		/// <returns> このゲームオブジェクトを管理しているシーン </returns>
+		Scene& GetScene()
+		{
+			return *scene;
 		}
 
 		/// <summary>
@@ -258,10 +266,10 @@ namespace PokarinEngine
 		// コライダー管理用配列
 		std::vector<ColliderPtr> colliders;
 
-	private: // -------------------------- エンジン ----------------------------
+	private: // --------------------------- シーン -----------------------------
 
-		// エンジンクラスのポインタ
-		Engine* engine = nullptr;
+		// 自身を管理しているシーン
+		Scene* scene = nullptr;
 
 	public: // ----------------------- ノードエディタ -------------------------
 

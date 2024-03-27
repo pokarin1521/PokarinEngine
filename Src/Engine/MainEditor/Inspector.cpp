@@ -8,25 +8,11 @@
 namespace PokarinEngine
 {
 	/// <summary>
-	/// 初期化
-	/// </summary>
-	void Inspector::Initialize(Engine& e)
-	{
-		engine = &e;
-	}
-
-	/// <summary>
 	/// 更新
 	/// </summary>
 	/// <param name="selectObject"> ヒエラルキーで選択中のオブジェクト </param>
 	void Inspector::Update(GameObjectPtr selectObject)
 	{
-		// 現在のシーン
-		Scene& currentScene = engine->GetCurrentScene();
-
-		// シーン内のゲームオブジェクト
-		GameObjectList gameObjectList = currentScene.GetGameObjectAll();
-
 		// インスペクターウィンドウ
 		ImGui::Begin("Inspector");
 		{
@@ -60,7 +46,8 @@ namespace PokarinEngine
 
 					// 名前を変更
 					// 余計な\0が入ると困るので、最初の\0までを渡す
-					currentScene.ChangeObjectName(selectObject, selectObjectName.substr(0, endLine));
+					selectObject->GetScene().ChangeObjectName(
+						selectObject, selectObjectName.substr(0, endLine));
 				}
 			}
 

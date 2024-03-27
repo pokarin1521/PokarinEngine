@@ -149,6 +149,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Src\Engine\Collision.cpp" />
+    <ClCompile Include="Src\Engine\Components\Camera.cpp" />
     <ClCompile Include="Src\Engine\Components\Light.cpp" />
     <ClCompile Include="Src\Engine\Components\Rigidbody.cpp" />
     <ClCompile Include="Src\Engine\Components\Transform.cpp" />
@@ -198,6 +199,7 @@
     <ClInclude Include="Src\Engine\Collision.h" />
     <ClInclude Include="Src\Engine\Color.h" />
     <ClInclude Include="Src\Engine\Components\Billboard.h" />
+    <ClInclude Include="Src\Engine\Components\Camera.h" />
     <ClInclude Include="Src\Engine\Components\Colliders\AabbCollider.h" />
     <ClInclude Include="Src\Engine\Components\Colliders\Collider.h" />
     <ClInclude Include="Src\Engine\Components\Colliders\SphereCollider.h" />

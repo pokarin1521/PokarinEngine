@@ -94,9 +94,6 @@ namespace PokarinEngine
 
 		// ヒエラルキーウィンドウ
 		hierarchy.Initialize(engine);
-
-		// インスペクターウィンドウ
-		inspector.Initialize(engine);
 	}
 
 	/// <summary>

@@ -15,6 +15,7 @@
 #include "Shader/Shader.h"
 
 #include "MainEditor/MainEditor.h"
+#include "NodeScript/NodeScript.h"
 
 #include "Settings/MeshSettings.h"
 
@@ -43,50 +44,6 @@ namespace PokarinEngine
 
 		Engine() = default;
 		~Engine() = default;
-
-	public: // -------------------- UIオブジェクト作成 --------------------
-
-		/// <summary>
-		/// UIオブジェクトを作成する
-		/// </summary>
-		/// <typeparam name="T"> 
-		/// ゲームオブジェクトに割り当てるUILayoutまたはその派生
-		/// </typeparam>
-		/// <param name="filename"> UIオブジェクトに表示する画像 </param>
-		/// <param name="position"> UIオブジェクトの座標 </param>
-		/// <param name="scale"> UIオブジェクトの大きさ </param>
-		/// <returns> 作成したUIオブジェクト </returns>
-		template<typename T>
-		std::pair<GameObjectPtr, std::shared_ptr<T>> CreateUIObject(
-			const char* filename, const Vec2& position, float scale)
-		{
-			// テキストオブジェクトを作成
-			auto object = currentScene->CreateGameObject(
-				filename, { position.x, position.y, 0 });
-
-			// 描画順を設定
-			object->renderQueue = RenderQueue::overlay;
-
-			// UI用スタティックメッシュを設定
-			object->staticMesh = GetStaticMesh(StaticMeshFile_OBJ::ui);
-
-			// テクスチャ
-			auto texBaseColor = GetTexture(filename);
-
-			// 固有マテリアルを作成し、テクスチャを差し替える
-			object->materials = CloneMaterialList(object->staticMesh);
-			object->materials[0]->texBaseColor = texBaseColor;
-
-			// 画像のアスペクト比に応じて拡大率を調整
-			const float aspectRatio = texBaseColor->GetAspectRatio();
-			object->transform->scale = { scale * aspectRatio, scale, 1 };
-
-			// コンポーネントを追加
-			auto component = object->AddComponent<T>();
-
-			// オブジェクトとコンポーネントを返す
-			return { object, component };
-		}
 
 	public: // ---------------------- シーン作成 ------------------------
 
@@ -140,11 +97,6 @@ namespace PokarinEngine
 			return meshBuffer->GetStaticMesh(filename);
 		}
 
-		GLuint GetVAO()
-		{
-			return *meshBuffer->GetVAO();
-		}
-
 	public: // -------------------------- テクスチャ -----------------------------
 
 		/// <summary>
@@ -164,28 +116,6 @@ namespace PokarinEngine
 		/// <param name="height"> 高さ </param>
 		/// <returns> 指定した大きさのテクスチャ </returns>
 		TexturePtr GetTexture(GLsizei width, GLsizei height);
-
-	public: // -------------------------- 視野角の設定 ---------------------------
-
-		/// <summary>
-		/// 垂直視野角を設定する
-		/// </summary>
-		/// <param name="fovY"> 設定する垂直視野角(度数法) </param>
-		void SetFovY(float fovY);
-
-	public: // -------------------------- 視野角の取得 ---------------------------
-
-		/// <summary>
-		/// 垂直視野角を取得
-		/// </summary>
-		/// <returns> 垂直視野角(度数法) </returns>
-		float GetFovY() const { return degFovY; }
-
-		/// <summary>
-		/// 視野角による拡大率を取得
-		/// </summary>
-		/// <returns> 視野角による拡大率の逆数 </returns>
-		float GetFovScale() const { return fovScale; }
 
 	public: // ------------------------------ 光線 -------------------------------
 
@@ -324,19 +254,6 @@ namespace PokarinEngine
 		/// <param name="renderView"> 描画情報を保持する描画用ビュー </param>
 		void DrawRenderView(const Transform& camera, const RenderView& view);
 
-	private: // ------------------------ 視野角 --------------------------
-
-		// 垂直視野角(度数法)
-		float degFovY = 60;
-
-		// 垂直視野角(弧度法)
-		float radFovY = degFovY * pi / 180;
-
-		// 視野角による拡大率の逆数
-		// (視野角による拡大率は常にこの形で使うので、
-		//  あらかじめ逆数にしておく)
-		float fovScale = 1 / tan(radFovY / 2);
-
 	private: // ------------------ シェーダプログラム --------------------
 
 		// シェーダプログラムの管理番号配列
@@ -359,9 +276,6 @@ namespace PokarinEngine
 		// 現在のシーン
 		ScenePtr currentScene;
 
-		// 次のシーン(待機中のシーン)
-		ScenePtr nextScene;
-
 		// シーン配列
 		SceneList scenes;
 
@@ -375,8 +289,8 @@ namespace PokarinEngine
 
 	private: // ------------------------- エディタ --------------------------
 
-		// エディタ制御用
-		MainEditor editor;
+		// メインエディタ制御用
+		MainEditor mainEditor;
 	};
 
 } // namespace PokarinEngine

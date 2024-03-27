@@ -32,7 +32,6 @@ namespace PokarinEngine
 	public: // ------- コンストラクタ・デストラクタ --------
 
 		Transform() = default;
-
 		virtual ~Transform() = default;
 
 	public: // ----------------- 禁止事項 ------------------

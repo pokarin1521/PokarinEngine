@@ -9,17 +9,17 @@
 
 namespace PokarinEngine
 {
-	/**
-	* ビルボード化コンポーネント
-	*/
+	/// <summary>
+	/// ビルボード化コンポーネント
+	/// </summary>
 	class Billboard : public Component
 	{
-	public: // コンストラクタ・デストラクタ
+	public: // ---------------- コンストラクタ・デストラクタ -------------------
 
 		Billboard() = default;
 		virtual ~Billboard() = default;
 
-	public: // イベント関数
+	public: // ------------------------- イベント関数 --------------------------
 
 		/// <summary>
 		/// 更新イベント
@@ -31,10 +31,9 @@ namespace PokarinEngine
 
 			// 持ち主からエンジンを取得
 			const GameObject& owner = GetOwner(); // 持ち主
-			const Engine& engine = owner.GetEngine(); // エンジン
 
 			// カメラの角度と持ち主の角度を合わせる
-			const GameObject& mainCamera = engine.GetCurrentScene().GetMainCamera();
+			const GameObject& mainCamera = owner.GetScene().GetMainCamera();
 			owner.transform->rotation.y = mainCamera.transform->rotation.y;
 		}
 	};

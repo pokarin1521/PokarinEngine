@@ -4,7 +4,6 @@
 #include "NodeEditor.h"
 
 #include "ImGui/imgui.h"
-#include "ImGui/imnodes.h"
 
 #include "../GameObject.h"
 
@@ -25,6 +24,8 @@ namespace PokarinEngine
 		// 分かりやすいように「持ち主の名前 + #持ち主の識別番号」にする
 		name = owner->GetName();
 		name += " #" + std::to_string(owner->GetID());
+
+		nodeEditorContext = ImNodes::EditorContextCreate();
 	}
 
 	/// <summary>
@@ -43,7 +44,8 @@ namespace PokarinEngine
 		}
 
 		// ImGuiウィンドウを作成
-		ImGui::Begin(name.c_str(), &isOpen);
+		// ウィンドウが選択された時に処理する
+		if(ImGui::Begin(name.c_str(), &isOpen))
 		{
 			// ImGuiウィンドウを登録
 			if (!imGuiWindow)
@@ -51,12 +53,7 @@ namespace PokarinEngine
 				imGuiWindow = ImGui::GetCurrentWindow();
 			}
 
-			// フォーカスされてないなら中断
-			if (!ImGui::IsWindowFocused())
-			{
-				ImGui::End();
-				return false;
-			}
+			ImNodes::EditorContextSet(nodeEditorContext);
 
 			// ノードエディタを作成
 			ImNodes::BeginNodeEditor();
@@ -64,10 +61,21 @@ namespace PokarinEngine
 				ImNodes::EndNodeEditor();
 			}
 
+			ImNodes::EditorContextSet(nullptr);
+
 			ImGui::End();
+
+			// 選択されているのでtrueを返す
+			return true;
 		}
 
-		return true;
+
+		// 選択状態に関わらずBegin関数が呼ばれているので
+		// End関数を呼ぶ
+		ImGui::End();
+
+		// 選択されてないのでfalseを返す
+		return false;
 	}
 
 } // namespace PokarinEngine

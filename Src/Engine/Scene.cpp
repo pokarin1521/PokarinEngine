@@ -25,6 +25,7 @@ namespace PokarinEngine
 	{
 		// メインカメラ作成
 		mainCamera = CreateGameObject("MainCamera");
+		cameraInfo = mainCamera->AddComponent<Camera>();
 	}
 
 	/// <summary>
@@ -49,8 +50,8 @@ namespace PokarinEngine
 		// ゲームオブジェクト作成
 		GameObjectPtr object = std::make_shared<GameObject>();
 
-		// エンジンを設定
-		object->engine = engine;
+		// シーンを設定
+		object->scene = this;
 
 		// 作成時の名前を種類名として設定
 		object->typeName = name;
@@ -92,17 +93,19 @@ namespace PokarinEngine
 	/// ゲームオブジェクトを複製する
 	/// </summary>
 	/// <param name="object"> 複製元のゲームオブジェクト </param>
-	/// <returns> 複製したゲームオブジェクト </returns>
-	GameObjectPtr Scene::CopyGameObject(GameObjectPtr object)
+	void Scene::CopyGameObject(GameObjectPtr object)
 	{
+		// メインカメラは複製しない
+		if (object == mainCamera)
+		{
+			return;
+		}
+
 		// 複製元と同じパラメータのオブジェクトを作成
 		// 名前の重複確認が出来るように種類名を使う
 		GameObjectPtr copyObject = CreateGameObject(object->typeName,
 			object->transform->position, object->transform->rotation,
 			object->staticMesh->filename.c_str());
-
-		// 複製したゲームオブジェクトを返す
-		return copyObject;
 	}
 
 	/// <summary>
@@ -360,9 +363,9 @@ namespace PokarinEngine
 
 #pragma region Destroy
 
-/// <summary>
-/// シーンから全てのゲームオブジェクトを破棄する
-/// </summary>
+	/// <summary>
+	/// シーンから全てのゲームオブジェクトを破棄する
+	/// </summary>
 	void Scene::ClearGameObjectAll()
 	{
 		// ゲームオブジェクトの削除イベントを実行
@@ -382,6 +385,12 @@ namespace PokarinEngine
 	/// <param name="object"> 削除するゲームオブジェクト </param>
 	void Scene::DestroyObject(GameObjectPtr object)
 	{
+		// メインカメラは削除しない
+		if (object == mainCamera)
+		{
+			return;
+		}
+
 		// -----------------------------------
 		// ゲームオブジェクトを削除
 		// -----------------------------------

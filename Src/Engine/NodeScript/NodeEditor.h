@@ -6,6 +6,9 @@
 
 #include "ImGui/imgui_internal.h"
 
+#include "ImGui/imnodes.h"
+#include "ImGui/imnodes_internal.h"
+
 #include "Nodes/Node.h"
 
 #include "../UsingNames/UsingNodeEditor.h"
@@ -41,7 +44,10 @@ namespace PokarinEngine
 
 		NodeEditor(GameObject* ownerObject);
 
-		~NodeEditor() = default;
+		~NodeEditor()
+		{
+			ImNodes::EditorContextFree(nodeEditorContext);
+		}
 
 	public: // -------------------- 型の別名を定義 ---------------------
 
@@ -62,8 +68,11 @@ namespace PokarinEngine
 
 	public: // --------------------- ノードの追加 ----------------------
 
-		//void AddNode();
-	
+		void AddNode(NodePtr node)
+		{
+			nodeList.emplace(node);
+		}
+
 	public: // ---------------------- 情報の取得 -----------------------
 
 		/// <summary>
@@ -126,6 +135,9 @@ namespace PokarinEngine
 
 		// ノードエディタが開いているならtrue
 		bool isOpen = false;
+
+		// ノードエディタ用コンテキスト
+		ImNodesEditorContext* nodeEditorContext = nullptr;
 	};
 
 } // namespace PokarinEngine

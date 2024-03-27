@@ -122,7 +122,7 @@ namespace PokarinEngine
 		}
 
 		// エディタを終了
-		editor.Finalize();
+		mainEditor.Finalize();
 
 		// ノードスクリプトの終了
 		NodeScript::Finalize();
@@ -185,7 +185,7 @@ namespace PokarinEngine
 		// エディタを初期化
 		// -----------------------------
 
-		editor.Initialize(*this);
+		mainEditor.Initialize(*this);
 
 		// サブウィンドウに設定されている可能性があるので
 		// コンテキストをメインウィンドウに設定する
@@ -280,7 +280,7 @@ namespace PokarinEngine
 		// エディタを更新
 		// ------------------------
 
-		editor.Update();
+		mainEditor.Update();
 	}
 
 	/// <summary>
@@ -322,16 +322,16 @@ namespace PokarinEngine
 		// ------------------------------------------
 
 		// メインカメラを使用してゲームビューに描画する
-		DrawRenderView(*currentScene->GetMainCamera().transform, editor.GetGameView());
+		DrawRenderView(*currentScene->GetMainCamera().transform, mainEditor.GetGameView());
 
 		// シーンビュー用カメラを使用してシーンビューに描画する
-		DrawRenderView(editor.GetSceneView().GetCamera(), editor.GetSceneView());
+		DrawRenderView(mainEditor.GetSceneView().GetCamera(), mainEditor.GetSceneView());
 
 		// --------------------------
 		// エディタ画面の描画
 		// --------------------------
 
-		editor.Render();
+		mainEditor.Render();
 	}
 
 	/// <summary>
@@ -354,7 +354,7 @@ namespace PokarinEngine
 			// アスペクト比と視野角による拡大率を設定
 			// GPU側での除算を避けるため、逆数にして渡す
 			glProgramUniform2f(prog, LocationNum::aspectRatioAndScaleFov,
-				1 / aspectRatio, fovScale);
+				1 / aspectRatio, currentScene->GetCameraInfo().GetFovScale());
 
 			CopyCameraParameters(prog, camera);
 		}
@@ -750,21 +750,6 @@ namespace PokarinEngine
 
 #pragma endregion
 
-#pragma region FOV
-
-	/// <summary>
-	/// 垂直視野角を設定する
-	/// </summary>
-	/// <param name="fovY"> 設定する垂直視野角(度数法) </param>
-	void Engine::SetFovY(float fovY)
-	{
-		degFovY = fovY; // 垂直視野角(度数法)を設定
-		radFovY = degFovY * pi / 180; // 弧度法に変換
-		fovScale = 1 / tan(radFovY / 2); // 視野角による拡大率の逆数
-	}
-
-#pragma endregion
-
 #pragma region Texture
 
 	/// <summary>
@@ -884,8 +869,6 @@ namespace PokarinEngine
 		// スクリーンのピクセル数
 		Vec2 windowSize = Window::GetWindowSize(WindowID::Main);
 
-		// NDC座標系に変換
-
 		// 光線の発射点の座標
 		Vec3 nearPos = {
 			static_cast<float>(mousePos.x / windowSize.x * 2 - 1),
@@ -949,7 +932,7 @@ namespace PokarinEngine
 
 		// 余分な除算を省くため、
 		// 逆数になっているFOVを逆数にして元に戻す
-		const float invFovScale = 1.0f / GetFovScale();
+		const float invFovScale = 1.0f / currentScene->GetCameraInfo().GetFovScale();
 
 		// FOVを掛けてビュー座標系に変換する
 		// Xにはアスペクト比も掛ける

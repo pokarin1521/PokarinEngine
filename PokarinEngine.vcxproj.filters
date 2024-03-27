@@ -108,6 +108,9 @@
     <Filter Include="Src\Engine\Buffer">
       <UniqueIdentifier>{10df0642-2191-4d62-94de-36b1f226edfd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Engine\Components\Camera">
+      <UniqueIdentifier>{b0b74134-9de8-4bbf-a93c-b0e7b418d328}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Main.cpp">
@@ -220,6 +223,9 @@
     </ClCompile>
     <ClCompile Include="Src\Engine\MainEditor\SceneView.cpp">
       <Filter>Src\Engine\Editor\MainEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\Components\Camera.cpp">
+      <Filter>Src\Engine\Components\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -408,6 +414,9 @@
     </ClInclude>
     <ClInclude Include="Src\Engine\MainEditor\SceneView.h">
       <Filter>Src\Engine\Editor\MainEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\Components\Camera.h">
+      <Filter>Src\Engine\Components\Camera</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

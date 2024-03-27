@@ -6,6 +6,7 @@
 
 #include <string>
 #include <vector>
+#include <unordered_set>
 #include <memory>
 
 namespace PokarinEngine
@@ -21,7 +22,7 @@ namespace PokarinEngine
 	// -----------------------------
 
 	using NodePtr = std::shared_ptr<Node>;
-	using NodeList = std::vector<NodePtr>;
+	using NodeList = std::unordered_set<NodePtr>;
 
 	/// <summary>
 	/// ノードの基底クラス

@@ -3,6 +3,7 @@
 */
 #include "UILayout.h"
 #include "../Engine.h"
+#include "../Scene.h"
 
 namespace PokarinEngine
 {
@@ -26,12 +27,14 @@ namespace PokarinEngine
 		/* 常にカメラの方を向くように
 		ゲームオブジェクトの向きを調整(ビルボードと同じ) */
 
-		// 持ち主からエンジンを取得
+		// コンポーネントの持ち主
 		const GameObject& owner = GetOwner();
-		const Engine& engine = owner.GetEngine();
+
+		// 持ち主を管理しているシーン
+		const Scene& scene = owner.GetScene();
 
 		// ゲームオブジェクトの角度をカメラの角度に合わせる
-		const GameObject& mainCamera = engine.GetCurrentScene().GetMainCamera();
+		const GameObject& mainCamera = scene.GetMainCamera();
 		owner.transform->rotation.y = mainCamera.transform->rotation.y;
 
 		/* 常にカメラの正面に位置するように
@@ -46,7 +49,7 @@ namespace PokarinEngine
 		// カメラに写る範囲の上端と下端になるように、Z座標を調整
 		// 視野角が広がれば近くに、
 		// 狭くなれば遠くに配置することでサイズが変わらないようにする
-		pos.z = -engine.GetFovScale();
+		pos.z = -scene.GetCameraInfo().GetFovScale();
 
 		// 回転の計算用
 		const float s = sin(mainCamera.transform->rotation.y);
