@@ -60,11 +60,11 @@ namespace PokarinEngine
 
 					// マテリアルを反映したオブジェクトの色を
 					// GPUにコピー
-					glProgramUniform4fv(program, LocationNum::color, 1, &color.r);
+					glProgramUniform4fv(program, UniformLocation::color, 1, &color.r);
 
 					// 発光色と
 					// エミッションテクスチャの管理番号をGPUにコピー
-					glProgramUniform4f(program, LocationNum::emissionColor,
+					glProgramUniform4f(program, UniformLocation::emissionColor,
 						material.emission.r,
 						material.emission.g,
 						material.emission.b,
@@ -77,22 +77,22 @@ namespace PokarinEngine
 					// テクスチャの管理番号
 					const GLuint tex = *material.texBaseColor;
 
-					// テクスチャを0番にバインド
-					glBindTextures(0, 1, &tex);
+					// 通常の色用テクスチャをバインド
+					glBindTextures(TextureBinding::color, 1, &tex);
 				}
 
 				// エミッションテクスチャがある
 				if (material.texEmission)
 				{
-					// エミッションテクスチャを1番にバインド
+					// エミッションテクスチャをバインド
 					const GLuint tex = *material.texEmission;
-					glBindTextures(1, 1, &tex);
+					glBindTextures(TextureBinding::emission, 1, &tex);
 				}
 				// エミッションテクスチャがない
 				else
 				{
 					// テクスチャ1を未設定にする
-					glBindTextures(1, 1, nullptr);
+					glBindTextures(TextureBinding::emission, 1, nullptr);
 				}
 			}
 
@@ -143,7 +143,7 @@ namespace PokarinEngine
 		for (int i = 0; i < vertexCount; ++i)
 		{
 			// 法線ベクトル
-			const Vec3& n = vertices[i].normal;
+			const Vector3& n = vertices[i].normal;
 
 			// 法線の長さが0の場合を「設定されていない」とみなす
 			if (n.x == 0 && n.y == 0 && n.z == 0)
@@ -173,14 +173,14 @@ namespace PokarinEngine
 			const int i2 = indices[i + 2];
 
 			// 頂点3つの座標を取得
-			const Vec3& v0 = vertices[i0].position;
-			const Vec3& v1 = vertices[i1].position;
-			const Vec3& v2 = vertices[i2].position;
+			const Vector3& v0 = vertices[i0].position;
+			const Vector3& v1 = vertices[i1].position;
+			const Vector3& v2 = vertices[i2].position;
 
 			// 取得した頂点座標から
 			// 面を構成する2辺a, bを求める
-			const Vec3 a = { v1.x - v0.x, v1.y - v0.y, v1.z - v0.z };
-			const Vec3 b = { v2.x - v0.x, v2.y - v0.y, v2.z - v0.z };
+			const Vector3 a = { v1.x - v0.x, v1.y - v0.y, v1.z - v0.z };
+			const Vector3 b = { v2.x - v0.x, v2.y - v0.y, v2.z - v0.z };
 
 			// 外積によってaとbに垂直なベクトル(法線)を求める
 			const float cx = a.y * b.z - a.z * b.y;
@@ -195,7 +195,7 @@ namespace PokarinEngine
 			const float l = sqrt(cx * cx + cy * cy + cz * cz);
 
 			// 正規化した法線ベクトル
-			const Vec3 normal = { cx / l, cy / l, cz / l };
+			const Vector3 normal = { cx / l, cy / l, cz / l };
 
 			// 法線が設定されていない頂点にだけ法線を加算
 			// 複数の面の法線を加算することで、法線の向きを平均化する
@@ -226,7 +226,7 @@ namespace PokarinEngine
 			if (missingNormals[i])
 			{
 				// 法線ベクトル
-				Vec3& n = vertices[i].normal;
+				Vector3& n = vertices[i].normal;
 
 				// ベクトルの大きさ
 				const float l = sqrt(n.x * n.x + n.y * n.y + n.z * n.z);
@@ -527,13 +527,13 @@ namespace PokarinEngine
 		それからOpenGLで描画できるデータに変換する */
 
 		// 頂点座標
-		std::vector<Vec3> positions;
+		std::vector<Vector3> positions;
 
 		// テクスチャ座標
-		std::vector<Vec2> texcoords;
+		std::vector<Vector2> texcoords;
 
 		// 法線ベクトル
-		std::vector<Vec3> normals;
+		std::vector<Vector3> normals;
 
 		// 頂点座標, テクスチャ座標, 法線ベクトルの
 		// インデックスデータの組
@@ -601,7 +601,7 @@ namespace PokarinEngine
 			// -----------------------------
 
 			// データ格納用(頂点座標)
-			Vec3 v(0);
+			Vector3 v(0);
 
 			//「読み取ったデータの数」が「データ格納用変数の数」と一致したら
 			// 読み取り成功と判断
@@ -623,7 +623,7 @@ namespace PokarinEngine
 			// ------------------------------------
 
 			// データ格納用(テクスチャ座標)
-			Vec2 vt(0);
+			Vector2 vt(0);
 
 			// 「読み取ったデータの数」が「データ格納用変数の数」と一致したら
 			// 読み取り成功と判断		
@@ -645,7 +645,7 @@ namespace PokarinEngine
 			// --------------------------
 
 			// データ格納用(法線ベクトル)
-			Vec3 vn(0);
+			Vector3 vn(0);
 
 			// 法線を読み取る
 			if (sscanf(p, " vn %f %f %f", &vn.x, &vn.y, &vn.z) == 3)
@@ -852,7 +852,7 @@ namespace PokarinEngine
 			else
 			{
 				// 新しい頂点データを作成
-				Vertex v = { Vec3(0), Vec2(0), Vec3(0) };
+				Vertex v = { Vector3(0), Vector2(0), Vector3(0) };
 
 				/* 添字を「-1」しているのは、
 				OBJファイルのインデックスは1から始まるのに対して、
@@ -1149,7 +1149,7 @@ namespace PokarinEngine
 	StaticMeshPtr MeshBuffer::GetStaticMesh(const char* filename)
 	{
 		// スタティックメッシュが登録されているなら検索
-		if (staticMeshList.size() > 0)
+		if (!staticMeshList.empty())
 		{
 			// 検索結果
 			auto itr = staticMeshList.find(filename);

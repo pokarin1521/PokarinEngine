@@ -29,6 +29,9 @@ layout(binding = 1) uniform sampler2D texEmission;
 // プログラムからの入力
 // ----------------------------
 
+/* ユニフォーム変数のロケーション番号は全ステージ共有なので
+頂点シェーダと重複しないように100から指定する */
+
 // オブジェクトの色
 layout(location = 100) uniform vec4 color;		
 
@@ -36,17 +39,31 @@ layout(location = 100) uniform vec4 color;
 // エミッションテクスチャの管理番号
 layout(location = 101) uniform vec4 emission;
 
-// 点光源パラメータ
+// 環境光
+
+// 平行光源
+struct DirectionalLight
+{
+	vec3 color;		// 色と明るさ
+	vec3 direction; // 光の向き
+};
+
+// 平行光源
+layout(location = 108) uniform DirectionalLight directionalLight;
+
+
+// ライト
+// 点光源とスポットライトに対応
 struct Light
 {
 	// 明るさを反映した色, 減衰開始角度
 	vec4 colorAndFalloffAngle[16];	
 	
-	// 座標と半径
-	vec4 positionAndRadius[16];		
+	// 座標と範囲(半径)
+	vec4 positionAndRange[16];		
 	
 	// 向き, 最大照射角度
-	vec4 directionAndConeAngle[16];
+	vec4 directionAndSpotAngle[16];
 };
 
 // ライトの数
@@ -54,9 +71,9 @@ layout(location = 110) uniform int lightCount;
 
 // ユニフォーム変数に構造体や配列を指定すると、
 // メンバまたは配列要素ごとにロケーション番号が割り振られる
-// (今回は、color = 111番, positionAndRadius = 112番)
+// (今回は、color = 111番, positionAndRange = 112番)
 
-// ポイントライト
+// ライト(ポイント・スポット)
 layout(location = 111) uniform Light light;
 
 // 出力する色データ
@@ -64,9 +81,9 @@ out vec4 outColor;
 
 void main()
 {
-	// -------------------
+	// -------------------------
 	// テクスチャの設定
-	// -------------------
+	// -------------------------
 
 	// サプライ変数が参照するユニットに割り当てられたテクスチャから、
 	// テクスチャ座標のピクセル値を読み取って返す
@@ -78,6 +95,32 @@ void main()
 	c.rgb = pow(c.rgb, vec3(crtGamma)); 
 
 	outColor = c * color;
+
+	// -----------------------------
+	// 法線の正規化
+	// -----------------------------
+
+	/* 頂点シェーダの出力変数の値は、
+	そのままフラグメントシェーダにコピーされるわけではない
+
+	頂点シェーダの計算結果は「頂点座標における値」
+	しかし、フラグメントシェーダは
+	「頂点間にある全てのピクセル」に対して実行される 
+	
+	そこで、「ピクセルから頂点までの距離に応じて頂点の値を混合」することで、
+	中間領域にあるピクセルの値を作り出す
+	この操作は「線形補間」という方法で行われる
+
+	例えば、頂点シェーダがoutColorに頂点の色を書き込み、
+	フラグメントシェーダがinColorで受け取る場合
+
+	頂点Aが赤(1, 0, 0)、頂点Bが青(0, 0, 1)をoutColorに代入したとき、
+	AとBの中間にあるピクセルのinColorには(0.5, 0, 0.5)という値が代入される */
+
+	// 線形補間によって長さが1ではなくなっているので、
+	// 正規化して長さを1に復元する
+	// (内積でcosθを求めるため)
+	vec3 normal = normalize(inNormal);
 
 	// ----------------------------------------
 	// 光の明るさを計算(ランバート反射)
@@ -101,15 +144,14 @@ void main()
 	// ライトの計算
 	for(int i = 0; i < lightCount; ++i)
 	{
-		// ---------------------------- 
+		// ----------------------------
 		// 計算に必要な値を求める 
 		// ----------------------------
 
 		// ポイントライトの座標
-		vec3 lightPosition = light.positionAndRadius[i].xyz;
+		vec3 lightPosition = light.positionAndRange[i].xyz;
 
-		// オブジェクトから見た
-		// ポイントライトの方向
+		// フラグメントから見たポイントライトの方向
 		vec3 direction = lightPosition - inPosition;
 
 		// 光源までの距離
@@ -119,28 +161,6 @@ void main()
 		// 方向を正規化して長さを1にする
 		// (内積でcosθを求めるため)
 		direction = normalize(direction);
-
-		/* 頂点シェーダの出力変数の値は、
-		そのままフラグメントシェーダにコピーされるわけではない
-
-		頂点シェーダの計算結果は「頂点座標における値」
-		しかし、フラグメントシェーダは
-		「頂点間にある全てのピクセル」に対して実行される 
-		
-		そこで、「ピクセルから頂点までの距離に応じて頂点の値を混合」することで、
-		中間領域にあるピクセルの値を作り出す
-		この操作は「線形補間」という方法で行われる
-
-		例えば、頂点シェーダがoutColorに頂点の色を書き込み、
-		フラグメントシェーダがinColorで受け取る場合
-
-		頂点Aが赤(1, 0, 0)、頂点Bが青(0, 0, 1)をoutColorに代入したとき、
-		AとBの中間にあるピクセルのinColorには(0.5, 0, 0.5)という値が代入される */
-
-		// 線形補間によって長さが1ではなくなっているので、
-		// 正規化して長さを1に復元する
-		// (内積でcosθを求めるため)
-		vec3 normal = normalize(inNormal);
 
 		// ----------------------------------------------
 		// ランベルトの余弦則を使って明るさを計算 
@@ -152,15 +172,16 @@ void main()
 		物体のある点で反射した光(反射光)の強さは、
 		その点の法線と光源方向のなす角θの余弦(cos)と正比例する */
 
-		// ポイントライトの方向ベクトルと法線ベクトルのなす角
-		// なす角の範囲は0 ～ 90なので、
-		// max関数でcosθが0以上になるようにしている
-		// (ベクトルを正規化しているので、dotの結果はcosθになる)
+		/* なす角の範囲は0 ～ 90なので、
+		max関数でcosθが0以上になるようにしている
+		(ベクトルを正規化しているので、dotの結果はcosθになる) */
+
+		// 光源の方向ベクトルと法線ベクトルのなす角
 		float theta = max(dot(direction, normal), 0);
 
-		// 拡散反射では入射光が「全方位に均等に反射」される
-		// このとき、ある方向に反射する光の量は入射光の「1/π倍」になる
-		// そのため、正しい明るさを得るには内積の結果をπで割る必要がある
+		/* 拡散反射では入射光が「全方位に均等に反射」される
+		このとき、ある方向に反射する光の量は入射光の「1/π倍」になる
+		そのため、正しい明るさを得るには内積の結果をπで割る必要がある */
 
 		// 照度
 		float illnuminance = theta / 3.14159265;
@@ -168,20 +189,20 @@ void main()
 		// ----------- スポットライトかどうか確認  -------------
 
 		// 最大照射角度
-		const float coneAngle = light.directionAndConeAngle[i].w;
+		const float spotAngle = light.directionAndSpotAngle[i].w;
 
 		// 照射角度が0より大きければスポットライトとみなす
-		if(coneAngle > 0)
+		if(spotAngle > 0)
 		{
 			// スポットライトの向き
-			vec3 lightDiretion = light.directionAndConeAngle[i].xyz;
+			vec3 lightDiretion = light.directionAndSpotAngle[i].xyz;
 
 			//「ライトからフラグメントへ向かうベクトル」と
 			//「スポットライトの向きベクトル」のなす角を計算
 			float angle = acos(dot(-direction, lightDiretion));
 
-			// 角度がconeAngle以上なら範囲外
-			if(angle >= coneAngle)
+			// 角度がspotAngle以上なら範囲外
+			if(angle >= spotAngle)
 			{
 				// 範囲外なら計算の必要はない
 				continue;
@@ -193,11 +214,11 @@ void main()
 			// 最大照射角度のとき0, 
 			// 減衰開始角度のとき1になるように補間
 			const float a = min(
-				(coneAngle - angle) / (coneAngle - falloffAngle), 1);
+				(spotAngle - angle) / (spotAngle - falloffAngle), 1);
 
 			illnuminance *= a;
 
-		} // if coneAngle
+		} // if spotAngle
 
 		// --------- ライトの最大距離を制限				   ---------
 		// --------- 計算はUE4などで採用されている式を使う ---------
@@ -208,11 +229,11 @@ void main()
 								distance^2 + 1                    
 		*/
 	
-		// ライトの半径
-		const float radius = light.positionAndRadius[i].w;
+		// ライトの範囲(半径)
+		const float range = light.positionAndRange[i].w;
 
 		// clamp関数で、0 ～ 1の範囲になるようにする
-		const float smoothFactor = clamp(1 - pow(distance / radius, 4), 0, 1);
+		const float smoothFactor = clamp(1 - pow(distance / range, 4), 0, 1);
 
 		// ライトの最大距離を制限
 		illnuminance *= smoothFactor * smoothFactor;
@@ -228,6 +249,31 @@ void main()
 		diffuse += lightColor * illnuminance;
 
 	} // for lightCount
+
+	// --------- 平行光源の明るさを計算 ---------
+
+	/* 平行光源には「光源の座標(発射点)」がないので、
+	光の向きには「平行光源の向き」をそのまま使う
+	
+	明るさは「法線と向きの内積」で求める */
+
+	/* なす角の範囲は0 ～ 90なので、
+	max関数でcosθが0以上になるようにしている
+	(ベクトルを正規化しているので、dotの結果はcosθになる) */
+
+	// 平行光源の方向ベクトルと法線ベクトルのなす角
+	// 「フラグメントから見た光の向き」が必要なので向きを逆にする
+	float theta = max(dot(-directionalLight.direction, normal), 0);
+
+	/* 拡散反射では入射光が「全方位に均等に反射」される
+	このとき、ある方向に反射する光の量は入射光の「1/π倍」になる
+	そのため、正しい明るさを得るには内積の結果をπで割る必要がある */
+
+	// 照度
+	float illnuminance = theta / 3.14159265;
+
+	// 拡散光の明るさを加算
+	diffuse += directionalLight.color * illnuminance;
 
 	// ---------- 拡散光の影響を反映 ------------
 

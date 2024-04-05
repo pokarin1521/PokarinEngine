@@ -55,7 +55,7 @@ namespace PokarinEngine
 			ImGui::Separator();
 
 			// コンポーネントを表示
-			for (ComponentPtr component : selectObject->components)
+			for (ComponentPtr component : selectObject->componentList)
 			{
 				component->RenderEditor();
 			}

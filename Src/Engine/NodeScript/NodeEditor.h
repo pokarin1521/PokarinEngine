@@ -49,12 +49,6 @@ namespace PokarinEngine
 			ImNodes::EditorContextFree(nodeEditorContext);
 		}
 
-	public: // -------------------- 型の別名を定義 ---------------------
-
-		// <ノードAの識別番号, ノードBの識別番号>
-		using LinkPair = std::pair<int, int>;
-		using LinkPairList = std::vector<LinkPair>;
-
 	public: // ------------------------- 制御 --------------------------
 
 		/// <summary>
@@ -68,10 +62,19 @@ namespace PokarinEngine
 
 	public: // --------------------- ノードの追加 ----------------------
 
-		void AddNode(NodePtr node)
-		{
-			nodeList.emplace(node);
-		}
+		/// <summary>
+		/// ノードを追加する
+		/// </summary>
+		/// <param name="node"> 追加するノード </param>
+		void AddNode(NodePtr node);
+
+	public: // ----------------- ノードの入出力用ピン ------------------
+
+		/// <summary>
+		/// ノードの入出力用ピンの識別番号を取得する
+		/// </summary>
+		/// <returns> 重複しない識別番号 </returns>
+		int GetSinglePinID();
 
 	public: // ---------------------- 情報の取得 -----------------------
 
@@ -115,7 +118,24 @@ namespace PokarinEngine
 			isOpen = true;
 		}
 
-	private: // ------------------------- 情報 -------------------------
+	private: // ----------------------- 型の別名を定義 -------------------------
+
+		// <ノードAの識別番号, ノードBの識別番号>
+		using LinkPair = std::pair<int, int>;
+		using LinkPairList = std::vector<LinkPair>;
+
+		using IDList = std::unordered_set<int>;
+
+	private: // --------------------------- 識別番号 ---------------------------
+
+		/// <summary>
+		/// 重複しない識別番号を配列に追加する
+		/// </summary>
+		/// <param name="idList"> 識別番号を追加する配列 </param>
+		/// <returns> 重複しない識別番号 </returns>
+		int AddSingleID(IDList& idList);
+
+	private: // ------------------------- ノード管理用 -------------------------
 
 		// ノード管理用配列
 		NodeList nodeList;
@@ -123,11 +143,22 @@ namespace PokarinEngine
 		// ノードのリンク状態を管理する配列
 		LinkPairList linkPairList;
 
-		// ノードエディタの持ち主
-		GameObject* owner = nullptr;
+		// ノードの識別番号を管理する配列
+		IDList nodeIDList;
+
+		// ノードの入出力用ピンの識別番号を管理する配列
+		IDList nodePinIDList;
+
+	private: // --------------------- ノードエディタの情報 ---------------------
+
+		// ノードエディタ用コンテキスト
+		ImNodesEditorContext* nodeEditorContext = nullptr;
 
 		// ImGuiウィンドウ
 		ImGuiWindow* imGuiWindow = nullptr;
+
+		// ノードエディタの持ち主
+		GameObject* owner = nullptr;
 
 		// ノードエディタの名前
 		// ImGuiウィンドウ作成時のタイトルにする
@@ -135,9 +166,6 @@ namespace PokarinEngine
 
 		// ノードエディタが開いているならtrue
 		bool isOpen = false;
-
-		// ノードエディタ用コンテキスト
-		ImNodesEditorContext* nodeEditorContext = nullptr;
 	};
 
 } // namespace PokarinEngine

@@ -34,7 +34,7 @@ namespace PokarinEngine
 			// ボタンが押されたので
 			// 現在のシーンにオブジェクトを作成
 			GameObjectPtr object = engine->GetCurrentScene().CreateGameObject(
-				typeName, Vec3(0), Vec3(0), staticMeshFile);
+				typeName, Vector3(0), Vector3(0), staticMeshFile);
 		}
 
 		// ボタン色の設定を終了

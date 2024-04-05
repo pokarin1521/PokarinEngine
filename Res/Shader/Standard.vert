@@ -41,7 +41,7 @@ layout(location = 4) uniform vec3 cameraPosition; // カメラの位置
 layout(location = 5) uniform vec3 cameraRotation;  // カメラの角度
 
 /**
-* ベクトルをX軸->Y軸の順で回転させる
+* ベクトルをZ軸->X軸->Y軸の順で回転させる
 * 
 * @param v				回転させるベクトル
 * @param sinRotation	各軸のSin

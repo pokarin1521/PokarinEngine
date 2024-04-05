@@ -72,10 +72,10 @@ namespace PokarinEngine
 				const GLFWvidmode mainMonitor = Window::GetMainMonitor();
 
 				// マウスカーソルの位置
-				Vec2 mousePos = GetScreenPos(windowID);
+				Vector2 mousePos = GetScreenPos(windowID);
 
 				// マウスカーソルの大きさ
-				Vec2 cursorSize = { 2, 35 };
+				Vector2 cursorSize = { 2, 35 };
 
 				// マウスカーソルの大きさを考慮した上で、
 				// マウスカーソルがメインモニターの端にいるかを返す
@@ -88,11 +88,11 @@ namespace PokarinEngine
 			/// </summary>
 			/// <param name="windowID"> ウィンドウ識別番号 </param>
 			/// <returns> スクリーン座標系のマウスカーソル座標 </returns>
-			Vec2 GetScreenPos(WindowID windowID)
+			Vector2 GetScreenPos(WindowID windowID)
 			{
 				double w = 0, h = 0;
 				glfwGetCursorPos(&Window::GetWindow(windowID), &w, &h);
-				return Vec2(static_cast<float>(w), static_cast<float>(h));
+				return Vector2(static_cast<float>(w), static_cast<float>(h));
 			}
 
 			/// <summary>
@@ -100,14 +100,14 @@ namespace PokarinEngine
 			/// </summary>
 			/// <param name="windowID"> ウィンドウ識別番号 </param>
 			/// <returns> ビュー座標系のカーソル座標 </returns>
-			Vec2 GetViewPos(WindowID windowID)
+			Vector2 GetViewPos(WindowID windowID)
 			{
 				// -----------------------------------------
 				// スクリーン座標系のカーソル座標を取得
 				// -----------------------------------------
 
 				// 戻り値の型に合わせるために、floatにキャスト
-				const Vec2 pos = { GetScreenPos(windowID) };
+				const Vector2 pos = { GetScreenPos(windowID) };
 
 				// ------------------------------------------------------
 				// UILayerの座標系に合わせるために、
@@ -118,7 +118,7 @@ namespace PokarinEngine
 				int w = 0, h = 0;
 
 				// 型を合わせるために、キャスト
-				const Vec2 framebufferSize = { static_cast<float>(w),static_cast<float>(h) };
+				const Vector2 framebufferSize = { static_cast<float>(w),static_cast<float>(h) };
 
 				// アスペクト比を取得
 				const float aspectRatio = framebufferSize.x / framebufferSize.y;
@@ -134,7 +134,7 @@ namespace PokarinEngine
 			/// </summary>
 			/// <param name="windowID"> ウィンドウ識別番号 </param>
 			/// <param name="mousePos"> マウスカーソルの座標 </param>
-			void SetScreenPos(WindowID windowID, Vec2 mousePos)
+			void SetScreenPos(WindowID windowID, Vector2 mousePos)
 			{
 				glfwSetCursorPos(&Window::GetWindow(windowID), mousePos.x, mousePos.y);
 			}

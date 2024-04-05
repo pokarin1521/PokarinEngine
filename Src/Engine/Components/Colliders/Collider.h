@@ -5,7 +5,8 @@
 #define COLLIDER_H_INCLUDED
 
 #include "../Component.h"
-#include "../../VecMath.h"
+#include "../../Math/Vector.h"
+#include "../../Math/Matrix.h"
 
 #include <memory>
 
@@ -49,13 +50,18 @@ namespace PokarinEngine
 		/// <summary>
 		/// コライダーの座標を変更する
 		/// </summary>
-		virtual void AddPosition(const Vec3& translate) = 0;
+		virtual void AddPosition(const Vector3& translate) = 0;
 
 		/// <summary>
 		/// 座標変換したコライダーを取得する
 		/// </summary>
 		virtual ColliderPtr GetTransformedCollider(
-			const Mat4& transform) const = 0;
+			const Matrix4x4& transform) const = 0;
+
+		/// <summary>
+		/// エディタ描画用
+		/// </summary>
+		virtual void RenderEditor() override {}
 
 	public: // ----------- コライダーの情報 -----------
 

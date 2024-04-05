@@ -84,7 +84,7 @@ namespace PokarinEngine
 		/// <param name="staticMeshFile"> スタティックメッシュのファイル名 </param>
 		/// <returns> 追加したゲームオブジェクトのポインタ </returns>
 		GameObjectPtr CreateGameObject(const std::string& name,
-			const Vec3& position = { 0,0,0 }, const Vec3& rotation = { 0,0,0 },
+			const Vector3& position = { 0,0,0 }, const Vector3& rotation = { 0,0,0 },
 			const char* staticMeshFile = "");
 
 		/// <summary>
@@ -122,8 +122,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// シーン内の全てのゲームオブジェクトを描画する
 		/// </summary>
-		/// <param name="shaderProgList"> シェーダプログラム配列 </param>
-		void DrawGameObjectAll(const Shader::ProgList& shaderProgList);
+		void DrawGameObjectAll();
 
 		/// <summary>
 		/// 削除するゲームオブジェクトを完全に削除する
@@ -181,14 +180,6 @@ namespace PokarinEngine
 		// 識別番号は1つずつしかないので重複禁止
 		using ObjectIDList = std::unordered_set<int>;
 
-	private: // ----------------- ゲームオブジェクトの追加 -------------------
-
-		/// <summary>
-		/// ゲームオブジェクトを追加する
-		/// </summary>
-		/// <param name="object"> 追加するゲームオブジェクト </param>
-		void AddGameObject(GameObjectPtr object);
-
 	private: // ---------------------- 名前・識別番号 ------------------------
 
 		/// <summary>
@@ -203,10 +194,10 @@ namespace PokarinEngine
 		std::string GetSingleObjectName(const std::string& typeName) const;
 
 		/// <summary>
-		/// 他のオブジェクトと重複しない識別番号を取得する
+		/// 他のオブジェクトと重複しない識別番号を配列に追加する
 		/// </summary>
 		/// <returns> 重複しない識別番号(乱数) </returns>
-		int GetSingleObjectID() const;
+		int AddSingleObjectID();
 
 	private: // --------------------------- 情報 ---------------------------
 

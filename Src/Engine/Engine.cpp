@@ -7,7 +7,7 @@
 #include "InputManager.h"
 
 #include "Debug.h"
-#include "LightManager.h"
+#include "LightParameter.h"
 
 #include "EasyAudio/EasyAudio.h"
 
@@ -24,11 +24,10 @@
 #include <filesystem>
 #include <vector>
 #include <cmath>
-#include <stdio.h>
+#include <cstdio>
 
 namespace PokarinEngine
 {
-
 #pragma region CopyParameter
 
 	/// <summary>
@@ -40,16 +39,14 @@ namespace PokarinEngine
 		GLuint prog, const Transform& camera)
 	{
 		// カメラパラメータを設定
-		glProgramUniform3fv(prog, LocationNum::cameraPosition,
+		glProgramUniform3fv(prog, UniformLocation::cameraPosition,
 			1, &camera.position.x);
 
 		// 回転の計算をするためにsin,cosで渡す
 		// カメラの回転方向とオブジェクトの移動方向が逆なので、マイナスにする
 		// (カメラが右に回転する = オブジェクトが左に回転する)
-		glProgramUniform3f(prog, LocationNum::cameraRotation,
-			-camera.rotation.x,
-			-camera.rotation.y,
-			-camera.rotation.z);
+		glProgramUniform3f(prog, UniformLocation::cameraRotation,
+			-camera.rotation.x, -camera.rotation.y, -camera.rotation.z);
 	}
 
 #pragma endregion
@@ -185,23 +182,14 @@ namespace PokarinEngine
 		// エディタを初期化
 		// -----------------------------
 
+		// メインエディタ
 		mainEditor.Initialize(*this);
-
-		// サブウィンドウに設定されている可能性があるので
-		// コンテキストをメインウィンドウに設定する
-		glfwMakeContextCurrent(&Window::GetWindow(WindowID::Main));
-
-		// -----------------------
-		// ライトを初期化
-		// -----------------------
-
-		LightManager::InitializeLight();
 
 		// -----------------------
 		// シェーダの初期化
 		// -----------------------
 
-		Shader::Initialize(shaderProgList);
+		Shader::Initialize();
 
 		// ---------------------------------------
 		// メッシュバッファを作成
@@ -235,9 +223,9 @@ namespace PokarinEngine
 			currentScene = Scene::Create(*this, "SampleScene");
 		}
 
-		// -----------------------------------------------
-		// ノードスクリプトを初期化する
-		// -----------------------------------------------
+		// ------------------------------------
+		// ノードスクリプトを初期化
+		// ------------------------------------
 
 		NodeScript::Initialize();
 
@@ -348,12 +336,15 @@ namespace PokarinEngine
 		// アスペクト比と視野角を設定
 		const float aspectRatio = Window::GetAspectRatio(WindowID::Main);
 
+		// 全てのシェーダプログラムの管理番号
+		Shader::ProgList allProg = Shader::GetAllProgram();
+
 		// [シェーダプログラムの種類, シェーダプログラムの管理番号]
-		for (auto& [type, prog] : shaderProgList)
+		for (auto& [type, prog] : allProg)
 		{
 			// アスペクト比と視野角による拡大率を設定
 			// GPU側での除算を避けるため、逆数にして渡す
-			glProgramUniform2f(prog, LocationNum::aspectRatioAndScaleFov,
+			glProgramUniform2f(prog, UniformLocation::aspectRatioAndScaleFov,
 				1 / aspectRatio, currentScene->GetCameraInfo().GetFovScale());
 
 			CopyCameraParameters(prog, camera);
@@ -373,11 +364,11 @@ namespace PokarinEngine
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glBlendEquation(GL_FUNC_ADD);
 
-		// -------------------------------
-		// ライトデータをGPUにコピー
-		// -------------------------------
+		// ----------------------------------
+		// ライト情報をGPUにコピー
+		// ----------------------------------
 
-		LightManager::Update(shaderProgList[Shader::ProgType::Standard], currentScene->GetMainCamera());
+		LightParameter::CopyGPU(currentScene->GetMainCamera());
 
 		// -----------------------------------
 		// 描画用ビューのFBOをバインド
@@ -393,7 +384,7 @@ namespace PokarinEngine
 		glBindVertexArray(*meshBuffer->GetVAO());
 
 		// シーン内のゲームオブジェクトを描画する
-		currentScene->DrawGameObjectAll(shaderProgList);
+		currentScene->DrawGameObjectAll();
 
 		// 誤操作のないようにバインドを解除
 		glBindVertexArray(0);
@@ -421,7 +412,7 @@ namespace PokarinEngine
 	/// <returns></returns>
 	template<typename T, typename U>
 	bool CallIntersect(
-		const ColliderPtr& a, const ColliderPtr& b, Vec3& p)
+		const ColliderPtr& a, const ColliderPtr& b, Vector3& p)
 	{
 		return Intersect(static_cast<T&>(*a).GetShape(),
 			static_cast<U&>(*b).GetShape(), p);
@@ -443,7 +434,7 @@ namespace PokarinEngine
 	/// </returns>
 	template<typename T, typename U>
 	bool CallIntersectReverse(
-		const ColliderPtr& a, const ColliderPtr& b, Vec3& p)
+		const ColliderPtr& a, const ColliderPtr& b, Vector3& p)
 	{
 		if (Intersect(static_cast<U&>(*b).GetShape(),
 			static_cast<T&>(*a).GetShape(), p))
@@ -480,7 +471,7 @@ namespace PokarinEngine
 		for (auto& gameObject : gameObjectList)
 		{
 			// ゲームオブジェクトにコライダーがなければ何もしない
-			if (gameObject->colliders.empty())
+			if (gameObject->colliderList.empty())
 			{
 				continue;
 			}
@@ -493,16 +484,16 @@ namespace PokarinEngine
 			// -------------------------------------------------
 
 			// ワールド座標系コライダーの配列
-			WorldColliderList list(gameObject->colliders.size());
+			WorldColliderList list(gameObject->colliderList.size());
 
 			// ワールド座標系に変換
-			for (int i = 0; i < gameObject->colliders.size(); ++i)
+			for (int i = 0; i < gameObject->colliderList.size(); ++i)
 			{
 				// オブジェクトのコライダー
-				ColliderPtr collider = gameObject->colliders[i];
+				ColliderPtr collider = gameObject->colliderList[i];
 
 				// 座標変換行列
-				Mat4 transformMatrix = gameObject->transform->GetTransformMatrix();
+				Matrix4x4 transformMatrix = gameObject->transform->GetTransformMatrix();
 
 				// ゲームオブジェクトのコライダーを設定
 				list[i].origin = collider;
@@ -571,7 +562,7 @@ namespace PokarinEngine
 	{
 		// 関数ポインタ型を定義
 		using FuncType = bool(*)(
-			const ColliderPtr&, const ColliderPtr&, Vec3&);
+			const ColliderPtr&, const ColliderPtr&, Vector3&);
 
 		// 組み合わせに対応する交差判定関数を選ぶための配列
 		static const FuncType funcList[2][2] = {
@@ -602,7 +593,7 @@ namespace PokarinEngine
 				}
 
 				// 貫通ベクトル
-				Vec3 penetration = Vec3(0);
+				Vector3 penetration = Vector3(0);
 
 				// colAの図形の種類番号
 				const int typeA = static_cast<int>(colA.origin->GetType());
@@ -654,7 +645,7 @@ namespace PokarinEngine
 						{
 							// 貫通ベクトルの半分
 							// 均等に移動させるため
-							Vec3 halfPenetration = penetration * 0.5f;
+							Vector3 halfPenetration = penetration * 0.5f;
 
 							// 貫通距離の半分だけ
 							// 貫通した方向に移動
@@ -695,7 +686,7 @@ namespace PokarinEngine
 	/// <param name="gameObject"> ゲームオブジェクト </param>
 	/// <param name="penetration"> 貫通ベクトル </param>
 	void Engine::ApplyPenetration(WorldColliderList* worldColliders,
-		GameObject& gameObject, const Vec3& penetration)
+		GameObject& gameObject, const Vector3& penetration)
 	{
 		// ---------------------------------------------------------
 		// 接地判定
@@ -721,7 +712,7 @@ namespace PokarinEngine
 		if (penetration.y > 0)
 		{
 			// 貫通距離
-			const float distance = Vec3_Function::Length(penetration);
+			const float distance = penetration.Length();
 
 			// 貫通ベクトルの向きが30度以下なら床と判断
 			// acosを避けるためcosで比較しているので、
@@ -841,14 +832,14 @@ namespace PokarinEngine
 	/// マウス座標から発射される光線を取得する
 	/// </summary>
 	/// <returns> マウス座標から発射される光線 </returns>
-	Ray Engine::GetRayFromMousePosition() const
+	Collision::Ray Engine::GetRayFromMousePosition() const
 	{
 		// ----------------------------------------------
 		// スクリーン座標系のマウスカーソル座標を取得
 		// ----------------------------------------------
 
 		// マウスカーソル座標
-		Vec2 mousePos = Input::Mouse::GetScreenPos(WindowID::Main);
+		Vector2 mousePos = Input::Mouse::GetScreenPos(WindowID::Main);
 
 		// -------------------------------------
 		// スクリーン座標系からNDC座標系
@@ -867,16 +858,16 @@ namespace PokarinEngine
 		NDC座標系のY軸は上がプラスなので、Y軸を符号反転する */
 
 		// スクリーンのピクセル数
-		Vec2 windowSize = Window::GetWindowSize(WindowID::Main);
+		Vector2 windowSize = Window::GetWindowSize(WindowID::Main);
 
 		// 光線の発射点の座標
-		Vec3 nearPos = {
+		Vector3 nearPos = {
 			static_cast<float>(mousePos.x / windowSize.x * 2 - 1),
 			-static_cast<float>(mousePos.y / windowSize.y * 2 - 1),
 			-1 };
 
 		// 光線の終着点の座標
-		Vec3 farPos = { nearPos.x, nearPos.y, 1 };
+		Vector3 farPos = { nearPos.x, nearPos.y, 1 };
 
 		// -------------------------------------
 		// NDC座標系からクリップ座標系に変換
@@ -988,7 +979,7 @@ namespace PokarinEngine
 		// -----------------------------------
 
 		// 光線の向きベクトル
-		Vec3 direction = farPos - nearPos;
+		Vector3 direction = farPos - nearPos;
 
 		// 正規化するために、ベクトルの長さを求める
 		const float length = sqrt(
@@ -999,7 +990,7 @@ namespace PokarinEngine
 		// 正規化
 		direction *= 1.0f / length;
 
-		return Ray{ nearPos, direction };
+		return Collision::Ray{ nearPos, direction };
 	}
 
 	/// <summary>
@@ -1012,7 +1003,7 @@ namespace PokarinEngine
 	/// <para> true : コライダーと交差した </para>
 	/// <para> false : コライダーと交差しなかった </para>
 	/// </returns>
-	bool Engine::Raycast(const Ray& ray, RaycastHit& hitInfo,
+	bool Engine::Raycast(const Collision::Ray& ray, RaycastHit& hitInfo,
 		const RaycastPredicate& pred) const
 	{
 		// 交点の情報を初期化
@@ -1023,7 +1014,7 @@ namespace PokarinEngine
 		for (auto& gameObject : currentScene->GetGameObjectAll())
 		{
 			// コライダー
-			for (auto& collider : gameObject->colliders)
+			for (auto& collider : gameObject->colliderList)
 			{
 				// コライダーをワールド座標系に変換
 				const auto worldCollider = collider->GetTransformedCollider(
@@ -1044,7 +1035,7 @@ namespace PokarinEngine
 				{
 				case Collider::Type::AABB:
 
-					AABB aabb =
+					Collision::AABB aabb =
 						static_cast<AabbCollider&>(*worldCollider).aabb;
 
 					// 交差判定
@@ -1054,7 +1045,7 @@ namespace PokarinEngine
 
 				case Collider::Type::Sphere:
 
-					Sphere sphere =
+					Collision::Sphere sphere =
 						static_cast<SphereCollider&>(*worldCollider).sphere;
 
 					// 交差判定
@@ -1084,7 +1075,7 @@ namespace PokarinEngine
 					hitInfo.distance = distance;
 				}
 
-			} // for colliders
+			} // for colliderList
 		} // for gameObjectList
 
 		// ------------------------------------

@@ -8,7 +8,7 @@
 #include "Components/Colliders/AabbCollider.h"
 #include "Texture.h"
 
-#include "VecMath.h"
+#include "Math/Vector.h"
 #include "Color.h"
 
 #include "UsingNames/UsingMesh.h"
@@ -90,11 +90,11 @@ namespace PokarinEngine
 			if constexpr (std::is_base_of_v<Collider, T>)
 			{
 				// コライダーの追加
-				colliders.push_back(p);
+				colliderList.push_back(p);
 			}
 
 			// コンポーネントの追加
-			components.push_back(p);
+			componentList.push_back(p);
 
 			// コンポーネント追加時の処理を実行
 			p->Awake();
@@ -111,7 +111,7 @@ namespace PokarinEngine
 		std::shared_ptr<T> GetComponent() const 
 		{
 			// コンポーネント
-			for (auto& e : components)
+			for (auto& e : componentList)
 			{
 				// コンポーネントがT型
 				// またはTの派生クラスの場合に変換が成功する
@@ -259,12 +259,12 @@ namespace PokarinEngine
 	public: // ------------------------ コンポーネント -------------------------
 
 		// コンポーネント管理用配列
-		std::vector<ComponentPtr> components;
+		std::vector<ComponentPtr> componentList;
 
 	public: // -------------------------- コライダー ---------------------------
 
 		// コライダー管理用配列
-		std::vector<ColliderPtr> colliders;
+		std::vector<ColliderPtr> colliderList;
 
 	private: // --------------------------- シーン -----------------------------
 

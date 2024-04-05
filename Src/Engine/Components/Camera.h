@@ -6,7 +6,7 @@
 
 #include "Component.h"
 
-#include "../VecMath.h"
+#include "../Math/Angle.h"
 
 #include <memory>
 
@@ -24,7 +24,7 @@ namespace PokarinEngine
 	public: // ------------------ コンストラクタ・デストラクタ -------------------
 
 		Camera() = default;
-		virtual ~Camera() = default;
+		~Camera() = default;
 
 	public: // -------------------------- 視野角の取得 ---------------------------
 

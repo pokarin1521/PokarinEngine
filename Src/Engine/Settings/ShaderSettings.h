@@ -18,22 +18,31 @@ namespace PokarinEngine
 	}
 
 	/// <summary>
-	/// シェーダのロケーション番号
+	/// テクスチャイメージユニットの番号
 	/// </summary>
-	namespace LocationNum
+	namespace TextureBinding
+	{
+		// 通常の色用
+		inline constexpr GLuint color = 0;
+
+		// 発光色用
+		inline constexpr GLuint emission = 1;
+	}
+
+	/// <summary>
+	/// シェーダのユニフォーム変数のロケーション番号
+	/// </summary>
+	namespace UniformLocation
 	{
 		// ------------------------
 		// オブジェクト, カメラ
 		// ------------------------
 
-		// オブジェクトの拡大率
-		inline constexpr GLint scale = 0;
+		// 座標変換ベクトルの行列
+		inline constexpr GLint transformMatrix = 0;
 
-		// オブジェクトの座標
-		inline constexpr GLint position = 1;
-
-		// オブジェクトのX,Y軸回転
-		inline constexpr GLint sinCosXY = 2;
+		// 法線変換ベクトルの行列
+		inline constexpr GLint normalMatrix = 1;
 
 		// アスペクト比と視野角による拡大率
 		inline constexpr GLint aspectRatioAndScaleFov = 3;
@@ -41,7 +50,7 @@ namespace PokarinEngine
 		// カメラの座標
 		inline constexpr GLint cameraPosition = 4;
 
-		// カメラのY軸回転
+		// カメラの回転角度
 		inline constexpr GLint cameraRotation = 5;
 
 		// オブジェクトの色
@@ -50,9 +59,15 @@ namespace PokarinEngine
 		// オブジェクトの発光色
 		inline constexpr GLint emissionColor = 101;
 
-		// ---------------
+		// -------------------
 		// ライト
-		// ---------------
+		// -------------------
+
+		// 平行光源の色
+		inline constexpr GLint directionalLightColor = 108;
+
+		// 平行光源の向き
+		inline constexpr GLint directionalLightDirection = 109;
 
 		// 使用するライトの数
 		inline constexpr GLint lightCount = 110;
@@ -61,16 +76,19 @@ namespace PokarinEngine
 		// 配列のインデックス0番
 		inline constexpr GLint lightColorAndFalloffAngle = 111;
 
+		/* ライト構造体の要素は配列なので
+		配列の数分ロケーション番号をずらす必要がある */
+
 		// ライトの座標と範囲の半径
 		// 配列のインデックス0番
-		inline constexpr GLint lightPositionAndRadius =
+		inline constexpr GLint lightPositionAndRange =
 			lightColorAndFalloffAngle + MaxShaderCount::light;
 
 		// ライト
-		inline constexpr GLint lightDirectionAndConeAngle =
+		inline constexpr GLint lightDirectionAndSpotAngle =
 			lightColorAndFalloffAngle + MaxShaderCount::light * 2;
 
-	} // LocationNum
+	} // UniformLocation
 
 } // namespace PokarinEngine
 

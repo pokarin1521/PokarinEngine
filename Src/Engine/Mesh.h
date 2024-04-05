@@ -6,7 +6,7 @@
 
 #include "Texture.h"
 
-#include "VecMath.h"
+#include "Math/Vector.h"
 #include "Color.h"
 
 #include "BufferObject.h"
@@ -41,9 +41,9 @@ namespace PokarinEngine
 	/// </summary>
 	struct Vertex
 	{
-		Vec3 position; // 頂点座標
-		Vec2 texcoord; // テクスチャ座標
-		Vec3 normal;   // 法線ベクトル
+		Vector3 position; // 頂点座標
+		Vector2 texcoord; // テクスチャ座標
+		Vector3 normal;   // 法線ベクトル
 	};
 
 	/// <summary>

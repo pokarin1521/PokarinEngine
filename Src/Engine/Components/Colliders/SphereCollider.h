@@ -17,7 +17,7 @@ namespace PokarinEngine
 	public: // -------- コンストラクタ・デストラクタ ---------
 
 		SphereCollider() = default;
-		virtual ~SphereCollider() = default;
+		~SphereCollider() = default;
 
 	public: // -------------- コライダーの機能 ---------------
 
@@ -34,7 +34,7 @@ namespace PokarinEngine
 		/// コライダーの座標を変更する
 		/// </summary>
 		/// <param name="translate"> 移動量 </param>
-		void AddPosition(const Vec3& translate) override
+		void AddPosition(const Vector3& translate) override
 		{
 			sphere.position += translate;
 		}
@@ -45,48 +45,13 @@ namespace PokarinEngine
 		/// <param name="transform"></param>
 		/// <returns></returns>
 		ColliderPtr GetTransformedCollider(
-			const Mat4& transform) const override
-		{
-			// -------------------------------
-			// 中心座標を座標変換する
-			// -------------------------------
-
-			// 座標変換した球体コライダーを格納する変数
-			auto p = std::make_shared<SphereCollider>();
-
-			// 座標変換
-			p->sphere.position = Vec3(
-				transform * Vec4(sphere.position, 1));
-
-			// -------------------------------
-			// 球体の拡大率を反映
-			// -------------------------------
-
-			/* 球体の拡大率は、
-			XYZが等しくなくてはならない(楕円形になるから)
-
-			オブジェクトの拡大率は個別に指定できてしまうので
-			「座標変換行列に含まれるXYZの拡大率のうち最大の値」を
-			球体の拡大率とする(unityの球体コライダーと同じ挙動) */
-
-			// 拡大率を取得
-			const Vec3 scale = Mat4_Function::ExtractScale(transform);
-
-			// X,Y,Zの拡大率で最大の値
-			const float maxScale = std::max({ scale.x, scale.y, scale.z });
-
-			// 拡大率を反映
-			p->sphere.radius = sphere.radius * maxScale;
-
-			// 座標変換した球体コライダー
-			return p;
-		}
+			const Matrix4x4& transform) const override;
 
 		/// <summary>
 		/// 図形を取得する
 		/// </summary>
 		/// <returns> 球体 </returns>
-		const Sphere& GetShape() const
+		const Collision::Sphere& GetShape() const
 		{
 			return sphere;
 		}
@@ -94,7 +59,7 @@ namespace PokarinEngine
 	public: // -------------- コライダーの情報 ---------------
 
 		// 図形(球体)
-		Sphere sphere = { Vec3(0), 1 };
+		Collision::Sphere sphere = { Vector3(0), 1 };
 	};
 
 } // namespace PokarinEngine

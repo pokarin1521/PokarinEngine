@@ -17,7 +17,7 @@ namespace PokarinEngine
 	public: // --------- コンストラクタ・デストラクタ ----------
 
 		Rigidbody() = default;
-		virtual ~Rigidbody() = default;
+		~Rigidbody() = default;
 
 	public: // ------------- コンポーネント制御 ----------------
 
@@ -25,7 +25,7 @@ namespace PokarinEngine
 		/// Rigibodyコンポーネントの更新
 		/// </summary>
 		/// <param name="deltaTime"></param>
-		virtual void Update(float deltaTime) override;
+		void Update(float deltaTime) override;
 
 	public: // ------------------- 情報 ---------------------
 
@@ -36,7 +36,7 @@ namespace PokarinEngine
 		float gravityScale = 1;
 
 		// 速度
-		Vec3 velocity = { 0, 0, 0 };
+		Vector3 velocity = { 0, 0, 0 };
 	};
 
 } // namespace PokarinEngine

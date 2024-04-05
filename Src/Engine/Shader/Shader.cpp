@@ -10,8 +10,22 @@
 
 namespace PokarinEngine
 {
+	/// <summary>
+	/// シェーダ管理用
+	/// </summary>
 	namespace Shader
 	{
+		// ------------------------------
+		// 変数
+		// ------------------------------
+
+		// シェーダプログラムの管理番号配列
+		ProgList progList;
+
+		// ------------------------------
+		// 関数
+		// ------------------------------
+
 		/// ここでしか使わないので、cppのみに書く
 		/// <summary>
 		/// シェーダファイルを読み込んでコンパイルする
@@ -77,8 +91,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// シェーダを初期化
 		/// </summary>
-		/// <param name="[out] progList"> シェーダプログラムの管理番号配列 </param>
-		void Initialize(ProgList& progList)
+		void Initialize()
 		{
 			// -----------------------------
 			// シェーダのコンパイル
@@ -129,6 +142,28 @@ namespace PokarinEngine
 
 			// 作成したシェーダを配列に追加
 			progList.emplace(ProgType::Unlit, progUnlit);
+		}
+
+		/// <summary>
+		/// シェーダプログラムの管理番号を取得する
+		/// </summary>
+		/// <param name="progType"> シェーダプログラムの種類 </param>
+		/// <returns> 指定した種類のシェーダプログラムの管理番号 </returns>
+		GLuint GetProgram(const ProgType& progType)
+		{
+			return progList[progType];
+		}
+
+		/// <summary>
+		/// 全てのシェーダプログラムの管理番号を取得する
+		/// </summary>
+		/// <returns> 
+		/// <para> 全てのシェーダプログラムの管理番号 </para>
+		/// <para> [シェーダプログラムの種類, シェーダプログラムの管理番号] </para>
+		/// </returns>
+		const ProgList& GetAllProgram()
+		{
+			return progList;
 		}
 
 	} // namespace Shader

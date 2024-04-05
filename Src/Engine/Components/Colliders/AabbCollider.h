@@ -31,7 +31,7 @@ namespace PokarinEngine
 	public: // -------- コンストラクタ・デストラクタ --------
 
 		AabbCollider() = default;
-		virtual ~AabbCollider() = default;
+		~AabbCollider() = default;
 
 	public: // ------------- コライダーの機能 ---------------
 
@@ -48,7 +48,7 @@ namespace PokarinEngine
 		/// コライダーの座標を変更する
 		/// </summary>
 		/// <param name="translate"> 移動量 </param>
-		void AddPosition(const Vec3& translate) override
+		void AddPosition(const Vector3& translate) override
 		{
 			aabb.min += translate;
 			aabb.max += translate;
@@ -62,36 +62,7 @@ namespace PokarinEngine
 		/// <param name="transform"> 座標変換行列 </param>
 		/// <returns> 座標変換したコライダー </returns>
 		ColliderPtr GetTransformedCollider(
-			const Mat4& transform) const override
-		{
-			// ------------------------------
-			// 座標変換したコピーを作成
-			// ------------------------------
-
-			// 座標変換したAABBコライダーを格納する変数
-			auto p = std::make_shared<AabbCollider>();
-
-			// 座標変換
-			p->aabb.min = Vec3(transform * Vec4(aabb.min, 1));
-			p->aabb.max = Vec3(transform * Vec4(aabb.max, 1));
-
-			// ---------------------------------------
-			// minの方が大きかったら入れ替える
-			// ---------------------------------------
-
-			for (int i = 0; i < Info_Vec3::count; ++i)
-			{
-				if (p->aabb.min[i] > p->aabb.max[i])
-				{
-					const float tmp = p->aabb.min[i];
-					p->aabb.min[i] = p->aabb.max[i];
-					p->aabb.max[i] = tmp;
-				}
-			}
-
-			// 座標変換したAABBコライダー
-			return p;
-		}
+			const Matrix4x4& transform) const override;
 
 	public: // --------------- AABBの取得 -------------------
 
@@ -99,7 +70,7 @@ namespace PokarinEngine
 		/// 図形を取得する
 		/// </summary>
 		/// <returns> 軸平行境界ボックス </returns>
-		const AABB& GetShape() const
+		const Collision::AABB& GetShape() const
 		{
 			return aabb;
 		}
@@ -107,7 +78,7 @@ namespace PokarinEngine
 	public: // ------------- コライダーの情報 ---------------
 
 		// 図形(軸平行境界ボックス)
-		AABB aabb = { Vec3(-1), Vec3(1) };
+		Collision::AABB aabb = { Vector3(-1), Vector3(1) };
 	};
 
 } // namespace PokarinEngine

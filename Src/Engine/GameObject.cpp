@@ -17,48 +17,52 @@ namespace PokarinEngine
 	/// </summary>
 	void GameObject::RemoveDestroyedComponent()
 	{
-		if (components.empty())
+		// コンポーネントを持っていなければ何もしない
+		if (componentList.empty())
 		{
-			return; // コンポーネントを持っていなければ何もしない
+			return;
 		}
 
-		// -------- 削除処理がしやすいように破棄予定の有無で振り分け ---------
+		// --------------------------------------- 
+		// コンポーネントを削除
+		// --------------------------------------- 
 
-		/* 移動させるためなのでstable_partitionを使う
-
-		破棄予定のないコンポーネントを配列の前側に、
-		破棄予定のあるコンポーネントを後ろ側に集める
-		std::stable_partition(範囲の先頭, 範囲の終端, 振り分け条件) */
-
-		// iterには破棄予定のあるコンポーネントの先頭イテレータが入る
-		const auto iter = std::stable_partition(
-			components.begin(), components.end(),
-			[](const auto& e) {return !e->IsDestroyed(); });
-
-		// 破棄予定のコンポーネントを別の配列に移動
-		std::vector<ComponentPtr> destroyList(
-			std::move_iterator(iter),
-			std::move_iterator(components.end()));
-
-		// 移動させて空になった配列を削除
-		components.erase(iter, components.end());
-
-		// コライダーはcollidersにも登録されているので、両方から削除する必要がある
-		// 削除するためなので、remove_ifを使う
-		const auto iter2 = std::remove_if(
-			colliders.begin(), colliders.end(),
-			[](const auto& p) {return p->IsDestroyed(); });
-
-		// 破棄予定のものを削除
-		colliders.erase(iter2, colliders.end());
-
-		// 破棄予定のコンポーネントのOnDestroyを実行
-		for (auto& e : destroyList)
+		// --------------- コンポーネント配列から削除 ------------------
 		{
-			e->OnDestroy();
+			/* 削除時の処理を実行出来るようにstable_partitionを使う
+			(remove_ifだと削除される可能性がある)
+
+			破棄予定のないコンポーネントを配列の前側に、
+			破棄予定のあるコンポーネントを後ろ側に集める
+			std::stable_partition(範囲の先頭, 範囲の終端, 振り分け条件) */
+
+			// 破棄予定のコンポーネントの先頭イテレータ
+			auto destroyStart = std::stable_partition(
+				componentList.begin(), componentList.end(),
+				[](const auto& e) {return !e->IsDestroyed(); });
+
+			// 削除時の処理を実行
+			for (auto& itr = destroyStart; itr != componentList.end(); ++itr)
+			{
+				auto& destroyComponent = *itr;
+				destroyComponent->OnDestroy();
+			}
+
+			// 破棄予定のコンポーネントを削除
+			componentList.erase(destroyStart, componentList.end());
 		}
 
-		// ここで実際にコンポーネントが削除される(destroyListの寿命が終わるため)
+		// ----------------- コライダー配列から削除 --------------------
+		{
+			// コライダーはコライダー配列にも登録されているので、両方から削除する必要がある
+			// 削除するだけなので、remove_ifを使う
+			const auto destroyStart = std::remove_if(
+				colliderList.begin(), colliderList.end(),
+				[](const auto& p) {return p->IsDestroyed(); });
+
+			// 破棄予定のものを削除
+			colliderList.erase(destroyStart, colliderList.end());
+		}
 	}
 
 	/// <summary>
@@ -87,7 +91,7 @@ namespace PokarinEngine
 	{
 		// コンポーネントのStartを１度だけ実行
 		// 途中で追加されることを想定して、Update内で実行
-		for (auto& e : components)
+		for (auto& e : componentList)
 		{
 			if (!e->isStarted)
 			{
@@ -97,7 +101,7 @@ namespace PokarinEngine
 		}
 
 		// コンポーネントを更新
-		for (auto& e : components)
+		for (auto& e : componentList)
 		{
 			e->Update(deltaTime);
 		}
@@ -113,7 +117,7 @@ namespace PokarinEngine
 	/// <param name="other"> 衝突したコンポーネント(相手) </param>
 	void GameObject::OnCollision(const ComponentPtr& self, const ComponentPtr& other)
 	{
-		for (auto& e : components)
+		for (auto& e : componentList)
 		{
 			e->OnCollision(self, other);
 		}
@@ -125,7 +129,7 @@ namespace PokarinEngine
 	void GameObject::OnDestroy()
 	{
 		// コンポーネントを削除
-		for (auto& e : components)
+		for (auto& e : componentList)
 		{
 			e->OnDestroy();
 		}

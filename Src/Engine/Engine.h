@@ -10,7 +10,7 @@
 #include "Scene.h"
 #include "GameObject.h"
 #include "Mesh.h"
-#include "VecMath.h"
+#include "Math/Vector.h"
 
 #include "Shader/Shader.h"
 
@@ -128,7 +128,7 @@ namespace PokarinEngine
 			ColliderPtr collider;
 
 			// 最初の交点の座標
-			Vec3 point;
+			Vector3 point;
 
 			// 最初の交点までの距離
 			float distance;
@@ -143,7 +143,7 @@ namespace PokarinEngine
 		/// マウス座標から発射される光線を取得する
 		/// </summary>
 		/// <returns> マウス座標から発射される光線 </returns>
-		Ray GetRayFromMousePosition() const;
+		Collision::Ray GetRayFromMousePosition() const;
 
 		/// <summary>
 		/// 光線とコライダーの交差判定
@@ -155,20 +155,8 @@ namespace PokarinEngine
 		/// <para> true : コライダーと交差した </para>
 		/// <para> false : コライダーと交差しなかった </para>
 		/// </returns>
-		bool Raycast(const Ray& ray, RaycastHit& hitInfo,
+		bool Raycast(const Collision::Ray& ray, RaycastHit& hitInfo,
 			const RaycastPredicate& pred) const;
-
-	public: // --------------------- シェーダ番号の取得 -----------------------
-
-		/// <summary>
-		/// シェーダプログラムの管理番号を取得する
-		/// </summary>
-		/// <param name="progNum"> 取得するシェーダの種類 </param>
-		/// <returns> 指定したシェーダプログラムの管理番号 </returns>
-		GLuint GetShaderProgram(Shader::ProgType progNum) const
-		{
-			return shaderProgList.at(progNum);
-		}
 
 	private: // ------------------------- コライダー --------------------------
 
@@ -179,7 +167,7 @@ namespace PokarinEngine
 			/// ワールドコライダーの座標を変更する
 			/// </summary>
 			/// <param name="v"> 移動量 </param>
-			void AddPosition(const Vec3& v)
+			void AddPosition(const Vector3& v)
 			{
 				// コライダーの持ち主の座標を変更
 				origin->GetOwner().transform->position += v;
@@ -205,7 +193,7 @@ namespace PokarinEngine
 		/// <param name="gameObject"> ゲームオブジェクト </param>
 		/// <param name="penetration"> 貫通ベクトル </param>
 		void ApplyPenetration(WorldColliderList* worldColliders,
-			GameObject& gameObject, const Vec3& penetration);
+			GameObject& gameObject, const Vector3& penetration);
 
 	private: // ---------------------- エンジンの制御 -------------------------
 
@@ -253,12 +241,6 @@ namespace PokarinEngine
 		/// <param name="camera"> 使用するカメラ </param>
 		/// <param name="renderView"> 描画情報を保持する描画用ビュー </param>
 		void DrawRenderView(const Transform& camera, const RenderView& view);
-
-	private: // ------------------ シェーダプログラム --------------------
-
-		// シェーダプログラムの管理番号配列
-		// <シェーダプログラムの種類, シェーダプログラムの管理番号>
-		Shader::ProgList shaderProgList;
 
 	private: // --------------------- 図形データ -------------------------
 

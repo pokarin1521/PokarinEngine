@@ -4,7 +4,7 @@
 #ifndef COLOR_H_INCLUDED
 #define COLOR_H_INCLUDED
 
-#include "VecMath.h"
+#include "Math/Vector.h"
 
 namespace PokarinEngine
 {
@@ -34,7 +34,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// Vec4Œ^‚Å‰Šú‰»‚·‚éƒRƒ“ƒXƒgƒ‰ƒNƒ^
 		/// </summary>
-		constexpr Color(const Vec4& v)
+		constexpr Color(const Vector4& v)
 			: r(v.x), g(v.y), b(v.z), a(v.w) {}
 
 		// ------------------
@@ -68,7 +68,7 @@ namespace PokarinEngine
 	// æZ
 	// --------------
 
-	// --------- Vec4“¯m‚ÌæZ -----------
+	// --------- Color“¯m‚ÌæZ -----------
 
 	inline Color& operator*=(Color& a, const Color& b)
 	{
@@ -81,6 +81,24 @@ namespace PokarinEngine
 	}
 
 	inline Color operator*(const Color& a, const Color& b)
+	{
+		Color n = a;
+		return n *= b;
+	}
+
+	// ------------------ Color‚Æfloat‚ÌæZ -------------------
+
+	inline Color operator*=(Color& a, float b)
+	{
+		a.r *= b;
+		a.g *= b;
+		a.b *= b;
+		a.a *= b;
+
+		return a;
+	}
+
+	inline Color operator*(const Color& a, float b)
 	{
 		Color n = a;
 		return n *= b;

@@ -13,9 +13,9 @@ namespace PokarinEngine
 	/// </summary>
 	void SceneView::CameraMoveControl()
 	{
-		Vec3 cameraRotation = sceneCamera.rotation;
-		const Vec3 cameraSin = { sin(cameraRotation.x),sin(cameraRotation.y),sin(cameraRotation.z) };
-		const Vec3 cameraCos = { cos(cameraRotation.x),cos(cameraRotation.y),cos(cameraRotation.z) };
+		Vector3 cameraRotation = sceneCamera.rotation;
+		const Vector3 cameraSin = { sin(cameraRotation.x),sin(cameraRotation.y),sin(cameraRotation.z) };
+		const Vector3 cameraCos = { cos(cameraRotation.x),cos(cameraRotation.y),cos(cameraRotation.z) };
 
 		if (ImGui::IsKeyDown(ImGuiKey_W))
 		{
@@ -59,10 +59,10 @@ namespace PokarinEngine
 		}
 
 		// 現在のマウスカーソルの位置
-		Vec2 currentMousePos = Input::Mouse::GetScreenPos(WindowID::Main);
+		Vector2 currentMousePos = Input::Mouse::GetScreenPos(WindowID::Main);
 
 		// マウスカーソルの移動量
-		Vec2 mouseMove = currentMousePos - mousePos;
+		Vector2 mouseMove = currentMousePos - mousePos;
 
 		// マウスカーソルの位置を更新
 		mousePos = currentMousePos;

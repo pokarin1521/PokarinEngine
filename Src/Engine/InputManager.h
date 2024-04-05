@@ -6,7 +6,7 @@
 
 #include "glad/glad.h"
 #include "ImGui/imgui.h"
-#include "VecMath.h"
+#include "Math/Vector.h"
 #include "Window.h"
 
 #include <GLFW/glfw3.h>
@@ -104,21 +104,21 @@ namespace PokarinEngine
 			/// </summary>
 			/// <param name="windowID"> ウィンドウ識別番号 </param>
 			/// <returns> スクリーン座標系のマウスカーソル座標 </returns>
-			Vec2 GetScreenPos(WindowID windowID);
+			Vector2 GetScreenPos(WindowID windowID);
 
 			/// <summary>
 			/// マウスカーソルの座標を取得する
 			/// </summary>
 			/// <param name="windowID"> ウィンドウ識別番号 </param>
 			/// <returns> ビュー座標系のカーソル座標 </returns>
-			Vec2 GetViewPos(WindowID windowID);
+			Vector2 GetViewPos(WindowID windowID);
 
 			/// <summary>
 			/// スクリーン座標系のマウスカーソル座標を設定する
 			/// </summary>
 			/// <param name="windowID"> ウィンドウ識別番号 </param>
 			/// <param name="mousePos"> マウスカーソルの座標 </param>
-			void SetScreenPos(WindowID windowID, Vec2 mousePos);
+			void SetScreenPos(WindowID windowID, Vector2 mousePos);
 
 		} // namespace Mouse
 

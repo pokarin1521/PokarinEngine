@@ -27,9 +27,6 @@
     <Filter Include="Src\Engine\Texture">
       <UniqueIdentifier>{df5b97da-dfeb-4237-b8dc-6e1733043ebf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Engine\Engine">
-      <UniqueIdentifier>{52b2c7ab-c8cc-444b-93c7-90459840bbc9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Src\Engine\Debug">
       <UniqueIdentifier>{289218ed-4e1f-411d-a170-5badb9b3297f}</UniqueIdentifier>
     </Filter>
@@ -78,9 +75,6 @@
     <Filter Include="Src\Engine\Scene">
       <UniqueIdentifier>{48ddb36e-d319-4a9f-806d-81d6730ed109}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Engine\LightManager">
-      <UniqueIdentifier>{719d773c-9e98-4380-b5cf-a346a915f007}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Src\Engine\Window">
       <UniqueIdentifier>{ea021b10-cc9b-4616-895c-4ce71710338c}</UniqueIdentifier>
     </Filter>
@@ -102,14 +96,23 @@
     <Filter Include="Src\Engine\Editor\NodeEditor">
       <UniqueIdentifier>{bcd28468-805a-45b1-b4a6-8de85bead9be}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Engine\Editor\NodeEditor\Node">
-      <UniqueIdentifier>{b2033307-da80-4a1e-b23b-be2e3aedb751}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Src\Engine\Buffer">
       <UniqueIdentifier>{10df0642-2191-4d62-94de-36b1f226edfd}</UniqueIdentifier>
     </Filter>
     <Filter Include="Src\Engine\Components\Camera">
       <UniqueIdentifier>{b0b74134-9de8-4bbf-a93c-b0e7b418d328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Engine\Engine">
+      <UniqueIdentifier>{52b2c7ab-c8cc-444b-93c7-90459840bbc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Engine\Editor\NodeEditor\Nodes">
+      <UniqueIdentifier>{b2033307-da80-4a1e-b23b-be2e3aedb751}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Engine\LightParameter">
+      <UniqueIdentifier>{719d773c-9e98-4380-b5cf-a346a915f007}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Engine\Math">
+      <UniqueIdentifier>{926ce579-cc08-49dc-9858-952380a41782}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -158,9 +161,6 @@
     <ClCompile Include="Src\Engine\Shader\Shader.cpp">
       <Filter>Src\Engine\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Engine\LightManager.cpp">
-      <Filter>Src\Engine\LightManager</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Engine\FramebufferObject.cpp">
       <Filter>Src\Engine\Buffer</Filter>
     </ClCompile>
@@ -169,6 +169,42 @@
     </ClCompile>
     <ClCompile Include="Src\Engine\Scene.cpp">
       <Filter>Src\Engine\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\Window.cpp">
+      <Filter>Src\Engine\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\InputManager.cpp">
+      <Filter>Src\Engine\InputManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\MainEditor\RenderView.cpp">
+      <Filter>Src\Engine\Editor\MainEditor\RenderView</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\NodeScript\NodeEditor.cpp">
+      <Filter>Src\Engine\Editor\NodeEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\MainEditor\GameView.cpp">
+      <Filter>Src\Engine\Editor\MainEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\MainEditor\Hierarchy.cpp">
+      <Filter>Src\Engine\Editor\MainEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\MainEditor\Inspector.cpp">
+      <Filter>Src\Engine\Editor\MainEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\MainEditor\MainEditor.cpp">
+      <Filter>Src\Engine\Editor\MainEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\MainEditor\SceneView.cpp">
+      <Filter>Src\Engine\Editor\MainEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\Components\Camera.cpp">
+      <Filter>Src\Engine\Components\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\NodeScript\NodeScript.cpp">
+      <Filter>Src\Engine\Editor\NodeEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\LightParameter.cpp">
+      <Filter>Src\Engine\LightParameter</Filter>
     </ClCompile>
     <ClCompile Include="Src\ImGui\ImGui\imgui.cpp">
       <Filter>Src\ImGui</Filter>
@@ -194,38 +230,14 @@
     <ClCompile Include="Src\ImGui\ImGui\imnodes.cpp">
       <Filter>Src\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Engine\Window.cpp">
-      <Filter>Src\Engine\Window</Filter>
+    <ClCompile Include="Src\Engine\Math\Vector.cpp">
+      <Filter>Src\Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Engine\InputManager.cpp">
-      <Filter>Src\Engine\InputManager</Filter>
+    <ClCompile Include="Src\Engine\Components\Colliders\AabbCollider.cpp">
+      <Filter>Src\Engine\Components\Colliders</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Engine\MainEditor\RenderView.cpp">
-      <Filter>Src\Engine\Editor\MainEditor\RenderView</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Engine\NodeScript\NodeEditor.cpp">
-      <Filter>Src\Engine\Editor\NodeEditor</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Engine\NodeScript\NodeScript.cpp">
-      <Filter>Src\Engine\Editor\NodeEditor</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Engine\MainEditor\GameView.cpp">
-      <Filter>Src\Engine\Editor\MainEditor</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Engine\MainEditor\Hierarchy.cpp">
-      <Filter>Src\Engine\Editor\MainEditor</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Engine\MainEditor\Inspector.cpp">
-      <Filter>Src\Engine\Editor\MainEditor</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Engine\MainEditor\MainEditor.cpp">
-      <Filter>Src\Engine\Editor\MainEditor</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Engine\MainEditor\SceneView.cpp">
-      <Filter>Src\Engine\Editor\MainEditor</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Engine\Components\Camera.cpp">
-      <Filter>Src\Engine\Components\Camera</Filter>
+    <ClCompile Include="Src\Engine\Components\Colliders\SphereCollider.cpp">
+      <Filter>Src\Engine\Components\Colliders</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -256,9 +268,6 @@
     <ClInclude Include="Src\Engine\Texture.h">
       <Filter>Src\Engine\Texture</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Engine\VecMath.h">
-      <Filter>Src\Engine</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Engine\Engine.h">
       <Filter>Src\Engine\Engine</Filter>
     </ClInclude>
@@ -280,9 +289,6 @@
     <ClInclude Include="Src\Engine\Random.h">
       <Filter>Src\Engine\Random</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Engine\EasyAudio\EasyAudio.h">
-      <Filter>Src\Engine\EasyAudio</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Engine\Components\Billboard.h">
       <Filter>Src\Engine\Components</Filter>
     </ClInclude>
@@ -298,9 +304,6 @@
     <ClInclude Include="Src\Engine\Components\Colliders\AabbCollider.h">
       <Filter>Src\Engine\Components\Colliders</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Engine\Components\Colliders\Collider.h">
-      <Filter>Src\Engine\Components\Colliders</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Engine\Components\Colliders\SphereCollider.h">
       <Filter>Src\Engine\Components\Colliders</Filter>
     </ClInclude>
@@ -313,9 +316,6 @@
     <ClInclude Include="Src\Engine\Shader\Shader.h">
       <Filter>Src\Engine\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Engine\LightManager.h">
-      <Filter>Src\Engine\LightManager</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Engine\FramebufferObject.h">
       <Filter>Src\Engine\Buffer</Filter>
     </ClInclude>
@@ -327,39 +327,6 @@
     </ClInclude>
     <ClInclude Include="Src\Engine\Color.h">
       <Filter>Src\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\ImGui\ImGui\imconfig.h">
-      <Filter>Src\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\ImGui\ImGui\imgui.h">
-      <Filter>Src\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\ImGui\ImGui\imgui_impl_glfw.h">
-      <Filter>Src\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\ImGui\ImGui\imgui_impl_opengl3.h">
-      <Filter>Src\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\ImGui\ImGui\imgui_impl_opengl3_loader.h">
-      <Filter>Src\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\ImGui\ImGui\imgui_internal.h">
-      <Filter>Src\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\ImGui\ImGui\imstb_rectpack.h">
-      <Filter>Src\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\ImGui\ImGui\imstb_textedit.h">
-      <Filter>Src\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\ImGui\ImGui\imstb_truetype.h">
-      <Filter>Src\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\ImGui\ImGui\imnodes.h">
-      <Filter>Src\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\ImGui\ImGui\imnodes_internal.h">
-      <Filter>Src\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="Src\Engine\Window.h">
       <Filter>Src\Engine\Window</Filter>
@@ -377,10 +344,7 @@
       <Filter>Src\Engine\Editor\NodeEditor</Filter>
     </ClInclude>
     <ClInclude Include="Src\Engine\NodeScript\Nodes\EventNode.h">
-      <Filter>Src\Engine\Editor\NodeEditor\Node</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Engine\NodeScript\Nodes\Node.h">
-      <Filter>Src\Engine\Editor\NodeEditor\Node</Filter>
+      <Filter>Src\Engine\Editor\NodeEditor\Nodes</Filter>
     </ClInclude>
     <ClInclude Include="Src\Engine\UsingNames\UsingGameObject.h">
       <Filter>Src\Engine\UsingNames</Filter>
@@ -417,6 +381,60 @@
     </ClInclude>
     <ClInclude Include="Src\Engine\Components\Camera.h">
       <Filter>Src\Engine\Components\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\EasyAudio\EasyAudio.h">
+      <Filter>Src\Engine\EasyAudio</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\NodeScript\Nodes\Node.h">
+      <Filter>Src\Engine\Editor\NodeEditor\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\LightParameter.h">
+      <Filter>Src\Engine\LightParameter</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\Math\Matrix.h">
+      <Filter>Src\Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\Math\Vector.h">
+      <Filter>Src\Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\Math\Angle.h">
+      <Filter>Src\Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\ImGui\ImGui\imconfig.h">
+      <Filter>Src\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\ImGui\ImGui\imgui.h">
+      <Filter>Src\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\ImGui\ImGui\imgui_impl_glfw.h">
+      <Filter>Src\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\ImGui\ImGui\imgui_impl_opengl3.h">
+      <Filter>Src\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\ImGui\ImGui\imgui_impl_opengl3_loader.h">
+      <Filter>Src\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\ImGui\ImGui\imgui_internal.h">
+      <Filter>Src\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\ImGui\ImGui\imnodes.h">
+      <Filter>Src\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\ImGui\ImGui\imnodes_internal.h">
+      <Filter>Src\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\ImGui\ImGui\imstb_rectpack.h">
+      <Filter>Src\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\ImGui\ImGui\imstb_textedit.h">
+      <Filter>Src\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\ImGui\ImGui\imstb_truetype.h">
+      <Filter>Src\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\Components\Colliders\Collider.h">
+      <Filter>Src\Engine\Components\Colliders</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

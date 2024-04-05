@@ -7,7 +7,7 @@
 #include "RenderView.h"
 
 #include "../Color.h"
-#include "../VecMath.h"
+#include "../Math/Vector.h"
 #include "../Components/Transform.h"
 
 namespace PokarinEngine
@@ -61,10 +61,10 @@ namespace PokarinEngine
 		Color backGround = { 0.3f, 0.3f, 0.3f, 1.0f };
 
 		// マウスカーソルの位置
-		Vec2 mousePos = Vec2(0, 0);
+		Vector2 mousePos = Vector2(0, 0);
 
 		// マウスカーソルの初期位置
-		Vec2 startMousePos = Vec2(0, 0);
+		Vector2 startMousePos = Vector2(0, 0);
 
 		// カメラの回転速度
 		float cameraRotateSpeed = 0.005f;

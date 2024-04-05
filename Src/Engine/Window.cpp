@@ -304,7 +304,7 @@ namespace PokarinEngine
 		/// </summary>
 		/// <param name="windowID"> ウィンドウ識別番号 </param>
 		/// <returns> 指定したウィンドウの大きさ </returns>
-		Vec2 GetWindowSize(WindowID windowID)
+		Vector2 GetWindowSize(WindowID windowID)
 		{
 			// 指定したウィンドウが無い場合は0を返す
 			if (!IsCreated(windowID))
@@ -342,7 +342,7 @@ namespace PokarinEngine
 		float GetAspectRatio(WindowID windowID)
 		{
 			// フレームバッファの大きさを取得
-			const Vec2 size = GetWindowSize(windowID);
+			const Vector2 size = GetWindowSize(windowID);
 
 			// 0除算は避ける
 			if (size.y == 0)

@@ -5,7 +5,7 @@
 #define UILAYOUT_H_INCLUDED
 
 #include "Component.h"
-#include "../VecMath.h"
+#include "../Math/Vector.h"
 
 namespace PokarinEngine
 {
@@ -17,7 +17,7 @@ namespace PokarinEngine
 	public: // コンストラクタ・デストラクタ
 
 		UILayout() = default;
-		virtual ~UILayout() = default;
+		~UILayout() = default;
 
 	public: // コンポーネント制御
 
@@ -37,7 +37,7 @@ namespace PokarinEngine
 	public: // イベント用変数
 
 		// カメラから見たUIの座標
-		Vec3 basePosition = { 0, 0, 0 };
+		Vector3 basePosition = { 0, 0, 0 };
 	};
 
 } // namespace PokarinEngine

@@ -88,7 +88,7 @@ namespace PokarinEngine
 
 	private: // ------------------ オブジェクト管理用 --------------------
 
-		// 非選択時の番号
+		// 非選択時の要素番号
 		const int unselected = -1;
 
 		// 選択中オブジェクトの要素番号

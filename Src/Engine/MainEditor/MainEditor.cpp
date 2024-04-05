@@ -58,6 +58,9 @@ namespace PokarinEngine
 		// コンテキスト作成
 		imGuiContext = ImGui::CreateContext();
 
+		// コンテキストを使用する
+		ImGui::SetCurrentContext(imGuiContext);
+
 		// ---------------------------------------
 		// ドッキングウィンドウの有効化
 		// ---------------------------------------
@@ -74,6 +77,10 @@ namespace PokarinEngine
 
 		// GLSLのバージョンを指定
 		ImGui_ImplOpenGL3_Init(glslVersion);
+
+		// ----------------------------------
+		// フォントを変更する
+		// ----------------------------------
 
 		io.Fonts->Clear();
 		io.Fonts->AddFontFromFileTTF("Res/Fonts/arial.ttf", 20.0f);

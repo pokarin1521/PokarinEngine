@@ -5,7 +5,7 @@
 #define WINDOW_H_INCLUDED
 
 #include "glad/glad.h"
-#include "VecMath.h"
+#include "Math/Vector.h"
 
 #include <GLFW/glfw3.h>
 
@@ -85,7 +85,7 @@ namespace PokarinEngine
 		/// </summary>
 		/// <param name="windowID"> ウィンドウ識別番号 </param>
 		/// <returns> 指定したウィンドウの大きさ </returns>
-		Vec2 GetWindowSize(WindowID windowID);
+		Vector2 GetWindowSize(WindowID windowID);
 
 		/// <summary>
 		/// GLFWウィンドウの大きさを取得する

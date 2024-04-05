@@ -27,9 +27,9 @@ namespace PokarinEngine
 	/// </summary>
 	/// <param name="point"> 中心の位置 </param>
 	/// <param name="rotY"> Y軸回転させる角度(弧度法) </param>
-	/// <param name="radius"> 中心からの距離 </param>
+	/// <param name="range"> 中心からの距離 </param>
 	void Transform::RotateAroundY(
-		const Vec3& point, float rotY, float distance)
+		const Vector3& point, float rotY, float distance)
 	{
 		float sinY = std::sin(rotY);
 		float cosY = std::cos(rotY);
@@ -42,9 +42,9 @@ namespace PokarinEngine
 	/// ターゲットの方を向くようにY軸回転
 	/// </summary>
 	/// <param name="target"> ターゲットの座標 </param>
-	void Transform::LookAtY(const Vec3& target)
+	void Transform::LookAtY(const Vector3& target)
 	{
-		// 内積で作り直せ！
+		// 諸事情で後回しにしております
 	}
 
 	/// <summary>
@@ -153,7 +153,7 @@ namespace PokarinEngine
 	/// </summary>
 	/// <param name="infoName"> 表示する情報の名前 </param>
 	/// <param name="info"> 表示する情報 </param>
-	void DragInformation(std::string infoName, Vec3& info)
+	void DragInformation(std::string infoName, Vector3& info)
 	{
 		// ----------------------------
 		// 情報の名前を表示

@@ -82,13 +82,13 @@ namespace PokarinEngine
 		// 衝突が起きたときに呼び出される
 		virtual void OnCollision(const ComponentPtr& self, const ComponentPtr& other) {}
 
-		// ゲームオブジェクトがエンジンから削除されるときに呼び出される
+		// ゲームオブジェクトが削除されるときに呼び出される
 		virtual void OnDestroy() {}
 
 	public: // ----------------------- エディタ用 --------------------------
 
 		// エディタに情報を表示する
-		virtual void RenderEditor() {}
+		virtual void RenderEditor() = 0;
 
 	private: // ----------------- コンポーネントの情報 ---------------------
 

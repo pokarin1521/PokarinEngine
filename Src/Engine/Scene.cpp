@@ -7,6 +7,8 @@
 #include "Random.h"
 #include "Debug.h"
 
+#include "Components/Light.h"
+
 #include "Settings/ShaderSettings.h"
 
 #include <algorithm>
@@ -24,8 +26,14 @@ namespace PokarinEngine
 		:engine(&e), name(sceneName)
 	{
 		// メインカメラ作成
-		mainCamera = CreateGameObject("MainCamera");
+		// オブジェクト生成時に見えるように少し後ろに配置する
+		mainCamera = CreateGameObject("MainCamera", Vector3(0, 0, -1));
 		cameraInfo = mainCamera->AddComponent<Camera>();
+
+		// 平行光源を作成
+		auto directionalLight = CreateGameObject("Directional Light");
+		auto lightComponent = directionalLight->AddComponent<Light>();
+		lightComponent->SetType(LightParameter::Type::directional);
 	}
 
 	/// <summary>
@@ -38,7 +46,7 @@ namespace PokarinEngine
 	/// <param name="staticMeshFile"> スタティックメッシュのファイル名 </param>
 	/// <returns> 追加したゲームオブジェクトのポインタ </returns>
 	GameObjectPtr Scene::CreateGameObject(const std::string& name,
-		const Vec3& position, const Vec3& rotation, const char* staticMeshFile)
+		const Vector3& position, const Vector3& rotation, const char* staticMeshFile)
 	{
 		// シーン内のゲームオブジェクト数が最大値に達したら作成しない
 		if (gameObjectList.size() >= gameObjectMax)
@@ -71,7 +79,7 @@ namespace PokarinEngine
 		}
 
 		// 重複しないように識別番号を設定
-		object->id = GetSingleObjectID();
+		object->id = AddSingleObjectID();
 
 		// ゲームオブジェクトの初期化
 		object->Initialize();
@@ -83,8 +91,8 @@ namespace PokarinEngine
 		// スタティックメッシュ
 		object->staticMesh = engine->GetStaticMesh(staticMeshFile);
 
-		// 現在のシーンに登録
-		AddGameObject(object);
+		// ゲームオブジェクト管理用配列に追加
+		gameObjectList.push_back(object);
 
 		return object;
 	}
@@ -106,19 +114,6 @@ namespace PokarinEngine
 		GameObjectPtr copyObject = CreateGameObject(object->typeName,
 			object->transform->position, object->transform->rotation,
 			object->staticMesh->filename.c_str());
-	}
-
-	/// <summary>
-	/// ゲームオブジェクトを追加する
-	/// </summary>
-	/// <param name="object"> 追加するゲームオブジェクト </param>
-	void Scene::AddGameObject(GameObjectPtr object)
-	{
-		// ゲームオブジェクトを追加
-		gameObjectList.push_back(object);
-
-		// オブジェクト識別番号を追加
-		objectIDList.emplace(object->id);
 	}
 
 #pragma endregion
@@ -197,7 +192,8 @@ namespace PokarinEngine
 	}
 
 	/// <summary>
-	/// ゲームオブジェクトの名前が重複しないように変更する
+	/// <para> 他のオブジェクトと重複しない名前を取得する </para>
+	/// <para> (重複していた場合は、後ろに数字を付ける) </para>
 	/// </summary>
 	/// <param name="objectName"> オブジェクト名 </param>
 	/// <returns> 
@@ -236,14 +232,15 @@ namespace PokarinEngine
 	}
 
 	/// <summary>
-	/// <para> 他のオブジェクトと重複しない識別番号を取得する </para>
+	/// <para> 他のオブジェクトと重複しない識別番号を配列に追加する </para>
 	/// </summary>
 	/// <returns> 
 	/// <para> 重複しない識別番号(乱数) </para>
 	/// </returns>
-	int Scene::GetSingleObjectID() const
+	int Scene::AddSingleObjectID()
 	{
-		// オブジェクト数が最大値まで達したらIDを生成しない
+		// オブジェクト数がint型の最大値まで達したらIDを生成しない
+		// INT_MIN ～ INT_MAXまで作れるが余裕を持つために半分にする
 		if (objectIDList.size() >= INT_MAX)
 		{
 			LOG_WARNING("オブジェクト数が最大値に達したため、IDを生成出来ません");
@@ -251,13 +248,12 @@ namespace PokarinEngine
 		}
 
 		// オブジェクト識別番号
-		// 負数が入るとヒエラルキーの処理で困るので0以上の乱数
-		int objectID = Random::Range(0, INT_MAX);
+		int objectID = Random::Range(INT_MIN, INT_MAX);
 
 		// 他のオブジェクトと番号が重複しているなら乱数を取得し直す
-		while (objectIDList.find(objectID) != objectIDList.end())
+		while (!objectIDList.emplace(objectID).second)
 		{
-			objectID = Random::Range(0, INT_MAX);
+			objectID = Random::Range(INT_MIN, INT_MAX);
 		}
 
 		return objectID;
@@ -290,12 +286,15 @@ namespace PokarinEngine
 			// オブジェクトの座標・回転角度・拡大率
 			TransformPtr transform = gameObject->transform;
 
+			// オブジェクトの座標
+			Vector3 position = transform->position;
+
 			// オブジェクトに設定する座標変換行列
-			Mat4 transformMatrix = Mat4_Function::GetTransformMatrix(
-				transform->scale, transform->rotation, transform->position);
+			Matrix4x4 transformMatrix = Mat4_Function::GetTransformMatrix(
+				transform->scale, transform->rotation, position);
 
 			// オブジェクトに設定する法線変換行列
-			Mat3 normalMatrix = Mat3_Function::GetRotationMatrix(transform->rotation);
+			Matrix3x3 normalMatrix = Mat3_Function::GetRotationMatrix(transform->rotation);
 
 			// 座標変換行列を設定
 			transform->SetTransformMatrix(transformMatrix);
@@ -309,10 +308,10 @@ namespace PokarinEngine
 		// ------------------------------------
 
 		// ワールド座標変換行列
-		std::vector<Mat4> worldTransforms(gameObjectList.size());
+		std::vector<Matrix4x4> worldTransforms(gameObjectList.size());
 
 		// ワールド法線変換行列
-		std::vector<Mat3> worldNormals(gameObjectList.size());
+		std::vector<Matrix3x3> worldNormals(gameObjectList.size());
 
 		// 全ての親の座標変換行列を掛け合わせる
 		for (size_t i = 0; i < gameObjectList.size(); ++i)
@@ -321,19 +320,19 @@ namespace PokarinEngine
 			Transform* transform = gameObjectList[i]->transform.get();
 
 			// 自身の座標変換行列
-			Mat4 transformMatrix = transform->GetTransformMatrix();
+			Matrix4x4 transformMatrix = transform->GetTransformMatrix();
 
 			// 自身の法線変換行列
-			Mat3 normalMatrix = transform->GetNormalMatrix();
+			Matrix3x3 normalMatrix = transform->GetNormalMatrix();
 
 			// 親をたどっていく
 			for (Transform* parent = transform->GetParent(); parent; parent = parent->GetParent())
 			{
 				// 親の座標変換行列
-				Mat4 parentTransformMatrix = parent->GetTransformMatrix();
+				Matrix4x4 parentTransformMatrix = parent->GetTransformMatrix();
 
 				// 親の法線変換行列
-				Mat3 parentNormalMatrix = parent->GetNormalMatrix();
+				Matrix3x3 parentNormalMatrix = parent->GetNormalMatrix();
 
 				// 親の変換行列を掛け合わせる
 				transformMatrix = parentTransformMatrix * transformMatrix;
@@ -473,14 +472,13 @@ namespace PokarinEngine
 	/// </summary>
 	/// <param name="prog"> シェーダプログラムの管理番号 </param>
 	/// <param name="gameObject"> パラメータをコピーするゲームオブジェクト </param>
-	void CopyGameObjectParameters(
-		const Engine& engine, GLuint prog, const GameObject& gameObject)
+	void CopyGameObjectParameters(GLuint prog, const GameObject& gameObject)
 	{
 		// 座標変換行列
-		Mat4 transformMatrix = gameObject.transform->GetTransformMatrix();
+		Matrix4x4 transformMatrix = gameObject.transform->GetTransformMatrix();
 
 		// 法線変換行列
-		Mat3 normalMatrix = gameObject.transform->GetNormalMatrix();
+		Matrix3x3 normalMatrix = gameObject.transform->GetNormalMatrix();
 
 		// ------------------------------------
 		// パラメータをGPUにコピー
@@ -488,17 +486,19 @@ namespace PokarinEngine
 
 		// オブジェクトの色
 		glProgramUniform4fv(prog,
-			LocationNum::color, 1, &gameObject.color.r);
+			UniformLocation::color, 1, &gameObject.color.r);
 
 		// 座標変換行列
 		glProgramUniformMatrix4fv(
-			prog, 0, 1, GL_FALSE, &transformMatrix[0].x);
+			prog, UniformLocation::transformMatrix,
+			1, GL_FALSE, &transformMatrix[0].x);
 
 		// 法線変換行列
-		if (prog == engine.GetShaderProgram(Shader::ProgType::Standard))
+		if (prog == Shader::GetProgram(Shader::ProgType::Standard))
 		{
 			glProgramUniformMatrix3fv(
-				prog, 1, 1, GL_FALSE, &normalMatrix[0].x);
+				prog, UniformLocation::normalMatrix, 
+				1, GL_FALSE, &normalMatrix[0].x);
 		}
 	}
 
@@ -509,8 +509,8 @@ namespace PokarinEngine
 	/// <param name="prog"> シェーダプログラムの管理番号 </param>
 	/// <param name="begin"> 描画するゲームオブジェクト配列の先頭イテレータ </param>
 	/// <param name="end"> 描画するゲームオブジェクト配列の末尾イテレータ </param>
-	void DrawGameObject(const Engine& engine, GLuint prog,
-		GameObjectList::iterator begin, GameObjectList::iterator end)
+	void DrawGameObject(GLuint prog,
+		GameObjectList::const_iterator begin, GameObjectList::const_iterator end)
 	{
 		// ------------------------
 		// オブジェクトの描画
@@ -541,7 +541,7 @@ namespace PokarinEngine
 			glUseProgram(prog);
 
 			// パラメータをコピー
-			CopyGameObjectParameters(engine, prog, *gameObject);
+			CopyGameObjectParameters(prog, *gameObject);
 
 			// ------------- 図形を描画 --------------
 
@@ -565,8 +565,7 @@ namespace PokarinEngine
 	/// <summary>
 	/// シーン内の全てのゲームオブジェクトを描画する
 	/// </summary>
-	/// <param name="shaderProgList"> シェーダプログラム配列 </param>
-	void Scene::DrawGameObjectAll(const Shader::ProgList& shaderProgList)
+	void Scene::DrawGameObjectAll()
 	{
 		// ------------------------------
 		// 描画優先度で並べ替え
@@ -611,10 +610,10 @@ namespace PokarinEngine
 		// ---------------------------------
 
 		// 標準シェーダプログラムの管理番号
-		GLuint progStandard = shaderProgList.at(Shader::ProgType::Standard);
+		GLuint progStandard = Shader::GetProgram(Shader::ProgType::Standard);
 
 		// ライティング無しシェーダプログラムの管理番号
-		GLuint progUnlit = shaderProgList.at(Shader::ProgType::Unlit);
+		GLuint progUnlit = Shader::GetProgram(Shader::ProgType::Unlit);
 
 		// ---------- transparent以前のキューを描画  -----------
 		// ---------- 通常のオブジェクト		     -----------
@@ -622,7 +621,7 @@ namespace PokarinEngine
 		// テスト用にライティング無しのシェーダを使う
 		// 本来は「progStandard」を使う
 		// 描画
-		DrawGameObject(*engine, progUnlit, drawObjectList.begin(), transparentBegin);
+		DrawGameObject(progStandard, drawObjectList.begin(), transparentBegin);
 
 		// ------ transparentからoverlayまでのキューを描画 ------
 		// ------ 半透明なオブジェクト					   ------
@@ -633,7 +632,7 @@ namespace PokarinEngine
 		// テスト用にライティング無しのシェーダを使う
 		// 本来は「progStandard」を使う
 		// 描画
-		DrawGameObject(*engine, progUnlit, transparentBegin, overlayBegin);
+		DrawGameObject(progStandard, transparentBegin, overlayBegin);
 
 		// 深度バッファへの書き込みを許可
 		glDepthMask(GL_TRUE);
@@ -647,7 +646,7 @@ namespace PokarinEngine
 		glDisable(GL_DEPTH_TEST);
 
 		// 描画
-		DrawGameObject(*engine, progUnlit, overlayBegin, drawObjectList.end());
+		DrawGameObject(progUnlit, overlayBegin, drawObjectList.end());
 	}
 
 #pragma endregion

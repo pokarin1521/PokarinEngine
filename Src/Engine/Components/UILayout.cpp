@@ -43,7 +43,7 @@ namespace PokarinEngine
 		回転の公式によってカメラとの相対座標を求める */
 
 		// 角度0度の場合の座標
-		Vec3 pos = basePosition;
+		Vector3 pos = basePosition;
 
 		// Y座標の-1～+1が、
 		// カメラに写る範囲の上端と下端になるように、Z座標を調整

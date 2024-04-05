@@ -5,7 +5,8 @@
 #define TRANSFORM_H_INCLUDED
 
 #include "Component.h"
-#include "../VecMath.h"
+#include "../Math/Vector.h"
+#include "../Math/Matrix.h"
 
 #include <vector>
 #include <string>
@@ -32,7 +33,7 @@ namespace PokarinEngine
 	public: // ------- コンストラクタ・デストラクタ --------
 
 		Transform() = default;
-		virtual ~Transform() = default;
+		~Transform() = default;
 
 	public: // ----------------- 禁止事項 ------------------
 
@@ -56,14 +57,14 @@ namespace PokarinEngine
 		/// </summary>
 		/// <param name="point"> 中心の位置 </param>
 		/// <param name="rotY"> Y軸回転させる角度(弧度法) </param>
-		/// <param name="radius"> 中心からの距離 </param>
-		void RotateAroundY(const Vec3& point, float rotY, float distance);
+		/// <param name="range"> 中心からの距離 </param>
+		void RotateAroundY(const Vector3& point, float rotY, float distance);
 
 		/// <summary>
 		/// ターゲットの方を向くようにY軸回転
 		/// </summary>
 		/// <param name="target"> ターゲットの座標 </param>
-		void LookAtY(const Vec3& target);
+		void LookAtY(const Vector3& target);
 
 	public: // ---------- 親オブジェクトの取得・設定 ----------
 
@@ -121,7 +122,7 @@ namespace PokarinEngine
 		/// 座標変換行列を取得する
 		/// </summary>
 		/// <returns> 座標変換行列 </returns>
-		const Mat4& GetTransformMatrix() const
+		const Matrix4x4& GetTransformMatrix() const
 		{
 			return transformMatrix;
 		}
@@ -130,7 +131,7 @@ namespace PokarinEngine
 		/// 法線変換行列を取得する
 		/// </summary>
 		/// <returns> 法線変換行列 </returns>
-		const Mat3& GetNormalMatrix() const
+		const Matrix3x3& GetNormalMatrix() const
 		{
 			return normalMatrix;
 		}
@@ -139,7 +140,7 @@ namespace PokarinEngine
 		/// 座標変換行列を設定する
 		/// </summary>
 		/// <param name="mat"> 座標変換行列 </param>
-		void SetTransformMatrix(const Mat4& mat)
+		void SetTransformMatrix(const Matrix4x4& mat)
 		{
 			transformMatrix = mat;
 		}
@@ -148,7 +149,7 @@ namespace PokarinEngine
 		/// 法線変換行列を設定する
 		/// </summary>
 		/// <param name="mat"> 法線変換行列 </param>
-		void SetNormalMatrix(const Mat3& mat)
+		void SetNormalMatrix(const Matrix3x3& mat)
 		{
 			normalMatrix = mat;
 		}
@@ -163,29 +164,29 @@ namespace PokarinEngine
 	public: // -------------------- 情報 --------------------
 
 		// 位置
-		Vec3 position = { 0, 0, 0 };
+		Vector3 position = { 0, 0, 0 };
 
 		// 回転(弧度法)
-		Vec3 rotation = { 0, 0, 0 };
+		Vector3 rotation = { 0, 0, 0 };
 
 		// 拡大率
-		Vec3 scale = { 1, 1, 1 };
+		Vector3 scale = { 1, 1, 1 };
 
 	private: // ---------------- エディタ用 ----------------
 
 		// 回転(度数法)
 		// スライダー表示に使う
-		Vec3 rotationDeg = { 0, 0, 0 };
+		Vector3 rotationDeg = { 0, 0, 0 };
 
 		bool isDrag = false;
 
 	private: // ----------------- 変換行列 -----------------
 
 		// 座標変換行列
-		Mat4 transformMatrix = Mat4(0);
+		Matrix4x4 transformMatrix = Matrix4x4(0);
 
 		// 法線変換行列
-		Mat3 normalMatrix = Mat3(0);
+		Matrix3x3 normalMatrix = Matrix3x3(0);
 
 	private: // ------------------- 親子 --------------------
 

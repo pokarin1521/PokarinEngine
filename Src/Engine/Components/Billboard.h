@@ -17,7 +17,7 @@ namespace PokarinEngine
 	public: // ---------------- コンストラクタ・デストラクタ -------------------
 
 		Billboard() = default;
-		virtual ~Billboard() = default;
+		~Billboard() = default;
 
 	public: // ------------------------- イベント関数 --------------------------
 
@@ -25,7 +25,7 @@ namespace PokarinEngine
 		/// 更新イベント
 		/// </summary>
 		/// <param name="deltaTime"> 前回の更新からの経過時間(秒) </param>
-		virtual void Update(float deltaTime) override
+		void Update(float deltaTime) override
 		{
 			/* 常にカメラの方を向くようにメッセージオブジェクトの向きを調整 */
 
