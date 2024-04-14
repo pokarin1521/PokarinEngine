@@ -12,7 +12,7 @@ namespace PokarinEngine
 	/// <param name="height"> 高さ </param>
 	/// <param name="internalformat"> 保持する情報のバッファ </param>
 	RenderbufferObject::RenderbufferObject(
-		GLsizei width, GLsizei fboHeight, GLenum internalformat)
+		GLsizei width, GLsizei height, GLenum internalformat)
 	{
 		// --------------------------------------------
 		// 深度バッファ用レンダーバッファを作成
@@ -29,7 +29,7 @@ namespace PokarinEngine
 
 		// 指定された情報を保持できるように紐づけ
 		glRenderbufferStorage(
-			GL_RENDERBUFFER, internalformat, width, fboHeight);
+			GL_RENDERBUFFER, internalformat, width, height);
 
 		// 誤操作のないようにバインド解除
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);

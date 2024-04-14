@@ -19,26 +19,26 @@ namespace PokarinEngine
 
 		if (ImGui::IsKeyDown(ImGuiKey_W))
 		{
-			sceneCamera.position.x -= cameraMoveSpeed * cameraSin.y;
-			sceneCamera.position.z -= cameraMoveSpeed * cameraCos.y;
+			sceneCamera.position.x += cameraMoveSpeed * -cameraSin.y;
+			sceneCamera.position.z += cameraMoveSpeed * cameraCos.y;
 		}
 
 		if (ImGui::IsKeyDown(ImGuiKey_S))
 		{
-			sceneCamera.position.x += cameraMoveSpeed * cameraSin.y;
-			sceneCamera.position.z += cameraMoveSpeed * cameraCos.y;
-		}
-
-		if (ImGui::IsKeyDown(ImGuiKey_A))
-		{
-			sceneCamera.position.x -= cameraMoveSpeed * cameraCos.y;
-			sceneCamera.position.z -= cameraMoveSpeed * -cameraSin.y;
+			sceneCamera.position.x -= cameraMoveSpeed * -cameraSin.y;
+			sceneCamera.position.z -= cameraMoveSpeed * cameraCos.y;
 		}
 
 		if (ImGui::IsKeyDown(ImGuiKey_D))
 		{
 			sceneCamera.position.x += cameraMoveSpeed * cameraCos.y;
-			sceneCamera.position.z += cameraMoveSpeed * -cameraSin.y;
+			sceneCamera.position.z += cameraMoveSpeed * cameraSin.y;
+		}
+
+		if (ImGui::IsKeyDown(ImGuiKey_A))
+		{
+			sceneCamera.position.x -= cameraMoveSpeed * cameraCos.y;
+			sceneCamera.position.z -= cameraMoveSpeed * cameraSin.y;
 		}
 	}
 

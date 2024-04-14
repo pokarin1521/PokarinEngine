@@ -42,34 +42,20 @@ namespace PokarinEngine
 	}
 
 	/// <summary>
-	/// ゲームオブジェクト作成用ポップアップを展開する
+	/// ゲームオブジェクト作成用ポップアップの処理
 	/// </summary>
-	void Hierarchy::CreateObjectPopup_Open()
+	void Hierarchy::CreateObjectPopup()
 	{
-		ImGui::OpenPopup("CreateObject");
-	}
-
-	/// <summary>
-	/// ゲームオブジェクト作成用ポップアップを展開した時の処理
-	/// </summary>
-	void Hierarchy::CreateObjectPopup_Run()
-	{
-		// ゲームオブジェクト作成用ポップアップ
-		if (ImGui::BeginPopup("CreateObject"))
+		// 3Dオブジェクト作成用メニュー
+		if (ImGui::BeginMenu("3D Object"))
 		{
-			// 3Dオブジェクト作成用メニュー
-			if (ImGui::BeginMenu("3D Object"))
-			{
-				// 球体生成用ボタン
-				CreateObjectButton("Sphere", StaticMeshFile_OBJ::sphere);
+			// 球体生成用ボタン
+			CreateObjectButton("Sphere", StaticMeshFile_OBJ::sphere);
 
-				// ロボット生成用ボタン
-				CreateObjectButton("Robot", StaticMeshFile_OBJ::robot);
+			// ロボット生成用ボタン
+			CreateObjectButton("Robot", StaticMeshFile_OBJ::robot);
 
-				ImGui::EndMenu();
-			}
-
-			ImGui::EndPopup();
+			ImGui::EndMenu();
 		}
 	}
 
@@ -108,12 +94,16 @@ namespace PokarinEngine
 			if (ImGui::IsWindowHovered() &&
 				Input::GetKeyUp(KeyCode::MouseRight))
 			{
-				CreateObjectPopup_Open();
+				ImGui::OpenPopup(createObjectPopup);
 			}
 
-			// オブジェクト作成用ポップアップを
-			// 展開した時の処理
-			CreateObjectPopup_Run();
+			// オブジェクト作成用ポップアップを展開中の時だけ処理を実行
+			if (ImGui::BeginPopup(createObjectPopup))
+			{
+				CreateObjectPopup();
+
+				ImGui::EndPopup();
+			}
 
 			// メニュー表示
 			Mene();
@@ -147,14 +137,19 @@ namespace PokarinEngine
 			{
 				// ボタンを押した時に
 				// ゲームオブジェクト作成用ポップアップを展開する
-				CreateObjectPopup_Open();
+				ImGui::OpenPopup(createObjectPopup);
 			}
 
 			// ボタンの色設定を終了
 			ImGui::PopStyleColor();
 
-			// ゲームオブジェクト作成用ポップアップ
-			CreateObjectPopup_Run();
+			// オブジェクト作成用ポップアップを展開中の時だけ処理を実行
+			if (ImGui::BeginPopup(createObjectPopup))
+			{
+				CreateObjectPopup();
+
+				ImGui::EndPopup();
+			}
 
 			ImGui::EndMenuBar();
 		}

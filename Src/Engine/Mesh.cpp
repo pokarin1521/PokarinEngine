@@ -13,7 +13,6 @@
 #include <algorithm>
 #include <filesystem>
 #include <fstream>
-#include <stdio.h>
 
 namespace PokarinEngine
 {
@@ -22,7 +21,7 @@ namespace PokarinEngine
 	/// </summary>
 	/// <param name="mesh"> 描画するスタティックメッシュ </param>
 	/// <param name="program"> 使用するシェーダプログラムの管理番号 </param>
-	/// <param name="materialss"> 使用するマテリアル配列 </param>
+	/// <param name="materials"> 使用するマテリアル配列 </param>
 	void Draw(const StaticMesh& mesh, GLuint program, const MaterialList& materials)
 	{
 		// カラーパラメータを取得
@@ -44,14 +43,14 @@ namespace PokarinEngine
 		これに対応するため、StaticMesh構造体は
 		DrawParamsを配列で管理するようにしている */
 
-		for (const auto& e : mesh.drawParamsList)
+		for (const auto& drawParameter : mesh.drawParamList)
 		{
 			// マテリアルを設定
 			// マテリアルがあるか確認
-			if (e.materialNo >= 0 && e.materialNo < materials.size())
+			if (drawParameter.materialNo >= 0 && drawParameter.materialNo < materials.size())
 			{
 				// マテリアル取得
-				const Material& material = *materials[e.materialNo];
+				const Material& material = *materials[drawParameter.materialNo];
 
 				if (program)
 				{
@@ -98,7 +97,7 @@ namespace PokarinEngine
 
 			// 描画
 			glDrawElementsBaseVertex(
-				e.mode, e.count, GL_UNSIGNED_SHORT, e.indices, e.baseVertex);
+				drawParameter.mode, drawParameter.count, GL_UNSIGNED_SHORT, drawParameter.indices, drawParameter.baseVertex);
 		}
 	}
 
@@ -413,6 +412,7 @@ namespace PokarinEngine
 	MeshBuffer::MeshBuffer(size_t bufferSize)
 	{
 		// バッファオブジェクトを作成
+		// 動的にメモリを確保出来るようにフラグを設定する
 		buffer = BufferObject::Create(
 			bufferSize, nullptr, GL_DYNAMIC_STORAGE_BIT);
 
@@ -455,7 +455,7 @@ namespace PokarinEngine
 		staticMeshList.reserve(100);
 
 		// 描画パラメータの容量を予約
-		drawParamsList.reserve(100);
+		drawParamList.reserve(100);
 	}
 
 	/// <summary>
@@ -911,10 +911,10 @@ namespace PokarinEngine
 		auto pMesh = std::make_shared<StaticMesh>();
 
 		// データの位置
-		const void* indexOffset = drawParamsList.back().indices;
+		const void* indexOffset = drawParamList.back().indices;
 
 		// インデックス0となる頂点配列の要素番号
-		const GLuint baseVertex = drawParamsList.back().baseVertex;
+		const GLuint baseVertex = drawParamList.back().baseVertex;
 
 		// ------- マテリアルに対応した描画パラメータを作成 -------
 
@@ -926,7 +926,7 @@ namespace PokarinEngine
 			i = 1;
 		}
 
-		// 次の要素を調べるので、size() - 1
+		// 次の要素を調べるので、size() - 1まで
 		for (; i < usemtls.size() - 1; ++i)
 		{
 			// 使用中のマテリアル
@@ -942,7 +942,7 @@ namespace PokarinEngine
 			}
 
 			// 描画パラメータを作成
-			DrawParams params;
+			DrawParameter params;
 
 			// プリミティブの種類
 			params.mode = GL_TRIANGLES;
@@ -971,7 +971,7 @@ namespace PokarinEngine
 			}
 
 			// 作成した描画パラメータを追加
-			pMesh->drawParamsList.push_back(params);
+			pMesh->drawParamList.push_back(params);
 
 			// インデックスオフセットを変更
 			// 描画した分ずらす
@@ -1081,7 +1081,7 @@ namespace PokarinEngine
 		glDeleteBuffers(2, tmp);
 
 		// 追加した図形の描画パラメータを作成
-		DrawParams newParams;
+		DrawParameter newParams;
 
 		// プリミティブの種類
 		newParams.mode = mode;
@@ -1097,7 +1097,7 @@ namespace PokarinEngine
 		newParams.baseVertex = static_cast<GLuint>(usedBytes / sizeof(Vertex));
 
 		// 作成した描画パラメータを配列に追加
-		drawParamsList.push_back(newParams);
+		drawParamList.push_back(newParams);
 
 		// 次のデータ格納開始位置を計算
 		// コピー先の位置を、頂点データとインデックスデータの共通の境界で合わせる
@@ -1138,7 +1138,7 @@ namespace PokarinEngine
 		staticMeshList.clear();
 
 		// 描画パラメータを削除
-		drawParamsList.clear();
+		drawParamList.clear();
 	}
 
 	/// <summary>

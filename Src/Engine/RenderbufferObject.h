@@ -37,10 +37,10 @@ namespace PokarinEngine
 		/// <param name="internalformat"> 保持する情報のバッファ </param>
 		/// <returns> 作成したRBO </returns>
 		static RenderbufferObjectPtr Create(
-			GLsizei width, GLsizei fboHeight, GLenum internalformat)
+			GLsizei width, GLsizei height, GLenum internalformat)
 		{
 			return std::make_shared<RenderbufferObject>(
-				width, fboHeight, internalformat);
+				width, height, internalformat);
 		}
 
 	public: // ---------- コンストラクタ・デストラクタ -----------
@@ -52,7 +52,7 @@ namespace PokarinEngine
 		/// <param name="height"> 高さ </param>
 		/// <param name="internalformat"> 保持する情報のバッファ </param>
 		RenderbufferObject(
-			GLsizei width, GLsizei fboHeight, GLenum internalformat);
+			GLsizei width, GLsizei height, GLenum internalformat);
 
 		/// <summary>
 		/// RBOを削除するデストラクタ

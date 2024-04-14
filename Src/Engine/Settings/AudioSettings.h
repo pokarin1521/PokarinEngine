@@ -4,15 +4,11 @@
 #ifndef AUDIOSETTINGS_H_INCLUDED
 #define AUDIOSETTINGS_H_INCLUDED
 
-/**
-* これも先生のやつだよ
-* 残しておくけど
-* ちゃんと作り直せよ
-*/
+#include <string>
 
-/**
-* 音声再生プレイヤー番号
-*/
+/// <summary>
+/// 音声再生プレイヤー番号 
+/// </summary>
 namespace AudioPlayer
 {
 	// BGMの再生に使うプレイヤー番号
@@ -20,22 +16,22 @@ namespace AudioPlayer
 
 }
 
-/**
-* BGM設定
-*/
+/// <summary>
+/// BGMファイル名
+/// </summary>
 namespace BGM
 {
-	inline constexpr char test_title[] = "Res/Audio/BGM/Title/Test_Title.mp3";
-	inline constexpr char test_play[] = "Res/Audio/BGM/Play/Test_Play.mp3";
+	inline constexpr const char* test_title = "Res/Audio/BGM/Title/Test_Title.mp3";
+	inline constexpr const char* test_play = "Res/Audio/BGM/Play/Test_Play.mp3";
 }
 
-/**
-* 効果音設定
-*/
+/// <summary>
+/// 効果音ファイル名
+/// </summary>
 namespace SE
 {
 	// ボタンクリック
-	inline constexpr char test_buttonClick[] = "Res/Audio/SE/Click/Test_Click.wav";
+	inline constexpr const char* test_buttonClick = "Res/Audio/SE/Click/Test_Click.wav";
 }
 
 #endif // !AUDIOSETTINGS_H_INCLUDED

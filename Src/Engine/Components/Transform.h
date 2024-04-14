@@ -35,14 +35,6 @@ namespace PokarinEngine
 		Transform() = default;
 		~Transform() = default;
 
-	public: // ----------------- 禁止事項 ------------------
-
-		// コピーの禁止
-		Transform(Transform&) = delete;
-
-		// 代入の禁止
-		Transform& operator=(Transform&) = delete;
-
 	public: // ----------- コンポーネントの制御 ------------
 
 		/// <summary>
@@ -59,12 +51,6 @@ namespace PokarinEngine
 		/// <param name="rotY"> Y軸回転させる角度(弧度法) </param>
 		/// <param name="range"> 中心からの距離 </param>
 		void RotateAroundY(const Vector3& point, float rotY, float distance);
-
-		/// <summary>
-		/// ターゲットの方を向くようにY軸回転
-		/// </summary>
-		/// <param name="target"> ターゲットの座標 </param>
-		void LookAtY(const Vector3& target);
 
 	public: // ---------- 親オブジェクトの取得・設定 ----------
 
@@ -159,7 +145,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// エディタに情報を表示する
 		/// </summary>
-		void RenderEditor() override;
+		void RenderInfo() override;
 
 	public: // -------------------- 情報 --------------------
 

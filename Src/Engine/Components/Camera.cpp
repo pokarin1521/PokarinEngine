@@ -10,7 +10,7 @@ namespace PokarinEngine
 	/// <summary>
 	/// エディタに情報を表示する
 	/// </summary>
-	void Camera::RenderEditor()
+	void Camera::RenderInfo()
 	{
 		if (ImGui::CollapsingHeader("Camera"))
 		{

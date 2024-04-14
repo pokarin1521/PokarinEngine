@@ -42,13 +42,13 @@ namespace PokarinEngine
 		/// </summary>
 		/// <param name="engine"> エンジンクラスの参照 </param>
 		/// <param name="_windowID"> ウィンドウ番号 </param>
-		/// <param name="width"> FBOの幅 </param>
-		/// <param name="height"> FBOの高さ </param>
+		/// <param name="fboWidth"> FBOの幅 </param>
+		/// <param name="fboHeight"> FBOの高さ </param>
 		static FramebufferObjectPtr Create(
-			Engine& engine, WindowID _windowID, GLsizei width, GLsizei height)
+			Engine& engine, WindowID _windowID, GLsizei fboWidth, GLsizei fboHeight)
 		{
 			return std::make_shared<FramebufferObject>(
-				engine, _windowID, width, height);
+				engine, _windowID, fboWidth, fboHeight);
 		}
 
 	public: // -------- コンストラクタ・デストラクタ --------
@@ -58,10 +58,10 @@ namespace PokarinEngine
 		/// </summary>
 		/// <param name="engine"> エンジンクラスの参照 </param>
 		/// <param name="_windowID"> ウィンドウ番号 </param>
-		/// <param name="width"> FBOの幅 </param>
-		/// <param name="height"> FBOの高さ </param>
+		/// <param name="fboWidth"> FBOの幅 </param>
+		/// <param name="fboHeight"> FBOの高さ </param>
 		FramebufferObject(
-			Engine& engine, WindowID _windowID, GLsizei width, GLsizei height);
+			Engine& engine, WindowID _windowID, GLsizei fboWidth, GLsizei fboHeight);
 
 		/// <summary>
 		/// FBOを削除するデストラクタ
@@ -104,12 +104,12 @@ namespace PokarinEngine
 		/// <summary>
 		/// FBOの大きさを設定する
 		/// </summary>
-		/// <param name="width"> 幅 </param>
-		/// <param name="height"> 高さ </param>
-		void SetSize(GLsizei width, GLsizei height)
+		/// <param name="fboWidth"> 幅 </param>
+		/// <param name="fboHeight"> 高さ </param>
+		void SetSize(GLsizei fboWidth, GLsizei fboHeight)
 		{
-			fboWidth = width;
-			fboHeight = height;
+			width = fboWidth;
+			height = fboHeight;
 		}
 
 	public: // -------------- 管理番号の取得 ---------------
@@ -137,7 +137,7 @@ namespace PokarinEngine
 		RenderbufferObjectPtr rbo;
 
 		// FBOの大きさ
-		GLsizei fboWidth = 0, fboHeight = 0;
+		GLsizei width = 0, height = 0;
 
 		// ウィンドウ識別番号
 		WindowID windowID;

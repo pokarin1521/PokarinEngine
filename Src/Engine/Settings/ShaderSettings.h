@@ -34,9 +34,9 @@ namespace PokarinEngine
 	/// </summary>
 	namespace UniformLocation
 	{
-		// ------------------------
-		// オブジェクト, カメラ
-		// ------------------------
+		// --------------------------------
+		// 座標、回転角度、拡大率
+		// --------------------------------
 
 		// 座標変換ベクトルの行列
 		inline constexpr GLint transformMatrix = 0;
@@ -53,6 +53,10 @@ namespace PokarinEngine
 		// カメラの回転角度
 		inline constexpr GLint cameraRotation = 5;
 
+		// -------------------------
+		// オブジェクト色
+		// -------------------------
+
 		// オブジェクトの色
 		inline constexpr GLint color = 100;
 
@@ -62,6 +66,10 @@ namespace PokarinEngine
 		// -------------------
 		// ライト
 		// -------------------
+
+		// 環境光
+		// 方向を持たないので色だけ
+		inline constexpr GLint ambientLight = 107;
 
 		// 平行光源の色
 		inline constexpr GLint directionalLightColor = 108;

@@ -181,10 +181,11 @@
     <ClCompile Include="Src\Engine\MainEditor\MainEditor.cpp" />
     <ClCompile Include="Src\Engine\MainEditor\RenderView.cpp" />
     <ClCompile Include="Src\Engine\MainEditor\SceneView.cpp" />
-    <ClCompile Include="Src\Engine\Math\Vector.cpp" />
     <ClCompile Include="Src\Engine\Mesh.cpp" />
     <ClCompile Include="Src\Engine\NodeScript\NodeEditor.cpp" />
     <ClCompile Include="Src\Engine\NodeScript\NodeScript.cpp" />
+    <ClCompile Include="Src\Engine\NodeScript\Nodes\EventNode.cpp" />
+    <ClCompile Include="Src\Engine\NodeScript\Nodes\Node.cpp" />
     <ClCompile Include="Src\Engine\Random.cpp" />
     <ClCompile Include="Src\Engine\RenderbufferObject.cpp" />
     <ClCompile Include="Src\Engine\Scene.cpp" />
@@ -244,6 +245,8 @@
     <ClInclude Include="Src\Engine\NodeScript\NodeScript.h" />
     <ClInclude Include="Src\Engine\NodeScript\Nodes\EventNode.h" />
     <ClInclude Include="Src\Engine\NodeScript\Nodes\Node.h" />
+    <ClInclude Include="Src\Engine\NodeScript\Nodes\TestNode.h" />
+    <ClInclude Include="Src\Engine\NodeScript\Nodes\EventUpdateNode.h" />
     <ClInclude Include="Src\Engine\Random.h" />
     <ClInclude Include="Src\Engine\RenderbufferObject.h" />
     <ClInclude Include="Src\Engine\Scene.h" />
@@ -254,6 +257,7 @@
     <ClInclude Include="Src\Engine\Texture.h" />
     <ClInclude Include="Src\Engine\UsingNames\UsingGameObject.h" />
     <ClInclude Include="Src\Engine\UsingNames\UsingMesh.h" />
+    <ClInclude Include="Src\Engine\UsingNames\UsingNode.h" />
     <ClInclude Include="Src\Engine\UsingNames\UsingNodeEditor.h" />
     <ClInclude Include="Src\Engine\VertexArrayObject.h" />
     <ClInclude Include="Src\Engine\Window.h" />

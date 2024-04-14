@@ -3,18 +3,16 @@
 */
 #include "NodeEditor.h"
 
-#include "ImGui/imgui.h"
+#include "Nodes/TestNode.h"
 
 #include "../GameObject.h"
 #include "../Random.h"
 #include "../InputManager.h"
 
-#include "Nodes/EventNode.h"
-
-#include "NodeScript.h"
-
 namespace PokarinEngine
 {
+#pragma region NodeEditor
+
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
@@ -60,21 +58,30 @@ namespace PokarinEngine
 			// ノードエディタ用コンテキストの使用を開始
 			ImNodes::EditorContextSet(nodeEditorContext);
 
-			/* テスト用 */
-			// 右クリックでイベントノードを追加する
-			if (Input::GetKeyDown(KeyCode::MouseRight))
+			// 右クリックでノード作成用ポップアップを展開する
+			if (Input::GetKeyUp(KeyCode::MouseRight))
 			{
-				AddNode(std::make_shared<EventNode>());
+				ImGui::OpenPopup(createNodePopup);
+			}
+
+			// ポップアップ展開中に処理を実行する
+			if (ImGui::BeginPopup(createNodePopup))
+			{
+				CreateNodePopup();
+
+				ImGui::EndPopup();
 			}
 
 			// ノードエディタを作成
 			ImNodes::BeginNodeEditor();
 			{
+				// 作成済みのノードを表示する
 				for (auto& node : nodeList)
 				{
-					node->RenderNode();
+					node->Render();
 				}
 
+				// リンク済みのピン同士を線で繋げる
 				for (int i = 0; i < linkPairList.size(); ++i)
 				{
 					int _s = linkPairList[i].first;
@@ -85,6 +92,7 @@ namespace PokarinEngine
 				ImNodes::EndNodeEditor();
 			}
 
+			// ピン同士がリンクしたら配列に追加する
 			int s = 0, e = 0;
 			if (ImNodes::IsLinkCreated(&s, &e))
 			{
@@ -93,7 +101,7 @@ namespace PokarinEngine
 
 			ImGui::End();
 
-			// 選択されているのでtrueを返す
+			// ウィンドウが選択されているのでtrueを返す
 			return true;
 		}
 
@@ -101,15 +109,19 @@ namespace PokarinEngine
 		// End関数を呼ぶ
 		ImGui::End();
 
-		// 選択されてないのでfalseを返す
+		// ウィンドウが選択されてないのでfalseを返す
 		return false;
 	}
 
+#pragma endregion
+
+#pragma region CreateNode
+
 	/// <summary>
-	/// ノードを追加する
+	/// ノード作成時の処理
 	/// </summary>
-	/// <param name="node"> 追加するノード </param>
-	void NodeEditor::AddNode(NodePtr node)
+	/// <param name="node"> 作成したノード </param>
+	void NodeEditor::CreateNode(NodePtr node)
 	{
 		// ノード配列に追加
 		nodeList.emplace(node);
@@ -120,9 +132,21 @@ namespace PokarinEngine
 		// ノードの識別番号を設定
 		node->SetID_OnlyOnce(nodeID);
 
-		// ノード追加時の処理を実行
-		node->AddNode(this);
+		// ノード作成時の処理を実行
+		node->CreateNode(this);
 	}
+
+	/// <summary>
+	/// ノード作成用ポップアップの処理
+	/// </summary>
+	void NodeEditor::CreateNodePopup()
+	{
+		CreateNodeButton<TestNode>();
+	}
+
+#pragma endregion
+
+#pragma region SingleID
 
 	/// <summary>
 	/// ノードの入出力用ピンの識別番号を取得する
@@ -152,5 +176,7 @@ namespace PokarinEngine
 
 		return singleID;
 	}
+
+#pragma endregion
 
 } // namespace PokarinEngine

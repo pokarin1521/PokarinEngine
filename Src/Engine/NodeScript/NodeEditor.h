@@ -4,6 +4,7 @@
 #ifndef NODEEDITOR_H_INCLUDED
 #define NODEEDITOR_H_INCLUDED
 
+#include "ImGui/imgui.h"
 #include "ImGui/imgui_internal.h"
 
 #include "ImGui/imnodes.h"
@@ -11,9 +12,11 @@
 
 #include "Nodes/Node.h"
 
+#include "../UsingNames/UsingNode.h"
 #include "../UsingNames/UsingNodeEditor.h"
 
 #include <vector>
+#include <unordered_set>
 #include <memory>
 
 namespace PokarinEngine
@@ -59,14 +62,6 @@ namespace PokarinEngine
 		/// <para> false : ノードエディタのウィンドウが選択されていない </para>
 		/// </returns>
 		bool Update();
-
-	public: // --------------------- ノードの追加 ----------------------
-
-		/// <summary>
-		/// ノードを追加する
-		/// </summary>
-		/// <param name="node"> 追加するノード </param>
-		void AddNode(NodePtr node);
 
 	public: // ----------------- ノードの入出力用ピン ------------------
 
@@ -126,6 +121,33 @@ namespace PokarinEngine
 
 		using IDList = std::unordered_set<int>;
 
+	private: // ------------------------- ノード作成用 -------------------------
+
+		/// <summary>
+		/// ノード作成用ボタンの処理
+		/// </summary>
+		/// <typeparam name="T"> ノードクラス </typeparam>
+		template <class T>
+		void CreateNodeButton()
+		{
+			// ボタンを押したらノード作成
+			if(ImGui::Button(T::name))
+			{
+				CreateNode(std::make_shared<T>());
+			}
+		}
+
+		/// <summary>
+		/// ノード作成時の処理
+		/// </summary>
+		/// <param name="node"> 作成したノード </param>
+		void CreateNode(NodePtr node);
+
+		/// <summary>
+		/// ノード作成用ポップアップの処理
+		/// </summary>
+		void CreateNodePopup();
+
 	private: // --------------------------- 識別番号 ---------------------------
 
 		/// <summary>
@@ -166,6 +188,11 @@ namespace PokarinEngine
 
 		// ノードエディタが開いているならtrue
 		bool isOpen = false;
+
+	private: // ------------------------- ノード作成用 -------------------------
+
+		// ノード作成用ポップアップの名前
+		const char* createNodePopup = "CreateNode";
 	};
 
 } // namespace PokarinEngine

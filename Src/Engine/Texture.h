@@ -24,9 +24,9 @@ namespace PokarinEngine
 	// テクスチャポインタ型
 	using TexturePtr = std::shared_ptr<Texture>;
 
-	/**
-	* テクスチャ管理クラス
-	*/
+	/// <summary>
+	/// テクスチャ管理クラス
+	/// </summary>
 	class Texture
 	{
 		// Engineクラスに情報を公開
@@ -55,14 +55,14 @@ namespace PokarinEngine
 		/// <summary>
 		/// テクスチャの高さを取得
 		/// </summary>
-		int GetHeight() const { return fboHeight; }
+		int GetHeight() const { return height; }
 
 		/// <summary>
 		/// 画像のアスペクト比を取得
 		/// </summary>
 		float GetAspectRatio() const
 		{
-			return static_cast<float>(width) / static_cast<float>(fboHeight);
+			return static_cast<float>(width) / static_cast<float>(height);
 		}
 
 		/// <summary>
@@ -101,7 +101,7 @@ namespace PokarinEngine
 		std::string name;	// テクスチャ名(主にデバッグ用)
 		GLuint id = 0;		// テクスチャオブジェクト管理番号
 		int width = 0;		// テクスチャの幅
-		int fboHeight = 0;		// テクスチャの高さ
+		int height = 0;		// テクスチャの高さ
 	};
 
 } // namespace PokarinEngine

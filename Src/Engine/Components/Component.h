@@ -41,18 +41,6 @@ namespace PokarinEngine
 	public: // ---------------------- コンポーネントの情報管理 ------------------------
 
 		/// <summary>
-		/// コンポーネントの所有者を取得する(読み取り専用)
-		/// </summary>
-		/// <returns> 所有者の参照 </returns>
-		const GameObject& GetOwner() const { return *owner; }
-
-		/// <summary>
-		/// コンポーネントの所有者を取得する
-		/// </summary>
-		/// <returns> 所有者の参照 </returns>
-		GameObject& GetOwner() { return *owner; }
-
-		/// <summary>
 		/// コンポーネントをゲームオブジェクトから削除する
 		/// </summary>
 		void Destroy() { isDestroyed = true; }
@@ -88,7 +76,21 @@ namespace PokarinEngine
 	public: // ----------------------- エディタ用 --------------------------
 
 		// エディタに情報を表示する
-		virtual void RenderEditor() = 0;
+		virtual void RenderInfo() = 0;
+
+	protected: // -------------------- 持ち主の取得 ------------------------
+
+		/// <summary>
+		/// コンポーネントの所有者を取得する(読み取り専用)
+		/// </summary>
+		/// <returns> 所有者の参照 </returns>
+		const GameObject& GetOwner() const { return *owner; }
+
+		/// <summary>
+		/// コンポーネントの所有者を取得する
+		/// </summary>
+		/// <returns> 所有者の参照 </returns>
+		GameObject& GetOwner() { return *owner; }
 
 	private: // ----------------- コンポーネントの情報 ---------------------
 

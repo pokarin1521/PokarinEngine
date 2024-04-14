@@ -49,7 +49,7 @@ namespace PokarinEngine
 	/// <summary>
 	/// 描画パラメータ
 	/// </summary>
-	struct DrawParams
+	struct DrawParameter
 	{
 		GLenum mode = GL_TRIANGLES; // プリミティブの種類
 		GLsizei count = 0;			// 描画するインデックス数
@@ -75,9 +75,14 @@ namespace PokarinEngine
 	/// </summary>
 	struct StaticMesh
 	{
-		std::string filename; // ファイル名
-		std::vector<DrawParams> drawParamsList; // 描画パラメータ配列
-		MaterialList materials; // 共有マテリアル配列
+		// ファイル名
+		std::string filename;
+
+		// 描画パラメータ配列
+		std::vector<DrawParameter> drawParamList;
+
+		// 共有マテリアル配列
+		MaterialList materials;
 	};
 
 	/// <summary>
@@ -107,7 +112,7 @@ namespace PokarinEngine
 		const uint16_t* indices, size_t indexCount);
 
 	/// <summary>
-	/// 頂点データを管理するクラス
+	/// メッシュバッファ(描画パラメータや頂点データなど)
 	/// </summary>
 	class MeshBuffer
 	{
@@ -197,16 +202,16 @@ namespace PokarinEngine
 		/// </summary>
 		/// <param name="index"> 取得する描画パラメータの要素番号 </param>
 		/// <returns> 指定した番号の描画パラメータ </returns>
-		const DrawParams& GetDrawParams(size_t index) const
+		const DrawParameter& GetDrawParams(size_t index) const
 		{
-			return drawParamsList[index];
+			return drawParamList[index];
 		}
 
 		/// <summary>
 		/// 描画パラメータの数を取得
 		/// </summary>
 		/// <returns> 描画パラメータ配列の要素数 </returns>
-		size_t GetDrawParamsCount() const { return drawParamsList.size(); }
+		size_t GetDrawParamsCount() const { return drawParamList.size(); }
 
 		/// <summary>
 		/// VAOの取得
@@ -232,12 +237,12 @@ namespace PokarinEngine
 		std::unordered_map<std::string, StaticMeshPtr> staticMeshList;
 
 		// 描画パラメータ配列
-		std::vector<DrawParams> drawParamsList;
+		std::vector<DrawParameter> drawParamList;
 
 		// 頂点属性配列
 		VertexArrayObjectPtr vao;
 
-		// 頂点データおよびインデックスデータ
+		// 頂点データおよびインデックスデータ用のバッファ
 		BufferObjectPtr buffer;
 
 		// バッファの使用済み容量(バイト)

@@ -15,10 +15,10 @@ namespace PokarinEngine
 	/// </summary>
 	/// <param name="engine"> エンジンクラスの参照 </param>
 	/// <param name="_windowID"> ウィンドウ番号 </param>
-	/// <param name="width"> FBOの幅 </param>
-	/// <param name="height"> FBOの高さ </param>
+	/// <param name="fboWidth"> FBOの幅 </param>
+	/// <param name="fboHeight"> FBOの高さ </param>
 	FramebufferObject::FramebufferObject(
-		Engine& engine, WindowID _windowID, GLsizei width, GLsizei height)
+		Engine& engine, WindowID _windowID, GLsizei fboWidth, GLsizei fboHeight)
 	{
 		// -------------------------------
 		// ウィンドウ番号を設定
@@ -30,21 +30,23 @@ namespace PokarinEngine
 		// FBOの大きさを設定
 		// -------------------------------
 
-		fboWidth = width;
-		fboHeight = height;
+		width = fboWidth;
+		height = fboHeight;
 
 		// -------------------------------------------
 		// カラーバッファ用テクスチャを作成
 		// -------------------------------------------
 
-		texture = engine.GetTexture(fboWidth, fboHeight);
+		texture = engine.GetTexture(width, height);
 
 		// -------------------------------
 		// 深度バッファ用RBOを作成
 		// -------------------------------
 
+		// どのGPUでもそれなりの性能になることを期待して
+		// 深度バッファはGL_DEPTH_COMPONENT32にする
 		rbo = RenderbufferObject::Create(
-			fboWidth, fboHeight, GL_DEPTH_COMPONENT32F);
+			width, height, GL_DEPTH_COMPONENT32);
 
 		// -------------------------
 		// FBOを作成
@@ -91,7 +93,7 @@ namespace PokarinEngine
 		glBindFramebuffer(GL_FRAMEBUFFER, id);
 
 		// ビューポートをFBOの大きさで設定
-		glViewport(0, 0, fboWidth, fboHeight);
+		glViewport(0, 0, width, height);
 
 		// 深度バッファをクリア
 		glClear(GL_DEPTH_BUFFER_BIT);

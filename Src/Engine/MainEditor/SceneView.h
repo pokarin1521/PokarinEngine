@@ -19,7 +19,12 @@ namespace PokarinEngine
 	{
 	public: // ----------------- コンストラクタ・デストラクタ ---------------------
 
-		SceneView() = default;
+		SceneView()
+		{
+			// オブジェクトが見えるように少し後ろに配置する
+			sceneCamera.position.z = -5;
+		}
+
 		~SceneView() = default;
 
 	public: // ------------------------------ 制御 --------------------------------

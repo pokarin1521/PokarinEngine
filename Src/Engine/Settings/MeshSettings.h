@@ -18,31 +18,38 @@ namespace PokarinEngine
 		// ------------------------
 
 		// 球体
-		inline constexpr char sphere[] = "Res/MeshData/Basic/Sphere/Sphere.obj";
+		inline constexpr const char* sphere = "Res/MeshData/Basic/Sphere/Sphere.obj";
 
 		// 板
-		inline constexpr char plane[] = "Res/MeshData/Basic/Plane/Plane.obj";
+		inline constexpr const char* plane = "Res/MeshData/Basic/Plane/Plane.obj";
 
 		// ------------------------
 		// UI用
 		// ------------------------
 
 		// UI用の板
-		inline constexpr char ui[] = "Res/MeshData/UI/Plane.obj";
+		inline constexpr const char* ui = "Res/MeshData/UI/Plane.obj";
+
+		// ------------------------
+		// スカイスフィア
+		// ------------------------
+
+		inline constexpr const char* skySphere = "Res/MeshData/SkySphere/SkySphere.obj";
 
 		// ------------------------ 
 		// お試しロボット 
 		// ------------------------
 
 		// お試しロボット
-		inline constexpr char robot[] = "Res/MeshData/Robot/Robot.obj";
+		inline constexpr const char* robot = "Res/MeshData/Robot/Robot.obj";
 
 		// ------------------------
 		// 全てのOBJファイル
 		// ------------------------
 
 		// 全てのOBJファイル
-		inline constexpr const char* allObj[] = { sphere, plane, ui, robot };
+		inline constexpr const char* allObj[] = {
+			sphere, plane, ui, robot, skySphere };
 	}
 
 } // namespace PokarinEngine

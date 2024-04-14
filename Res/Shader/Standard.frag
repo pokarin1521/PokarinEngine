@@ -40,6 +40,8 @@ layout(location = 100) uniform vec4 color;
 layout(location = 101) uniform vec4 emission;
 
 // 環境光
+// 方向を持たないので色だけ
+layout(location = 107) uniform vec3 ambientLight;
 
 // 平行光源
 struct DirectionalLight
@@ -50,7 +52,6 @@ struct DirectionalLight
 
 // 平行光源
 layout(location = 108) uniform DirectionalLight directionalLight;
-
 
 // ライト
 // 点光源とスポットライトに対応
@@ -272,8 +273,12 @@ void main()
 	// 照度
 	float illnuminance = theta / 3.14159265;
 
-	// 拡散光の明るさを加算
+	// 平行光源の明るさを加算
 	diffuse += directionalLight.color * illnuminance;
+
+	// --------- 環境光の明るさを加算 -----------
+
+	diffuse += ambientLight;
 
 	// ---------- 拡散光の影響を反映 ------------
 

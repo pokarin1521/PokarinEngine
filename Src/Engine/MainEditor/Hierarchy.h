@@ -77,14 +77,9 @@ namespace PokarinEngine
 		void CreateObjectButton(const char* typeName, const char* staticMeshFile);
 
 		/// <summary>
-		/// ゲームオブジェクト作成用ポップアップを展開する
+		/// ゲームオブジェクト作成用ポップアップの処理
 		/// </summary>
-		void CreateObjectPopup_Open();
-
-		/// <summary>
-		/// ゲームオブジェクト作成用ポップアップを展開した時の処理
-		/// </summary>
-		void CreateObjectPopup_Run();
+		void CreateObjectPopup();
 
 	private: // ------------------ オブジェクト管理用 --------------------
 
@@ -96,6 +91,9 @@ namespace PokarinEngine
 
 		// 選択中のオブジェクト
 		GameObjectPtr selectObject;
+
+		// オブジェクト作成用ポップアップの名前
+		const char* createObjectPopup = "CreateObject";
 
 	private: // ----------------------- エンジン -------------------------
 

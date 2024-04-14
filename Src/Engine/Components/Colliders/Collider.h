@@ -61,7 +61,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// エディタ描画用
 		/// </summary>
-		virtual void RenderEditor() override {}
+		virtual void RenderInfo() override {}
 
 	public: // ----------- コライダーの情報 -----------
 

@@ -76,7 +76,7 @@ namespace PokarinEngine
 		/// </summary>
 		/// <typeparam name="T"> コンポーネントクラス </typeparam>
 		/// <returns> 追加したコンポーネントのポインタ </returns>
-		template<typename T>
+		template <class T>
 		std::shared_ptr<T> AddComponent()
 		{
 			// コンポーネント作成
@@ -107,8 +107,8 @@ namespace PokarinEngine
 		/// </summary>
 		/// <typeparam name="T"> 取得するコンポーネント </typeparam>
 		/// <returns> 検索したコンポーネント </returns>
-		template<typename T>
-		std::shared_ptr<T> GetComponent() const 
+		template <class T>
+		std::shared_ptr<T> GetComponent() const
 		{
 			// コンポーネント
 			for (auto& e : componentList)
@@ -196,7 +196,7 @@ namespace PokarinEngine
 		{
 			return *scene;
 		}
-		
+
 		/// <summary>
 		/// シーンを取得する
 		/// </summary>

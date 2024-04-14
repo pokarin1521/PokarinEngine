@@ -39,15 +39,6 @@ namespace PokarinEngine
 	}
 
 	/// <summary>
-	/// ターゲットの方を向くようにY軸回転
-	/// </summary>
-	/// <param name="target"> ターゲットの座標 </param>
-	void Transform::LookAtY(const Vector3& target)
-	{
-		// 諸事情で後回しにしております
-	}
-
-	/// <summary>
 	/// 親オブジェクトを設定
 	/// </summary>
 	/// <param name="parent"> 
@@ -120,17 +111,21 @@ namespace PokarinEngine
 	void DragValue(std::string valueName, float& value, std::string info = "")
 	{
 		// 識別用ラベル(非表示にしたいので##)
-		std::string label = "##" + info + "." + valueName;
+		const std::string label = "##" + info + "." + valueName;
+
+		// ドラッグ操作用スライダーのImGuiウィンドウ幅に対する割合
+		static const float sliderRatio = 6.0f;
 
 		// ドラッグ操作用スライダーの幅
-		float dragSliderWidth = ImGui::GetWindowSize().x / 6.0f;
+		// ImGuiウィンドウの幅に合わせる
+		const float dragSliderWidth = ImGui::GetWindowWidth() / sliderRatio;
 
 		// ドラッグ操作の速度
-		float dragSpeed = 0.2f;
+		static const float dragSpeed = 0.2f;
 
 		// 表示する桁数を指定するフォーマット
 		// 小数2桁まで表示する
-		const char* format = "%.2f";
+		static const char* format = "%.2f";
 
 		// 値の名前を表示
 		ImGui::Text(valueName.c_str());
@@ -182,24 +177,33 @@ namespace PokarinEngine
 	/// <summary>
 	/// エディタに情報を表示する
 	/// </summary>
-	void Transform::RenderEditor()
+	void Transform::RenderInfo()
 	{
 		// 折りたたみ可能なヘッダーを表示
 		// 最初から展開しておく
 		if (ImGui::CollapsingHeader("Transform",
 			ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_DefaultOpen))
 		{
+			// -----------------------
+			// 位置
+			// -----------------------
+
 			// 位置
 			DragInformation("Position", position);
 
-			// 回転(度数法)
+			// ----------------------------
+			// 回転角度(度数法)
+			// ----------------------------
+
 			DragInformation("Rotation", rotationDeg);
 
 			// 弧度法に変換
 			rotation = Radians(rotationDeg);
 
+			// ----------------------------
 			// 拡大率
-			// 表示する位置を合わせるために空白を入れる
+			// ----------------------------
+
 			DragInformation("Scale", scale);
 		}
 	}

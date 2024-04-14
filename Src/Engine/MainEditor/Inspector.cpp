@@ -45,7 +45,7 @@ namespace PokarinEngine
 					size_t endLine = selectObjectName.find_first_of('\0');
 
 					// 名前を変更
-					// 余計な\0が入ると困るので、最初の\0までを渡す
+					// 余計な空白が入ると困るので、最初の\0までを渡す
 					selectObject->GetScene().ChangeObjectName(
 						selectObject, selectObjectName.substr(0, endLine));
 				}
@@ -57,7 +57,7 @@ namespace PokarinEngine
 			// コンポーネントを表示
 			for (ComponentPtr component : selectObject->componentList)
 			{
-				component->RenderEditor();
+				component->RenderInfo();
 			}
 
 			ImGui::End();

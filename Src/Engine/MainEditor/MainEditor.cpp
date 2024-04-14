@@ -21,7 +21,7 @@
 
 namespace PokarinEngine
 {
-	/// ここでしか使わないのでcppのみに書く
+	/// ここでしか使わないので、cppのみに書く
 	/// <summary>
 	/// メインメニュー
 	/// </summary>

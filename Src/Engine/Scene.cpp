@@ -27,7 +27,7 @@ namespace PokarinEngine
 	{
 		// メインカメラ作成
 		// オブジェクト生成時に見えるように少し後ろに配置する
-		mainCamera = CreateGameObject("MainCamera", Vector3(0, 0, -1));
+		mainCamera = CreateGameObject("MainCamera", Vector3(0, 0, -5));
 		cameraInfo = mainCamera->AddComponent<Camera>();
 
 		// 平行光源を作成
@@ -90,6 +90,14 @@ namespace PokarinEngine
 
 		// スタティックメッシュ
 		object->staticMesh = engine->GetStaticMesh(staticMeshFile);
+
+		// スタティックメッシュがあるなら固有マテリアルを設定
+		if (object->staticMesh)
+		{
+			// 共有マテリアルのコピーを
+			// 固有マテリアルとして設定する
+			object->materials = CloneMaterialList(object->staticMesh);
+		}
 
 		// ゲームオブジェクト管理用配列に追加
 		gameObjectList.push_back(object);
@@ -287,7 +295,9 @@ namespace PokarinEngine
 			TransformPtr transform = gameObject->transform;
 
 			// オブジェクトの座標
+			// 左手座標系の値なので右手座標系にする
 			Vector3 position = transform->position;
+			position.z *= -1;
 
 			// オブジェクトに設定する座標変換行列
 			Matrix4x4 transformMatrix = Mat4_Function::GetTransformMatrix(
@@ -497,7 +507,7 @@ namespace PokarinEngine
 		if (prog == Shader::GetProgram(Shader::ProgType::Standard))
 		{
 			glProgramUniformMatrix3fv(
-				prog, UniformLocation::normalMatrix, 
+				prog, UniformLocation::normalMatrix,
 				1, GL_FALSE, &normalMatrix[0].x);
 		}
 	}
@@ -576,7 +586,7 @@ namespace PokarinEngine
 		GameObjectList drawObjectList = gameObjectList;
 
 		// ゲームオブジェクトを描画順に並べ替える
-		// (レンダーキューが小さいものから順に並べる)
+		// (描画優先度が低いものから順に並べる)
 		std::stable_sort(drawObjectList.begin(), drawObjectList.end(),
 			[](const GameObjectPtr& a, const GameObjectPtr& b) {
 				return a->renderQueue < b->renderQueue; });
@@ -618,22 +628,20 @@ namespace PokarinEngine
 		// ---------- transparent以前のキューを描画  -----------
 		// ---------- 通常のオブジェクト		     -----------
 
-		// テスト用にライティング無しのシェーダを使う
-		// 本来は「progStandard」を使う
 		// 描画
 		DrawGameObject(progStandard, drawObjectList.begin(), transparentBegin);
 
 		// ------ transparentからoverlayまでのキューを描画 ------
 		// ------ 半透明なオブジェクト					   ------
 
+		// 半透明なオブジェクトなので後ろのオブジェクトが見えるように
 		// 深度バッファへの書き込みを禁止
 		glDepthMask(GL_FALSE);
 
-		// テスト用にライティング無しのシェーダを使う
-		// 本来は「progStandard」を使う
 		// 描画
 		DrawGameObject(progStandard, transparentBegin, overlayBegin);
 
+		// 後ろのオブジェクトが見えるのは半透明なオブジェクトだけなので
 		// 深度バッファへの書き込みを許可
 		glDepthMask(GL_TRUE);
 
@@ -646,6 +654,7 @@ namespace PokarinEngine
 		glDisable(GL_DEPTH_TEST);
 
 		// 描画
+		// UIにライティングはいらないのでアンリットシェーダを使う
 		DrawGameObject(progUnlit, overlayBegin, drawObjectList.end());
 	}
 

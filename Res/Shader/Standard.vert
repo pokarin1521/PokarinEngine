@@ -192,13 +192,13 @@ void main()
 	A = -2 * far * near / (near - far)
 	B = (far + near) / (far - near) */
 	
-	// 描画開始距離
+	// 最小描画範囲
 	// オブジェクトの中身が見えないように
 	// カメラの衝突判定の半径の「cos45」倍にする
 	const float near = 0.35f; 
 	
 	// 最大描画範囲
-	const float far = 1000; 
+	const float far = 1000;
 
 	// -1 <= A * 深度値 + B <= 1 となる
 	// 定数A,Bを求める

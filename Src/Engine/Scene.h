@@ -8,6 +8,7 @@
 #include "Settings/MeshSettings.h"
 
 #include "UsingNames/UsingGameObject.h"
+#include "UsingNames/UsingMesh.h"
 
 #include "GameObject.h"
 
@@ -199,7 +200,7 @@ namespace PokarinEngine
 		/// <returns> 重複しない識別番号(乱数) </returns>
 		int AddSingleObjectID();
 
-	private: // --------------------------- 情報 ---------------------------
+	private: // ---------------------- ゲームオブジェクト ----------------------
 
 		// ゲームオブジェクト管理用配列
 		GameObjectList gameObjectList;
@@ -211,18 +212,24 @@ namespace PokarinEngine
 		// オブジェクト識別番号の管理用配列
 		ObjectIDList objectIDList;
 
+		// ゲームオブジェクトの最大数
+		// 余裕を持てるように少なめに設定
+		const size_t gameObjectMax = INT_MAX - 5;
+
+	private: // ------------------------- メインカメラ ------------------------
+
 		// メインカメラ
 		GameObjectPtr mainCamera;
 
 		// メインカメラの情報
 		CameraPtr cameraInfo;
 
-		// ゲームオブジェクトの最大数
-		// 余裕を持てるように少なめに設定
-		size_t gameObjectMax = INT_MAX - 5;
+	private: // ----------------------------- 情報 ----------------------------
 
 		// シーンの名前
 		std::string name = "";
+
+	private: // --------------------------- エンジン --------------------------
 
 		// エンジンクラスのポインタ
 		Engine* engine = nullptr;

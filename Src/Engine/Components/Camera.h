@@ -40,8 +40,6 @@ namespace PokarinEngine
 		/// <returns> ‹–ìŠp‚É‚æ‚éŠg‘å—¦‚Ì‹t” </returns>
 		float GetFovScale() const { return fovScale; }
 
-	public: // -------------------------- ‹–ìŠp‚Ìİ’è ---------------------------
-
 		/// <summary>
 		/// ‚’¼‹–ìŠp‚ğİ’è‚·‚é
 		/// </summary>
@@ -58,12 +56,32 @@ namespace PokarinEngine
 			fovScale = 1 / tan(radFovY / 2);
 		}
 
+	public: // ------------------------- •`‰æ”ÍˆÍ‚Ìæ“¾ --------------------------
+
+		/// <summary>
+		/// Å¬•`‰æ”ÍˆÍ‚ğæ“¾‚·‚é
+		/// </summary>
+		/// <returns> •`‰æ”ÍˆÍ‚ÌÅ¬’l </returns>
+		float GetDrawNear() const
+		{
+			return drawRange.near;
+		}
+
+		/// <summary>
+		/// Å‘å•`‰æ”ÍˆÍ‚ğæ“¾‚·‚é
+		/// </summary>
+		/// <returns> •`‰æ”ÍˆÍ‚ÌÅ‘å’l </returns>
+		float GetDrawFar() const
+		{
+			return drawRange.far;
+		}
+
 	public: // --------------------------- ƒGƒfƒBƒ^—p ----------------------------
 
 		/// <summary>
 		/// ƒGƒfƒBƒ^‚Éî•ñ‚ğ•\¦‚·‚é
 		/// </summary>
-		void RenderEditor() override;
+		void RenderInfo() override;
 
 	private: // ---------------------------- ‹–ìŠp ------------------------------
 
@@ -76,6 +94,21 @@ namespace PokarinEngine
 		// ‹–ìŠp‚É‚æ‚éŠg‘å—¦‚Ì‹t”
 		// (‹–ìŠp‚É‚æ‚éŠg‘å—¦‚Íí‚É‚±‚ÌŒ`‚Åg‚¤‚Ì‚ÅA‚ ‚ç‚©‚¶‚ß‹t”‚É‚µ‚Ä‚¨‚­)
 		float fovScale = 1 / tan(radFovY / 2);
+
+	private: // ---------------------------- •`‰æ”ÍˆÍ ----------------------------
+
+		// •`‰æ”ÍˆÍ
+		struct DrawRange
+		{
+			// Å¬•`‰æ”ÍˆÍ
+			float near = 0.35f;
+
+			// Å‘å•`‰æ”ÍˆÍ
+			float far = 1000.0f;
+		};
+
+		// •`‰æ”ÍˆÍ
+		DrawRange drawRange;
 	};
 }
 

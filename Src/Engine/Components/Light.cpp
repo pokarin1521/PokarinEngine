@@ -94,7 +94,7 @@ namespace PokarinEngine
 	/// <summary>
 	/// エディタに情報を描画する
 	/// </summary>
-	void Light::RenderEditor()
+	void Light::RenderInfo()
 	{
 		if (ImGui::CollapsingHeader("Light"))
 		{

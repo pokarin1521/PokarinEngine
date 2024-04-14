@@ -230,14 +230,17 @@
     <ClCompile Include="Src\ImGui\ImGui\imnodes.cpp">
       <Filter>Src\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Engine\Math\Vector.cpp">
-      <Filter>Src\Engine\Math</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Engine\Components\Colliders\AabbCollider.cpp">
       <Filter>Src\Engine\Components\Colliders</Filter>
     </ClCompile>
     <ClCompile Include="Src\Engine\Components\Colliders\SphereCollider.cpp">
       <Filter>Src\Engine\Components\Colliders</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\NodeScript\Nodes\Node.cpp">
+      <Filter>Src\Engine\Editor\NodeEditor\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\NodeScript\Nodes\EventNode.cpp">
+      <Filter>Src\Engine\Editor\NodeEditor\Nodes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -343,9 +346,6 @@
     <ClInclude Include="Src\Engine\NodeScript\NodeScript.h">
       <Filter>Src\Engine\Editor\NodeEditor</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Engine\NodeScript\Nodes\EventNode.h">
-      <Filter>Src\Engine\Editor\NodeEditor\Nodes</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Engine\UsingNames\UsingGameObject.h">
       <Filter>Src\Engine\UsingNames</Filter>
     </ClInclude>
@@ -435,6 +435,18 @@
     </ClInclude>
     <ClInclude Include="Src\Engine\Components\Colliders\Collider.h">
       <Filter>Src\Engine\Components\Colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\UsingNames\UsingNode.h">
+      <Filter>Src\Engine\UsingNames</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\NodeScript\Nodes\TestNode.h">
+      <Filter>Src\Engine\Editor\NodeEditor\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\NodeScript\Nodes\EventUpdateNode.h">
+      <Filter>Src\Engine\Editor\NodeEditor\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\NodeScript\Nodes\EventNode.h">
+      <Filter>Src\Engine\Editor\NodeEditor\Nodes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

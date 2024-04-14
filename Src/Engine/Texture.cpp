@@ -75,7 +75,7 @@ namespace PokarinEngine
 		// 画像の幅と高さはそれぞれ16ビットのデータ
 		// 値を復元するため上位8ビットを256倍(左に8シフト)して合成
 		width = buffer[12] + buffer[13] * 256;
-		fboHeight = buffer[14] + buffer[15] * 256;
+		height = buffer[14] + buffer[15] * 256;
 
 		// ----------------------------------
 		// 画像が圧縮形式なら展開する
@@ -98,7 +98,7 @@ namespace PokarinEngine
 			// ------------ 展開前の準備 --------------
 
 			// 展開後のバイト数
-			const int imageBytes = width * fboHeight * pixelBytes;
+			const int imageBytes = width * height * pixelBytes;
 
 			// 展開用のバッファ
 			// 画像データより前の部分(ヘッダ + ID)をコピーするので
@@ -204,7 +204,7 @@ namespace PokarinEngine
 
 			// 最後の行以外の画像面積 + 一番上の行の位置で、
 			// 一番下の行の位置を求める
-			uint8_t* bottom = top + lineByteSize * (fboHeight - 1); // 下の行の位置
+			uint8_t* bottom = top + lineByteSize * (height - 1); // 下の行の位置
 
 			// 一行ずつ保管できるようにサイズ確保
 			std::vector<uint8_t> tmp(lineByteSize); // 上下入れ替え用バッファ
@@ -334,7 +334,7 @@ namespace PokarinEngine
 		視点からオブジェクトまでの距離に応じて、
 		大きさの違うテクスチャを使い分ける機能 */
 
-		glTextureStorage2D(object, 1, format->gpuFormat, width, fboHeight);
+		glTextureStorage2D(object, 1, format->gpuFormat, width, height);
 
 		/* 画像データをGPUメモリにコピー
 
@@ -348,7 +348,7 @@ namespace PokarinEngine
 		コピー先の座標指定は、
 		複数の画像データをひとつのテクスチャにまとめたい場合に使う */
 
-		glTextureSubImage2D(object, 0, 0, 0, width, fboHeight,
+		glTextureSubImage2D(object, 0, 0, 0, width, height,
 			format->imageFormat, format->imageType,
 			buffer.data() + tgaHeaderSize);
 
@@ -412,7 +412,7 @@ namespace PokarinEngine
 		// ------------------------
 
 		width = w;
-		fboHeight = h;
+		height = h;
 
 		// -------------------------
 		// テクスチャ作成
@@ -429,7 +429,7 @@ namespace PokarinEngine
 
 		// 設定
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
-			width, fboHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+			width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
 		// 誤操作のないようにバインド解除
 		glBindTexture(GL_TEXTURE_2D, 0);

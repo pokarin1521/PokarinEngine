@@ -117,83 +117,27 @@ namespace PokarinEngine
 		/// <returns> 指定した大きさのテクスチャ </returns>
 		TexturePtr GetTexture(GLsizei width, GLsizei height);
 
-	public: // ------------------------------ 光線 -------------------------------
+	public: // --------------------- スカイスフィアの描画 ---------------------
 
 		/// <summary>
-		/// 光線の交差判定結果
+		/// スカイスフィアを描画する
 		/// </summary>
-		struct RaycastHit
-		{
-			// 最初に光線と交差したコライダー
-			ColliderPtr collider;
+		/// <param name="skySphereMaterial"> スカイスフィア用マテリアル </param>
+		void DrawSkySphere(const MaterialPtr skySphereMaterial = nullptr);
 
-			// 最初の交点の座標
-			Vector3 point;
-
-			// 最初の交点までの距離
-			float distance;
-		};
-
-		// 交差判定の対象になるかどうか調べる述語型
-		// 戻り値は、交差判定の対象になるかどうか
-		using RaycastPredicate = std::function<bool(
-			const ColliderPtr& collider, float distance)>;
+	public: // ---------------------- ゲームの実行ボタン ----------------------
 
 		/// <summary>
-		/// マウス座標から発射される光線を取得する
+		/// ゲームが実行中か取得する
 		/// </summary>
-		/// <returns> マウス座標から発射される光線 </returns>
-		Collision::Ray GetRayFromMousePosition() const;
-
-		/// <summary>
-		/// 光線とコライダーの交差判定
-		/// </summary>
-		/// <param name="[in] ray"> 光線 </param>
-		/// <param name="[out] hitInfo"> 光線と最初に交差したコライダーの情報 </param>
-		/// <param name="pred"> 交差判定を行うコライダーを選別する述語 </param>
 		/// <returns>
-		/// <para> true : コライダーと交差した </para>
-		/// <para> false : コライダーと交差しなかった </para>
+		/// <para> true : 実行中 </para>
+		/// <para> false : 実行中ではない </para>
 		/// </returns>
-		bool Raycast(const Collision::Ray& ray, RaycastHit& hitInfo,
-			const RaycastPredicate& pred) const;
-
-	private: // ------------------------- コライダー --------------------------
-
-		// ワールド座標系のコライダーを表す構造体
-		struct WorldCollider
+		bool IsGameRun()
 		{
-			/// <summary>
-			/// ワールドコライダーの座標を変更する
-			/// </summary>
-			/// <param name="v"> 移動量 </param>
-			void AddPosition(const Vector3& v)
-			{
-				// コライダーの持ち主の座標を変更
-				origin->GetOwner().transform->position += v;
-
-				// コライダーの座標を変更
-				world->AddPosition(v);
-			}
-
-			// オリジナルのコライダー
-			ColliderPtr origin;
-
-			// コライダー
-			ColliderPtr world;
-		};
-
-		// ワールド座標系コライダーの配列
-		using WorldColliderList = std::vector<WorldCollider>;
-
-		/// <summary>
-		/// 貫通ベクトルをゲームオブジェクトに反映する
-		/// </summary>
-		/// <param name="worldColliders"> ワールド座標系のコライダー配列 </param>
-		/// <param name="gameObject"> ゲームオブジェクト </param>
-		/// <param name="penetration"> 貫通ベクトル </param>
-		void ApplyPenetration(WorldColliderList* worldColliders,
-			GameObject& gameObject, const Vector3& penetration);
+			return isGameRun;
+		}
 
 	private: // ---------------------- エンジンの制御 -------------------------
 
@@ -216,23 +160,6 @@ namespace PokarinEngine
 		/// </summary>
 		void Render();
 
-	private: // ---------------- ゲームオブジェクトの衝突 ------------------
-
-		/// <summary>
-		/// ゲームオブジェクトの衝突処理
-		/// </summary>
-		void HandleGameObjectCollision();
-
-		/// <summary>
-		/// コライダー単位の衝突判定
-		/// </summary>
-		/// <param name="colliderA"> 
-		/// 判定対象のワールドコライダー配列(衝突する側) </param>
-		/// <param name="colliderB"> 
-		/// 判定対象のワールドコライダー配列(衝突される側) </param>
-		void HandleWorldColliderCollision(
-			WorldColliderList* collidersA, WorldColliderList* collidersB);
-
 	private: // ---------------------- 描画用ビュー ---------------------
 
 		/// <summary>
@@ -242,18 +169,31 @@ namespace PokarinEngine
 		/// <param name="renderView"> 描画情報を保持する描画用ビュー </param>
 		void DrawRenderView(const Transform& camera, const RenderView& view);
 
-	private: // --------------------- 図形データ -------------------------
+	private: // ---------------------- 図形データ ------------------------
 
-		// 図形データ管理オブジェクト
+		// 図形データ管理用バッファ
 		MeshBufferPtr meshBuffer;
 
-	private: // --------------------- キャッシュ -------------------------
+	private: // ---------------------- テクスチャ ----------------------
 
 		// テクスチャ用キャッシュ
 		// <ファイル名, テクスチャのポインタ>
 		std::unordered_map<std::string, TexturePtr> textureCache;
 
-	private: // ----------------------- シーン ---------------------------
+		// コンストラクタ、デストラクタを
+		// 呼べるようにするための補助クラス
+		struct TexHelper : public Texture
+		{
+			TexHelper(const char* p) : Texture(p) {}
+			TexHelper(GLsizei w, GLsizei h) : Texture(w, h) {}
+		};
+
+	private: // -------------------- スカイスフィア --------------------
+
+		// スカイスフィア用モデル
+		StaticMeshPtr skySphere;
+
+	private: // ------------------------ シーン ------------------------
 
 		// 現在のシーン
 		ScenePtr currentScene;
@@ -273,6 +213,9 @@ namespace PokarinEngine
 
 		// メインエディタ制御用
 		MainEditor mainEditor;
+
+		// 作成中のゲームが実行中ならtrue
+		bool isGameRun = false;
 	};
 
 } // namespace PokarinEngine

@@ -8,51 +8,47 @@
 
 namespace PokarinEngine
 {
+	/// <summary>
+	/// イベント制御用ノードの基底クラス
+	/// </summary>
 	class EventNode : public Node
 	{
-	public:
+	public: // ----------------- コンストラクタ・デストラクタ --------------------
 
 		EventNode() = default;
-		~EventNode() = default;
+		virtual ~EventNode() = default;
 
-	public:
+	public: // ---------------------------- 初期化 -------------------------------
 
 		/// <summary>
 		/// 初期化
 		/// </summary>
 		void Initialize() override
 		{
-			auto& owner = GetOwner();
-			inputPin = owner.GetSinglePinID();
-			outputPin = owner.GetSinglePinID();
+			linkOutputPin = GetSinglePinID();
 		}
 
-		void RenderNode() override
-		{
-			NodeEditor& owner = GetOwner();
+	public: // ----------------------------- 名前 --------------------------------
 
-			ImNodes::BeginNode(GetID());
-			{
-				SetTitle("Event");
+		inline static const char* name = "No Title";
 
-				ImNodes::BeginOutputAttribute(outputPin);
-				ImGui::Text("Out");
-				ImNodes::EndOutputAttribute();
+	private: // ----------------------------- 制御 -------------------------------
 
-				ImNodes::BeginInputAttribute(inputPin);
-				ImGui::Text("In");
-				ImNodes::EndInputAttribute();
+		/// <summary>
+		/// ノード別の情報を表示する
+		/// </summary>
+		virtual void RenderNode() = 0;
 
-				ImNodes::EndNode();
-			}
-		}
+		/// <summary>
+		/// ノード情報を表示する
+		/// </summary>
+		void RenderInfo() override;
 
-	private:
+	private: // ----------------------------- 情報 -------------------------------
 
-		int inputPin = 0;
-		int outputPin = 0;
+		// リンク用出力ピンの識別番号
+		int linkOutputPin = 0;
 	};
-
-} // namespace PokarinEngine
+}
 
 #endif // !EVENTNODE_H_INCLUDED

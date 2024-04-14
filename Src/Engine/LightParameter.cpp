@@ -31,9 +31,13 @@ namespace PokarinEngine
 
 		// ライトデータ配列
 		LightDataList lightList;
-		
+
 		// 平行光源
 		LightData* directionalLight = nullptr;
+
+		// 環境光(青空をイメージ)
+		// 方向を持たないので色だけ
+		Color ambientLight = { 0.05f, 0.15f, 0.25f, 1.0f };
 
 		// -----------------------------
 		// 関数
@@ -45,12 +49,16 @@ namespace PokarinEngine
 		/// <param name="mainCamera"> カメラ </param>
 		void CopyGPU(const GameObject& mainCamera)
 		{
+			// ------------------------------------
+			// 環境光をGPUメモリーにコピー
+			// ------------------------------------
+
+			// シェーダプログラム(標準)の管理番号
+			const GLuint progStandard = Shader::GetProgram(Shader::ProgType::Standard);
+
 			// -------------------------
 			// 使用中ライトを確認
 			// -------------------------
-
-			// シェーダプログラム(標準)の管理番号
-			GLuint progStandard = Shader::GetProgram(Shader::ProgType::Standard);
 
 			// 使用中のライトがなければコピーするライト数を0に設定
 			if (lightList.empty())
@@ -137,6 +145,10 @@ namespace PokarinEngine
 				glProgramUniform3fv(progStandard,
 					UniformLocation::directionalLightDirection, 1, &directionalLight->direction.x);
 			}
+
+
+			glProgramUniform3fv(progStandard,
+				UniformLocation::ambientLight, 1, &ambientLight.r);
 
 			// ----------- 画面に影響するライトがなければ -------------
 			// ----------- ライト数を0に設定する		  -------------

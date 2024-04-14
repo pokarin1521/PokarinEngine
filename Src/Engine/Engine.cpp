@@ -9,6 +9,8 @@
 #include "Debug.h"
 #include "LightParameter.h"
 
+#include "Math/Matrix.h"
+
 #include "EasyAudio/EasyAudio.h"
 
 #include "Components/Colliders/AabbCollider.h"
@@ -38,15 +40,29 @@ namespace PokarinEngine
 	void CopyCameraParameters(
 		GLuint prog, const Transform& camera)
 	{
-		// カメラパラメータを設定
-		glProgramUniform3fv(prog, UniformLocation::cameraPosition,
-			1, &camera.position.x);
+		// ----------------------------
+		// カメラの座標
+		// ----------------------------
 
-		// 回転の計算をするためにsin,cosで渡す
-		// カメラの回転方向とオブジェクトの移動方向が逆なので、マイナスにする
+		// 左手座標系の値なので右手座標系にする
+		Vector3 position = camera.position;
+		position.z *= -1;
+
+		// カメラの座標をGPUにコピー
+		glProgramUniform3fv(prog, UniformLocation::cameraPosition,
+			1, &position.x);
+
+		// --------------------------------
+		// カメラの回転角度
+		// --------------------------------
+
+		// カメラの回転方向とオブジェクトの移動方向が逆なので、符号を逆にする
 		// (カメラが右に回転する = オブジェクトが左に回転する)
-		glProgramUniform3f(prog, UniformLocation::cameraRotation,
-			-camera.rotation.x, -camera.rotation.y, -camera.rotation.z);
+		Vector3 rotation = -camera.rotation;
+
+		// カメラの回転角度をGPUにコピー
+		glProgramUniform3fv(prog, UniformLocation::cameraRotation,
+			1, &rotation.x);
 	}
 
 #pragma endregion
@@ -214,6 +230,12 @@ namespace PokarinEngine
 			meshBuffer->LoadOBJ(obj);
 		}
 
+		// ----------------------------------
+		// スカイスフィアを取得する
+		// ----------------------------------
+
+		skySphere = meshBuffer->GetStaticMesh(StaticMeshFile_OBJ::skySphere);
+
 		// -----------------------------------
 		// シーンがなければ作成
 		// -----------------------------------
@@ -257,12 +279,6 @@ namespace PokarinEngine
 		// ------------------------------------------
 
 		currentScene->UpdateGameObject(deltaTime);
-
-		// ------------------------------------
-		// ゲームオブジェクトの衝突処理
-		// ------------------------------------
-
-		HandleGameObjectCollision();
 
 		// ------------------------
 		// エディタを更新
@@ -377,6 +393,12 @@ namespace PokarinEngine
 		renderView.BindFBO();
 
 		// -----------------------------------
+		// スカイスフィアを描画
+		// -----------------------------------
+
+		DrawSkySphere();
+		
+		// -----------------------------------
 		// ゲームオブジェクトを描画
 		// -----------------------------------
 
@@ -398,349 +420,6 @@ namespace PokarinEngine
 
 #pragma endregion
 
-#pragma region Collision
-
-	/// ここでしか使わないのでcppのみに書く
-	/// <summary>
-	/// 型によって交差判定関数を呼び分けるための関数テンプレート
-	/// </summary>
-	/// <typeparam name="T"> 判定対象の型(衝突する側) </typeparam>
-	/// <typeparam name="U"> 判定対象の型(衝突される側) </typeparam>
-	/// <param name="[in] a"> 判定対象のコライダー() </param>
-	/// <param name="[in] b"> 判定対象のコライダー2 </param>
-	/// <param name="[out] p"> 貫通ベクトル </param>
-	/// <returns></returns>
-	template<typename T, typename U>
-	bool CallIntersect(
-		const ColliderPtr& a, const ColliderPtr& b, Vector3& p)
-	{
-		return Intersect(static_cast<T&>(*a).GetShape(),
-			static_cast<U&>(*b).GetShape(), p);
-	}
-
-	/// ここでしか使わないのでcppのみに書く
-	/// <summary>
-	/// <para> 型によって交差判定関数を呼び分けるための関数テンプレート </para>
-	/// <para> 交差判定関数に渡す引数を逆数にするバージョン </para>
-	/// </summary>
-	/// <typeparam name="T"> 判定対象の型(衝突される側) </typeparam>
-	/// <typeparam name="U"> 判定対象の型(衝突する側) </typeparam>
-	/// <param name="[in] a"> 判定対象のコライダー(衝突される側) </param>
-	/// <param name="[in] b"> 判定対象のコライダー(衝突する側) </param>
-	/// <param name="[out] p"> 貫通ベクトル </param>
-	/// <returns>
-	/// <para> true  : 交差した </para>
-	/// <para> false : 交差していない </para>
-	/// </returns>
-	template<typename T, typename U>
-	bool CallIntersectReverse(
-		const ColliderPtr& a, const ColliderPtr& b, Vector3& p)
-	{
-		if (Intersect(static_cast<U&>(*b).GetShape(),
-			static_cast<T&>(*a).GetShape(), p))
-		{
-			// 衝突する側と衝突される側が逆になるので
-			// 貫通ベクトルを逆向きにする
-			p *= -1;
-
-			return true;
-		}
-
-		return false;
-	}
-
-	/// <summary>
-	/// ゲームオブジェクトの衝突を処理する
-	/// </summary>
-	void Engine::HandleGameObjectCollision()
-	{
-		// --------------------------------------
-		// ワールド座標系の衝突判定を作成
-		// --------------------------------------
-
-		// ゲームオブジェクトごとのコライダーを管理する配列
-		std::vector<WorldColliderList> colliders;
-
-		// シーン内のゲームオブジェクト
-		GameObjectList gameObjectList = currentScene->GetGameObjectAll();
-
-		// ゲームオブジェクト分の容量を予約
-		colliders.reserve(gameObjectList.size());
-
-		// [ゲームオブジェクト識別番号, ゲームオブジェクト]
-		for (auto& gameObject : gameObjectList)
-		{
-			// ゲームオブジェクトにコライダーがなければ何もしない
-			if (gameObject->colliderList.empty())
-			{
-				continue;
-			}
-
-			// 「接地していない」状態にする
-			gameObject->isGrounded = false;
-
-			// -------------------------------------------------
-			// コライダーをコピーしてワールド座標に変換
-			// -------------------------------------------------
-
-			// ワールド座標系コライダーの配列
-			WorldColliderList list(gameObject->colliderList.size());
-
-			// ワールド座標系に変換
-			for (int i = 0; i < gameObject->colliderList.size(); ++i)
-			{
-				// オブジェクトのコライダー
-				ColliderPtr collider = gameObject->colliderList[i];
-
-				// 座標変換行列
-				Matrix4x4 transformMatrix = gameObject->transform->GetTransformMatrix();
-
-				// ゲームオブジェクトのコライダーを設定
-				list[i].origin = collider;
-
-				// 座標変換をしたコライダーを設定
-				list[i].world = collider->GetTransformedCollider(transformMatrix);
-			}
-
-			// ワールド座標系コライダーを追加
-			colliders.push_back(list);
-		}
-
-		// ----------------------------------
-		// コライダーの衝突判定
-		// ----------------------------------
-
-		// コライダーを持つオブジェクトが
-		// 2つ以上ないと衝突判定できないので、個数チェック
-		if (colliders.size() >= 2)
-		{
-			/* ゲームオブジェクトは複数のコライダーを持てるので、
-			ゲームオブジェクトが持つ全てのコライダーを処理しなければならない */
-
-			// 1つ目のオブジェクトのコライダー配列
-			for (auto collidersA = colliders.begin(); collidersA != colliders.end() - 1; ++collidersA)
-			{
-				// 1つ目のオブジェクト
-				const GameObject& objectA = collidersA->at(0).origin->GetOwner();
-
-				// コライダーの持ち主が削除済みなら何もしない
-				if (objectA.IsDestroyed())
-				{
-					continue;
-				}
-
-				// 2つ目のオブジェクトのコライダー配列
-				for (auto collidersB = collidersA + 1; collidersB != colliders.end(); ++collidersB)
-				{
-					// 2つ目のオブジェクト
-					const GameObject& objectB = collidersA->at(0).origin->GetOwner();
-
-					// コライダーの持ち主が削除済みなら何もしない
-					if (objectB.IsDestroyed())
-					{
-						continue;
-					}
-
-					// コライダー単位の衝突判定
-					HandleWorldColliderCollision(&*collidersA, &*collidersB);
-
-				} // for collidersB
-			} // for collidersA
-		}
-
-	} // HandleGameObjectCollision
-
-	/// <summary>
-	/// コライダー単位の衝突判定
-	/// </summary>
-	/// <param name="collidersA"> 
-	/// 判定対象のワールドコライダー配列(衝突する側) </param>
-	/// <param name="collidersB"> 
-	/// 判定対象のワールドコライダー配列(衝突される側) </param>
-	void Engine::HandleWorldColliderCollision(
-		WorldColliderList* collidersA, WorldColliderList* collidersB)
-	{
-		// 関数ポインタ型を定義
-		using FuncType = bool(*)(
-			const ColliderPtr&, const ColliderPtr&, Vector3&);
-
-		// 組み合わせに対応する交差判定関数を選ぶための配列
-		static const FuncType funcList[2][2] = {
-			{
-				CallIntersect<AabbCollider, AabbCollider>,
-				CallIntersect<AabbCollider, SphereCollider>,
-			},
-			{
-				CallIntersectReverse<SphereCollider, AabbCollider>,
-				CallIntersect<SphereCollider, SphereCollider>,
-			},
-		};
-
-		// ----------------------------------
-		// コライダー単位の衝突判定
-		// ----------------------------------
-
-		// コライダー(衝突する側)
-		for (auto& colA : *collidersA)
-		{
-			// コライダー(衝突される側)
-			for (auto& colB : *collidersB)
-			{
-				// スタティックコライダー同士は衝突しない
-				if (colA.origin->isStatic && colB.origin->isStatic)
-				{
-					continue;
-				}
-
-				// 貫通ベクトル
-				Vector3 penetration = Vector3(0);
-
-				// colAの図形の種類番号
-				const int typeA = static_cast<int>(colA.origin->GetType());
-
-				// colBの図形の種類番号
-				const int typeB = static_cast<int>(colB.origin->GetType());
-
-				// 衝突判定を行う
-				if (funcList[typeA][typeB](
-					colA.world, colB.world, penetration))
-				{
-					// 衝突したゲームオブジェクト
-					GameObject& gameObjectA = colA.origin->GetOwner();
-
-					// 衝突されたゲームオブジェクト
-					GameObject& gameObjectB = colB.origin->GetOwner();
-
-					// ----------------------------------------------
-					// コライダーが重ならないように座標を調整
-					// ----------------------------------------------
-
-					// 両方が重複可能なコライダーでないことを確認
-					if (!colA.origin->isTrigger && !colB.origin->isTrigger)
-					{
-						// Aは動かないので、Bを移動させる
-						if (colA.origin->isStatic)
-						{
-							/* AがBにぶつかった際の処理なので、
-							AがBに貫通した分、
-							同じ方向にBを移動させる */
-
-							// 貫通した分移動
-							ApplyPenetration(
-								collidersB, gameObjectB, penetration);
-						}
-						// Bは動かないので、Aを移動させる
-						else if (colB.origin->isStatic)
-						{
-							/* AがBにぶつかった際の処理なので、
-							AがBに貫通した分、
-							逆方向にAを移動させる */
-
-							// 貫通した分移動
-							ApplyPenetration(
-								collidersA, gameObjectA, -penetration);
-						}
-						// 両方動かないので、均等に移動させる
-						else
-						{
-							// 貫通ベクトルの半分
-							// 均等に移動させるため
-							Vector3 halfPenetration = penetration * 0.5f;
-
-							// 貫通距離の半分だけ
-							// 貫通した方向に移動
-							ApplyPenetration(
-								collidersB, gameObjectB, halfPenetration);
-
-							// 貫通距離の半分だけ
-							// 逆方向に移動
-							ApplyPenetration(
-								collidersA, gameObjectA, -halfPenetration);
-						}
-					}
-
-					// ------------------------------
-					// 衝突イベントを実行
-					// ------------------------------
-
-					gameObjectA.OnCollision(colA.origin, colB.origin);
-					gameObjectB.OnCollision(colB.origin, colA.origin);
-
-					// イベントの結果、
-					// どちらかのゲームオブジェクトが破棄された場合
-					if (gameObjectA.IsDestroyed() || gameObjectB.IsDestroyed())
-					{
-						// 衝突処理を終了
-						return;
-					}
-				}
-
-			} // for colB 
-		} // for col A
-	}
-
-	/// <summary>
-	/// 貫通ベクトルをゲームオブジェクトに反映する
-	/// </summary>
-	/// <param name="worldColliders"> ワールド座標系のコライダー配列 </param>
-	/// <param name="gameObject"> ゲームオブジェクト </param>
-	/// <param name="penetration"> 貫通ベクトル </param>
-	void Engine::ApplyPenetration(WorldColliderList* worldColliders,
-		GameObject& gameObject, const Vector3& penetration)
-	{
-		// ---------------------------------------------------------
-		// 接地判定
-		// 貫通ベクトルが垂直に近い場合に、床に触れたとみなす
-		// ---------------------------------------------------------
-
-		/* 「貫通ベクトル」と「垂直ベクトル」の角度で判定する
-
-		内積を使って角度を求める
-		貫通ベクトル(px, py, pz)と垂直ベクトル(0, 1, 0)で計算すると
-		「なす角 = 貫通ベクトルのY要素」ということが分かる
-
-		そして、貫通ベクトルは衝突面に対して垂直に作られる
-		(それが最短距離だから)
-		そのため、「貫通ベクトルがワールド座標系の垂直に近い」
-		ならば「衝突面はワールド座標系の水平に近い」と言える */
-
-		// 床とみなす角度
-		static const float cosGround = cos(Radians(30));
-
-		// 貫通ベクトルが下方向を向いている
-		// (下方向でない場合は、計算するだけ無駄なので計算前に判定する)
-		if (penetration.y > 0)
-		{
-			// 貫通距離
-			const float distance = penetration.Length();
-
-			// 貫通ベクトルの向きが30度以下なら床と判断
-			// acosを避けるためcosで比較しているので、
-			// 角度で比較する時と不等号の向きが逆
-			if (penetration.y >= distance * cosGround)
-			{
-				// 接地した
-				gameObject.isGrounded = true;
-			}
-		}
-
-		// ----------------------------------------
-		// ゲームオブジェクトとコライダーに
-		// 衝突による貫通分の移動を反映
-		// ----------------------------------------
-
-		// ゲームオブジェクトを移動
-		gameObject.transform->position += penetration;
-
-		// 全てのワールドコライダーを移動
-		for (auto& collider : *worldColliders)
-		{
-			collider.world->AddPosition(penetration);
-		}
-	}
-
-#pragma endregion
-
 #pragma region Texture
 
 	/// <summary>
@@ -756,7 +435,7 @@ namespace PokarinEngine
 		// ----------------------------------------
 
 		// テクスチャを検索
-		// なければend()が入る
+		// なければendが入る
 		auto itr = textureCache.find(name);
 
 		// テクスチャが見つかった場合
@@ -774,13 +453,6 @@ namespace PokarinEngine
 		/* make_shared関数はEngineクラスのメンバ関数ではない
 		なので、補助クラスを作成して
 		間接的にコンストラクタ、デストラクタを呼び出す */
-
-		// コンストラクタ、デストラクタを
-		// 呼べるようにするための補助クラス
-		struct TexHelper : public Texture
-		{
-			TexHelper(const char* p) : Texture(p) {}
-		};
 
 		// テクスチャ
 		std::shared_ptr<TexHelper> tex;
@@ -807,13 +479,6 @@ namespace PokarinEngine
 		なので、補助クラスを作成して
 		間接的にコンストラクタ、デストラクタを呼び出す */
 
-		// コンストラクタ、デストラクタを
-		// 呼べるようにするための補助クラス
-		struct TexHelper : public Texture
-		{
-			TexHelper(GLsizei w, GLsizei h) : Texture(w, h) {}
-		};
-
 		// テクスチャ
 		std::shared_ptr<TexHelper> tex;
 
@@ -826,273 +491,123 @@ namespace PokarinEngine
 
 #pragma endregion
 
-#pragma region Ray
+#pragma region SkySphere
 
 	/// <summary>
-	/// マウス座標から発射される光線を取得する
+	/// スカイスフィアを描画する
 	/// </summary>
-	/// <returns> マウス座標から発射される光線 </returns>
-	Collision::Ray Engine::GetRayFromMousePosition() const
+	/// <param name="skySphereMaterial"> スカイスフィア用マテリアル </param>
+	void Engine::DrawSkySphere(const MaterialPtr skySphereMaterial)
 	{
-		// ----------------------------------------------
-		// スクリーン座標系のマウスカーソル座標を取得
-		// ----------------------------------------------
+		// --------------------------------------------------------
+		// スカイスフィア用モデルがない場合は描画しない
+		// --------------------------------------------------------
 
-		// マウスカーソル座標
-		Vector2 mousePos = Input::Mouse::GetScreenPos(WindowID::Main);
-
-		// -------------------------------------
-		// スクリーン座標系からNDC座標系
-		// (正規化デバイス座標系)に変換
-		// -------------------------------------
-
-		/* NDC座標系は-1 ～ +1の範囲の座標系
-
-		Windowsのスクリーン座標系は
-		画面のピクセル数をそのまま表現する座標系
-
-		そこで、スクリーン座標をピクセル数で割る
-		これで0 ～ 1の値になるので、2倍して1引くとNDC座標が得られる
-
-		また、Windowsのスクリーン座標系のY軸は下がプラス、
-		NDC座標系のY軸は上がプラスなので、Y軸を符号反転する */
-
-		// スクリーンのピクセル数
-		Vector2 windowSize = Window::GetWindowSize(WindowID::Main);
-
-		// 光線の発射点の座標
-		Vector3 nearPos = {
-			static_cast<float>(mousePos.x / windowSize.x * 2 - 1),
-			-static_cast<float>(mousePos.y / windowSize.y * 2 - 1),
-			-1 };
-
-		// 光線の終着点の座標
-		Vector3 farPos = { nearPos.x, nearPos.y, 1 };
-
-		// -------------------------------------
-		// NDC座標系からクリップ座標系に変換
-		// -------------------------------------
-
-		/* NDC座標系は、
-		クリップ座標系のX,Y,Z要素をW要素で除算した座標系
-
-		なので、頂点シェーダの計算、GPUがする「wによる除算」を
-		逆に実行する */
-
-		// --------- 深度値の計算結果が-1 ～ +1になるような -------------
-		// --------- パラメータA,Bを計算					-------------
-		// --------- (頂点シェーダの値と一致させる)			-------------
-
-		// 描画開始距離
-		const float near = 0.35f;
-
-		// 描画終了距離
-		const float far = 1000;
-
-		// -1 <= A / 深度値 + B <= 1 となる定数A,Bを求める
-		// (standard.vertの式と同じ)
-		const float A = -2 * far * near / (far - near);
-		const float B = (far + near) / (far - near);
-
-		// ------- クリップ座標系に変換 --------
-
-		//「wによる除算」の逆なので
-		// 深度値を掛ける
-		nearPos *= near;
-		farPos *= far;
-
-		// 頂点シェーダで 深度値 * B + A をしたので、
-		// 逆算して計算前の深度値を求める
-		nearPos.z = (nearPos.z - A) / B;
-		farPos.z = (farPos.z - A) / B;
-
-		// ----------------------------------------
-		// クリップ座標系からビュー座標系に変換
-		// ----------------------------------------
-
-		/* 頂点シェーダで、
-		Xをアスペクト比で割った後、X,YをFOVで割ることで、
-		アスペクト比とFOVを反映させたので、
-		その逆を実行してビュー座標系に変換する
-
-		ただし、余計な除算を省くために、逆数で乗算していたので、
-		逆数で割る必要がある */
-
-		// アスペクト比
-		const float aspectRatio = Window::GetAspectRatio(WindowID::Main);
-
-		// 余分な除算を省くため、
-		// 逆数になっているFOVを逆数にして元に戻す
-		const float invFovScale = 1.0f / currentScene->GetCameraInfo().GetFovScale();
-
-		// FOVを掛けてビュー座標系に変換する
-		// Xにはアスペクト比も掛ける
-		nearPos.x *= invFovScale * aspectRatio;
-		nearPos.y *= invFovScale;
-
-		farPos.x *= invFovScale * aspectRatio;
-		farPos.y *= invFovScale;
-
-		// ----------------------------------------
-		// ビュー座標系からワールド座標系に変換
-		// ----------------------------------------
-
-		/* ワールド座標系からビュー座標系への変換では
-		「カメラの回転の逆」の回転をした
-		その逆をするので、カメラの回転を適用することで変換する
-
-		また、ワールド座標系からビュー座標系への変換では
-		「カメラ座標を減算してから回転」をしていた
-		その逆をするので、「回転してからカメラの座標を加算」する */
-
-		// メインカメラ
-		TransformPtr mainCamera = currentScene->GetMainCamera().transform;
-
-		// カメラのY軸回転用sin
-		const float cameraSinY = std::sin(mainCamera->rotation.y);
-
-		// カメラのY軸回転用cos
-		const float cameraCosY = std::cos(mainCamera->rotation.y);
-
-		// カメラの回転を適用
-		// 発射点は一番手前の座標なので、Z座標はnear
-		nearPos = {
-			nearPos.x * cameraCosY - near * cameraSinY,
-			nearPos.y,
-			nearPos.x * -cameraSinY - near * cameraCosY };
-
-		// カメラの座標を加算して変換完了
-		nearPos += mainCamera->position;
-
-		// 終着点は一番奥の座標なので、Z座標はfar
-		farPos = {
-			farPos.x * cameraCosY - far * cameraSinY,
-			farPos.y,
-			farPos.x * -cameraSinY - far * cameraCosY };
-
-		// カメラの座標を加算して変換完了
-		farPos += mainCamera->position;
-
-		// -----------------------------------
-		// 近平面の座標と遠平面の座標から
-		// 光線の向きベクトルを求める
-		// -----------------------------------
-
-		// 光線の向きベクトル
-		Vector3 direction = farPos - nearPos;
-
-		// 正規化するために、ベクトルの長さを求める
-		const float length = sqrt(
-			direction.x * direction.x +
-			direction.y * direction.y +
-			direction.z * direction.z);
-
-		// 正規化
-		direction *= 1.0f / length;
-
-		return Collision::Ray{ nearPos, direction };
-	}
-
-	/// <summary>
-	/// 光線とコライダーの交差判定
-	/// </summary>
-	/// <param name="[in] ray"> 光線 </param>
-	/// <param name="[out] hitInfo"> 光線と最初に交差したコライダーの情報 </param>
-	/// <param name="pred"> 交差判定を行うコライダーを選別する述語 </param>
-	/// <returns>
-	/// <para> true : コライダーと交差した </para>
-	/// <para> false : コライダーと交差しなかった </para>
-	/// </returns>
-	bool Engine::Raycast(const Collision::Ray& ray, RaycastHit& hitInfo,
-		const RaycastPredicate& pred) const
-	{
-		// 交点の情報を初期化
-		hitInfo.collider = nullptr;
-		hitInfo.distance = FLT_MAX;
-
-		// [ゲームオブジェクト識別番号, ゲームオブジェクト]
-		for (auto& gameObject : currentScene->GetGameObjectAll())
+		if (!skySphere)
 		{
-			// コライダー
-			for (auto& collider : gameObject->colliderList)
-			{
-				// コライダーをワールド座標系に変換
-				const auto worldCollider = collider->GetTransformedCollider(
-					gameObject->transform->GetTransformMatrix());
-
-				// --------------------
-				// 光線との交差判定
-				// --------------------
-
-				// 光線がAABBと最初に交差するまでの距離
-				float distance = 0;
-
-				// 交差判定結果
-				bool hit = false;
-
-				// コライダーの図形種類によって処理を分岐
-				switch (collider->GetType())
-				{
-				case Collider::Type::AABB:
-
-					Collision::AABB aabb =
-						static_cast<AabbCollider&>(*worldCollider).aabb;
-
-					// 交差判定
-					hit = Intersect(aabb, ray, distance);
-
-					break;
-
-				case Collider::Type::Sphere:
-
-					Collision::Sphere sphere =
-						static_cast<SphereCollider&>(*worldCollider).sphere;
-
-					// 交差判定
-					hit = Intersect(sphere, ray, distance);
-
-					break;
-				}
-
-				// 光線とコライダーが
-				// 交差しなければ次のコライダーへ
-				if (!hit)
-				{
-					continue;
-				}
-
-				// 交差判定の対象でなければ次のコライダーへ
-				if (!pred(collider, distance))
-				{
-					continue;
-				}
-
-				// より発射点に近い交点を持つコライダーを選ぶ
-				if (distance < hitInfo.distance)
-				{
-					// 情報を更新
-					hitInfo.collider = collider;
-					hitInfo.distance = distance;
-				}
-
-			} // for colliderList
-		} // for gameObjectList
-
-		// ------------------------------------
-		// 交差するコライダーがあるか確認
-		// ------------------------------------
-
-		// 交差するコライダーがある
-		if (hitInfo.collider)
-		{
-			// 交点の座標を計算
-			hitInfo.point = ray.start + ray.direction * hitInfo.distance;
-
-			return true;
+			return;
 		}
 
-		// 交差するコライダーがない
-		return false;
+		// -------------------------------------
+		// 使用するシェーダを指定する
+		// -------------------------------------
+
+		// ライティング無しのシェーダ
+		static const GLuint progUnlit = Shader::GetProgram(Shader::ProgType::Unlit);
+
+		// 空にライティングすると不自然なので
+		// アンリットシェーダで描画
+		glUseProgram(progUnlit);
+
+		// VAOにバインド
+		glBindVertexArray(*meshBuffer->GetVAO());
+
+		// 深度バッファへの書き込みを禁止
+		glDepthMask(GL_FALSE);
+
+		// ----------------------------------------
+		// 座標変換行列をGPUにコピーする
+		// ----------------------------------------
+
+		/* スカイスフィアは移動と回転はしないので拡大率だけを設定する
+
+		スカイスフィアは最も遠くに描画される物体なので、
+		カメラが描画できる範囲のうち、できるだけ遠い位置に描画したい
+
+		現在の最大描画範囲を使いたいが
+		スカイスフィアもポリゴンモデルなので微妙な凹凸がある
+		凹凸が範囲からはみ出さないように*/
+
+		// 最大描画範囲
+		const float far = currentScene->GetCameraInfo().GetDrawFar();
+
+		// スカイスフィアの半径
+		static const float skySphereRadius = 0.5f;
+
+		// 拡大率
+		// 最大描画範囲の95%の位置に描画できるように設定
+		const float scale = far * 0.95f / skySphereRadius;
+
+		// 座標変換行列
+		const Matrix4x4 transformMatrix = {
+			{ scale,     0,     0,     0 },
+			{     0, scale,     0,     0 },
+			{     0,     0, scale,     0 },
+			{     0,     0,     0, scale },
+		};
+
+		// 座標変換行列をGPUにコピー
+		glProgramUniformMatrix4fv(progUnlit, UniformLocation::transformMatrix,
+			1, GL_FALSE, &transformMatrix[0].x);
+
+		// -----------------------------------
+		// 色をGPUメモリにコピー
+		// -----------------------------------
+
+		// 色はマテリアルカラーで調整するので白を設定
+		// (実際に描画される色は「オブジェクトカラー」と「マテリアルカラー」の乗算)
+		static const Color color = { 1, 1, 1, 1 };
+		glProgramUniform4fv(progUnlit, UniformLocation::color, 1, &color.r);
+
+		// -----------------------------------
+		// カメラの座標をGPUにコピー
+		// -----------------------------------
+
+		// スカイスフィアは常にカメラを中心に描画したいので、
+		// カメラを一時的に原点に移動させる
+		static const Vector3 skySphereCameraPos = { 0, 0, 0 };
+		glProgramUniform3fv(progUnlit, UniformLocation::cameraPosition,
+			1, &skySphereCameraPos.x);
+
+		// -----------------------------------
+		// スカイスフィアを描画する
+		// -----------------------------------
+
+		// 描画できるように配列に格納
+		const MaterialList materials(1, skySphereMaterial);
+
+		// スカイスフィア用マテリアルが指定されているならそれを使う
+		if (skySphereMaterial)
+		{
+			// スカイスフィアを描画する
+			Draw(*skySphere, progUnlit, materials);
+		}
+		// 指定されていないならスタティックメッシュにあるマテリアルを使う
+		else
+		{
+			// スカイスフィアを描画する
+			Draw(*skySphere, progUnlit, skySphere->materials);
+		}
+
+		// カメラの座標を元に戻す
+		glProgramUniform3fv(progUnlit, UniformLocation::cameraPosition,
+			1, &currentScene->GetMainCamera().transform->position.x);
+
+		// 深度バッファへの書き込みを許可
+		glDepthMask(GL_TRUE);
+
+		// 標準シェーダに戻す
+		glUseProgram(Shader::GetProgram(Shader::ProgType::Standard));
 	}
 
 #pragma endregion

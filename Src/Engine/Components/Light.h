@@ -42,7 +42,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// エディタに情報を描画する
 		/// </summary>
-		void RenderEditor() override;
+		void RenderInfo() override;
 
 	public: // ----------------- 種類の設定 ----------------
 

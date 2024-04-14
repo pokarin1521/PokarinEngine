@@ -32,16 +32,15 @@ namespace PokarinEngine
 		/// <summary>
 		/// バッファオブジェクトを作成する
 		/// </summary>
-		/// <param name="size">
-		///  バッファオブジェクトのバイト数 
+		/// <param name="size"> 
+		/// バッファオブジェクトのバイト数 
 		/// </param>
 		/// <param name="data"> 
 		/// バッファにコピーするデータのアドレス、
-		/// nullptrを指定すると空のバッファが作成される
+		/// nullptrを指定すると空のバッファが作成される 
 		/// </param>
 		/// <param name="flags"> 
-		/// 用途を示すビットフラグの論理和
-		/// (glBufferStorageを参照) 
+		/// メモリの使用方法を示すフラグ
 		/// </param>
 		/// <returns> 作成したバッファオブジェクトへのポインタ </returns>
 		static BufferObjectPtr Create(GLsizeiptr size,
@@ -57,7 +56,7 @@ namespace PokarinEngine
 		/// </summary>
 		/// <param name="size"> バッファサイズ(バイト数) </param>
 		/// <param name="data"> コピーするデータのアドレス </param>
-		/// <param name="flags"> 各種フラグ </param>
+		/// <param name="flags"> メモリの使用方法を示すフラグ </param>
 		BufferObject(GLsizeiptr size, const void* data, GLbitfield flags)
 		{
 			// バッファサイズを設定

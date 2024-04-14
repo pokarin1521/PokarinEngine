@@ -41,16 +41,17 @@ namespace PokarinEngine
 			// ライトの種類
 			// ------------------
 
+			// ライトの種類
 			Type type = Type::pointLight;
 
 			// ----------------- 
 			// ライト全般 
 			// -----------------
 
-			Color color = { 1,1,1,1 };	// 色
-			float intensity = 5;		// 明るさ
+			Color color = { 1,1,1,1 };	    // 色
+			float intensity = 5;		    // 明るさ
 			Vector3 position = { 0,0,0 };	// 位置
-			float range = 10;			// ライトが届く最大範囲(半径)
+			float range = 10;			    // ライトが届く最大範囲(半径)
 
 			// ---------------------
 			// スポットライト 

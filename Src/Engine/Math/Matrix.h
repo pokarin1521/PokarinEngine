@@ -226,21 +226,19 @@ namespace PokarinEngine
 			/* 行列は、ベクトル配列と比べて
 			「縦と横が反転している」ので
 
-			{  cosY, sinX * sinY, cosX * sinY }
-			{     0,        cosX,       -sinX }
-			{ -sinY, sinX * cosY, cosX * cosY }
+			{  cosZ, -sinZ,  0 }
+			{  sinZ,  cosZ,  0 }
+			{     0,     0, -1 } 	
+			
+					 ↓
 
-							↓
-
-			{        cosY,     0,       -sinY }
-			{ sinX * sinY,  cosX, sinX * cosY }
-			{ cosX * sinY, -sinX, cosX * cosY }
+			{  cosZ,  sinZ,  0 }
+			{ -sinZ,  cosZ,  0 }
+			{     0,     0, -1 } 
 
 			になる
-
-			XY軸回転の行列は
-		　　「X軸回転の行列」に「Y軸回転の行列」を掛け合わせたもの
-			なので、Z軸回転を追加するには「XY軸回転の行列」に「Z軸回転の行列」を掛け合わせればいい */
+			
+			X,Y,Z軸の回転行列を求めて掛けることで、XYZ軸回転の行列が求められる*/
 
 			// X軸回転のSin・Cos
 			const float sinX = sin(rotation.x), cosX = cos(rotation.x);
@@ -251,19 +249,27 @@ namespace PokarinEngine
 			// Z軸回転のSin・Cos
 			const float sinZ = sin(rotation.z), cosZ = cos(rotation.z);
 
-			// XY軸回転の行列
-			Matrix3x3 m = { {        cosY,     0,        -sinY },
-					   { sinX * sinY,  cosX,  sinX * cosY },
-					   { cosX * sinY, -sinX,  cosX * cosY } };
+			// X軸回転の行列
+			const Matrix3x3 matrix_X = {
+					   { 1,     0,      0 },
+					   { 0,  cosX,  -sinX },
+					   { 0,  sinX,   cosX } };
+
+			// Y軸回転の行列
+			const Matrix3x3 matrix_Y = {
+					   {  cosY,  0, sinY },
+					   {     0,  1,    0 },
+					   { -sinY,  0, cosY } };
 
 			// Z軸回転の行列
-			const Matrix3x3 n = { {  cosZ, sinZ, 0 },
+			const Matrix3x3 matrix_Z = {
+							 {  cosZ, sinZ, 0 },
 							 { -sinZ, cosZ, 0 },
-							 {     0,    0, 1 } };
+							 {     0,    0, -1 } };
 
-			// XY軸回転にZ軸回転を掛け合わせて
+			// X,Y,Z軸回転を掛け合わせて
 			// XYZ軸回転の行列にする
-			return m * n;
+			return matrix_X * matrix_Y * matrix_Z;
 		}
 	}
 
