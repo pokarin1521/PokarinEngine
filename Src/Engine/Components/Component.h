@@ -64,8 +64,8 @@ namespace PokarinEngine
 		// 自分以外を参照する場合は、この関数で初期化する
 		virtual void Start() {}
 
-		// 毎フレーム１回呼び出される
-		virtual void Update(float deltaTime) {}
+		// 毎フレーム呼び出される
+		virtual void Update() {}
 
 		// 衝突が起きたときに呼び出される
 		virtual void OnCollision(const ComponentPtr& self, const ComponentPtr& other) {}

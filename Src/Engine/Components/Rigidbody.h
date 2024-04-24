@@ -24,8 +24,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// Rigibodyコンポーネントの更新
 		/// </summary>
-		/// <param name="deltaTime"></param>
-		void Update(float deltaTime) override;
+		void Update() override;
 
 	public: // ------------------- 情報 ---------------------
 

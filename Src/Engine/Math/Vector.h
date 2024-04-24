@@ -32,8 +32,6 @@ namespace PokarinEngine
 	// 構造体定義
 	// -------------------------------
 
-#pragma region Vector
-
 	/// <summary>
 	/// 2次元座標
 	/// </summary>
@@ -214,8 +212,6 @@ namespace PokarinEngine
 		float& operator[](size_t i) { return *(&x + i); }
 		float operator[](size_t i)const { return *(&x + i); }
 	};
-
-#pragma endregion
 
 	// -------------------------------
 	// オペレーター

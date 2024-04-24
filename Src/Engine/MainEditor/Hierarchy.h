@@ -20,15 +20,8 @@ namespace PokarinEngine
 	/// <summary>
 	/// ヒエラルキー(シーン内のオブジェクト管理用ウィンドウ)
 	/// </summary>
-	class Hierarchy
+	namespace Hierarchy
 	{
-	public: // ------------- コンストラクタ・デストラクタ ----------------
-
-		Hierarchy() = default;
-		~Hierarchy() = default;
-
-	public: // ------------------------- 制御 ----------------------------
-
 		/// <summary>
 		/// 初期化
 		/// </summary>
@@ -39,67 +32,12 @@ namespace PokarinEngine
 		/// </summary>
 		void Update();
 
-	public: // ---------------------- 情報の取得 -------------------------
-
 		/// <summary>
 		/// 選択中のオブジェクトの要素番号を取得する
 		/// </summary>
 		/// <returns> ウィンドウ内で選択中のオブジェクトの要素番号 </returns>
-		GameObjectPtr GetSelectObject()
-		{
-			return selectObject;
-		}
-
-	private: // ------------------ ウィンドウ内の機能 --------------------
-
-		/// <summary>
-		/// ゲームオブジェクト表示用ツリーノードの処理
-		/// </summary>
-		void ObjectTree();
-
-		/// <summary>
-		/// メニューの処理
-		/// </summary>
-		void Mene();
-
-		/// <summary>
-		/// 選択中のオブジェクトに対する制御をまとめた関数
-		/// </summary>
-		void ScelectObjectControl();
-
-	private: // --------------- ゲームオブジェクト作成用 -----------------
-
-		/// <summary>
-		/// ゲームオブジェクト作成用ボタンの処理
-		/// </summary>
-		/// <param name="kindName"> 作成するゲームオブジェクトの種類 </param>
-		/// <param name="staticMeshFile"> スタティックメッシュのファイル名 </param>
-		void CreateObjectButton(const char* typeName, const char* staticMeshFile);
-
-		/// <summary>
-		/// ゲームオブジェクト作成用ポップアップの処理
-		/// </summary>
-		void CreateObjectPopup();
-
-	private: // ------------------ オブジェクト管理用 --------------------
-
-		// 非選択時の要素番号
-		const int unselected = -1;
-
-		// 選択中オブジェクトの要素番号
-		int selectObjectIndex = unselected;
-
-		// 選択中のオブジェクト
-		GameObjectPtr selectObject;
-
-		// オブジェクト作成用ポップアップの名前
-		const char* createObjectPopup = "CreateObject";
-
-	private: // ----------------------- エンジン -------------------------
-
-		// エンジンクラスのポインタ
-		Engine* engine = nullptr;
-	};
+		GameObjectPtr GetSelectObject();
+	} 
 
 } // namespace PokarinEngine
 

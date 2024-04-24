@@ -29,10 +29,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// 更新イベント
 		/// </summary>
-		/// <param name="deltaTime"> 
-		/// 前回の更新からの経過時間(秒) 
-		/// </param>
-		void Update(float deltaTime) override;
+		void Update() override;
 
 	public: // イベント用変数
 

@@ -79,15 +79,14 @@ namespace PokarinEngine
 		// ノードエディタを作成
 		if (!nodeEditor)
 		{
-			nodeEditor = NodeEditor::Create(this);
+			nodeEditor = std::make_shared<NodeEditor>(*this);
 		}
 	}
 
 	/// <summary>
 	/// 更新
 	/// </summary>
-	/// <param name="deltaTime"> 前回の更新からの経過時間(秒) </param>
-	void GameObject::Update(float deltaTime)
+	void GameObject::Update()
 	{
 		// コンポーネントのStartを１度だけ実行
 		// 途中で追加されることを想定して、Update内で実行
@@ -103,8 +102,10 @@ namespace PokarinEngine
 		// コンポーネントを更新
 		for (auto& e : componentList)
 		{
-			e->Update(deltaTime);
+			e->Update();
 		}
+
+		nodeEditor->Run();
 
 		// コンポーネントの削除を確定させる
 		RemoveDestroyedComponent();

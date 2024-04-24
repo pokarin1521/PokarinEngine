@@ -19,10 +19,7 @@ namespace PokarinEngine
 	/// <summary>
 	/// 更新イベント
 	/// </summary>
-	/// <param name="deltaTime"> 
-	/// 前回の更新からの経過時間(秒) 
-	/// </param>
-	void UILayout::Update(float deltaTime)
+	void UILayout::Update()
 	{
 		/* 常にカメラの方を向くように
 		ゲームオブジェクトの向きを調整(ビルボードと同じ) */

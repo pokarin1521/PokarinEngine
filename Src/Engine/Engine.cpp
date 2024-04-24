@@ -7,6 +7,7 @@
 #include "InputManager.h"
 
 #include "Debug.h"
+#include "Time.h"
 #include "LightParameter.h"
 
 #include "Math/Matrix.h"
@@ -18,7 +19,10 @@
 
 #include "Settings/ShaderSettings.h"
 
+#include "MainEditor/MainEditor.h"
 #include "MainEditor/RenderView.h"
+#include "MainEditor/SceneView.h"
+#include "MainEditor/GameView.h"
 
 #include "NodeScript/NodeScript.h"
 
@@ -43,7 +47,7 @@ namespace PokarinEngine
 		// ----------------------------
 		// カメラの座標
 		// ----------------------------
-
+		
 		// 左手座標系の値なので右手座標系にする
 		Vector3 position = camera.position;
 		position.z *= -1;
@@ -135,7 +139,7 @@ namespace PokarinEngine
 		}
 
 		// エディタを終了
-		mainEditor.Finalize();
+		MainEditor::Finalize();
 
 		// ノードスクリプトの終了
 		NodeScript::Finalize();
@@ -199,7 +203,7 @@ namespace PokarinEngine
 		// -----------------------------
 
 		// メインエディタ
-		mainEditor.Initialize(*this);
+		MainEditor::Initialize(*this);
 
 		// -----------------------
 		// シェーダの初期化
@@ -259,32 +263,23 @@ namespace PokarinEngine
 	/// </summary>
 	void Engine::Update()
 	{
-		// ------------------------------------------
-		// デルタタイム(前回の更新からの経過時間)
-		// ------------------------------------------
+		// ---------------------------
+		// 時間を更新
+		// ---------------------------
 
-		// デルタタイム(前回の更新からの経過時間)を計算
-		const double currentTime = glfwGetTime(); // 現在時刻
-		deltaTime = static_cast<float>(currentTime - previousTime);
-		previousTime = currentTime;
-
-		// 経過時間が長すぎる場合は適当に短くする(デバッグ対策)
-		if (deltaTime >= 0.5f)
-		{
-			deltaTime = 1.0f / 60.0f;
-		}
+		Time::Update();
 
 		// ------------------------------------------
 		// シーン内のゲームオブジェクトを更新
 		// ------------------------------------------
 
-		currentScene->UpdateGameObject(deltaTime);
+		currentScene->UpdateGameObject();
 
 		// ------------------------
 		// エディタを更新
 		// ------------------------
 
-		mainEditor.Update();
+		MainEditor::Update();
 	}
 
 	/// <summary>
@@ -326,16 +321,19 @@ namespace PokarinEngine
 		// ------------------------------------------
 
 		// メインカメラを使用してゲームビューに描画する
-		DrawRenderView(*currentScene->GetMainCamera().transform, mainEditor.GetGameView());
+		DrawRenderView(*currentScene->GetMainCamera().transform, MainEditor::GetGameView());
+
+		// シーンビュー
+		const SceneView& sceneView = MainEditor::GetSceneView();
 
 		// シーンビュー用カメラを使用してシーンビューに描画する
-		DrawRenderView(mainEditor.GetSceneView().GetCamera(), mainEditor.GetSceneView());
+		DrawRenderView(sceneView.GetCamera(), sceneView);
 
 		// --------------------------
 		// エディタ画面の描画
 		// --------------------------
 
-		mainEditor.Render();
+		MainEditor::Render();
 	}
 
 	/// <summary>

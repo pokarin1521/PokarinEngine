@@ -51,7 +51,7 @@ namespace PokarinEngine
 			/// <param name="mouseButton"> マウスボタン </param>
 			/// <returns>
 			/// <para> true : ダブルクリックした </para>
-			/// <para> false : ダブルクリックしてない </para>
+			/// <para> false : ダブルクリックしていない </para>
 			/// </returns>
 			bool IsDoubleClick(MouseButton mouseButton)
 			{

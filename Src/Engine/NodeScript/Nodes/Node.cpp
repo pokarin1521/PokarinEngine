@@ -7,24 +7,36 @@
 #include "ImGui/imnodes.h"
 
 #include "../NodeEditor.h"
+#include "../Pin/Pin.h"
 
 #include "../../Window.h"
 #include "../../InputManager.h"
 
+#include "../../Color.h"
+
+#include "../../GameObject.h"
+
 namespace PokarinEngine
 {
-#pragma region Create, Render
+#pragma region Node
 
 	/// <summary>
 	/// ノード作成時の処理
 	/// </summary>
 	/// <param name="nodeEditor"> 持ち主であるノードエディタ </param>
-	void Node::CreateNode(NodeEditor* nodeEditor)
+	/// <param name="nodeID"> ノードの識別番号 </param>
+	void Node::CreateNode(NodeEditor& nodeEditor, int nodeID, const char* nodeTitle)
 	{
 		// 持ち主であるノードエディタを設定
-		owner = nodeEditor;
+		owner = &nodeEditor;
 
-		// マウスカーソルの位置にノードを設置する
+		// ノードの識別番号を設定
+		id = nodeID;
+
+		// タイトルを設定する
+		title = nodeTitle;
+
+		// マウスカーソルの位置にノードを設置
 		ImVec2 mousePos = Input::Mouse::GetScreenPos(WindowID::NodeScript);
 		ImNodes::SetNodeScreenSpacePos(id, mousePos);
 
@@ -33,94 +45,132 @@ namespace PokarinEngine
 	}
 
 	/// <summary>
+	/// タイトルを表示する
+	/// </summary>
+	void Node::RenderTitle()
+	{
+		ImNodes::BeginNodeTitleBar();
+		ImGui::Text(title.c_str());
+		ImNodes::EndNodeTitleBar();
+	}
+
+	/// <summary>
 	/// ノードを表示する
 	/// </summary>
 	void Node::Render()
 	{
 		ImNodes::BeginNode(id);
-		RenderInfo();
+		RenderTitle();
+		RenderPin();
 		ImNodes::EndNode();
 	}
 
 #pragma endregion
 
-#pragma region ID
+#pragma region CreatePin
 
 	/// <summary>
-	/// 未設定の場合だけノードの識別番号を設定する
+	/// ピンを作成する
 	/// </summary>
-	void Node::SetID_OnlyOnce(int setID)
+	/// <param name="pinType"> ピンの種類 </param>
+	/// <returns> 作成したピンの識別番号 </returns>
+	int Node::CreatePin(PinType pinType)
 	{
-		// 設定済みなら何もしない
-		if (isSetID)
-		{
-			return;
-		}
-
-		// 識別番号を設定
-		id = setID;
-
-		// 設定済みにする
-		isSetID = true;
-	}
-
-	/// <summary>
-	/// 重複しない入出力用ピンの識別番号を取得する
-	/// </summary>
-	/// <returns> 重複しない識別番号 </returns>
-	int Node::GetSinglePinID()
-	{
-		return owner->GetSinglePinID();
+		return owner->CreatePin(id, pinType);
 	}
 
 #pragma endregion
 
-#pragma region SetNode
+#pragma region SetPin
 
 	/// <summary>
-	/// ノードの入力用ピンを設定する
+	/// ピンの形
 	/// </summary>
-	/// <param name="pinID"> 設定するピンの識別番号 </param>
-	/// <param name="pinName"> 設定するピンの名前 </param>
-	void Node::SetInputPin(int pinID, const char* pinName)
+	enum class Node::PinShape
 	{
-		ImNodes::BeginInputAttribute(pinID, ImNodesPinShape_CircleFilled);
+		Triangle = ImNodesPinShape_TriangleFilled,
+		Circle = ImNodesPinShape_CircleFilled,
+	};
 
-		ImGui::Text(pinName);
-
-		ImNodes::EndInputAttribute();
+	/// <summary>
+	/// ピンの設定を開始する
+	/// </summary>
+	/// <param name="pinID"> ピンの識別番号 </param>
+	/// <param name="pinAttribute"> ピンの属性 </param>
+	/// <param name="pinShape"> ピンの形 </param>
+	void Node::BeginPin(int pinID, PinAttribute pinAttribute, PinShape pinShape)
+	{
+		// 入力用ピン
+		if (pinAttribute == PinAttribute::Input)
+		{
+			ImNodes::BeginInputAttribute(pinID, ImNodesPinShape(pinShape));
+		}
+		// 出力用ピン
+		else
+		{
+			ImNodes::BeginOutputAttribute(pinID, ImNodesPinShape(pinShape));
+		}
 	}
 
 	/// <summary>
-	/// ノードの出力用ピンを設定する
+	/// データピンの設定を開始する
 	/// </summary>
-	/// <param name="pinID"> 設定するピンの識別番号 </param>
-	/// <param name="pinName"> 設定するピンの名前 </param>
-	void Node::SetOutputPin(int pinID, const char* pinName)
+	/// <param name="pinID"> ピンの識別番号 </param>
+	/// <param name="pinAttribute"> ピンの属性 </param>
+	void Node::BeginDataPin(int pinID, PinAttribute pinAttribute)
 	{
-		ImNodes::BeginOutputAttribute(pinID, ImNodesPinShape_CircleFilled);
-
-		ImGui::Text(pinName);
-
-		ImNodes::EndOutputAttribute();
+		BeginPin(pinID, pinAttribute, PinShape::Circle);
 	}
 
 	/// <summary>
-	/// ノードの入出力用ピンを設定する
+	/// 実行ピンの設定を開始する
 	/// </summary>
-	/// <param name="inputID"> 入力用ピンの識別番号 </param>
-	/// <param name="outputID"> 出力用ピンの識別番号 </param>
-	/// <param name="inputName"> 入力用ピンの名前 </param>
-	/// <param name="outputName"> 出力用ピンの名前 </param>
-	void Node::SetInOutPin(int inputID, int outputID, const char* inputName, const char* outputName)
+	/// <param name="pinID"> ピンの識別番号 </param>
+	/// <param name="pinAttribute"> ピンの属性 </param>
+	void Node::BeginRunPin(int pinID, PinAttribute pinAttribute)
 	{
-		// 入力用ピンの名前と出力用ピンの名前の間隔
-		static const float spacing = 20;
+		BeginPin(pinID, pinAttribute, PinShape::Triangle);
+	}
 
-		// 入出力用ピンを同じ行に表示する
-		SetInputPin(inputID, inputName);
+	/// <summary>
+	/// ピンの設定を終了する
+	/// </summary>
+	/// <param name="pinAttribute"> ピンの属性 </param>
+	void Node::EndPin(PinAttribute pinAttribute)
+	{
+		// 入力用ピン
+		if (pinAttribute == PinAttribute::Input)
+		{
+			ImNodes::EndInputAttribute();
+		}
+		// 出力用ピン
+		else
+		{
+			ImNodes::EndOutputAttribute();
+		}
+	}
+
+	/// <summary>
+	/// 次に設定するピンを同じ行に表示する
+	/// </summary>
+	void Node::PinSameLin()
+	{
+		// ピン同士の間隔
+		static const float spacing = 0;
 		ImGui::SameLine(0, spacing);
-		SetOutputPin(outputID, outputName);
+	}
+
+#pragma endregion
+
+#pragma region GameObject
+
+	/// <summary>
+	/// ノードエディタの持ち主であるゲームオブジェクトを取得する
+	/// </summary>
+	/// <returns> 持ち主であるゲームオブジェクト </returns>
+	GameObject& Node::GetGameObject()
+	{
+		return owner->GetOwner();
 	}
 
 #pragma endregion

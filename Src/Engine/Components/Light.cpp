@@ -29,8 +29,7 @@ namespace PokarinEngine
 	/// <summary>
 	/// コンポーネントを更新
 	/// </summary>
-	/// <param name="deltaTime"> 前回の更新からの経過時間(秒) </param>
-	void Light::Update(float deltaTime)
+	void Light::Update()
 	{
 		// --------------------------------
 		// ライトの座標を設定

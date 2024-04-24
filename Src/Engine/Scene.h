@@ -117,8 +117,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// ゲームオブジェクトの状態を更新する
 		/// </summary>
-		/// <param name="deltaTime"> 前回の更新からの経過時間(秒) </param>
-		void UpdateGameObject(float deltaTime);
+		void UpdateGameObject();
 
 		/// <summary>
 		/// シーン内の全てのゲームオブジェクトを描画する
@@ -174,7 +173,7 @@ namespace PokarinEngine
 		using SetNumberNameList = std::set<std::string>;
 
 		// <オブジェクト種類名, 数字付きオブジェクト名>
-		using ObjectTypeNameList = std::unordered_map < std::string, SetNumberNameList>;
+		using ObjectTypeNameList = std::unordered_map<std::string, SetNumberNameList>;
 
 		/* 検索をメインで使うので、検索が得意なset型を使う */
 

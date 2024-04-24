@@ -8,6 +8,14 @@
 namespace PokarinEngine
 {
 	/// <summary>
+	/// 更新
+	/// </summary>
+	void Transform::Update()
+	{
+
+	}
+
+	/// <summary>
 	/// ゲームオブジェクトが削除された時の処理
 	/// </summary>
 	void Transform::OnDestroy()
@@ -45,13 +53,13 @@ namespace PokarinEngine
 	/// <para> 親にするゲームオブジェクトのトランスフォーム </para>
 	/// <para> nullptrを指定すると親子関係を解除する </para>
 	/// </param>
-	void Transform::SetParent(Transform* parent)
+	void Transform::SetParent(Transform* _parent)
 	{
 		// ------------------------------------------
 		// 同じ親を指定された場合は、何もしない
 		// ------------------------------------------
 
-		if (parent == this->parent)
+		if (_parent == parent)
 		{
 			return;
 		}
@@ -60,10 +68,10 @@ namespace PokarinEngine
 		// 既に親がいる場合、その親との関係を解除する
 		// ------------------------------------------------
 
-		if (this->parent)
+		if (parent)
 		{
 			// 親が持つ子オブジェクト配列
-			auto& c = this->parent->children;
+			auto& c = parent->children;
 
 			// 自分の位置を検索
 			auto itr = std::find(c.begin(), c.end(), this);
@@ -81,10 +89,10 @@ namespace PokarinEngine
 		// ---------------------------
 
 		// 新たな親の存在確認
-		if (parent)
+		if (_parent)
 		{
 			// 親子関係を設定
-			parent->children.push_back(this);
+			_parent->children.push_back(this);
 		}
 
 		// 親オブジェクトに設定
@@ -108,7 +116,7 @@ namespace PokarinEngine
 	/// </summary>
 	/// <param name="axisName"> 表示する値の名前 </param>
 	/// <param name="axis"> 表示する値 </param>
-	void DragValue(std::string valueName, float& value, std::string info = "")
+	void DragValue(const std::string& valueName, float& value, std::string info = "")
 	{
 		// 識別用ラベル(非表示にしたいので##)
 		const std::string label = "##" + info + "." + valueName;
@@ -148,7 +156,7 @@ namespace PokarinEngine
 	/// </summary>
 	/// <param name="infoName"> 表示する情報の名前 </param>
 	/// <param name="info"> 表示する情報 </param>
-	void DragInformation(std::string infoName, Vector3& info)
+	void DragInformation(const std::string& infoName, Vector3& info)
 	{
 		// ----------------------------
 		// 情報の名前を表示
@@ -161,7 +169,7 @@ namespace PokarinEngine
 		// ----------------------------
 
 		// 値を表示し始める位置
-		const float dragValueX = 90;
+		const float dragValueX = 90.0f;
 
 		ImGui::SameLine();
 		ImGui::SetCursorPosX(dragValueX);
@@ -194,6 +202,8 @@ namespace PokarinEngine
 			// ----------------------------
 			// 回転角度(度数法)
 			// ----------------------------
+
+			Vector3 rotationDeg = Degrees(rotation);
 
 			DragInformation("Rotation", rotationDeg);
 

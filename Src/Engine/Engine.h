@@ -14,9 +14,6 @@
 
 #include "Shader/Shader.h"
 
-#include "MainEditor/MainEditor.h"
-#include "NodeScript/NodeScript.h"
-
 #include "Settings/MeshSettings.h"
 
 #include <GLFW/glfw3.h>
@@ -125,20 +122,6 @@ namespace PokarinEngine
 		/// <param name="skySphereMaterial"> スカイスフィア用マテリアル </param>
 		void DrawSkySphere(const MaterialPtr skySphereMaterial = nullptr);
 
-	public: // ---------------------- ゲームの実行ボタン ----------------------
-
-		/// <summary>
-		/// ゲームが実行中か取得する
-		/// </summary>
-		/// <returns>
-		/// <para> true : 実行中 </para>
-		/// <para> false : 実行中ではない </para>
-		/// </returns>
-		bool IsGameRun()
-		{
-			return isGameRun;
-		}
-
 	private: // ---------------------- エンジンの制御 -------------------------
 
 		/// <summary>
@@ -200,22 +183,6 @@ namespace PokarinEngine
 
 		// シーン配列
 		SceneList scenes;
-
-	private: // --------------------------- 時間 ----------------------------
-
-		// 前回更新時の時刻
-		double previousTime = 0;
-
-		// 前回更新からの経過時間
-		float deltaTime = 0;
-
-	private: // ------------------------- エディタ --------------------------
-
-		// メインエディタ制御用
-		MainEditor mainEditor;
-
-		// 作成中のゲームが実行中ならtrue
-		bool isGameRun = false;
 	};
 
 } // namespace PokarinEngine

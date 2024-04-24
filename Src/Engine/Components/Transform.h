@@ -38,6 +38,11 @@ namespace PokarinEngine
 	public: // ----------- コンポーネントの制御 ------------
 
 		/// <summary>
+		/// 更新
+		/// </summary>
+		void Update() override;
+
+		/// <summary>
 		/// ゲームオブジェクトが削除された時の処理
 		/// </summary>
 		void OnDestroy() override;
@@ -159,10 +164,6 @@ namespace PokarinEngine
 		Vector3 scale = { 1, 1, 1 };
 
 	private: // ---------------- エディタ用 ----------------
-
-		// 回転(度数法)
-		// スライダー表示に使う
-		Vector3 rotationDeg = { 0, 0, 0 };
 
 		bool isDrag = false;
 

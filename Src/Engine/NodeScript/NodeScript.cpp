@@ -26,14 +26,10 @@
 namespace PokarinEngine
 {
 	/// <summary>
-	/// ノードエディタを管理する機能
+	/// クラス
 	/// </summary>
-	namespace NodeScript
+	namespace
 	{
-		// ---------------------------------------
-		// クラス
-		// ---------------------------------------
-
 		/// <summary>
 		/// コンテキスト管理用クラス
 		/// </summary>
@@ -81,7 +77,7 @@ namespace PokarinEngine
 				ImGui::SetCurrentContext(imGuiContext);
 				ImNodes::SetCurrentContext(imNodesContext);
 			}
-			
+
 		public: // ---------------------------- フォーカス ---------------------------
 
 			/// <summary>
@@ -245,11 +241,13 @@ namespace PokarinEngine
 			// ImGuiの色設定の回数
 			int pushColorCount = 0;
 		};
+	}
 
-		// ---------------------------------------
-		// 変数
-		// ---------------------------------------
-
+	/// <summary>
+	/// 変数
+	/// </summary>
+	namespace
+	{
 		// コンテキスト管理用
 		ContextManager contextManager;
 
@@ -258,11 +256,13 @@ namespace PokarinEngine
 
 		// ImGuiの色設定用
 		SetUpColor setUpColor;
+	}
 
-		// -------------------------------------------
-		// 関数
-		// -------------------------------------------
-
+	/// <summary>
+	/// ノードエディタを管理する機能
+	/// </summary>
+	namespace NodeScript
+	{
 		/// <summary>
 		/// 初期化
 		/// </summary>

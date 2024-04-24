@@ -28,6 +28,7 @@ namespace PokarinEngine
 		C = ImGuiKey_C,
 		D = ImGuiKey_D,
 		Delete = ImGuiKey_Delete,
+		LeftAlt = ImGuiKey_LeftAlt,
 
 		// ------------------------
 		// マウス
@@ -85,7 +86,7 @@ namespace PokarinEngine
 			/// <param name="mouseButton"> マウスボタン </param>
 			/// <returns>
 			/// <para> true : ダブルクリックした </para>
-			/// <para> false : ダブルクリックしてない </para>
+			/// <para> false : ダブルクリックしていない </para>
 			/// </returns>
 			bool IsDoubleClick(MouseButton mouseButton);
 

@@ -3,16 +3,20 @@
 */
 #include "Rigidbody.h"
 
+#include "../Time.h"
+
 namespace PokarinEngine
 {
 	/// <summary>
 	/// Rigibodyコンポーネントの更新
 	/// </summary>
-	/// <param name="deltaTime"> 前回の更新からの経過時間(秒) </param>
-	void Rigidbody::Update(float deltaTime)
+	void Rigidbody::Update()
 	{
 		// コンポーネントの持ち主
 		const GameObject& owner = GetOwner();
+
+		// 前回の更新からの経過時間
+		float deltaTime = Time::DeltaTime();
 
 		// 接地している
 		if (owner.isGrounded)

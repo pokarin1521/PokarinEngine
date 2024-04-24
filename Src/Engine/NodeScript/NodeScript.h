@@ -40,8 +40,7 @@ namespace PokarinEngine
 		/// </summary>
 		/// <param name="nodeEditor"> ノードエディタ </param>
 		void OpenNodeEditor(const NodeEditorPtr nodeEditor);
-
-	} // namespace NodeScript
+	} 
 
 } // namespace PokarinEngine
 

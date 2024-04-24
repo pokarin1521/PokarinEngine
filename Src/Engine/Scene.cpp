@@ -274,14 +274,17 @@ namespace PokarinEngine
 	/// <summary>
 	/// ゲームオブジェクトの状態を更新する
 	/// </summary>
-	/// <param name="deltaTime"> 前回の更新からの経過時間(秒) </param>
-	void Scene::UpdateGameObject(float deltaTime)
+	void Scene::UpdateGameObject()
 	{
+		// ------------------------------------------
+		// ゲームオブジェクトを更新
+		// ------------------------------------------
+
 		for (const auto& gameObject : gameObjectList)
 		{
 			if (!gameObject->IsDestroyed())
 			{
-				gameObject->Update(deltaTime);
+				gameObject->Update();
 			}
 		}
 

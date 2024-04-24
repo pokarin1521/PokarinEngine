@@ -9,7 +9,7 @@
 namespace PokarinEngine
 {
 	/// <summary>
-	/// 更新イベント用ノード(リンクしているノードを毎フレーム実行する)
+	/// 更新イベント用ノード
 	/// </summary>
 	class EventUpdateNode : public EventNode
 	{
@@ -18,14 +18,15 @@ namespace PokarinEngine
 		EventUpdateNode() = default;
 		~EventUpdateNode() = default;
 
-	private: // --------------------------- ノード表示 ----------------------------
+	public: // ---------------------------- 実行処理 -----------------------------
 
 		/// <summary>
-		/// ノードを表示する
+		/// 実行処理
 		/// </summary>
-		void RenderNode() override
+		void Run()
 		{
-
+			// 次のノードの処理を実行
+			RunNextNode();
 		}
 	};
 }

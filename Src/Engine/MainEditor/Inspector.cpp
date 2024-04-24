@@ -8,34 +8,24 @@
 namespace PokarinEngine
 {
 	/// <summary>
-	/// 更新
+	/// インスペクター(シーン内のオブジェクト制御用ウィンドウ)
 	/// </summary>
-	/// <param name="selectObject"> ヒエラルキーで選択中のオブジェクト </param>
-	void Inspector::Update(GameObjectPtr selectObject)
+	namespace Inspector
 	{
-		// インスペクターウィンドウ
-		ImGui::Begin("Inspector");
+		/// ここでしか使わないので、cppのみに書く
+		/// <summary>
+		/// オブジェクト名を表示する
+		/// </summary>
+		/// <param name="selectObject"> ヒエラルキーで選択中のオブジェクト </param>
+		void RenderName(GameObjectPtr selectObject)
 		{
-			// ヒエラルキーでオブジェクトを選択していないなら
-			// 何も表示しない
-			if (!selectObject)
-			{
-				ImGui::End();
-				return;
-			}
-
-			// 選択中のオブジェクトの名前を取得
-			selectObjectName = selectObject->GetName();
-
-			// 名前を書き換えられるように
-			// オブジェクト名の最大文字数を設定
-			selectObjectName.resize(selectObject->GetNameSize());
+			// 選択中オブジェクトの名前
+			std::string selectObjectName = selectObject->GetName();
 
 			// オブジェクト名を入力するテキスト欄
-			// ##でテキストを非表示する
+				// ##でテキストを非表示する
 			if (ImGui::InputText("##ObjectName", selectObjectName.data(), selectObject->GetNameSize(),
-				ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue | 
-				ImGuiInputTextFlags_::ImGuiInputTextFlags_None))
+				ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue))
 			{
 				// 新しい名前が入力されている
 				if (selectObjectName[0] != '\0' &&
@@ -50,17 +40,39 @@ namespace PokarinEngine
 						selectObject, selectObjectName.substr(0, endLine));
 				}
 			}
+		}
 
-			// 区切り線を入れる
-			ImGui::Separator();
-
-			// コンポーネントを表示
-			for (ComponentPtr component : selectObject->componentList)
+		/// <summary>
+		/// 更新
+		/// </summary>
+		/// <param name="selectObject"> ヒエラルキーで選択中のオブジェクト </param>
+		void Inspector::Update(GameObjectPtr selectObject)
+		{
+			// インスペクターウィンドウ
+			ImGui::Begin("Inspector");
 			{
-				component->RenderInfo();
-			}
+				// ヒエラルキーでオブジェクトを選択していないなら
+				// 何も表示しない
+				if (!selectObject)
+				{
+					ImGui::End();
+					return;
+				}
 
-			ImGui::End();
+				// オブジェクト名を表示
+				RenderName(selectObject);
+
+				// 区切り線を入れる
+				ImGui::Separator();
+
+				// コンポーネントを表示
+				for (ComponentPtr component : selectObject->componentList)
+				{
+					component->RenderInfo();
+				}
+
+				ImGui::End();
+			}
 		}
 	}
 

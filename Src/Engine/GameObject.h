@@ -164,8 +164,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// 更新
 		/// </summary>
-		/// <param name="deltaTime"> 前回の更新からの経過時間(秒) </param>
-		virtual void Update(float deltaTime);
+		virtual void Update();
 
 		/// <summary>
 		/// 衝突時の処理
@@ -272,6 +271,8 @@ namespace PokarinEngine
 		Scene* scene = nullptr;
 
 	public: // ----------------------- ノードエディタ -------------------------
+
+		/* ヘッダにインクルードしたくないのでポインタ */
 
 		// ノードエディタ
 		NodeEditorPtr nodeEditor;

@@ -36,8 +36,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// コンポーネントを更新
 		/// </summary>
-		/// <param name="deltaTime"> 前回の更新からの経過時間(秒) </param>
-		void Update(float deltaTime) override;
+		void Update() override;
 
 		/// <summary>
 		/// エディタに情報を描画する

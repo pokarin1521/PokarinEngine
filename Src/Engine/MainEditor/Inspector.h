@@ -13,35 +13,17 @@
 
 namespace PokarinEngine
 {
-	// ------------------------
-	// 前方宣言
-	// ------------------------
-
-	class Engine;
-
 	/// <summary>
 	/// インスペクター(シーン内のオブジェクト制御用ウィンドウ)
 	/// </summary>
-	class Inspector
+	namespace Inspector
 	{
-	public: // --------------- コンストラクタ・デストラクタ ------------------
-
-		Inspector() = default;
-		~Inspector() = default;
-
-	public: // ---------------------------- 制御 -----------------------------
-
 		/// <summary>
 		/// 更新
 		/// </summary>
 		/// <param name="selectObject"> ヒエラルキーで選択中のオブジェクト </param>
 		void Update(GameObjectPtr selectObject);
-
-	private: // --------------------- オブジェクト制御用 ---------------------
-
-		// 選択中のオブジェクトの名前
-		std::string selectObjectName = "";
-	};
+	}
 
 } // namespace PokarinEngine
 

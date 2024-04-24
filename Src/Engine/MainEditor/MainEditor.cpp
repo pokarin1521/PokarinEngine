@@ -3,8 +3,14 @@
 */
 #include "MainEditor.h"
 
+#include "ImGui/imgui.h"
 #include "ImGui/imgui_impl_glfw.h"
 #include "ImGui/imgui_impl_opengl3.h"
+
+#include "Hierarchy.h"
+#include "Inspector.h"
+#include "SceneView.h"
+#include "GameView.h"
 
 #include "../Engine.h"
 #include "../GameObject.h"
@@ -14,6 +20,7 @@
 
 #include "../Window.h"
 #include "../InputManager.h"
+#include "../Color.h"
 
 #include <fstream>
 #include <filesystem>
@@ -21,196 +28,273 @@
 
 namespace PokarinEngine
 {
-	/// ここでしか使わないので、cppのみに書く
 	/// <summary>
-	/// メインメニュー
+	/// 変数
 	/// </summary>
-	void MainMenu()
+	namespace
 	{
-		// メインメニュー作成
-		ImGui::BeginMainMenuBar();
-		{
-			if (ImGui::BeginMenu("Menu"))
-			{
-				ImGui::Text("OpenMenu");
-				ImGui::EndMenu();
-			}
+		// GLSLのバージョン
+		const char* glslVersion = "#version 450";
 
-			ImGui::EndMainMenuBar();
+		// シーンビュー
+		SceneView sceneView;
+
+		// ゲームビュー
+		GameView gameView;
+
+		// ImGui用コンテキスト
+		ImGuiContext* imGuiContext = nullptr;
+
+		// ImGuiの色設定の数
+		int pushColorCount = 0;
+	}
+
+	/// <summary>
+	/// ImGuiの色設定用関数
+	/// </summary>
+	namespace StyleColor
+	{
+		/// <summary>
+		/// ImGuiの色設定を開始する
+		/// </summary>
+		/// <param name="style"> 色を設定したい項目 </param>
+		/// <param name="styleColor"> 設定する色 </param>
+		void Push(ImGuiCol style, const Color& styleColor)
+		{
+			// 色設定を開始
+			ImGui::PushStyleColor(style, styleColor);
+
+			// 設定数をカウント
+			pushColorCount++;
+		}
+
+		/// <summary>
+		/// ImGuiの色設定を終了する
+		/// </summary>
+		void Pop()
+		{
+			// 色設定を終了
+			ImGui::PopStyleColor(pushColorCount);
+
+			// 設定数をリセット
+			pushColorCount = 0;
 		}
 	}
 
 	/// <summary>
-	/// 初期化
+	/// メインエディタ管理用
 	/// </summary>
-	/// <param name="engine"> エンジンクラスの参照 </param>
-	void MainEditor::Initialize(Engine& engine)
+	namespace MainEditor
 	{
-		// ---------------------------
-		// コンテキスト作成
-		// ---------------------------
+		/// ここでしか使わないので、cppのみに書く
+		/// <summary>
+		/// メインメニュー
+		/// </summary>
+		void MainMenu()
+		{
+			// メインメニュー作成
+			ImGui::BeginMainMenuBar();
+			{
+				if (ImGui::BeginMenu("Menu"))
+				{
+					ImGui::Text("OpenMenu");
+					ImGui::EndMenu();
+				}
 
-		glfwMakeContextCurrent(&Window::GetWindow(WindowID::Main));
+				ImGui::EndMainMenuBar();
+			}
+		}
 
-		// ImGuiのバージョンを確認
-		IMGUI_CHECKVERSION();
+		/// <summary>
+		/// 初期化
+		/// </summary>
+		/// <param name="engine"> エンジンクラスの参照 </param>
+		void Initialize(Engine& engine)
+		{
+			// ---------------------------
+			// コンテキスト作成
+			// ---------------------------
 
-		// コンテキスト作成
-		imGuiContext = ImGui::CreateContext();
+			glfwMakeContextCurrent(&Window::GetWindow(WindowID::Main));
 
-		// コンテキストを使用する
-		ImGui::SetCurrentContext(imGuiContext);
+			// ImGuiのバージョンを確認
+			IMGUI_CHECKVERSION();
 
-		// ---------------------------------------
-		// ドッキングウィンドウの有効化
-		// ---------------------------------------
+			// コンテキスト作成
+			imGuiContext = ImGui::CreateContext();
 
-		ImGuiIO& io = ImGui::GetIO();
-		io.ConfigFlags |= ImGuiConfigFlags_::ImGuiConfigFlags_DockingEnable;
+			// コンテキストを使用する
+			ImGui::SetCurrentContext(imGuiContext);
 
-		// ------------------------
-		// ImGuiの初期化
-		// ------------------------
+			// ---------------------------------------
+			// ドッキングウィンドウの有効化
+			// ---------------------------------------
 
-		// GLFW
-		ImGui_ImplGlfw_InitForOpenGL(&Window::GetWindow(WindowID::Main), true);
+			ImGuiIO& io = ImGui::GetIO();
+			io.ConfigFlags |= ImGuiConfigFlags_::ImGuiConfigFlags_DockingEnable;
 
-		// GLSLのバージョンを指定
-		ImGui_ImplOpenGL3_Init(glslVersion);
+			// ------------------------
+			// ImGuiの初期化
+			// ------------------------
 
-		// ----------------------------------
-		// フォントを変更する
-		// ----------------------------------
+			// GLFW
+			ImGui_ImplGlfw_InitForOpenGL(&Window::GetWindow(WindowID::Main), true);
 
-		io.Fonts->Clear();
-		io.Fonts->AddFontFromFileTTF("Res/Fonts/arial.ttf", 20.0f);
+			// GLSLのバージョンを指定
+			ImGui_ImplOpenGL3_Init(glslVersion);
 
-		// ----------------------------
-		// 描画用ビューの初期化
-		// ----------------------------
+			// ----------------------------------
+			// フォントを変更する
+			// ----------------------------------
 
-		// シーンビュー
-		sceneView.Initialize(engine);
+			io.Fonts->Clear();
+			io.Fonts->AddFontFromFileTTF("Res/Fonts/arial.ttf", 20.0f);
 
-		// ゲームビュー
-		gameView.Initialize(engine);
+			// ----------------------------
+			// 描画用ビューの初期化
+			// ----------------------------
 
-		// ----------------------------------------
-		// エディタ用ウィンドウの初期化
-		// ----------------------------------------
+			// シーンビュー
+			sceneView.Initialize(engine);
 
-		// ヒエラルキーウィンドウ
-		hierarchy.Initialize(engine);
-	}
+			// ゲームビュー
+			gameView.Initialize(engine);
 
-	/// <summary>
-	/// 更新
-	/// </summary>
-	void MainEditor::Update()
-	{
-		// -------------------------
-		// ImGuiフレームの更新
-		// -------------------------
+			// ----------------------------------------
+			// ヒエラルキーウィンドウの初期化
+			// ----------------------------------------
 
-		ImGui::SetCurrentContext(imGuiContext);
+			Hierarchy::Initialize(engine);
+		}
 
-		ImGui_ImplGlfw_NewFrame();
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui::NewFrame();
+		/// <summary>
+		/// 更新
+		/// </summary>
+		void Update()
+		{
+			// -------------------------
+			// ImGuiフレームの更新
+			// -------------------------
 
-		// ---------------------------------
-		// タブの丸みを設定
-		// ---------------------------------
+			ImGui::SetCurrentContext(imGuiContext);
 
-		// 丸み無し
-		ImGui::PushStyleVar(ImGuiStyleVar_::ImGuiStyleVar_TabRounding, 0);
+			ImGui_ImplGlfw_NewFrame();
+			ImGui_ImplOpenGL3_NewFrame();
+			ImGui::NewFrame();
 
-		// -------------------------------------
-		// ウィンドウの背景色を設定
-		// -------------------------------------
+			// ---------------------------------
+			// タブの丸みを設定
+			// ---------------------------------
 
-		PushStyleColor(ImGuiCol_::ImGuiCol_WindowBg, BasicColor::gray);
-		PushStyleColor(ImGuiCol_::ImGuiCol_Tab, BasicColor::gray);
-		PushStyleColor(ImGuiCol_::ImGuiCol_TabUnfocusedActive, BasicColor::gray);
-		PushStyleColor(ImGuiCol_::ImGuiCol_TitleBgActive, BasicColor::black);
+			// 丸み無し
+			ImGui::PushStyleVar(ImGuiStyleVar_::ImGuiStyleVar_TabRounding, 0);
 
-		// --------------------------------------------------------------
-		// 画面全体でウィンドウをドッキングできるようにする
-		// --------------------------------------------------------------
+			// -------------------------------------
+			// ウィンドウの背景色を設定
+			// -------------------------------------
 
-		ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+			StyleColor::Push(ImGuiCol_::ImGuiCol_WindowBg, BasicColor::gray);
+			StyleColor::Push(ImGuiCol_::ImGuiCol_Tab, BasicColor::gray);
+			StyleColor::Push(ImGuiCol_::ImGuiCol_TabUnfocusedActive, BasicColor::gray);
+			StyleColor::Push(ImGuiCol_::ImGuiCol_TitleBgActive, BasicColor::black);
 
-		// ------------------------------
-		// メインメニュー
-		// ------------------------------
+			// --------------------------------------------------------------
+			// 画面全体でウィンドウをドッキングできるようにする
+			// --------------------------------------------------------------
 
-		MainMenu();
+			ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 
-		// ------------------------------
-		// ビューの更新(仮)
-		// ------------------------------
+			// ------------------------------
+			// メインメニュー
+			// ------------------------------
 
-		// シーンビュー
-		sceneView.Update();
+			MainMenu();
 
-		// ゲームビュー
-		gameView.Update();
+			// ------------------------------
+			// ビューの更新(仮)
+			// ------------------------------
 
-		// ヒエラルキーウィンドウ
-		hierarchy.Update();
+			// シーンビュー
+			sceneView.Update();
 
-		// インスペクターウィンドウ
-		inspector.Update(hierarchy.GetSelectObject());
+			// ゲームビュー
+			gameView.Update();
 
-		// --------------------------
-		// デモ(機能確認用)
-		// --------------------------
+			// ヒエラルキーウィンドウ
+			Hierarchy::Update();
 
-		ImGui::ShowDemoWindow();
+			// インスペクターウィンドウ
+			Inspector::Update(Hierarchy::GetSelectObject());
 
-		// ------------------------------------
-		// タブの丸み設定を終了
-		// ------------------------------------
+			// --------------------------
+			// デモ(機能確認用)
+			// --------------------------
 
-		ImGui::PopStyleVar();
+			ImGui::ShowDemoWindow();
 
-		// ------------------------------------
-		// 色関係の設定を終了
-		// ------------------------------------
+			// ------------------------------------
+			// タブの丸み設定を終了
+			// ------------------------------------
 
-		PopStyleColor();
-	}
+			ImGui::PopStyleVar();
 
-	/// <summary>
-	/// 描画
-	/// </summary>
-	void MainEditor::Render()
-	{
-		// エディタ画面を描画
-		ImGui::Render();
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-	}
+			// ------------------------------------
+			// 色関係の設定を終了
+			// ------------------------------------
 
-	/// <summary>
-	/// 終了
-	/// </summary>
-	void MainEditor::Finalize()
-	{
-		// -----------------
-		// ImGuiの終了
-		// -----------------
+			StyleColor::Pop();
+		}
 
-		// コンテキストを設定
-		ImGui::SetCurrentContext(imGuiContext);
+		/// <summary>
+		/// 描画
+		/// </summary>
+		void Render()
+		{
+			// エディタ画面を描画
+			ImGui::Render();
+			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		}
 
-		ImGui_ImplGlfw_Shutdown();
-		ImGui_ImplOpenGL3_Shutdown();
+		/// <summary>
+		/// 終了
+		/// </summary>
+		void Finalize()
+		{
+			// -----------------
+			// ImGuiの終了
+			// -----------------
 
-		// ------------------------
-		// コンテキストの削除
-		// ------------------------
+			// コンテキストを設定
+			ImGui::SetCurrentContext(imGuiContext);
 
-		ImGui::DestroyContext(imGuiContext);
-	}
+			ImGui_ImplGlfw_Shutdown();
+			ImGui_ImplOpenGL3_Shutdown();
+
+			// ------------------------
+			// コンテキストの削除
+			// ------------------------
+
+			ImGui::DestroyContext(imGuiContext);
+		}
+
+		/// <summary>
+		/// シーンビューを取得する
+		/// </summary>
+		/// <returns> シーンビュー </returns>
+		const SceneView& GetSceneView()
+		{
+			return sceneView;
+		}
+
+		/// <summary>
+		/// ゲームビューを取得する
+		/// </summary>
+		/// <returns> ゲームビュー </returns>
+		const GameView& GetGameView()
+		{
+			return gameView;
+		}
+
+	} // namespace MainEditor
 
 } // namespace PokarinEngine
