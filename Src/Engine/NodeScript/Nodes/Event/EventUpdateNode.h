@@ -18,15 +18,19 @@ namespace PokarinEngine
 		EventUpdateNode() = default;
 		~EventUpdateNode() = default;
 
-	public: // ---------------------------- 実行処理 -----------------------------
+	private: // ---------------------------- 実行処理 -----------------------------
 
 		/// <summary>
-		/// 実行処理
+		/// ノード別の実行処理
 		/// </summary>
-		void Run()
+		/// <returns>
+		/// <para> true : 次のノードを実行する </para>
+		/// <para> false : 次のノードを実行しない </para>
+		/// </returns>
+		bool RunNode() override
 		{
-			// 次のノードの処理を実行
-			RunNextNode();
+			// 次のノードを実行する
+			return true;
 		}
 	};
 }

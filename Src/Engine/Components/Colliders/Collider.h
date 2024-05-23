@@ -59,9 +59,9 @@ namespace PokarinEngine
 			const Matrix4x4& transform) const = 0;
 
 		/// <summary>
-		/// エディタ描画用
+		/// 情報を編集できるように表示する
 		/// </summary>
-		virtual void RenderInfo() override {}
+		virtual void InfoEditor() override = 0;
 
 	public: // ----------- コライダーの情報 -----------
 

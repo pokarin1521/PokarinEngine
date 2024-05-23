@@ -11,13 +11,13 @@ namespace PokarinEngine
 	void GameView::Update()
 	{
 		// FBOからテクスチャを取得
-		texture = (void*)(std::intptr_t)fbo->GetTexture();
+		texture = ImTextureID(*fbo->GetTexture());
 
 		// ウィンドウの丸みを無くす
 		ImGui::PushStyleVar(ImGuiStyleVar_::ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 
 		// シーンビュー用ウィンドウ
-		ImGui::Begin("Game", NULL,
+		ImGui::Begin("Game", nullptr,
 			ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar |
 			ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollWithMouse);
 		{

@@ -16,6 +16,7 @@
 
 #include <string>
 #include <vector>
+#include <unordered_set>
 #include <memory>
 #include <type_traits>
 
@@ -25,9 +26,6 @@ namespace PokarinEngine
 	// 前方宣言
 	// ----------------
 
-	// ---------- クラス ----------
-
-	class Engine;
 	class Scene;
 
 	/// int型としても使うので、普通の列挙型
@@ -47,19 +45,13 @@ namespace PokarinEngine
 	/// </summary>
 	class GameObject
 	{
-		// エンジンクラスに情報公開
-		friend Engine;
-
-		// シーンクラスに情報公開
+		// シーンに情報を公開
 		friend Scene;
 
 	public: // ---------------- コンストラクタ・デストラクタ ----------------
 
-		/// <summary>
-		/// コンストラクタ
-		/// </summary>
 		GameObject() = default;
-		virtual ~GameObject() = default;
+		~GameObject() = default;
 
 	public: // -------------------------- 禁止事項 --------------------------
 
@@ -75,19 +67,36 @@ namespace PokarinEngine
 		/// ゲームオブジェクトにコンポーネント、コライダーを追加する 
 		/// </summary>
 		/// <typeparam name="T"> コンポーネントクラス </typeparam>
-		/// <returns> 追加したコンポーネントのポインタ </returns>
+		/// <param name="coponentName"> コンポーネントの名前 </param>
+		/// <returns> 
+		/// <para> first : 追加したコンポーネントのポインタ </para>
+		/// <para> second : 追加できたらtrue, 追加済みで追加できなかったらfalse </para> 
+		/// </returns>
 		template <class T>
-		std::shared_ptr<T> AddComponent()
+		std::pair<std::shared_ptr<T>, bool> AddComponent()
 		{
+			// コライダーならtrue
+			constexpr bool isCollider = std::is_base_of_v<Collider, T>;
+
+			// 追加済みのコンポーネントか確認するために取得を試みる
+			auto component = GetComponent<T>();
+
+			// コライダー以外で、追加済みのコンポーネントなら
+			// 取得したコンポーネントを返す
+			if (component && !isCollider)
+			{
+				return { component, false };
+			}
+
 			// コンポーネント作成
 			auto p = std::make_shared<T>();
 
 			// コンポーネントの所有者を登録
-			p->owner = this;
+			p->ownerObject = this;
 
 			// コライダーなのか判定する
 			// Tが判定するベースクラスと同じ、または基底クラスならtrueを返す
-			if constexpr (std::is_base_of_v<Collider, T>)
+			if constexpr (isCollider)
 			{
 				// コライダーの追加
 				colliderList.push_back(p);
@@ -99,7 +108,7 @@ namespace PokarinEngine
 			// コンポーネント追加時の処理を実行
 			p->Awake();
 
-			return p;
+			return { p, true };
 		}
 
 		/// <summary>
@@ -159,24 +168,18 @@ namespace PokarinEngine
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		virtual void Initialize();
+		void Initialize();
 
 		/// <summary>
 		/// 更新
 		/// </summary>
-		virtual void Update();
-
-		/// <summary>
-		/// 衝突時の処理
-		/// </summary>
-		/// <param name="self"> 衝突したコンポーネント(自分) </param>
-		/// <param name="other"> 衝突したコンポーネント(相手) </param>
-		virtual void OnCollision(const ComponentPtr& self, const ComponentPtr& other);
+		/// <param name="isPlayGame"> 作成中のゲームが再生中ならtrue </param>
+		void Update(bool isPlayGame);
 
 		/// <summary>
 		/// 削除
 		/// </summary>
-		virtual void OnDestroy();
+		void OnDestroy();
 
 	public: // ------------------------- ノードエディタ -------------------------
 
@@ -188,21 +191,21 @@ namespace PokarinEngine
 	public: // --------------------------- 情報の取得 ---------------------------
 
 		/// <summary>
-		/// シーンを取得する
+		/// 持ち主であるシーンを取得する
 		/// </summary>
-		/// <returns> このゲームオブジェクトを管理しているシーン </returns>
-		const Scene& GetScene() const
+		/// <returns> このゲームオブジェクトの持ち主であるシーン </returns>
+		const Scene& GetOwnerScene() const
 		{
-			return *scene;
+			return *ownerScene;
 		}
 
 		/// <summary>
-		/// シーンを取得する
+		/// 持ち主であるシーンを取得する
 		/// </summary>
-		/// <returns> このゲームオブジェクトを管理しているシーン </returns>
-		Scene& GetScene()
+		/// <returns> このゲームオブジェクトを持ち主であるシーン </returns>
+		Scene& GetOwnerScene()
 		{
-			return *scene;
+			return *ownerScene;
 		}
 
 		/// <summary>
@@ -240,8 +243,7 @@ namespace PokarinEngine
 		// 物体の色
 		Color color = { 1,1,1,1 };
 
-		// true : 足場となる物体の上に乗っている
-		// false : 足場となる物体の上に乗っていない
+
 		bool isGrounded = false;
 
 	public: // ------------------------- 描画系の情報 --------------------------
@@ -267,8 +269,8 @@ namespace PokarinEngine
 
 	private: // --------------------------- シーン -----------------------------
 
-		// 自身を管理しているシーン
-		Scene* scene = nullptr;
+		// 持ち主であるシーン
+		Scene* ownerScene = nullptr;
 
 	public: // ----------------------- ノードエディタ -------------------------
 
@@ -276,6 +278,19 @@ namespace PokarinEngine
 
 		// ノードエディタ
 		NodeEditorPtr nodeEditor;
+
+	private: // ---------------------------- 更新 ------------------------------
+
+		/// <summary>
+		/// ゲームオブジェクトにあるコンポーネントを更新する
+		/// </summary>
+		/// <param name="isPlayGame"> 作成中のゲームが再生中ならtrue </param>
+		void UpdateComponent(bool isPlayGame);
+
+		/// <summary>
+		/// ゲームオブジェクトの座標変換行列を更新する
+		/// </summary>
+		void UpdateMatrix();
 
 	private: // --------------------------- 管理用 -----------------------------
 

@@ -122,8 +122,8 @@ namespace PokarinEngine
 		/// <summary>
 		/// 描画後のテクスチャを取得する
 		/// </summary>
-		/// <returns> カラーバッファ用テクスチャの管理番号 </returns>
-		GLuint GetTexture() { return *texture; }
+		/// <returns> カラーバッファ用テクスチャ </returns>
+		TexturePtr GetTexture() { return texture; }
 
 	private: // ------------------- 情報 --------------------
 

@@ -124,7 +124,7 @@ namespace PokarinEngine
 			Vector3 closestPoint = Vector3(0);
 
 			// X,Y,Z座標それぞれで求める
-			for (int i = 0; i < Vector_Size::vector3; ++i)
+			for (int i = 0; i < Vector3::size; ++i)
 			{
 				// 範囲内に制限することで、
 				// AABBの中で最も点に近い座標を求める
@@ -150,7 +150,7 @@ namespace PokarinEngine
 			Vector3 closestPoint = box.position;
 
 			// X,Y,Z軸それぞれで求める
-			for (int i = 0; i < Vector_Size::vector3; ++i)
+			for (int i = 0; i < Vector3::size; ++i)
 			{
 				/* OBBの中心から点に向かうベクトルを
 				OBBのX,Y,Z軸に射影することで、
@@ -160,7 +160,7 @@ namespace PokarinEngine
 				射影は内積で求める */
 
 				// OBBのi軸の向きに対応したOBBの中心からの距離
-				float distance = vector.Dot(box.axis[i]);
+				float distance = Vector3::Dot(vector, box.axis[i]);
 
 				// 射影で得られた距離をOBBの範囲内に制限
 				distance = std::clamp(distance, -box.scale[i], box.scale[i]);
@@ -423,7 +423,7 @@ namespace PokarinEngine
 
 				// X,Y,Zそれぞれで比較し、
 				// 貫通距離が一番短い方向を調べてインデックスを設定する
-				for (int i = 0; i < Vector_Size::vector3; ++i)
+				for (int i = 0; i < Vector3::size; ++i)
 				{
 					// AABBの最小座標から球体の中心までの距離
 					float distance_sphere = point[i] - aabb.min[i];
@@ -605,7 +605,7 @@ namespace PokarinEngine
 			// 球体に対する光線の方向(内積で判断する)
 			// プラス   : 球体から離れていく方向
 			// マイナス : 球体に向かっていく方向
-			const float b = m.Dot(ray.direction);
+			const float b = Vector3::Dot(m, ray.direction);
 
 			//「球体の中心から光線の始点までの距離」と「球体の半径」の差
 			// 平方根を避けるために2乗値同士で計算

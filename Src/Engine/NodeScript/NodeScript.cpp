@@ -13,6 +13,7 @@
 
 #include "NodeEditor.h"
 
+#include "../Configs/ImGuiConfig.h"
 #include "../Window.h"
 #include "../InputManager.h"
 
@@ -110,6 +111,14 @@ namespace PokarinEngine
 			/// </summary>
 			void UpdateEditor(const ImGuiID& dockSpaceID, const ContextManager& contextManager)
 			{
+				// ノードスクリプトウィンドウが閉じられたら
+				// 全てのノードエディタウィンドウを閉じる
+				if (glfwWindowShouldClose(&Window::GetWindow(WindowID::NodeScript)))
+				{
+					openEditorList.clear();
+					return;
+				}
+
 				// ------------------------------------
 				// ノードエディタを更新
 				// ------------------------------------
@@ -192,6 +201,11 @@ namespace PokarinEngine
 				closedEditor.reset();
 			}
 
+			void EraseEditor(const NodeEditorPtr nodeEditor)
+			{
+				openEditorList.erase(nodeEditor);
+			}
+
 		private: // -------------------- 型の別名を定義 -----------------------
 
 			using OpenEditorList = std::unordered_set<NodeEditorPtr>;
@@ -272,8 +286,8 @@ namespace PokarinEngine
 			// コンテキスト作成
 			// ---------------------------
 
-			// ノードスクリプト用のウィンドウを使用するように設定
-			glfwMakeContextCurrent(&Window::GetWindow(WindowID::NodeScript));
+			// ノードスクリプト用のウィンドウを使用する
+			Window::SetCurrentWindow(WindowID::NodeScript);
 
 			// ImGuiのバージョンを確認
 			IMGUI_CHECKVERSION();
@@ -284,12 +298,35 @@ namespace PokarinEngine
 			// コンテキストを使用する
 			contextManager.UsingContext();
 
+			// ----------------------------------------
+			// ImGuiの保存先ファイルを設定
+			// ----------------------------------------
+
+			// ImGuiの設定用
+			ImGuiIO& io = ImGui::GetIO();
+
+			// 保存先を設定
+			io.IniFilename = ImGuiConfig::File::setting;
+
 			// ---------------------------------------
 			// ドッキングウィンドウの有効化
 			// ---------------------------------------
 
-			ImGuiIO& io = ImGui::GetIO();
-			io.ConfigFlags |= ImGuiConfigFlags_::ImGuiConfigFlags_DockingEnable;
+			io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
+			// -------------------------------------------------------
+			// ImGuiウィンドウの情報を保存しないように設定
+			// -------------------------------------------------------
+
+			// 更新時に設定しているので、保存しておく必要がない
+			io.IniFilename = nullptr;
+
+			// ------------------------
+			// フォントを設定
+			// ------------------------
+
+			io.Fonts->Clear();
+			io.Fonts->AddFontFromFileTTF(ImGuiConfig::File::font, ImGuiConfig::fontSize);
 
 			// ------------------------
 			// ImGuiの初期化
@@ -330,8 +367,8 @@ namespace PokarinEngine
 			// ImGuiの色設定
 			// ------------------------------------
 
-			setUpColor.Push(ImGuiCol_::ImGuiCol_Tab, BasicColor::gray);
-			setUpColor.Push(ImGuiCol_::ImGuiCol_TitleBgActive, BasicColor::gray);
+			setUpColor.Push(ImGuiCol_::ImGuiCol_Tab, Color::gray);
+			setUpColor.Push(ImGuiCol_::ImGuiCol_TitleBgActive, Color::gray);
 
 			// -----------------------------------------------------------------------
 			// ウィンドウ全体でウィンドウをドッキング出来るようにする
@@ -413,6 +450,15 @@ namespace PokarinEngine
 
 			// 開いたノードエディタをフォーカスする
 			contextManager.FocusEditor(nodeEditor);
+		}
+
+		/// <summary>
+		/// ノードエディタを閉じる
+		/// </summary>
+		/// <param name="nodeEditor"> ノードエディタ </param>
+		void CloseNodeEditor(const NodeEditorPtr nodeEditor)
+		{
+			nodeEditorManager.EraseEditor(nodeEditor);
 		}
 
 	} // namespace NodeScript

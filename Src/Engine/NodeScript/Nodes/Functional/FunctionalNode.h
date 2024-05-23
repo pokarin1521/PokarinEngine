@@ -6,6 +6,8 @@
 
 #include "../Node.h"
 
+#include "../../../EditorInfoRenderer.h"
+
 namespace PokarinEngine
 {
 	/// <summary>
@@ -18,12 +20,16 @@ namespace PokarinEngine
 		FunctionalNode() = default;
 		virtual ~FunctionalNode() = default;
 
-	public: // --------------------------- 実行処理  ---------------------------
+	private: // --------------------------- 実行処理 ---------------------------
 
 		/// <summary>
-		/// ノードの実行処理
+		/// ノード別の実行処理
 		/// </summary>
-		virtual void Run() = 0;
+		/// <returns>
+		/// <para> true : 次のノードを実行する </para>
+		/// <para> false : 次のノードを実行しない </para>
+		/// </returns>
+		bool RunNode() override = 0;
 
 	private: // --------------------------- ピン制御 ---------------------------
 

@@ -72,10 +72,10 @@ namespace PokarinEngine
 		Vector2 startMousePos = Vector2(0, 0);
 
 		// カメラの回転速度
-		float cameraRotateSpeed = 0.005f;
+		float cameraRotateSpeed = 0.5f;
 
 		// カメラの移動速度
-		float cameraMoveSpeed = 0.03f;
+		float cameraMoveSpeed = 1.0f;
 
 		// カメラ操作状態ならtrue
 		bool isControlCamera = false;

@@ -19,16 +19,7 @@ namespace PokarinEngine
 		SphereCollider() = default;
 		~SphereCollider() = default;
 
-	public: // -------------- コライダーの機能 ---------------
-
-		/// <summary>
-		/// 図形の種類を取得する
-		/// </summary>
-		/// <returns> 球体を表すType </returns>
-		Type GetType() const override
-		{
-			return Type::Sphere;
-		}
+	public: // -------------------- 座標 ---------------------
 
 		/// <summary>
 		/// コライダーの座標を変更する
@@ -47,6 +38,17 @@ namespace PokarinEngine
 		ColliderPtr GetTransformedCollider(
 			const Matrix4x4& transform) const override;
 
+	public: // ----------------- 情報の取得 ------------------
+
+		/// <summary>
+		/// 図形の種類を取得する
+		/// </summary>
+		/// <returns> 球体を表すType </returns>
+		Type GetType() const override
+		{
+			return Type::Sphere;
+		}
+
 		/// <summary>
 		/// 図形を取得する
 		/// </summary>
@@ -56,10 +58,29 @@ namespace PokarinEngine
 			return sphere;
 		}
 
-	public: // -------------- コライダーの情報 ---------------
+		/// <summary>
+		/// コンポーネントの名前を取得する
+		/// </summary>
+		/// <returns> コンポーネントの名前 </returns>
+		const std::string& GetName() override
+		{
+			return name;
+		}
 
+	public: // -------------------- 情報 ---------------------
+	
 		// 図形(球体)
 		Collision::Sphere sphere = { Vector3(0), 1 };
+
+		// コンポーネントの名前
+		inline static const std::string name = "Sphere Collider";
+
+	private: // ---------------- エディタ用 ------------------
+
+		/// <summary>
+		/// 情報を編集できるように表示する
+		/// </summary>
+		void InfoEditor() override {}
 	};
 
 } // namespace PokarinEngine

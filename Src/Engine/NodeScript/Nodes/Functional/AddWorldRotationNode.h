@@ -1,8 +1,8 @@
 /**
-* @file AddRotation.h
+* @file AddWorldRotationNode.h
 */
-#ifndef ADDROTATION_H_INCLUDED
-#define ADDROTATION_H_INCLUDED
+#ifndef ADDWORLDROTATION_H_INCLUDED
+#define ADDWORLDROTATION_H_INCLUDED
 
 #include "FunctionalNode.h"
 
@@ -13,19 +13,23 @@ namespace PokarinEngine
 	/// <summary>
 	/// 回転角度を加算するノード
 	/// </summary>
-	class AddRotationNode : public FunctionalNode
+	class AddWorldRotationNode : public FunctionalNode
 	{
 	public: // ----------------- コンストラクタ・デストラクタ --------------------
 
-		AddRotationNode() = default;
-		~AddRotationNode() = default;
+		AddWorldRotationNode() = default;
+		~AddWorldRotationNode() = default;
 
-	public: // ----------------------------- 実行処理 ----------------------------
+	private: // ----------------------------- 実行処理 ----------------------------
 
 		/// <summary>
-		/// 実行処理
+		/// ノード別の実行処理
 		/// </summary>
-		void Run() override;
+		/// <returns>
+		/// <para> true : 次のノードを実行する </para>
+		/// <para> false : 次のノードを実行しない </para>
+		/// </returns>
+		bool RunNode() override;
 
 	private: // --------------------------- データピン ---------------------------
 
@@ -47,9 +51,9 @@ namespace PokarinEngine
 		// 回転角度入力用データピンの識別番号
 		int inputRotationPin = 0;
 
-		// 回転角度の加算値
-		Vector3 addRotation = { 0, 0, 0 };
+		// 回転量(度数法)
+		Vector3 rotationDeg = { 0, 0, 0 };
 	};
 }
 
-#endif // !ADDROTATION_H_INCLUDED
+#endif // !ADDWORLDROTATION_H_INCLUDED

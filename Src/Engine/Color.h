@@ -13,9 +13,7 @@ namespace PokarinEngine
 	/// </summary>
 	struct Color
 	{
-		// 赤・青・緑・透明度
-		// 「0.0 ～ 1.0」で指定
-		float r, g, b, a;
+	public: // -------------------- コンストラクタ --------------------
 
 		// デフォルトコンストラクタ
 		Color() = default;
@@ -37,30 +35,43 @@ namespace PokarinEngine
 		constexpr Color(const Vector4& v)
 			: r(v.x), g(v.y), b(v.z), a(v.w) {}
 
-		// ------------------
-		// 添字演算子
-		// ------------------
+	public: // ---------------------- 添字演算子 ----------------------
 
 		float& operator[](size_t i) { return *(&r + i); }
 		float operator[](size_t i)const { return *(&r + i); }
 
-		// ------------------------
-		// 変換
-		// ------------------------
+	public: // ------------------------- 変換 -------------------------
 
 		operator ImVec4() { return ImVec4(r, g, b, a); }
-
 		operator const ImVec4() const { return ImVec4(r, g, b, a); }
-	};
 
-	namespace BasicColor
-	{
-		// 灰色
-		inline constexpr Color gray = { 0.2f, 0.2f, 0.2f, 1.0f };
+	public: // ------------------------- 変数 -------------------------
+
+		// 赤・青・緑・透明度
+		// 「0.0 ～ 1.0」で指定
+		float r, g, b, a;
+
+	public: // ------------------------ 基本色 ------------------------
+
+		// 白色
+		static const Color white;
 
 		// 黒色
-		inline constexpr Color black = { 0, 0, 0, 1.0f };
-	}
+		static const Color black;
+
+		// 灰色
+		static const Color gray;
+	};
+
+	// ---------------------------------
+	// 基本色の定義
+	// ---------------------------------
+
+	inline const Color Color::white = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+	inline const Color Color::black = { 0, 0, 0, 1.0f };
+
+	inline const Color Color::gray = { 0.2f, 0.2f, 0.2f, 1.0f };
 
 #pragma region Operator
 

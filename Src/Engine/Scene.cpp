@@ -9,7 +9,7 @@
 
 #include "Components/Light.h"
 
-#include "Settings/ShaderSettings.h"
+#include "Configs/ShaderConfig.h"
 
 #include <algorithm>
 
@@ -21,18 +21,19 @@ namespace PokarinEngine
 	/// シーン作成用コンストラクタ
 	/// </summary>
 	/// <param name="e"> エンジンクラスの参照 </param>
+	/// <param name="sceneID"> シーン識別番号 </param>
 	/// <param name="sceneName"> シーン名 </param>
-	Scene::Scene(Engine& e, const char* sceneName)
-		:engine(&e), name(sceneName)
+	Scene::Scene(Engine& e, int sceneID, const char* sceneName)
+		:engine(&e), id(sceneID), name(sceneName)
 	{
 		// メインカメラ作成
 		// オブジェクト生成時に見えるように少し後ろに配置する
 		mainCamera = CreateGameObject("MainCamera", Vector3(0, 0, -5));
-		cameraInfo = mainCamera->AddComponent<Camera>();
+		mainCameraInfo = mainCamera->AddComponent<Camera>().first;
 
 		// 平行光源を作成
 		auto directionalLight = CreateGameObject("Directional Light");
-		auto lightComponent = directionalLight->AddComponent<Light>();
+		std::shared_ptr<Light> lightComponent = directionalLight->AddComponent<Light>().first;
 		lightComponent->SetType(LightParameter::Type::directional);
 	}
 
@@ -59,7 +60,7 @@ namespace PokarinEngine
 		GameObjectPtr object = std::make_shared<GameObject>();
 
 		// シーンを設定
-		object->scene = this;
+		object->ownerScene = this;
 
 		// 作成時の名前を種類名として設定
 		object->typeName = name;
@@ -82,6 +83,7 @@ namespace PokarinEngine
 		object->id = AddSingleObjectID();
 
 		// ゲームオブジェクトの初期化
+		// 識別番号が必要になるので、このタイミングで行う
 		object->Initialize();
 
 		// 位置と角度を設定
@@ -284,89 +286,8 @@ namespace PokarinEngine
 		{
 			if (!gameObject->IsDestroyed())
 			{
-				gameObject->Update();
+				gameObject->Update(engine->IsPlayGame());
 			}
-		}
-
-		// ----------------------------------
-		// ローカル座標変換行列を計算
-		// ----------------------------------
-
-		for (const auto& gameObject : gameObjectList)
-		{
-			// オブジェクトの座標・回転角度・拡大率
-			TransformPtr transform = gameObject->transform;
-
-			// オブジェクトの座標
-			// 左手座標系の値なので右手座標系にする
-			Vector3 position = transform->position;
-			position.z *= -1;
-
-			// オブジェクトに設定する座標変換行列
-			Matrix4x4 transformMatrix = Mat4_Function::GetTransformMatrix(
-				transform->scale, transform->rotation, position);
-
-			// オブジェクトに設定する法線変換行列
-			Matrix3x3 normalMatrix = Mat3_Function::GetRotationMatrix(transform->rotation);
-
-			// 座標変換行列を設定
-			transform->SetTransformMatrix(transformMatrix);
-
-			// 法線変換行列を設定
-			transform->SetNormalMatrix(normalMatrix);
-		}
-
-		// ------------------------------------
-		// ワールド座標変換行列を計算
-		// ------------------------------------
-
-		// ワールド座標変換行列
-		std::vector<Matrix4x4> worldTransforms(gameObjectList.size());
-
-		// ワールド法線変換行列
-		std::vector<Matrix3x3> worldNormals(gameObjectList.size());
-
-		// 全ての親の座標変換行列を掛け合わせる
-		for (size_t i = 0; i < gameObjectList.size(); ++i)
-		{
-			// オブジェクトの座標・回転角度・拡大率
-			Transform* transform = gameObjectList[i]->transform.get();
-
-			// 自身の座標変換行列
-			Matrix4x4 transformMatrix = transform->GetTransformMatrix();
-
-			// 自身の法線変換行列
-			Matrix3x3 normalMatrix = transform->GetNormalMatrix();
-
-			// 親をたどっていく
-			for (Transform* parent = transform->GetParent(); parent; parent = parent->GetParent())
-			{
-				// 親の座標変換行列
-				Matrix4x4 parentTransformMatrix = parent->GetTransformMatrix();
-
-				// 親の法線変換行列
-				Matrix3x3 parentNormalMatrix = parent->GetNormalMatrix();
-
-				// 親の変換行列を掛け合わせる
-				transformMatrix = parentTransformMatrix * transformMatrix;
-				normalMatrix = parentNormalMatrix * normalMatrix;
-			}
-
-			// 計算したワールド座標変換行列を代入
-			worldTransforms[i] = transformMatrix;
-			worldNormals[i] = normalMatrix;
-		}
-
-		// -----------------------------------
-		// ワールド座標変換行列を
-		// ゲームオブジェクトに設定
-		// -----------------------------------
-
-		for (size_t i = 0; i < gameObjectList.size(); ++i)
-		{
-			gameObjectList[i]->transform->SetTransformMatrix(worldTransforms[i]);
-
-			gameObjectList[i]->transform->SetNormalMatrix(worldNormals[i]);
 		}
 
 	} // UpdateGameObject
@@ -378,7 +299,7 @@ namespace PokarinEngine
 	/// <summary>
 	/// シーンから全てのゲームオブジェクトを破棄する
 	/// </summary>
-	void Scene::ClearGameObjectAll()
+	void Scene::ClearGameObject()
 	{
 		// ゲームオブジェクトの削除イベントを実行
 		for (auto& gameObject : gameObjectList)
@@ -386,7 +307,10 @@ namespace PokarinEngine
 			gameObject->OnDestroy();
 		}
 
+		// ゲームオブジェクトを全削除
 		gameObjectList.clear();
+		
+		// オブジェクトの種類名と識別番号を全削除
 		objectTypeNameList.clear();
 		objectIDList.clear();
 	}

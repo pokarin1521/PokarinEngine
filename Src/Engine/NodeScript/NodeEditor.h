@@ -15,7 +15,6 @@
 #include "Pin/PinType.h"
 
 #include <string>
-#include <unordered_set>
 #include <unordered_map>
 #include <memory>
 #include <cassert>
@@ -38,10 +37,11 @@ namespace PokarinEngine
 	{
 	public: // -------------- コンストラクタ・デストラクタ --------------
 
-		NodeEditor(GameObject& ownerObject);
+		NodeEditor(GameObject& gameObject);
 
 		~NodeEditor()
 		{
+			Finalize();
 			ImNodes::EditorContextFree(nodeEditorContext);
 		}
 
@@ -92,12 +92,12 @@ namespace PokarinEngine
 		}
 
 		/// <summary>
-		/// ノードエディタの持ち主を取得する
+		/// 持ち主であるゲームオブジェクトを取得する
 		/// </summary>
 		/// <returns> 持ち主であるゲームオブジェクト </returns>
-		GameObject& GetOwner()
+		GameObject& GetOwnerObject()
 		{
-			return *owner;
+			return *ownerObject;
 		}
 
 	public: // ---------------------- 状態の制御 -----------------------
@@ -136,9 +136,12 @@ namespace PokarinEngine
 
 		// <識別番号, ノード>
 		using NodeList = std::unordered_map<int, NodePtr>;
+
+		// <識別番号, ピン>
 		using PinList = std::unordered_map<int, PinPtr>;
 
-		using EventNodeList = std::unordered_set<EventNodePtr>;
+		// <識別番号, イベントノード>
+		using EventNodeList = std::unordered_map<int, EventNodePtr>;
 
 	private: // ------------------------- ノード作成用 -------------------------
 
@@ -153,46 +156,66 @@ namespace PokarinEngine
 			// タイトルが設定されてるか確認
 			assert(!nodeTitle.empty());
 
-			// ノードのタイトル
-			const char* title = nodeTitle.c_str();
-
-			// ボタンを押したらノード作成
-			if (ImGui::Button(title))
+			// ノード作成用ボタン
+			if (ImGui::Button(nodeTitle.c_str()))
 			{
-				// ノード
-				auto node = std::make_shared<T>();
-
-				// イベントノードなら配列に追加する
-				if constexpr (std::is_base_of_v<EventNode, T>)
-				{
-					eventNodeList.emplace(node);
-				}
-
-				// ノード作成時の処理を実行
-				CreateNode(node, title);
+				// 押されたらノード作成
+				CreateNode<T>(nodeTitle);
 			}
 		}
 
 		/// <summary>
-		/// ノード作成時の処理
+		/// ノード作成用ボタンの処理
 		/// </summary>
-		/// <param name="node"> 作成したノード </param>
-		/// <param name="nodeTitle"> 作成したノードのタイトル </param>
-		void CreateNode(NodePtr node, const char* nodeTitle);
+		/// <typeparam name="T"> ノードクラス </typeparam>
+		/// <param name="nodeTitle"> ノードのタイトル </param>
+		template <class T>
+		void CreateNode(const std::string& nodeTitle)
+		{
+			// ノード
+			auto node = std::make_shared<T>();
+
+			// 重複しないノードの識別番号
+			int nodeID = AddNode(node);
+
+			// イベントノードなら配列に追加する
+			if constexpr (std::is_base_of_v<EventNode, T>)
+			{
+				eventNodeList.emplace(nodeID, node);
+			}
+
+			// 作成時の処理を実行
+			node->CreateNode(*this, nodeID, nodeTitle);
+		}
 
 		/// <summary>
 		/// ノード作成用ポップアップの処理
 		/// </summary>
 		void CreateNodePopup();
 
-	private: // --------------------------- 識別番号 ---------------------------
+	private: // ------------------------- ノードの追加 -------------------------
 
 		/// <summary>
-		/// 重複しないノード識別番号を取得する
+		/// ノードを追加する
 		/// </summary>
-		/// <param name="node"> ノード </param>
-		/// <returns> 重複しない識別番号 </returns>
-		int GetSingleNodeID(NodePtr node);
+		/// <param name="node"> 追加するノード </param>
+		/// <returns> 追加したノードの識別番号 </returns>
+		int AddNode(NodePtr node);
+
+	private: // ------------------------- ノード削除用 -------------------------
+
+		/// <summary>
+		/// ノードを削除する
+		/// </summary>
+		/// <param name="nodeID"> 削除するノードの識別番号 </param>
+		void DestroyNode(int nodeID);
+
+	private: // ------------------------- ノード制御用 -------------------------
+
+		/// <summary>
+		/// エディタ内のノードの状態を更新する
+		/// </summary>
+		void UpdateNode();
 
 	private: // ----------------------- ピン同士のリンク -----------------------
 
@@ -218,21 +241,26 @@ namespace PokarinEngine
 		/// <param name="linkPairID"> 削除するリンクの識別番号 </param>
 		void DestroyLink(int linkPairID);
 
+	private: // --------------------------- 終了処理 ---------------------------
+
+		/// <summary>
+		/// 終了処理
+		/// </summary>
+		void Finalize();
+
 	private: // ------------------------- ノード管理用 -------------------------
 
 		// ノード管理用配列
 		NodeList nodeList;
+
+		// イベントノード管理用配列
+		NodeList eventNodeList;
 
 		// ピン管理用配列
 		PinList pinList;
 
 		// リンクしているピンの識別番号を管理する配列
 		LinkPairList linkPairList;
-
-	private: // --------------------- イベントノード管理用 ---------------------
-
-		// イベントノード管理用配列
-		EventNodeList eventNodeList;
 
 	private: // --------------------- ノードエディタの情報 ---------------------
 
@@ -242,8 +270,8 @@ namespace PokarinEngine
 		// ImGuiウィンドウ
 		ImGuiWindow* imGuiWindow = nullptr;
 
-		// ノードエディタの持ち主
-		GameObject* owner = nullptr;
+		// 持ち主であるゲームオブジェクト
+		GameObject* ownerObject = nullptr;
 
 		// ノードエディタの名前
 		// ImGuiウィンドウ作成時のタイトルにする

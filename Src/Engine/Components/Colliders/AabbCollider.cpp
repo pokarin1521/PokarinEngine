@@ -30,7 +30,7 @@ namespace PokarinEngine
 		// min‚Ì•û‚ª‘å‚«‚©‚Á‚½‚ç“ü‚ê‘Ö‚¦‚é
 		// ---------------------------------------
 
-		for (int i = 0; i < Vector_Size::vector3; ++i)
+		for (int i = 0; i < Vector3::size; ++i)
 		{
 			if (p->aabb.min[i] > p->aabb.max[i])
 			{

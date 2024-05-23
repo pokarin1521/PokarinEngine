@@ -38,7 +38,7 @@ layout(location = 4) uniform vec3 cameraPosition;
 layout(location = 5) uniform vec3 cameraRotation;
 
 /**
-* ベクトルをX軸->Y軸の順で回転させる
+* ベクトルをZ軸->X軸->Y軸の順で回転させる
 * 
 * @param v				回転させるベクトル
 * @param sinRotation	各軸のSin
@@ -59,26 +59,29 @@ vec3 RotateZXY(vec3 v, vec3 sinRotation, vec3 cosRotation)
 	ワールド座標系の軸の定義によっては、別の順序の方がいい場合もある */
 
 	// -------------------------------
-	// X->Yの順で回転を計算する
+	// Y->X->Zの順で回転を計算する
 	// -------------------------------
 
-	// ---------- Z軸回転 -----------
-	
-	v.xy = vec2(
-		v.x * cosRotation.z + v.y * sinRotation.z,
-		v.x * -sinRotation.z + v.y * cosRotation.z);
-	
-	// ---------- X軸回転 -----------
-
-	v.zy = vec2(
-		v.z * cosRotation.x + v.y * sinRotation.x, 
-		v.z * -sinRotation.x + v.y * cosRotation.x);
+	/* カメラとオブジェクトの回転方向が逆になるので、
+	ZXYの順で回転させたいときは、カメラはYXZの順で回転させないといけない */
 
 	// ---------- Y軸回転 -----------
 
 	v.xz = vec2(
 		v.x * cosRotation.y + v.z * sinRotation.y,
 		-v.x * sinRotation.y + v.z * cosRotation.y);
+
+	// ---------- X軸回転 -----------
+
+	v.yz = vec2(
+		v.z * -sinRotation.x + v.y * cosRotation.x,
+		v.z * cosRotation.x + v.y * sinRotation.x); 
+
+	// ---------- Z軸回転 -----------
+	
+	v.xy = vec2(
+		v.x * cosRotation.z + v.y * sinRotation.z,
+		v.x * -sinRotation.z + v.y * cosRotation.z);
 
 	return v;
 }

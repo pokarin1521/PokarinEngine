@@ -5,7 +5,7 @@
 #define SCENE_H_INCLUDED
 
 #include "Shader/Shader.h"
-#include "Settings/MeshSettings.h"
+#include "Configs/MeshConfig.h"
 
 #include "UsingNames/UsingGameObject.h"
 #include "UsingNames/UsingMesh.h"
@@ -42,26 +42,15 @@ namespace PokarinEngine
 	/// </summary>
 	class Scene
 	{
-	public: // ------------------------- シーン作成 --------------------------
-
-		/// <summary>
-		/// シーンを作成する
-		/// </summary>
-		/// <param name="_engine"> エンジンクラスの参照 </param>
-		/// <param name="sceneName"> シーン名 </param>
-		static ScenePtr Create(Engine& e, const char* sceneName)
-		{
-			return std::make_shared<Scene>(e, sceneName);
-		}
-
 	public: // --------------- コンストラクタデストラクタ ------------------
 
 		/// <summary>
 		/// シーン作成用コンストラクタ
 		/// </summary>
 		/// <param name="e"> エンジンクラスの参照 </param>
+		/// <param name="sceneID"> シーン識別番号 </param>
 		/// <param name="sceneName"> シーン名 </param>
-		Scene(Engine& e, const char* sceneName);
+		Scene(Engine& e, int sceneID, const char* sceneName);
 
 		~Scene() = default;
 
@@ -112,7 +101,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// ゲームエンジンから全てのゲームオブジェクトを破棄する
 		/// </summary>
-		void ClearGameObjectAll();
+		void ClearGameObject();
 
 		/// <summary>
 		/// ゲームオブジェクトの状態を更新する
@@ -152,10 +141,10 @@ namespace PokarinEngine
 		/// <summary>
 		/// メインカメラの情報を取得する
 		/// </summary>
-		/// <returns> カメラ情報を管理するコンポーネント </returns>
-		const Camera& GetCameraInfo() const
+		/// <returns> メインカメラの情報 </returns>
+		const Camera& GetMainCameraInfo() const
 		{
-			return *cameraInfo;
+			return *mainCameraInfo;
 		}
 
 		/// <summary>
@@ -213,7 +202,7 @@ namespace PokarinEngine
 
 		// ゲームオブジェクトの最大数
 		// 余裕を持てるように少なめに設定
-		const size_t gameObjectMax = INT_MAX - 5;
+		const size_t gameObjectMax = 1000000;
 
 	private: // ------------------------- メインカメラ ------------------------
 
@@ -221,12 +210,15 @@ namespace PokarinEngine
 		GameObjectPtr mainCamera;
 
 		// メインカメラの情報
-		CameraPtr cameraInfo;
+		CameraPtr mainCameraInfo;
 
 	private: // ----------------------------- 情報 ----------------------------
 
 		// シーンの名前
 		std::string name = "";
+
+		// 識別番号
+		int id = 0;
 
 	private: // --------------------------- エンジン --------------------------
 

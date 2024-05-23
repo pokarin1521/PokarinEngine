@@ -14,7 +14,7 @@
 
 #include "Shader/Shader.h"
 
-#include "Settings/MeshSettings.h"
+#include "Configs/MeshConfig.h"
 
 #include <GLFW/glfw3.h>
 #include <string>
@@ -42,7 +42,7 @@ namespace PokarinEngine
 		Engine() = default;
 		~Engine() = default;
 
-	public: // ---------------------- シーン作成 ------------------------
+	public: // ------------------------ シーン作成 ------------------------
 
 		/// <summary>
 		/// シーンを作成する
@@ -51,7 +51,7 @@ namespace PokarinEngine
 		/// <returns> 作成したシーンのポインタ </returns>
 		ScenePtr CreateScene(const char* name);
 
-	public: // ---------------------- シーン取得 ------------------------
+	public: // ------------------------ シーン取得 ------------------------
 
 		/// <summary>
 		/// 現在のシーンを取得する
@@ -122,6 +122,20 @@ namespace PokarinEngine
 		/// <param name="skySphereMaterial"> スカイスフィア用マテリアル </param>
 		void DrawSkySphere(const MaterialPtr skySphereMaterial = nullptr);
 
+	public: // ------------------------- ゲームの再生 -------------------------
+
+		/// <summary>
+		/// 作成中のゲームが再生中か取得する
+		/// </summary>
+		/// <returns>
+		/// <para> true : ゲームが再生中 </para>
+		/// <para> false : ゲームが再生されていない </para>
+		/// </returns>
+		bool IsPlayGame()
+		{
+			return isPlayGame;
+		}
+
 	private: // ---------------------- エンジンの制御 -------------------------
 
 		/// <summary>
@@ -142,6 +156,14 @@ namespace PokarinEngine
 		/// ゲームエンジンの状態を描画する
 		/// </summary>
 		void Render();
+
+	private: // -------------------- シーンの識別番号 -------------------
+
+		/// <summary>
+		/// シーンの識別番号を作成する
+		/// </summary>
+		/// <returns> 作成した識別番号 </returns>
+		int CreateSceneID();
 
 	private: // ---------------------- 描画用ビュー ---------------------
 
@@ -181,8 +203,19 @@ namespace PokarinEngine
 		// 現在のシーン
 		ScenePtr currentScene;
 
-		// シーン配列
-		SceneList scenes;
+		// シーン管理用配列
+		SceneList sceneList;
+
+		// シーン識別番号の管理用配列
+		std::unordered_set<int> sceneIDList;
+
+		// シーンの最大数
+		const int sceneMax = 1000;
+
+	private: // ------------------- ゲーム再生確認用 -------------------
+
+		// 作成中のゲームが再生中ならtrue
+		bool isPlayGame = false;
 	};
 
 } // namespace PokarinEngine

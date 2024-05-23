@@ -16,13 +16,12 @@ namespace PokarinEngine
 	/// </summary>
 	enum class WindowID
 	{
-		Main,	     // メイン
+		Main,   	 // メイン
 		NodeScript,  // ノードスクリプト用
-		Max,         // ウィンドウの数
 	};
 
 	/// <summary>
-	/// ウィンドウ管理用
+	/// GLFWウィンドウ管理用
 	/// </summary>
 	namespace Window
 	{
@@ -81,14 +80,14 @@ namespace PokarinEngine
 		GLFWwindow& GetWindow(WindowID windowID);
 
 		/// <summary>
-		/// GLFWウィンドウの大きさを取得する
+		/// ウィンドウの大きさを取得する
 		/// </summary>
 		/// <param name="windowID"> ウィンドウ識別番号 </param>
 		/// <returns> 指定したウィンドウの大きさ </returns>
 		Vector2 GetWindowSize(WindowID windowID);
 
 		/// <summary>
-		/// GLFWウィンドウの大きさを取得する
+		/// ウィンドウの大きさを取得する
 		/// </summary>
 		/// <param name="[in] windowID"> ウィンドウ識別番号 </param>
 		/// <param name="[out] w"> ウィンドウの幅 </param>
@@ -107,6 +106,12 @@ namespace PokarinEngine
 		/// </summary>
 		/// <returns> メインモニターの情報 </returns>
 		const GLFWvidmode& GetMainMonitor();
+
+		/// <summary>
+		/// 使用するウィンドウを設定する
+		/// </summary>
+		/// <param name="windowID"> ウィンドウ識別番号 </param>
+		void SetCurrentWindow(WindowID windowID);
 
 	} // namespace Window
 

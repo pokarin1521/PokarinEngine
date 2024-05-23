@@ -36,7 +36,7 @@ namespace PokarinEngine
 		球体の拡大率とする(unityの球体コライダーと同じ挙動) */
 
 		// 拡大率を取得
-		const Vector3 scale = Mat4_Function::ExtractScale(transform);
+		const Vector3 scale = Matrix4x4::Scale(transform);
 
 		// X,Y,Zの拡大率で最大の値
 		const float maxScale = std::max({ scale.x, scale.y, scale.z });

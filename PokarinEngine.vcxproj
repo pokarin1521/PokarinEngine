@@ -90,7 +90,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)IMGUI_IMPL_OPENGL_LOADER_GLAD</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)Src/glad/include;$(ProjectDir)Src/ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Src/Packages;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -109,7 +109,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)IMGUI_IMPL_OPENGL_LOADER_GLAD</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)Src/glad/include;$(ProjectDir)Src/ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Src/Packages;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -128,7 +128,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)IMGUI_IMPL_OPENGL_LOADER_GLAD</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)Src/glad/include;$(ProjectDir)Src/ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Src/Packages;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -147,7 +147,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)IMGUI_IMPL_OPENGL_LOADER_GLAD</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)Src/glad/include;$(ProjectDir)Src/ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Src/Packages;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -167,9 +167,8 @@
     <ClCompile Include="Src\Engine\Components\Light.cpp" />
     <ClCompile Include="Src\Engine\Components\Rigidbody.cpp" />
     <ClCompile Include="Src\Engine\Components\Transform.cpp" />
-    <ClCompile Include="Src\Engine\Components\UILayout.cpp" />
     <ClCompile Include="Src\Engine\Debug.cpp" />
-    <ClCompile Include="Src\Engine\EasyAudio\EasyAudio.cpp" />
+    <ClCompile Include="Src\Engine\EditorInfoRenderer.cpp" />
     <ClCompile Include="Src\Engine\Engine.cpp" />
     <ClCompile Include="Src\Engine\FramebufferObject.cpp" />
     <ClCompile Include="Src\Engine\GameObject.cpp" />
@@ -181,10 +180,14 @@
     <ClCompile Include="Src\Engine\MainEditor\MainEditor.cpp" />
     <ClCompile Include="Src\Engine\MainEditor\RenderView.cpp" />
     <ClCompile Include="Src\Engine\MainEditor\SceneView.cpp" />
+    <ClCompile Include="Src\Engine\MainEditor\Toolbar.cpp" />
+    <ClCompile Include="Src\Engine\Math\Matrix.cpp" />
     <ClCompile Include="Src\Engine\Mesh.cpp" />
+    <ClCompile Include="Src\Engine\NodeScript\NodeCreator.cpp" />
     <ClCompile Include="Src\Engine\NodeScript\NodeEditor.cpp" />
     <ClCompile Include="Src\Engine\NodeScript\NodeScript.cpp" />
-    <ClCompile Include="Src\Engine\NodeScript\Nodes\Functional\AddRotationNode.cpp" />
+    <ClCompile Include="Src\Engine\NodeScript\Nodes\Functional\AddWorldPositionNode.cpp" />
+    <ClCompile Include="Src\Engine\NodeScript\Nodes\Functional\AddWorldRotationNode.cpp" />
     <ClCompile Include="Src\Engine\NodeScript\Nodes\Node.cpp" />
     <ClCompile Include="Src\Engine\Random.cpp" />
     <ClCompile Include="Src\Engine\RenderbufferObject.cpp" />
@@ -193,16 +196,16 @@
     <ClCompile Include="Src\Engine\Texture.cpp" />
     <ClCompile Include="Src\Engine\Time.cpp" />
     <ClCompile Include="Src\Engine\Window.cpp" />
-    <ClCompile Include="Src\glad\src\glad.c" />
-    <ClCompile Include="Src\ImGui\ImGui\imgui.cpp" />
-    <ClCompile Include="Src\ImGui\ImGui\imgui_demo.cpp" />
-    <ClCompile Include="Src\ImGui\ImGui\imgui_draw.cpp" />
-    <ClCompile Include="Src\ImGui\ImGui\imgui_impl_glfw.cpp" />
-    <ClCompile Include="Src\ImGui\ImGui\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="Src\ImGui\ImGui\imgui_tables.cpp" />
-    <ClCompile Include="Src\ImGui\ImGui\imgui_widgets.cpp" />
-    <ClCompile Include="Src\ImGui\ImGui\imnodes.cpp" />
     <ClCompile Include="Src\Main.cpp" />
+    <ClCompile Include="Src\Packages\glad\glad.c" />
+    <ClCompile Include="Src\Packages\ImGui\imgui.cpp" />
+    <ClCompile Include="Src\Packages\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="Src\Packages\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="Src\Packages\ImGui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="Src\Packages\ImGui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="Src\Packages\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="Src\Packages\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="Src\Packages\ImGui\imnodes.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -215,7 +218,6 @@
     <ClInclude Include="Src\Engine\BufferObject.h" />
     <ClInclude Include="Src\Engine\Collision.h" />
     <ClInclude Include="Src\Engine\Color.h" />
-    <ClInclude Include="Src\Engine\Components\Billboard.h" />
     <ClInclude Include="Src\Engine\Components\Camera.h" />
     <ClInclude Include="Src\Engine\Components\Colliders\AabbCollider.h" />
     <ClInclude Include="Src\Engine\Components\Colliders\Collider.h" />
@@ -224,9 +226,11 @@
     <ClInclude Include="Src\Engine\Components\Light.h" />
     <ClInclude Include="Src\Engine\Components\Rigidbody.h" />
     <ClInclude Include="Src\Engine\Components\Transform.h" />
-    <ClInclude Include="Src\Engine\Components\UILayout.h" />
+    <ClInclude Include="Src\Engine\Configs\ImGuiConfig.h" />
+    <ClInclude Include="Src\Engine\Configs\MeshConfig.h" />
+    <ClInclude Include="Src\Engine\Configs\ShaderConfig.h" />
     <ClInclude Include="Src\Engine\Debug.h" />
-    <ClInclude Include="Src\Engine\EasyAudio\EasyAudio.h" />
+    <ClInclude Include="Src\Engine\EditorInfoRenderer.h" />
     <ClInclude Include="Src\Engine\Engine.h" />
     <ClInclude Include="Src\Engine\FramebufferObject.h" />
     <ClInclude Include="Src\Engine\GameObject.h" />
@@ -238,6 +242,7 @@
     <ClInclude Include="Src\Engine\MainEditor\MainEditor.h" />
     <ClInclude Include="Src\Engine\MainEditor\RenderView.h" />
     <ClInclude Include="Src\Engine\MainEditor\SceneView.h" />
+    <ClInclude Include="Src\Engine\MainEditor\Toolbar.h" />
     <ClInclude Include="Src\Engine\Math\Angle.h" />
     <ClInclude Include="Src\Engine\Math\Matrix.h" />
     <ClInclude Include="Src\Engine\Math\Vector.h" />
@@ -246,18 +251,15 @@
     <ClInclude Include="Src\Engine\NodeScript\NodeScript.h" />
     <ClInclude Include="Src\Engine\NodeScript\Nodes\Event\EventNode.h" />
     <ClInclude Include="Src\Engine\NodeScript\Nodes\Event\EventUpdateNode.h" />
-    <ClInclude Include="Src\Engine\NodeScript\Nodes\Functional\AddRotationNode.h" />
+    <ClInclude Include="Src\Engine\NodeScript\Nodes\Functional\AddWorldPositionNode.h" />
+    <ClInclude Include="Src\Engine\NodeScript\Nodes\Functional\AddWorldRotationNode.h" />
     <ClInclude Include="Src\Engine\NodeScript\Nodes\Functional\FunctionalNode.h" />
     <ClInclude Include="Src\Engine\NodeScript\Nodes\Node.h" />
-    <ClInclude Include="Src\Engine\NodeScript\Nodes\TestNode.h" />
     <ClInclude Include="Src\Engine\NodeScript\Pin\Pin.h" />
     <ClInclude Include="Src\Engine\NodeScript\Pin\PinType.h" />
     <ClInclude Include="Src\Engine\Random.h" />
     <ClInclude Include="Src\Engine\RenderbufferObject.h" />
     <ClInclude Include="Src\Engine\Scene.h" />
-    <ClInclude Include="Src\Engine\Settings\AudioSettings.h" />
-    <ClInclude Include="Src\Engine\Settings\MeshSettings.h" />
-    <ClInclude Include="Src\Engine\Settings\ShaderSettings.h" />
     <ClInclude Include="Src\Engine\Shader\Shader.h" />
     <ClInclude Include="Src\Engine\Texture.h" />
     <ClInclude Include="Src\Engine\Time.h" />
@@ -266,19 +268,21 @@
     <ClInclude Include="Src\Engine\UsingNames\UsingNodeEditor.h" />
     <ClInclude Include="Src\Engine\VertexArrayObject.h" />
     <ClInclude Include="Src\Engine\Window.h" />
-    <ClInclude Include="Src\glad\include\glad\glad.h" />
-    <ClInclude Include="Src\glad\include\KHR\khrplatform.h" />
-    <ClInclude Include="Src\ImGui\ImGui\imconfig.h" />
-    <ClInclude Include="Src\ImGui\ImGui\imgui.h" />
-    <ClInclude Include="Src\ImGui\ImGui\imgui_impl_glfw.h" />
-    <ClInclude Include="Src\ImGui\ImGui\imgui_impl_opengl3.h" />
-    <ClInclude Include="Src\ImGui\ImGui\imgui_impl_opengl3_loader.h" />
-    <ClInclude Include="Src\ImGui\ImGui\imgui_internal.h" />
-    <ClInclude Include="Src\ImGui\ImGui\imnodes.h" />
-    <ClInclude Include="Src\ImGui\ImGui\imnodes_internal.h" />
-    <ClInclude Include="Src\ImGui\ImGui\imstb_rectpack.h" />
-    <ClInclude Include="Src\ImGui\ImGui\imstb_textedit.h" />
-    <ClInclude Include="Src\ImGui\ImGui\imstb_truetype.h" />
+    <ClInclude Include="Src\Packages\glad\glad.h" />
+    <ClInclude Include="Src\Packages\glad\khrplatform.h" />
+    <ClInclude Include="Src\Packages\ImGui\imconfig.h" />
+    <ClInclude Include="Src\Packages\ImGui\imgui.h" />
+    <ClInclude Include="Src\Packages\ImGui\imgui_impl_glfw.h" />
+    <ClInclude Include="Src\Packages\ImGui\imgui_impl_opengl3.h" />
+    <ClInclude Include="Src\Packages\ImGui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="Src\Packages\ImGui\imgui_internal.h" />
+    <ClInclude Include="Src\Packages\ImGui\imnodes.h" />
+    <ClInclude Include="Src\Packages\ImGui\imnodes_internal.h" />
+    <ClInclude Include="Src\Packages\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="Src\Packages\ImGui\imstb_textedit.h" />
+    <ClInclude Include="Src\Packages\ImGui\imstb_truetype.h" />
+    <ClInclude Include="Src\Packages\Json\Json.h" />
+    <ClInclude Include="Src\Packages\Json\nlohmann\json.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

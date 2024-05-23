@@ -8,13 +8,10 @@
 namespace PokarinEngine
 {
 	/// <summary>
-	/// エディタに情報を表示する
+	/// 情報を編集できるように表示する
 	/// </summary>
-	void Camera::RenderInfo()
+	void Camera::InfoEditor()
 	{
-		if (ImGui::CollapsingHeader("Camera"))
-		{
-			ImGui::Text("Camera Information");
-		}
+		ImGui::Text("Camera Information");
 	}
 }

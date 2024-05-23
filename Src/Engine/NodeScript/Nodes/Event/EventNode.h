@@ -18,14 +18,16 @@ namespace PokarinEngine
 		EventNode() = default;
 		virtual ~EventNode() = default;
 
-	public: // --------------------------- 実行処理  ---------------------------
+	private: // -------------------------- ノード制御 -------------------------
 
 		/// <summary>
-		/// ノードの実行処理
+		/// ノード別の実行処理
 		/// </summary>
-		virtual void Run() = 0;
-
-	private: // --------------------------- ピン制御 ---------------------------
+		/// <returns>
+		/// <para> true : 次のノードを実行する </para>
+		/// <para> false : 次のノードを実行しない </para>
+		/// </returns>
+		virtual bool RunNode() override = 0;
 
 		/// <summary>
 		/// 初期化
@@ -38,6 +40,8 @@ namespace PokarinEngine
 			// データピンを作成する
 			CreateDataPin();
 		}
+
+	private: // --------------------------- ピン制御 ---------------------------
 
 		/// <summary>
 		/// ピンを表示する

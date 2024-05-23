@@ -5,6 +5,11 @@
 
 #include "../Engine.h"
 
+#include "../EditorInfoRenderer.h"
+
+// Vector3型のfor文
+#define ForVector3() for(int i = 0; i < 3; ++i)
+
 namespace PokarinEngine
 {
 	/// <summary>
@@ -12,7 +17,74 @@ namespace PokarinEngine
 	/// </summary>
 	void Transform::Update()
 	{
+		// -------------------------------
+		// 座標を制限
+		// -------------------------------
 
+		// 座標の最大値
+		// Unityを参考に10万で設定する
+		static const float positionMax = 100000;
+
+		// 座標を±10万の範囲になるように制限する
+		ForVector3()
+		{
+			// プラス方向の制限
+			if (position[i] > positionMax)
+			{
+				position[i] = positionMax;
+			}
+
+			// マイナス方向の制限
+			if (position[i] < -positionMax)
+			{
+				position[i] = -positionMax;
+			}
+		}
+
+		// -------------------------------
+		// 回転角度を制限
+		// -------------------------------
+
+		// 回転角度の最大値
+		static const float rotationMax = Radians(360.0f);
+
+		// 回転角度を±360度の範囲になるように制限する
+		ForVector3()
+		{
+			if (std::abs(rotation[i]) > rotationMax)
+			{
+				// 周回数
+				int laps = static_cast<int>(rotation[i] / rotationMax);
+
+				// 周回数に応じて回転角度の最大値を減らすことで、
+				// 制限したうえでの適切な数値を求める
+				rotation[i] -= rotationMax * laps;
+			}
+		}
+
+		// -------------------------------
+		// 拡大率
+		// -------------------------------
+
+		// 拡大率の最大値
+		// 座標と同じにしておく
+		static const float scaleMax = 100000;
+
+		// 拡大率を±10万の範囲になるように制限する
+		ForVector3()
+		{
+			// プラス方向の制限
+			if (scale[i] > scaleMax)
+			{
+				scale[i] = scaleMax;
+			}
+
+			// マイナス方向の制限
+			if (scale[i] < -scaleMax)
+			{
+				scale[i] = -scaleMax;
+			}
+		}
 	}
 
 	/// <summary>
@@ -28,22 +100,6 @@ namespace PokarinEngine
 		{
 			child->parent = nullptr;
 		}
-	}
-
-	/// <summary>
-	/// pointを中心にY軸回転
-	/// </summary>
-	/// <param name="point"> 中心の位置 </param>
-	/// <param name="rotY"> Y軸回転させる角度(弧度法) </param>
-	/// <param name="range"> 中心からの距離 </param>
-	void Transform::RotateAroundY(
-		const Vector3& point, float rotY, float distance)
-	{
-		float sinY = std::sin(rotY);
-		float cosY = std::cos(rotY);
-
-		position.z = distance * cosY + point.z;
-		position.x = distance * sinY + point.x;
 	}
 
 	/// <summary>
@@ -112,110 +168,49 @@ namespace PokarinEngine
 	}
 
 	/// <summary>
-	/// 値をドラッグ操作用スライダーで表示する
+	/// 情報を編集できるように表示する
 	/// </summary>
-	/// <param name="axisName"> 表示する値の名前 </param>
-	/// <param name="axis"> 表示する値 </param>
-	void DragValue(const std::string& valueName, float& value, std::string info = "")
+	void Transform::InfoEditor()
 	{
-		// 識別用ラベル(非表示にしたいので##)
-		const std::string label = "##" + info + "." + valueName;
+		// --------------------------------------
+		// 表示の開始位置と幅を設定
+		// --------------------------------------
 
 		// ドラッグ操作用スライダーのImGuiウィンドウ幅に対する割合
 		static const float sliderRatio = 6.0f;
 
 		// ドラッグ操作用スライダーの幅
 		// ImGuiウィンドウの幅に合わせる
-		const float dragSliderWidth = ImGui::GetWindowWidth() / sliderRatio;
+		const float sliderWidth = ImGui::GetWindowWidth() / sliderRatio;
 
-		// ドラッグ操作の速度
-		static const float dragSpeed = 0.2f;
+		// 値表示の開始位置
+		static const float startX = 90.0f;
 
-		// 表示する桁数を指定するフォーマット
-		// 小数2桁まで表示する
-		static const char* format = "%.2f";
+		// -----------------------
+		// 位置
+		// -----------------------
 
-		// 値の名前を表示
-		ImGui::Text(valueName.c_str());
-
-		// ドラッグ操作用スライダーの幅を設定
-		ImGui::PushItemWidth(dragSliderWidth);
-		{
-			// ドラッグ操作用スライダーを
-			// 名前と同じ行に表示する
-			ImGui::SameLine();
-			ImGui::DragFloat(label.c_str(), &value, dragSpeed, 0, 0, format);
-
-			// 幅の設定を終了
-			ImGui::PopItemWidth();
-		}
-	}
-
-	/// <summary>
-	/// 情報をドラッグ操作用スライダーで表示する
-	/// </summary>
-	/// <param name="infoName"> 表示する情報の名前 </param>
-	/// <param name="info"> 表示する情報 </param>
-	void DragInformation(const std::string& infoName, Vector3& info)
-	{
-		// ----------------------------
-		// 情報の名前を表示
-		// ----------------------------
-
-		ImGui::Text(infoName.c_str());
+		// 位置
+		EditorInfoRenderer::DragVector3(position, sliderWidth, "Position", startX);
 
 		// ----------------------------
-		// それぞれの値を表示
+		// 回転角度(度数法)
 		// ----------------------------
 
-		// 値を表示し始める位置
-		const float dragValueX = 90.0f;
+		// 回転角度(度数法)
+		Vector3 rotationDeg = Degrees(rotation);
 
-		ImGui::SameLine();
-		ImGui::SetCursorPosX(dragValueX);
-		DragValue("x", info.x, infoName);
+		// 分かりやすいように度数法で表示
+		EditorInfoRenderer::DragVector3(rotationDeg, sliderWidth, "Rotation", startX);
 
-		ImGui::SameLine();
-		DragValue("y", info.y, infoName);
+		// 弧度法に変換
+		rotation = Radians(rotationDeg);
 
-		ImGui::SameLine();
-		DragValue("z", info.z, infoName);
-	}
+		// ----------------------------
+		// 拡大率
+		// ----------------------------
 
-	/// <summary>
-	/// エディタに情報を表示する
-	/// </summary>
-	void Transform::RenderInfo()
-	{
-		// 折りたたみ可能なヘッダーを表示
-		// 最初から展開しておく
-		if (ImGui::CollapsingHeader("Transform",
-			ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_DefaultOpen))
-		{
-			// -----------------------
-			// 位置
-			// -----------------------
-
-			// 位置
-			DragInformation("Position", position);
-
-			// ----------------------------
-			// 回転角度(度数法)
-			// ----------------------------
-
-			Vector3 rotationDeg = Degrees(rotation);
-
-			DragInformation("Rotation", rotationDeg);
-
-			// 弧度法に変換
-			rotation = Radians(rotationDeg);
-
-			// ----------------------------
-			// 拡大率
-			// ----------------------------
-
-			DragInformation("Scale", scale);
-		}
+		EditorInfoRenderer::DragVector3(scale, sliderWidth, "Scale", startX);
 	}
 
 } // namespace PokarinEngine

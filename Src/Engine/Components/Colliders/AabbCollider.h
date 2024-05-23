@@ -33,16 +33,7 @@ namespace PokarinEngine
 		AabbCollider() = default;
 		~AabbCollider() = default;
 
-	public: // ------------- コライダーの機能 ---------------
-
-		/// <summary>
-		/// 図形の種類を取得する
-		/// </summary>
-		/// <returns> 軸平行境界ボックスを表すType </returns>
-		Type GetType() const override
-		{
-			return Type::AABB;
-		}
+	public: // ------------------- 座標 ---------------------
 
 		/// <summary>
 		/// コライダーの座標を変更する
@@ -64,7 +55,16 @@ namespace PokarinEngine
 		ColliderPtr GetTransformedCollider(
 			const Matrix4x4& transform) const override;
 
-	public: // --------------- AABBの取得 -------------------
+	public: // ---------------- 情報の取得 ------------------
+
+		/// <summary>
+		/// 図形の種類を取得する
+		/// </summary>
+		/// <returns> 軸平行境界ボックスを表すType </returns>
+		Type GetType() const override
+		{
+			return Type::AABB;
+		}
 
 		/// <summary>
 		/// 図形を取得する
@@ -75,10 +75,29 @@ namespace PokarinEngine
 			return aabb;
 		}
 
-	public: // ------------- コライダーの情報 ---------------
+		/// <summary>
+		/// コンポーネントの名前を取得する
+		/// </summary>
+		/// <returns> コンポーネントの名前 </returns>
+		const std::string& GetName() override
+		{
+			return name;
+		}
+
+	public: // ------------------- 情報 ---------------------
 
 		// 図形(軸平行境界ボックス)
 		Collision::AABB aabb = { Vector3(-1), Vector3(1) };
+
+		// コンポーネントの名前
+		inline static const std::string name = "Aabb Collider";
+
+	private: // --------------- エディタ用 ------------------
+
+		/// <summary>
+		/// 情報を編集できるように表示する
+		/// </summary>
+		void InfoEditor() override {}
 	};
 
 } // namespace PokarinEngine

@@ -4,6 +4,7 @@
 #include "MainEditor.h"
 
 #include "ImGui/imgui.h"
+#include "ImGui/imgui_internal.h"
 #include "ImGui/imgui_impl_glfw.h"
 #include "ImGui/imgui_impl_opengl3.h"
 
@@ -11,12 +12,14 @@
 #include "Inspector.h"
 #include "SceneView.h"
 #include "GameView.h"
+#include "Toolbar.h"
 
 #include "../Engine.h"
 #include "../GameObject.h"
 #include "../Debug.h"
 
-#include "../Settings/MeshSettings.h"
+#include "../Configs/ImGuiConfig.h"
+#include "../Configs/MeshConfig.h"
 
 #include "../Window.h"
 #include "../InputManager.h"
@@ -95,9 +98,11 @@ namespace PokarinEngine
 			// メインメニュー作成
 			ImGui::BeginMainMenuBar();
 			{
-				if (ImGui::BeginMenu("Menu"))
+				// ファイル関係のメニュー
+				if (ImGui::BeginMenu("File"))
 				{
-					ImGui::Text("OpenMenu");
+					ImGui::Button("Save");
+
 					ImGui::EndMenu();
 				}
 
@@ -115,7 +120,8 @@ namespace PokarinEngine
 			// コンテキスト作成
 			// ---------------------------
 
-			glfwMakeContextCurrent(&Window::GetWindow(WindowID::Main));
+			// メインウィンドウを使用する
+			Window::SetCurrentWindow(WindowID::Main);
 
 			// ImGuiのバージョンを確認
 			IMGUI_CHECKVERSION();
@@ -126,11 +132,20 @@ namespace PokarinEngine
 			// コンテキストを使用する
 			ImGui::SetCurrentContext(imGuiContext);
 
+			// ----------------------------------------
+			// ImGuiの保存先ファイルを設定
+			// ----------------------------------------
+
+			// ImGuiの設定用
+			ImGuiIO& io = ImGui::GetIO();
+
+			// 保存先を設定
+			io.IniFilename = ImGuiConfig::File::setting;
+				
 			// ---------------------------------------
 			// ドッキングウィンドウの有効化
 			// ---------------------------------------
 
-			ImGuiIO& io = ImGui::GetIO();
 			io.ConfigFlags |= ImGuiConfigFlags_::ImGuiConfigFlags_DockingEnable;
 
 			// ------------------------
@@ -144,11 +159,11 @@ namespace PokarinEngine
 			ImGui_ImplOpenGL3_Init(glslVersion);
 
 			// ----------------------------------
-			// フォントを変更する
+			// フォントを設定
 			// ----------------------------------
 
 			io.Fonts->Clear();
-			io.Fonts->AddFontFromFileTTF("Res/Fonts/arial.ttf", 20.0f);
+			io.Fonts->AddFontFromFileTTF(ImGuiConfig::File::font, ImGuiConfig::fontSize);
 
 			// ----------------------------
 			// 描画用ビューの初期化
@@ -165,12 +180,19 @@ namespace PokarinEngine
 			// ----------------------------------------
 
 			Hierarchy::Initialize(engine);
+
+			// ----------------------------------------
+			// ツールバーの初期化
+			// ----------------------------------------
+
+			Toolbar::Initialize(engine);
 		}
 
 		/// <summary>
 		/// 更新
 		/// </summary>
-		void Update()
+		/// <param name="[out] isPlayGame"> ゲーム再生中ならtrue </param>
+		void Update(bool& isPlayGame)
 		{
 			// -------------------------
 			// ImGuiフレームの更新
@@ -193,10 +215,10 @@ namespace PokarinEngine
 			// ウィンドウの背景色を設定
 			// -------------------------------------
 
-			StyleColor::Push(ImGuiCol_::ImGuiCol_WindowBg, BasicColor::gray);
-			StyleColor::Push(ImGuiCol_::ImGuiCol_Tab, BasicColor::gray);
-			StyleColor::Push(ImGuiCol_::ImGuiCol_TabUnfocusedActive, BasicColor::gray);
-			StyleColor::Push(ImGuiCol_::ImGuiCol_TitleBgActive, BasicColor::black);
+			StyleColor::Push(ImGuiCol_::ImGuiCol_WindowBg, Color::gray);
+			StyleColor::Push(ImGuiCol_::ImGuiCol_Tab, Color::gray);
+			StyleColor::Push(ImGuiCol_::ImGuiCol_TabUnfocusedActive, Color::gray);
+			StyleColor::Push(ImGuiCol_::ImGuiCol_TitleBgActive, Color::black);
 
 			// --------------------------------------------------------------
 			// 画面全体でウィンドウをドッキングできるようにする
@@ -210,9 +232,9 @@ namespace PokarinEngine
 
 			MainMenu();
 
-			// ------------------------------
-			// ビューの更新(仮)
-			// ------------------------------
+			// -------------------------------------------
+			// エディタ内ウィンドウ・ビューの更新
+			// -------------------------------------------
 
 			// シーンビュー
 			sceneView.Update();
@@ -225,6 +247,9 @@ namespace PokarinEngine
 
 			// インスペクターウィンドウ
 			Inspector::Update(Hierarchy::GetSelectObject());
+
+			// ツールバー
+			Toolbar::Update(isPlayGame);
 
 			// --------------------------
 			// デモ(機能確認用)

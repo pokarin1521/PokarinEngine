@@ -6,7 +6,7 @@
 #include "Mesh.h"
 #include "Debug.h" 
 
-#include "Settings/ShaderSettings.h"
+#include "Configs/ShaderConfig.h"
 
 #include <numeric>
 

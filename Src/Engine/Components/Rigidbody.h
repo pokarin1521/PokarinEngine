@@ -10,7 +10,7 @@
 namespace PokarinEngine
 {
 	/// <summary>
-	/// 物理挙動を扱うコンポーネント
+	/// 剛体の物理的挙動を扱うコンポーネント
 	/// </summary>
 	class Rigidbody : public Component
 	{
@@ -22,20 +22,41 @@ namespace PokarinEngine
 	public: // ------------- コンポーネント制御 ----------------
 
 		/// <summary>
-		/// Rigibodyコンポーネントの更新
+		/// ゲーム再生中の更新
 		/// </summary>
-		void Update() override;
+		void Update_PlayGame() override;
+
+	public: // ---------------- 名前の取得 ------------------
+
+		/// <summary>
+		/// コンポーネントの名前を取得する
+		/// </summary>
+		/// <returns> コンポーネントの名前 </returns>
+		const std::string& GetName() override
+		{
+			return name;
+		}
 
 	public: // ------------------- 情報 ---------------------
 
 		// 重力加速度
-		static constexpr float gravity = 9.81f;
+		const float gravity = 9.81f;
 
 		// 重力の影響を制御する係数
 		float gravityScale = 1;
 
 		// 速度
 		Vector3 velocity = { 0, 0, 0 };
+
+		// コンポーネントの名前
+		inline static const std::string name = "Rigidbody";
+
+	private: // --------------- エディタ用 -----------------
+
+		/// <summary>
+		/// 情報を編集できるように表示する
+		/// </summary>
+		void InfoEditor() override {}
 	};
 
 } // namespace PokarinEngine

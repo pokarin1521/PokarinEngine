@@ -53,7 +53,10 @@ namespace PokarinEngine
 		/// </returns>
 		bool CreateWindow(WindowID windowID)
 		{
-			// 既にウィンドウがあるならそれを返す
+			// ---------------------------------------------
+			// 既にウィンドウがあるなら終了
+			// ---------------------------------------------
+
 			if (IsCreated(windowID))
 			{
 				return true;
@@ -123,7 +126,7 @@ namespace PokarinEngine
 		bool CreateAllWindow()
 		{
 			// 作成可能なウィンドウの数
-			int windowMax = static_cast<int>(WindowID::Max);
+			static const int windowMax = 2;
 
 			// 全てのウィンドウオブジェクトを作成
 			for (int i = 0; i < windowMax; ++i)
@@ -206,18 +209,15 @@ namespace PokarinEngine
 				return false;
 			}
 
-			// ウィンドウ
-			GLFWwindow* window = windowList[windowID];
-
 			// 使用するウィンドウを設定
-			glfwMakeContextCurrent(windowList[windowID]);
+			SetCurrentWindow(windowID);
 
 			// OSからの要求を処理する
 			// キーボードやマウスなどの状態を取得するには、定期的に呼び出す必要がある
 			glfwPollEvents();
 
 			// ウィンドウがアクティブになったらtrue
-			return glfwGetWindowAttrib(window, GLFW_FOCUSED);
+			return glfwGetWindowAttrib(windowList[windowID], GLFW_FOCUSED);
 		}
 
 		/// <summary>
@@ -300,7 +300,7 @@ namespace PokarinEngine
 		}
 
 		/// <summary>
-		/// GLFWウィンドウの大きさを取得する
+		/// ウィンドウの大きさを取得する
 		/// </summary>
 		/// <param name="windowID"> ウィンドウ識別番号 </param>
 		/// <returns> 指定したウィンドウの大きさ </returns>
@@ -321,7 +321,7 @@ namespace PokarinEngine
 		}
 
 		/// <summary>
-		/// GLFWウィンドウの大きさを取得する
+		/// ウィンドウの大きさを取得する
 		/// </summary>
 		/// <param name="[in] windowID"> ウィンドウ識別番号 </param>
 		/// <param name="[out] w"> ウィンドウの幅 </param>
@@ -361,6 +361,15 @@ namespace PokarinEngine
 		const GLFWvidmode& GetMainMonitor()
 		{
 			return *glfwGetVideoMode(glfwGetPrimaryMonitor());
+		}
+
+		/// <summary>
+		/// 使用するウィンドウを設定する
+		/// </summary>
+		/// <param name="windowID"> ウィンドウ識別番号 </param>
+		void SetCurrentWindow(WindowID windowID)
+		{
+			glfwMakeContextCurrent(windowList[windowID]);
 		}
 
 	} // namespace Window

@@ -5,6 +5,7 @@
 
 #include "../Window.h"
 #include "../InputManager.h"
+#include "../Time.h"
 
 namespace PokarinEngine
 {
@@ -13,32 +14,77 @@ namespace PokarinEngine
 	/// </summary>
 	void SceneView::CameraMoveControl()
 	{
+		// 回転速度
+		float moveSpeed = cameraMoveSpeed * Time::DeltaTime();
+
+		// カメラの回転角度
 		Vector3 cameraRotation = sceneCamera.rotation;
-		const Vector3 cameraSin = { sin(cameraRotation.x),sin(cameraRotation.y),sin(cameraRotation.z) };
-		const Vector3 cameraCos = { cos(cameraRotation.x),cos(cameraRotation.y),cos(cameraRotation.z) };
 
-		if (ImGui::IsKeyDown(ImGuiKey_W))
+		// カメラの回転角度のSin
+		// Z軸は回転させないので、XY軸のみ
+		const Vector2 cameraSin = { sin(cameraRotation.x),sin(cameraRotation.y) };
+
+		// カメラの回転角度のCos
+		// Z軸は回転させないので、XY軸のみ
+		const Vector2 cameraCos = { cos(cameraRotation.x),cos(cameraRotation.y) };
+
+		// ------------------------------------
+		// 前に移動
+		// ------------------------------------
+
+		// 正面ベクトル
+		Vector3 forward = { -cameraSin.y, cameraSin.x, cameraCos.x * cameraCos.y };
+
+		if (Input::GetKey(KeyCode::W))
 		{
-			sceneCamera.position.x += cameraMoveSpeed * -cameraSin.y;
-			sceneCamera.position.z += cameraMoveSpeed * cameraCos.y;
+			sceneCamera.position += moveSpeed * forward;
 		}
 
-		if (ImGui::IsKeyDown(ImGuiKey_S))
+		// ------------------------------------
+		// 後ろに移動
+		// ------------------------------------
+
+		if (Input::GetKey(KeyCode::S))
 		{
-			sceneCamera.position.x -= cameraMoveSpeed * -cameraSin.y;
-			sceneCamera.position.z -= cameraMoveSpeed * cameraCos.y;
+			sceneCamera.position -= moveSpeed * forward;
 		}
 
-		if (ImGui::IsKeyDown(ImGuiKey_D))
+		// ------------------------------------
+		// 右に移動
+		// ------------------------------------
+
+		if (Input::GetKey(KeyCode::D))
 		{
-			sceneCamera.position.x += cameraMoveSpeed * cameraCos.y;
-			sceneCamera.position.z += cameraMoveSpeed * cameraSin.y;
+			sceneCamera.position.x += moveSpeed * cameraCos.y;
+			sceneCamera.position.z += moveSpeed * cameraSin.y;
 		}
 
-		if (ImGui::IsKeyDown(ImGuiKey_A))
+		// ------------------------------------
+		// 左に移動
+		// ------------------------------------
+
+		if (Input::GetKey(KeyCode::A))
 		{
-			sceneCamera.position.x -= cameraMoveSpeed * cameraCos.y;
-			sceneCamera.position.z -= cameraMoveSpeed * cameraSin.y;
+			sceneCamera.position.x -= moveSpeed * cameraCos.y;
+			sceneCamera.position.z -= moveSpeed * cameraSin.y;
+		}
+
+		// ------------------------------------
+		// 上に移動
+		// ------------------------------------
+
+		if (Input::GetKey(KeyCode::E))
+		{
+			sceneCamera.position.y += moveSpeed;
+		}
+
+		// ------------------------------------
+		// 下に移動
+		// ------------------------------------
+
+		if (Input::GetKey(KeyCode::Q))
+		{
+			sceneCamera.position.y -= moveSpeed;
 		}
 	}
 
@@ -47,6 +93,9 @@ namespace PokarinEngine
 	/// </summary>
 	void SceneView::CameraRotateControl()
 	{
+		// 回転速度
+		float rotateSpeed = cameraRotateSpeed * Time::DeltaTime();
+
 		// マウスカーソルがImGuiウィンドウから出た場合
 		if (!ImGui::IsWindowHovered() ||
 			Input::Mouse::IsScreenEdge(WindowID::Main))
@@ -68,8 +117,8 @@ namespace PokarinEngine
 		mousePos = currentMousePos;
 
 		// マウスでカメラを操作する
-		//sceneCamera.transform->rotation.x -= mouseMove.y * cameraRotateSpeed;
-		sceneCamera.rotation.y -= mouseMove.x * cameraRotateSpeed;
+		sceneCamera.rotation.x -= mouseMove.y * rotateSpeed;
+		sceneCamera.rotation.y -= mouseMove.x * rotateSpeed;
 	}
 
 	/// <summary>
@@ -78,13 +127,13 @@ namespace PokarinEngine
 	void SceneView::Update()
 	{
 		// FBOからテクスチャを取得
-		texture = (void*)(std::intptr_t)fbo->GetTexture();
+		texture = ImTextureID(*fbo->GetTexture());
 
 		// ウィンドウの丸みを無くす
 		ImGui::PushStyleVar(ImGuiStyleVar_::ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 
 		// シーンビュー用ウィンドウ
-		ImGui::Begin("Scene", NULL,
+		ImGui::Begin("Scene", nullptr,
 			ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar |
 			ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollWithMouse);
 		{

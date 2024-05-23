@@ -25,10 +25,10 @@ namespace PokarinEngine
 	/// </summary>
 	/// <param name="nodeEditor"> 持ち主であるノードエディタ </param>
 	/// <param name="nodeID"> ノードの識別番号 </param>
-	void Node::CreateNode(NodeEditor& nodeEditor, int nodeID, const char* nodeTitle)
+	void Node::CreateNode(NodeEditor& nodeEditor, int nodeID, const std::string& nodeTitle)
 	{
 		// 持ち主であるノードエディタを設定
-		owner = &nodeEditor;
+		ownerEditor = &nodeEditor;
 
 		// ノードの識別番号を設定
 		id = nodeID;
@@ -42,6 +42,19 @@ namespace PokarinEngine
 
 		// 初期化
 		Initialize();
+	}
+
+	/// <summary>
+	/// 実行処理
+	/// </summary>
+	void Node::Run()
+	{
+		// ノード別の処理を実行
+		if (RunNode())
+		{
+			// 次のノードが設定されているので、実行
+			RunNextNode();
+		}
 	}
 
 	/// <summary>
@@ -76,12 +89,12 @@ namespace PokarinEngine
 	/// <returns> 作成したピンの識別番号 </returns>
 	int Node::CreatePin(PinType pinType)
 	{
-		return owner->CreatePin(id, pinType);
+		return ownerEditor->CreatePin(id, pinType);
 	}
 
 #pragma endregion
 
-#pragma region SetPin
+#pragma region RenderPin
 
 	/// <summary>
 	/// ピンの形
@@ -93,7 +106,7 @@ namespace PokarinEngine
 	};
 
 	/// <summary>
-	/// ピンの設定を開始する
+	/// ピンの表示を開始する
 	/// </summary>
 	/// <param name="pinID"> ピンの識別番号 </param>
 	/// <param name="pinAttribute"> ピンの属性 </param>
@@ -113,7 +126,7 @@ namespace PokarinEngine
 	}
 
 	/// <summary>
-	/// データピンの設定を開始する
+	/// データピンの表示を開始する
 	/// </summary>
 	/// <param name="pinID"> ピンの識別番号 </param>
 	/// <param name="pinAttribute"> ピンの属性 </param>
@@ -123,7 +136,7 @@ namespace PokarinEngine
 	}
 
 	/// <summary>
-	/// 実行ピンの設定を開始する
+	/// 実行ピンの表示を開始する
 	/// </summary>
 	/// <param name="pinID"> ピンの識別番号 </param>
 	/// <param name="pinAttribute"> ピンの属性 </param>
@@ -133,7 +146,7 @@ namespace PokarinEngine
 	}
 
 	/// <summary>
-	/// ピンの設定を終了する
+	/// ピンの表示を終了する
 	/// </summary>
 	/// <param name="pinAttribute"> ピンの属性 </param>
 	void Node::EndPin(PinAttribute pinAttribute)
@@ -168,9 +181,9 @@ namespace PokarinEngine
 	/// ノードエディタの持ち主であるゲームオブジェクトを取得する
 	/// </summary>
 	/// <returns> 持ち主であるゲームオブジェクト </returns>
-	GameObject& Node::GetGameObject()
+	GameObject& Node::GetOnwerObject()
 	{
-		return owner->GetOwner();
+		return ownerEditor->GetOwnerObject();
 	}
 
 #pragma endregion

@@ -3,7 +3,7 @@
 */
 #include "LightParameter.h"
 
-#include "Settings/ShaderSettings.h"
+#include "Configs/ShaderConfig.h"
 #include "Shader/Shader.h"
 
 #include <algorithm>
@@ -116,7 +116,7 @@ namespace PokarinEngine
 				const Vector3 v = light->position - mainCamera.transform->position;
 
 				// カメラの後ろで、ライトの範囲外だった場合
-				if (front.Dot(v) <= -light->range)
+				if (Vector3::Dot(front, v) <= -light->range)
 				{
 					// 計算の必要がないので
 					// 次のライトへ

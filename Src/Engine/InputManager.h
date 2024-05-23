@@ -25,8 +25,13 @@ namespace PokarinEngine
 
 		LeftCtrl = ImGuiKey_LeftCtrl,
 		RightCtrl = ImGuiKey_RightCtrl,
+		A = ImGuiKey_A,
 		C = ImGuiKey_C,
 		D = ImGuiKey_D,
+		E = ImGuiKey_E,
+		Q = ImGuiKey_Q,
+		S = ImGuiKey_S,
+		W = ImGuiKey_W,
 		Delete = ImGuiKey_Delete,
 		LeftAlt = ImGuiKey_LeftAlt,
 

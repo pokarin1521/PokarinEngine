@@ -31,7 +31,8 @@ namespace PokarinEngine
 		/// <summary>
 		/// XV
 		/// </summary>
-		void Update();
+		/// <param name="[out] isPlayGame"> ƒQ[ƒ€Ä¶’†‚È‚çtrue </param>
+		void Update(bool& isPlayGame);
 
 		/// <summary>
 		/// •`‰æ

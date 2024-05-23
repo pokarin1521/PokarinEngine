@@ -79,9 +79,25 @@ namespace PokarinEngine
 	public: // --------------------------- エディタ用 ----------------------------
 
 		/// <summary>
-		/// エディタに情報を表示する
+		/// 情報を編集できるように表示する
 		/// </summary>
-		void RenderInfo() override;
+		void InfoEditor() override;
+
+	public: // -------------------------- 名前の取得 -----------------------------
+
+		/// <summary>
+		/// コンポーネントの名前を取得する
+		/// </summary>
+		/// <returns> コンポーネントの名前 </returns>
+		const std::string& GetName() override
+		{
+			return name;
+		}
+
+	public: // ----------------------------- 名前 --------------------------------
+
+		// コンポーネントの名前
+		inline static const std::string name = "Camera";
 
 	private: // ---------------------------- 視野角 ------------------------------
 

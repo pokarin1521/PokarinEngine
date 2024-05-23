@@ -4,9 +4,86 @@
 #include "Inspector.h"
 
 #include "../Engine.h"
+#include "../Color.h"
+
+#include "../Components/Rigidbody.h"
 
 namespace PokarinEngine
 {
+	/// <summary>
+	/// コンポーネント追加用
+	/// </summary>
+	namespace AddComponent
+	{
+		// -----------------------------
+		// 変数
+		// -----------------------------
+
+		// ポップアップの名前
+		const char* popupName = "AddComponent";
+
+		// ----------------------------------
+		// 関数
+		// ----------------------------------
+
+		/// <summary>
+		/// コンポーネント追加用ボタン
+		/// </summary>
+		/// <typeparam name="T">  </typeparam>
+		template<class T>
+		void AddButton(GameObjectPtr object)
+		{
+
+		}
+
+		/// <summary>
+		/// ポップアップ展開用ボタン
+		/// </summary>
+		/// <returns>
+		/// <para> true : 展開中 </para>
+		/// <para> false : 展開していない </para>
+		/// </returns>
+		bool OpenPopupButton()
+		{
+			static bool isOpen = false;
+
+			// ボタンのX位置
+			const float posX = 5.0f;
+
+			// ボタンの大きさ
+			const ImVec2 size = { ImGui::GetWindowWidth() , 25.0f };
+
+			// そのままだと位置がずれてしまうので、
+			// X位置を設定
+			ImGui::SetCursorPosX(posX);
+
+			// コンポーネント追加用ボタン
+			// 押されたらポップアップ展開
+			if (ImGui::Button("Add Component", size))
+			{
+				//ImGui::OpenPopup(popupName);
+				isOpen = true;
+			}
+
+			return isOpen;
+		}
+
+		/// <summary>
+		/// ポップアップ展開中の処理
+		/// </summary>
+		/// <param name="object"> ゲームオブジェクト </param>
+		void DownMenu(GameObjectPtr object)
+		{
+
+			if (ImGui::CollapsingHeader("Add Component", ImGuiTreeNodeFlags_Bullet))
+			{
+				ImGui::Text("Select Component");
+			}
+
+			//AddButton<Rigidbody>(object);
+		}
+	}
+
 	/// <summary>
 	/// インスペクター(シーン内のオブジェクト制御用ウィンドウ)
 	/// </summary>
@@ -36,7 +113,7 @@ namespace PokarinEngine
 
 					// 名前を変更
 					// 余計な空白が入ると困るので、最初の\0までを渡す
-					selectObject->GetScene().ChangeObjectName(
+					selectObject->GetOwnerScene().ChangeObjectName(
 						selectObject, selectObjectName.substr(0, endLine));
 				}
 			}
@@ -46,7 +123,7 @@ namespace PokarinEngine
 		/// 更新
 		/// </summary>
 		/// <param name="selectObject"> ヒエラルキーで選択中のオブジェクト </param>
-		void Inspector::Update(GameObjectPtr selectObject)
+		void Update(GameObjectPtr selectObject)
 		{
 			// インスペクターウィンドウ
 			ImGui::Begin("Inspector");
@@ -66,10 +143,21 @@ namespace PokarinEngine
 				ImGui::Separator();
 
 				// コンポーネントを表示
-				for (ComponentPtr component : selectObject->componentList)
+				for (auto& component : selectObject->componentList)
 				{
-					component->RenderInfo();
+					// 表示するコンポーネント名
+					// 区別できるように、オブジェクトの識別番号を付けておく(非表示)
+					const std::string componentName = component->GetName() + "##" + std::to_string(selectObject->GetID());
+
+					// 折り畳み可能なヘッダーで表示
+					if (ImGui::CollapsingHeader(componentName.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+					{
+						// ヘッダーを展開中に情報の編集ができるように表示する
+						component->InfoEditor();
+					}
 				}
+
+				//AddComponent::DownMenu(selectObject);
 
 				ImGui::End();
 			}

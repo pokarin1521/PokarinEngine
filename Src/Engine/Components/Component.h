@@ -67,37 +67,52 @@ namespace PokarinEngine
 		// 毎フレーム呼び出される
 		virtual void Update() {}
 
-		// 衝突が起きたときに呼び出される
-		virtual void OnCollision(const ComponentPtr& self, const ComponentPtr& other) {}
+		// 作成中のゲームが再生中の時に
+		// 毎フレーム呼び出される
+		virtual void Update_PlayGame() {}
 
 		// ゲームオブジェクトが削除されるときに呼び出される
 		virtual void OnDestroy() {}
 
 	public: // ----------------------- エディタ用 --------------------------
 
-		// エディタに情報を表示する
-		virtual void RenderInfo() = 0;
+		// 情報を編集できるように表示する
+		virtual void InfoEditor() = 0;
+
+	public: // ------------------------ 名前の取得 -------------------------
+
+		// 名前を取得する
+		virtual const std::string& GetName() = 0;
+
+	public: // --------------------------- 名前 ----------------------------
+
+		// コンポーネントの名前
+		inline static const std::string name = "No Name";
 
 	protected: // -------------------- 持ち主の取得 ------------------------
 
 		/// <summary>
-		/// コンポーネントの所有者を取得する(読み取り専用)
+		/// 持ち主であるゲームオブジェクトを取得する
 		/// </summary>
-		/// <returns> 所有者の参照 </returns>
-		const GameObject& GetOwner() const { return *owner; }
+		/// <returns> 持ち主であるゲームオブジェクト </returns>
+		const GameObject& GetOwnerObject() const { return *ownerObject; }
 
 		/// <summary>
-		/// コンポーネントの所有者を取得する
+		/// 持ち主であるゲームオブジェクトを取得する
 		/// </summary>
-		/// <returns> 所有者の参照 </returns>
-		GameObject& GetOwner() { return *owner; }
+		/// <returns> 持ち主であるゲームオブジェクト </returns>
+		GameObject& GetOwnerObject() { return *ownerObject; }
 
 	private: // ----------------- コンポーネントの情報 ---------------------
 
-		GameObject* owner = nullptr;	// このコンポーネントの所有者
+		// 持ち主であるゲームオブジェクト
+		GameObject* ownerObject = nullptr;
 
-		bool isStarted = false;			// Startが実行されたらtrueになる
-		bool isDestroyed = false;		// Destroyが実行されたらtrueになる
+		// 初期化済みならtrue
+		bool isStarted = false;
+
+		// 削除済みならtrue
+		bool isDestroyed = false;
 	};
 
 } // namespace PokarinEngine

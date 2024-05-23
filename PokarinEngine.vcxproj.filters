@@ -9,9 +9,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Src\glad">
-      <UniqueIdentifier>{4edc28de-5526-4db9-8cd0-ec7caf6dbe76}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Src\Engine">
       <UniqueIdentifier>{156d02c8-0061-4e43-b203-75b5f92601ae}</UniqueIdentifier>
     </Filter>
@@ -36,17 +33,8 @@
     <Filter Include="Src\Engine\Random">
       <UniqueIdentifier>{ff0aad65-a468-4205-910f-763d3888fa53}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Engine\EasyAudio">
-      <UniqueIdentifier>{65e7c89d-6696-4ee7-ae42-3293f19987c6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Src\Engine\Components">
       <UniqueIdentifier>{da93753a-de43-4a7b-a5b6-ecf28c31b62d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Engine\Components\UILayout">
-      <UniqueIdentifier>{9348bb61-d5fa-4f19-b0c4-7c56b6ccd544}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Engine\Components\UIButton">
-      <UniqueIdentifier>{bd549091-59c7-40bb-9a45-408633cbd91d}</UniqueIdentifier>
     </Filter>
     <Filter Include="Src\Engine\Components\Transform">
       <UniqueIdentifier>{9a532c29-e0ec-47b8-96b3-5bcc74d53df8}</UniqueIdentifier>
@@ -66,9 +54,6 @@
     <Filter Include="Src\Engine\Editor">
       <UniqueIdentifier>{f59e6974-afa4-458f-8a38-22c0355897c0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\ImGui">
-      <UniqueIdentifier>{6c757eca-2b34-4227-8277-a0c9643ec1bf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Res\Shader">
       <UniqueIdentifier>{6ec76ba0-0fdb-4946-9d6f-b30ac6ec87dc}</UniqueIdentifier>
     </Filter>
@@ -83,9 +68,6 @@
     </Filter>
     <Filter Include="Src\Engine\UsingNames">
       <UniqueIdentifier>{ac4c34a3-edba-4f73-88d8-ddc39ece82f8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Engine\Settings">
-      <UniqueIdentifier>{506e5ef1-5a42-4e1a-8c9f-e3e80f5b2167}</UniqueIdentifier>
     </Filter>
     <Filter Include="Src\Engine\Editor\NodeEditor">
       <UniqueIdentifier>{bcd28468-805a-45b1-b4a6-8de85bead9be}</UniqueIdentifier>
@@ -126,13 +108,34 @@
     <Filter Include="Src\Engine\Time">
       <UniqueIdentifier>{ebad3738-f9c0-4f35-975b-0b49c11b71a2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Engine\EditorInfoSetter">
+      <UniqueIdentifier>{f3c12434-fbe2-4daf-902d-22ee8b41463f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Packages">
+      <UniqueIdentifier>{97db61aa-2d1e-4021-b95a-5d370b9152d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Packages\ImGui">
+      <UniqueIdentifier>{6c757eca-2b34-4227-8277-a0c9643ec1bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Packages\glad">
+      <UniqueIdentifier>{4edc28de-5526-4db9-8cd0-ec7caf6dbe76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Engine\Configs">
+      <UniqueIdentifier>{506e5ef1-5a42-4e1a-8c9f-e3e80f5b2167}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Packages\Json">
+      <UniqueIdentifier>{56ee8d9b-a570-4629-93b1-94ec959f075f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Packages\Json\nlohmann">
+      <UniqueIdentifier>{a0ea5351-ab58-4644-b38a-46edeeffc7b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Engine\Color">
+      <UniqueIdentifier>{356c702c-94a0-4877-b425-8acd29d21054}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Main.cpp">
       <Filter>Src</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\glad\src\glad.c">
-      <Filter>Src\glad</Filter>
     </ClCompile>
     <ClCompile Include="Src\Engine\GameObject.cpp">
       <Filter>Src\Engine\GameObject</Filter>
@@ -155,17 +158,11 @@
     <ClCompile Include="Src\Engine\Random.cpp">
       <Filter>Src\Engine\Random</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Engine\EasyAudio\EasyAudio.cpp">
-      <Filter>Src\Engine\EasyAudio</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Engine\Components\Light.cpp">
       <Filter>Src\Engine\Components\Light</Filter>
     </ClCompile>
     <ClCompile Include="Src\Engine\Components\Transform.cpp">
       <Filter>Src\Engine\Components\Transform</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Engine\Components\UILayout.cpp">
-      <Filter>Src\Engine\Components\UILayout</Filter>
     </ClCompile>
     <ClCompile Include="Src\Engine\Components\Rigidbody.cpp">
       <Filter>Src\Engine\Components\Rigidbody</Filter>
@@ -218,30 +215,6 @@
     <ClCompile Include="Src\Engine\LightParameter.cpp">
       <Filter>Src\Engine\LightParameter</Filter>
     </ClCompile>
-    <ClCompile Include="Src\ImGui\ImGui\imgui.cpp">
-      <Filter>Src\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\ImGui\ImGui\imgui_demo.cpp">
-      <Filter>Src\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\ImGui\ImGui\imgui_draw.cpp">
-      <Filter>Src\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\ImGui\ImGui\imgui_impl_glfw.cpp">
-      <Filter>Src\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\ImGui\ImGui\imgui_impl_opengl3.cpp">
-      <Filter>Src\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\ImGui\ImGui\imgui_tables.cpp">
-      <Filter>Src\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\ImGui\ImGui\imgui_widgets.cpp">
-      <Filter>Src\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\ImGui\ImGui\imnodes.cpp">
-      <Filter>Src\ImGui</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Engine\Components\Colliders\AabbCollider.cpp">
       <Filter>Src\Engine\Components\Colliders</Filter>
     </ClCompile>
@@ -254,8 +227,50 @@
     <ClCompile Include="Src\Engine\Time.cpp">
       <Filter>Src\Engine\Time</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Engine\NodeScript\Nodes\Functional\AddRotationNode.cpp">
+    <ClCompile Include="Src\Engine\NodeScript\Nodes\Functional\AddWorldRotationNode.cpp">
       <Filter>Src\Engine\Editor\NodeEditor\Nodes\Functional</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\EditorInfoRenderer.cpp">
+      <Filter>Src\Engine\EditorInfoSetter</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\NodeScript\Nodes\Functional\AddWorldPositionNode.cpp">
+      <Filter>Src\Engine\Editor\NodeEditor\Nodes\Functional</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\Math\Matrix.cpp">
+      <Filter>Src\Engine\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\MainEditor\Toolbar.cpp">
+      <Filter>Src\Engine\Editor\MainEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Packages\ImGui\imgui.cpp">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Packages\ImGui\imgui_demo.cpp">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Packages\ImGui\imgui_draw.cpp">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Packages\ImGui\imgui_impl_glfw.cpp">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Packages\ImGui\imgui_impl_opengl3.cpp">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Packages\ImGui\imgui_tables.cpp">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Packages\ImGui\imgui_widgets.cpp">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Packages\ImGui\imnodes.cpp">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Packages\glad\glad.c">
+      <Filter>Src\Packages\glad</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\NodeScript\NodeCreator.cpp">
+      <Filter>Src\Engine\Editor\NodeEditor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -274,12 +289,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Src\glad\include\glad\glad.h">
-      <Filter>Src\glad</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\glad\include\KHR\khrplatform.h">
-      <Filter>Src\glad</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Engine\GameObject.h">
       <Filter>Src\Engine\GameObject</Filter>
     </ClInclude>
@@ -307,17 +316,11 @@
     <ClInclude Include="Src\Engine\Random.h">
       <Filter>Src\Engine\Random</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Engine\Components\Billboard.h">
-      <Filter>Src\Engine\Components</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Engine\Components\Light.h">
       <Filter>Src\Engine\Components\Light</Filter>
     </ClInclude>
     <ClInclude Include="Src\Engine\Components\Transform.h">
       <Filter>Src\Engine\Components\Transform</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Engine\Components\UILayout.h">
-      <Filter>Src\Engine\Components\UILayout</Filter>
     </ClInclude>
     <ClInclude Include="Src\Engine\Components\Colliders\AabbCollider.h">
       <Filter>Src\Engine\Components\Colliders</Filter>
@@ -343,9 +346,6 @@
     <ClInclude Include="Src\Engine\Scene.h">
       <Filter>Src\Engine\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Engine\Color.h">
-      <Filter>Src\Engine</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Engine\Window.h">
       <Filter>Src\Engine\Window</Filter>
     </ClInclude>
@@ -367,15 +367,6 @@
     <ClInclude Include="Src\Engine\UsingNames\UsingMesh.h">
       <Filter>Src\Engine\UsingNames</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Engine\Settings\AudioSettings.h">
-      <Filter>Src\Engine\Settings</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Engine\Settings\MeshSettings.h">
-      <Filter>Src\Engine\Settings</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Engine\Settings\ShaderSettings.h">
-      <Filter>Src\Engine\Settings</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Engine\MainEditor\GameView.h">
       <Filter>Src\Engine\Editor\MainEditor</Filter>
     </ClInclude>
@@ -394,9 +385,6 @@
     <ClInclude Include="Src\Engine\Components\Camera.h">
       <Filter>Src\Engine\Components\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Engine\EasyAudio\EasyAudio.h">
-      <Filter>Src\Engine\EasyAudio</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Engine\LightParameter.h">
       <Filter>Src\Engine\LightParameter</Filter>
     </ClInclude>
@@ -409,44 +397,8 @@
     <ClInclude Include="Src\Engine\Math\Angle.h">
       <Filter>Src\Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Src\ImGui\ImGui\imconfig.h">
-      <Filter>Src\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\ImGui\ImGui\imgui.h">
-      <Filter>Src\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\ImGui\ImGui\imgui_impl_glfw.h">
-      <Filter>Src\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\ImGui\ImGui\imgui_impl_opengl3.h">
-      <Filter>Src\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\ImGui\ImGui\imgui_impl_opengl3_loader.h">
-      <Filter>Src\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\ImGui\ImGui\imgui_internal.h">
-      <Filter>Src\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\ImGui\ImGui\imnodes.h">
-      <Filter>Src\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\ImGui\ImGui\imnodes_internal.h">
-      <Filter>Src\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\ImGui\ImGui\imstb_rectpack.h">
-      <Filter>Src\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\ImGui\ImGui\imstb_textedit.h">
-      <Filter>Src\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\ImGui\ImGui\imstb_truetype.h">
-      <Filter>Src\ImGui</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Engine\Components\Colliders\Collider.h">
       <Filter>Src\Engine\Components\Colliders</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Engine\NodeScript\Nodes\TestNode.h">
-      <Filter>Src\Engine\Editor\NodeEditor\Nodes</Filter>
     </ClInclude>
     <ClInclude Include="Src\Engine\NodeScript\Nodes\Event\EventUpdateNode.h">
       <Filter>Src\Engine\Editor\NodeEditor\Nodes\Event</Filter>
@@ -472,8 +424,74 @@
     <ClInclude Include="Src\Engine\Time.h">
       <Filter>Src\Engine\Time</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Engine\NodeScript\Nodes\Functional\AddRotationNode.h">
+    <ClInclude Include="Src\Engine\NodeScript\Nodes\Functional\AddWorldRotationNode.h">
       <Filter>Src\Engine\Editor\NodeEditor\Nodes\Functional</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\EditorInfoRenderer.h">
+      <Filter>Src\Engine\EditorInfoSetter</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\NodeScript\Nodes\Functional\AddWorldPositionNode.h">
+      <Filter>Src\Engine\Editor\NodeEditor\Nodes\Functional</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\MainEditor\Toolbar.h">
+      <Filter>Src\Engine\Editor\MainEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Packages\ImGui\imconfig.h">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Packages\ImGui\imgui.h">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Packages\ImGui\imgui_impl_glfw.h">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Packages\ImGui\imgui_impl_opengl3.h">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Packages\ImGui\imgui_impl_opengl3_loader.h">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Packages\ImGui\imgui_internal.h">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Packages\ImGui\imnodes.h">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Packages\ImGui\imnodes_internal.h">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Packages\ImGui\imstb_rectpack.h">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Packages\ImGui\imstb_textedit.h">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Packages\ImGui\imstb_truetype.h">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Packages\glad\glad.h">
+      <Filter>Src\Packages\glad</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Packages\glad\khrplatform.h">
+      <Filter>Src\Packages\glad</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\Configs\MeshConfig.h">
+      <Filter>Src\Engine\Configs</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\Configs\ShaderConfig.h">
+      <Filter>Src\Engine\Configs</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Packages\Json\nlohmann\json.hpp">
+      <Filter>Src\Packages\Json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Packages\Json\Json.h">
+      <Filter>Src\Packages\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\Configs\ImGuiConfig.h">
+      <Filter>Src\Engine\Configs</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\Color.h">
+      <Filter>Src\Engine\Color</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

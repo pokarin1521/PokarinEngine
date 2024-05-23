@@ -42,7 +42,7 @@ namespace PokarinEngine
 			Vector3 position;
 
 			// Ž²‚ÌŒü‚«ƒxƒNƒgƒ‹
-			Vector3 axis[Vector_Size::vector3];
+			Vector3 axis[Vector3::size];
 
 			// Ž²•ûŒü‚Ì‘å‚«‚³
 			Vector3 scale;

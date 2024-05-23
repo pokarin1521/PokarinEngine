@@ -1,8 +1,8 @@
 /**
-* @file MeshSettings.h
+* @file MeshConfig.h
 */
-#ifndef MESHSETTINGS_H_INCLUDED
-#define MESHSETTINGS_H_INCLUDED
+#ifndef MESHCONFIG_H_INCLUDED
+#define MESHCONFIG_H_INCLUDED
 
 #include <vector>
 
@@ -54,4 +54,4 @@ namespace PokarinEngine
 
 } // namespace PokarinEngine
 
-#endif // !MESHSETTINGS_H_INCLUDED
+#endif // !MESHCONFIG_H_INCLUDED

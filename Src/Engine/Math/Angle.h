@@ -9,7 +9,7 @@
 namespace PokarinEngine
 {
 	// 円周率
-	constexpr float pi = 3.1415926535f;
+	inline constexpr float pi = 3.1415926535f;
 
 	/// <summary>
 	/// 度数法を弧度法に変換する

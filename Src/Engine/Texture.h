@@ -5,6 +5,7 @@
 #define TEXTURE_H_INCLUDED
 
 #include "glad/glad.h"
+#include "ImGui/imgui.h"
 
 #include <string>
 #include <memory>
@@ -40,22 +41,31 @@ namespace PokarinEngine
 		// コピー代入の禁止
 		Texture& operator=(const Texture&) = delete;
 
-	public: // ----------------- キャスト -------------------
+	public: // ------------------- 変換 ---------------------
 
 		// GLuint型に変換(管理番号を返す)
-		operator GLuint() const { return id; }
+		operator GLuint() const { return id; }		
+		
+		// ImTextureID型に変換(管理番号を返す)
+		operator ImTextureID() const { return (void*)(std::intptr_t)id; }
 
 	public: // ---------- テクスチャの情報を取得 ------------
 
 		/// <summary>
 		/// テクスチャの幅を取得
 		/// </summary>
-		int GetWidth() const { return width; }
+		int GetWidth() const
+		{
+			return width;
+		}
 
 		/// <summary>
 		/// テクスチャの高さを取得
 		/// </summary>
-		int GetHeight() const { return height; }
+		int GetHeight() const
+		{
+			return height;
+		}
 
 		/// <summary>
 		/// 画像のアスペクト比を取得
@@ -68,7 +78,10 @@ namespace PokarinEngine
 		/// <summary>
 		/// テクスチャの名前を取得
 		/// </summary>
-		const std::string& GetName() const { return name; }
+		const std::string& GetName() const
+		{
+			return name;
+		}
 
 	private: // ---------- コンストラクタ・デストラクタ -----------
 

@@ -36,7 +36,7 @@ namespace PokarinEngine
 		// --------------------------------
 
 		// コンポーネントの持ち主
-		const GameObject& owner = GetOwner();
+		const GameObject& owner = GetOwnerObject();
 
 		// ライトの座標を設定
 		lightData.position = owner.transform->position;
@@ -91,14 +91,11 @@ namespace PokarinEngine
 	}
 
 	/// <summary>
-	/// エディタに情報を描画する
+	/// 情報を編集できるように表示する
 	/// </summary>
-	void Light::RenderInfo()
+	void Light::InfoEditor()
 	{
-		if (ImGui::CollapsingHeader("Light"))
-		{
-			ImGui::Text("Light Information");
-		}
+		ImGui::Text("Light Information");
 	}
 
 } // namespace PokarinEngine

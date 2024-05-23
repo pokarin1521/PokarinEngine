@@ -8,16 +8,15 @@
 
 #include "Debug.h"
 #include "Time.h"
+#include "Random.h"
 #include "LightParameter.h"
 
 #include "Math/Matrix.h"
 
-#include "EasyAudio/EasyAudio.h"
-
 #include "Components/Colliders/AabbCollider.h"
 #include "Components/Colliders/SphereCollider.h"
 
-#include "Settings/ShaderSettings.h"
+#include "Configs/ShaderConfig.h"
 
 #include "MainEditor/MainEditor.h"
 #include "MainEditor/RenderView.h"
@@ -47,26 +46,25 @@ namespace PokarinEngine
 		// ----------------------------
 		// カメラの座標
 		// ----------------------------
-		
-		// 左手座標系の値なので右手座標系にする
+
+		// 今は左手座標系の値になっていて、
+		// OpenGLは右手座標系なので、右手座標系にする
 		Vector3 position = camera.position;
 		position.z *= -1;
 
 		// カメラの座標をGPUにコピー
-		glProgramUniform3fv(prog, UniformLocation::cameraPosition,
-			1, &position.x);
+		glProgramUniform3fv(prog, UniformLocation::cameraPosition, 1, &position.x);
 
 		// --------------------------------
 		// カメラの回転角度
 		// --------------------------------
 
-		// カメラの回転方向とオブジェクトの移動方向が逆なので、符号を逆にする
-		// (カメラが右に回転する = オブジェクトが左に回転する)
+		// カメラの回転
+		// オブジェクトはカメラの回転方向とは逆に動くことになるので、符号を逆にする
 		Vector3 rotation = -camera.rotation;
 
 		// カメラの回転角度をGPUにコピー
-		glProgramUniform3fv(prog, UniformLocation::cameraRotation,
-			1, &rotation.x);
+		glProgramUniform3fv(prog, UniformLocation::cameraRotation, 1, &rotation.x);
 	}
 
 #pragma endregion
@@ -80,13 +78,42 @@ namespace PokarinEngine
 	/// <returns> 作成したシーンのポインタ </returns>
 	ScenePtr Engine::CreateScene(const char* name)
 	{
+		if (sceneList.size() == INT_MAX)
+		{
+			LOG_WARNING("シーンの数が最大数になったので、シーンを作成することができません。");
+			return nullptr;
+		}
+
+		// シーンの識別番号を作成
+		int sceneID = CreateSceneID();
+
 		// シーン作成
-		auto scene = Scene::Create(*this, name);
+		auto scene = std::make_shared<Scene>(*this, sceneID, name);
 
 		// エンジンに登録
-		scenes.push_back(scene);
+		sceneList.push_back(scene);
 
 		return scene;
+	}
+
+	/// <summary>
+	/// シーンの識別番号を作成する
+	/// </summary>
+	/// <returns> 作成した識別番号 </returns>
+	int Engine::CreateSceneID()
+	{
+		// シーンの識別番号
+		// 乱数で決める
+		int sceneID = Random::Range(INT_MIN, INT_MAX);
+
+		// シーンの識別番号を管理用配列に追加
+		// 重複していたら再設定する
+		while (!sceneIDList.emplace(sceneID).second)
+		{
+			sceneID = Random::Range(INT_MIN, INT_MAX);
+		}
+
+		return sceneID;
 	}
 
 #pragma endregion
@@ -178,15 +205,12 @@ namespace PokarinEngine
 			return false;
 		}
 
-		// メインウィンドウ
-		GLFWwindow* mainWindow = &Window::GetWindow(WindowID::Main);
-
 		// --------------------------------
 		// OpenGLコンテキストの作成
 		// --------------------------------
 
-		// コンテキスト作成
-		glfwMakeContextCurrent(mainWindow);
+		// メインウィンドウを使用する
+		Window::SetCurrentWindow(WindowID::Main);
 
 		// OpenGL関数のアドレスを取得
 		gladLoadGLLoader(
@@ -244,9 +268,9 @@ namespace PokarinEngine
 		// シーンがなければ作成
 		// -----------------------------------
 
-		if (scenes.empty())
+		if (sceneList.empty())
 		{
-			currentScene = Scene::Create(*this, "SampleScene");
+			currentScene = CreateScene("SampleScene");
 		}
 
 		// ------------------------------------
@@ -279,7 +303,7 @@ namespace PokarinEngine
 		// エディタを更新
 		// ------------------------
 
-		MainEditor::Update();
+		MainEditor::Update(isPlayGame);
 	}
 
 	/// <summary>
@@ -359,8 +383,9 @@ namespace PokarinEngine
 			// アスペクト比と視野角による拡大率を設定
 			// GPU側での除算を避けるため、逆数にして渡す
 			glProgramUniform2f(prog, UniformLocation::aspectRatioAndScaleFov,
-				1 / aspectRatio, currentScene->GetCameraInfo().GetFovScale());
+				1 / aspectRatio, currentScene->GetMainCameraInfo().GetFovScale());
 
+			// カメラの情報をGPUにコピー
 			CopyCameraParameters(prog, camera);
 		}
 
@@ -395,7 +420,7 @@ namespace PokarinEngine
 		// -----------------------------------
 
 		DrawSkySphere();
-		
+
 		// -----------------------------------
 		// ゲームオブジェクトを描画
 		// -----------------------------------
@@ -537,7 +562,7 @@ namespace PokarinEngine
 		凹凸が範囲からはみ出さないように*/
 
 		// 最大描画範囲
-		const float far = currentScene->GetCameraInfo().GetDrawFar();
+		const float far = currentScene->GetMainCameraInfo().GetDrawFar();
 
 		// スカイスフィアの半径
 		static const float skySphereRadius = 0.5f;

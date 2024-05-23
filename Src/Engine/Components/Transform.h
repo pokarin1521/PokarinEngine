@@ -10,6 +10,7 @@
 
 #include <vector>
 #include <string>
+#include <cmath>
 
 namespace PokarinEngine
 {
@@ -18,6 +19,7 @@ namespace PokarinEngine
 	// -----------------
 
 	class Transform;
+	class GameObject;
 
 	// ------------------------
 	// 型の別名を定義
@@ -30,12 +32,15 @@ namespace PokarinEngine
 	/// </summary>
 	class Transform : public Component
 	{
-	public: // ------- コンストラクタ・デストラクタ --------
+		// ゲームオブジェクトに情報を公開
+		friend GameObject;
+
+	public: // ---------------- コンストラクタ・デストラクタ -----------------
 
 		Transform() = default;
 		~Transform() = default;
 
-	public: // ----------- コンポーネントの制御 ------------
+	public: // --------------------- コンポーネントの制御 --------------------
 
 		/// <summary>
 		/// 更新
@@ -47,17 +52,7 @@ namespace PokarinEngine
 		/// </summary>
 		void OnDestroy() override;
 
-	public: // ------------------- 回転 --------------------
-
-		/// <summary>
-		/// pointを中心にY軸回転
-		/// </summary>
-		/// <param name="point"> 中心の位置 </param>
-		/// <param name="rotY"> Y軸回転させる角度(弧度法) </param>
-		/// <param name="range"> 中心からの距離 </param>
-		void RotateAroundY(const Vector3& point, float rotY, float distance);
-
-	public: // ---------- 親オブジェクトの取得・設定 ----------
+	public: // ------------------ 親オブジェクトの取得・設定 -----------------
 
 		/// <summary>
 		/// 親オブジェクトを取得
@@ -86,7 +81,7 @@ namespace PokarinEngine
 		/// </param>
 		void SetParent(const TransformPtr& parent);
 
-	public: // ------------ 子オブジェクトの取得 ------------
+	public: // ---------------------- 子オブジェクトの取得 ----------------------
 
 		/// <summary>
 		/// 子オブジェクトの数を取得する
@@ -107,7 +102,7 @@ namespace PokarinEngine
 			return children[index];
 		}
 
-	public: // ------------- 変換行列の取得・設定 -------------
+	public: // --------------------- 変換行列の取得・設定 ----------------------
 
 		/// <summary>
 		/// 座標変換行列を取得する
@@ -127,47 +122,58 @@ namespace PokarinEngine
 			return normalMatrix;
 		}
 
+	public: // ---------------------- 方向ベクトル ---------------------
+
 		/// <summary>
-		/// 座標変換行列を設定する
+		/// 正面ベクトルを取得する
 		/// </summary>
-		/// <param name="mat"> 座標変換行列 </param>
-		void SetTransformMatrix(const Matrix4x4& mat)
+		/// <returns></returns>
+		inline Vector3 Forward() const
 		{
-			transformMatrix = mat;
+			// 回転角度のSin
+			Vector2 rotationSin = { std::sin(rotation.x), std::sin(rotation.y) };
+
+			// 回転角度のCos
+			Vector2 rotationCos = { std::cos(rotation.x), std::cos(rotation.y) };
+
+			return { -rotationSin.y, rotationSin.x, rotationCos.x * rotationCos.y };
 		}
 
+	public: // ----------------------- エディタ用 ----------------------
+
 		/// <summary>
-		/// 法線変換行列を設定する
+		/// 情報を編集できるように表示する
 		/// </summary>
-		/// <param name="mat"> 法線変換行列 </param>
-		void SetNormalMatrix(const Matrix3x3& mat)
+		void InfoEditor() override;
+
+	public: // ----------------------- 名前の取得 ----------------------
+
+		/// <summary>
+		/// コンポーネントの名前を取得する
+		/// </summary>
+		/// <returns> コンポーネントの名前 </returns>
+		const std::string& GetName() override
 		{
-			normalMatrix = mat;
+			return name;
 		}
 
-	public: // ----------------- エディタ用 -----------------
+	public: // -------------------- ワールド軸の情報 -------------------
 
-		/// <summary>
-		/// エディタに情報を表示する
-		/// </summary>
-		void RenderInfo() override;
-
-	public: // -------------------- 情報 --------------------
-
-		// 位置
+		// ワールド軸の座標
 		Vector3 position = { 0, 0, 0 };
 
-		// 回転(弧度法)
+		// ワールド軸の回転角度(弧度法)
 		Vector3 rotation = { 0, 0, 0 };
 
 		// 拡大率
 		Vector3 scale = { 1, 1, 1 };
 
-	private: // ---------------- エディタ用 ----------------
+	public: // -------------------------- 名前 ------------------------
 
-		bool isDrag = false;
+		// コンポーネントの名前
+		inline static const std::string name = "Transform";
 
-	private: // ----------------- 変換行列 -----------------
+	private: // ----------------------- 変換行列 -----------------------
 
 		// 座標変換行列
 		Matrix4x4 transformMatrix = Matrix4x4(0);
@@ -175,7 +181,7 @@ namespace PokarinEngine
 		// 法線変換行列
 		Matrix3x3 normalMatrix = Matrix3x3(0);
 
-	private: // ------------------- 親子 --------------------
+	private: // ------------------------- 親子 -------------------------
 
 		/* 循環参照を防ぐために生ポインタで管理する */
 

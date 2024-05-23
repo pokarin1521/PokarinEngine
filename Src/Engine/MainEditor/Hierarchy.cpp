@@ -10,7 +10,7 @@
 
 #include "../InputManager.h"
 
-#include "../Settings/MeshSettings.h"
+#include "../Configs/MeshConfig.h"
 
 namespace PokarinEngine
 {
@@ -28,59 +28,101 @@ namespace PokarinEngine
 		// 選択中のオブジェクト
 		GameObjectPtr selectObject;
 
-		// オブジェクト作成用ポップアップの名前
-		const char* createObjectPopup = "CreateObject";
-
 		// エンジンクラスのポインタ
 		Engine* engine = nullptr;
 	}
 
 	/// <summary>
-	/// オブジェクト作成用関数
+	/// オブジェクト作成用
 	/// </summary>
-	namespace CreateObject
+	namespace
 	{
 		/// <summary>
-		/// ゲームオブジェクト作成用ボタンの処理
+		/// オブジェクト作成用クラス
 		/// </summary>
-		/// <param name="kindName"> 作成するゲームオブジェクトの種類 </param>
-		/// <param name="staticMeshFile"> スタティックメッシュのファイル名 </param>
-		void Button(
-			const char* typeName, const char* staticMeshFile)
+		class CreateObject
 		{
-			// ボタンの色を無色に設定
-			ImGui::PushStyleColor(ImGuiCol_::ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+		public: // -------------------- ポップアップ制御 --------------------
 
-			// オブジェクト作成用ボタン
-			if (ImGui::Button(typeName))
+			/// <summary>
+			/// ゲームオブジェクト作成用ポップアップを開く
+			/// </summary>
+			void OpenPopup()
 			{
-				// ボタンが押されたので
-				// 現在のシーンにオブジェクトを作成
-				GameObjectPtr object = engine->GetCurrentScene().CreateGameObject(
-					typeName, Vector3(0), Vector3(0), staticMeshFile);
+				ImGui::OpenPopup(popupName);
 			}
 
-			// ボタン色の設定を終了
-			ImGui::PopStyleColor();
-		}
-
-		/// <summary>
-		/// ゲームオブジェクト作成用ポップアップの処理
-		/// </summary>
-		void Popup()
-		{
-			// 3Dオブジェクト作成用メニュー
-			if (ImGui::BeginMenu("3D Object"))
+			/// <summary>
+			/// ゲームオブジェクト作成用ポップアップの処理
+			/// </summary>
+			void Popup()
 			{
-				// 球体生成用ボタン
-				Button("Sphere", StaticMeshFile_OBJ::sphere);
+				// -----------------------------------
+				// ポップアップ開始
+				// -----------------------------------
 
-				// ロボット生成用ボタン
-				Button("Robot", StaticMeshFile_OBJ::robot);
+				// 開いていなければ何もせずに終了
+				if (!ImGui::BeginPopup(popupName))
+				{
+					return;
+				}
 
-				ImGui::EndMenu();
+				// -----------------------------------
+				// ポップアップ内の処理
+				// -----------------------------------
+
+				// 3Dオブジェクト作成用メニュー
+				if (ImGui::BeginMenu("3D Object"))
+				{
+					// 球体生成用ボタン
+					Button("Sphere", StaticMeshFile_OBJ::sphere);
+
+					// ロボット生成用ボタン
+					Button("Robot", StaticMeshFile_OBJ::robot);
+
+					ImGui::EndMenu();
+				}
+
+				// --------------------------------
+				// ポップアップの終了
+				// --------------------------------
+
+				ImGui::EndPopup();
 			}
-		}
+
+		private: // --------------------- 作成用ボタン ----------------------
+
+			/// <summary>
+			/// ゲームオブジェクト作成用ボタンの処理
+			/// </summary>
+			/// <param name="kindName"> 作成するゲームオブジェクトの種類 </param>
+			/// <param name="staticMeshFile"> スタティックメッシュのファイル名 </param>
+			void Button(const char* typeName, const char* staticMeshFile)
+			{
+				// ボタンの色を無色に設定
+				ImGui::PushStyleColor(ImGuiCol_::ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+
+				// オブジェクト作成用ボタン
+				if (ImGui::Button(typeName))
+				{
+					// ボタンが押されたので
+					// 現在のシーンにオブジェクトを作成
+					GameObjectPtr object = engine->GetCurrentScene().CreateGameObject(
+						typeName, Vector3(0), Vector3(0), staticMeshFile);
+				}
+
+				// ボタン色の設定を終了
+				ImGui::PopStyleColor();
+			}
+
+		private: // --------------------- ポップアップ ----------------------
+
+			// オブジェクト作成用ポップアップの名前
+			const char* popupName = "CreateObject";
+		};
+
+		// オブジェクト作成用
+		CreateObject createObject;
 	}
 
 	/// <summary>
@@ -88,6 +130,21 @@ namespace PokarinEngine
 	/// </summary>
 	namespace Hierarchy
 	{
+		/// ここでしか使わないので、cppのみに書く
+		/// <summary>
+		/// ヒエラルキーウィンドウ内での操作
+		/// </summary>
+		void HierarchyControl()
+		{
+			// ウィンドウ内で右クリックした時に
+			// オブジェクト作成用ポップアップを展開する
+			if (ImGui::IsWindowHovered() &&
+				Input::GetKeyUp(KeyCode::MouseRight))
+			{
+				createObject.OpenPopup();
+			}
+		}
+
 		/// ここでしか使わないので、cppのみに書く
 		/// <summary>
 		/// メニューの処理
@@ -106,19 +163,14 @@ namespace PokarinEngine
 				{
 					// ボタンを押した時に
 					// ゲームオブジェクト作成用ポップアップを展開する
-					ImGui::OpenPopup(createObjectPopup);
+					createObject.OpenPopup();
 				}
 
 				// ボタンの色設定を終了
 				ImGui::PopStyleColor();
 
-				// オブジェクト作成用ポップアップを展開中の時だけ処理を実行
-				if (ImGui::BeginPopup(createObjectPopup))
-				{
-					CreateObject::Popup();
-
-					ImGui::EndPopup();
-				}
+				// ゲームオブジェクト作成用ポップアップの処理
+				createObject.Popup();
 
 				ImGui::EndMenuBar();
 			}
@@ -173,7 +225,7 @@ namespace PokarinEngine
 					{
 						// テスト用に
 						// ダブルクリックしたオブジェクトの名前をタイトルにする
-						Window::OpenWindow(WindowID::NodeScript, gameObject.GetName());
+						Window::OpenWindow(WindowID::NodeScript, "NodeScript");
 						gameObject.OpenNodeEditor();
 					}
 				}
@@ -246,27 +298,17 @@ namespace PokarinEngine
 			ScelectObjectControl();
 
 			// ヒエラルキーウィンドウ
-			ImGui::Begin("Hierarchy", NULL,
+			ImGui::Begin("Hierarchy", nullptr,
 				ImGuiWindowFlags_::ImGuiWindowFlags_MenuBar);
 			{
-				// ウィンドウ内で右クリックした時に
-				// オブジェクト作成用ポップアップを展開する
-				if (ImGui::IsWindowHovered() &&
-					Input::GetKeyUp(KeyCode::MouseRight))
-				{
-					ImGui::OpenPopup(createObjectPopup);
-				}
-
-				// オブジェクト作成用ポップアップを展開中の時だけ処理を実行
-				if (ImGui::BeginPopup(createObjectPopup))
-				{
-					CreateObject::Popup();
-
-					ImGui::EndPopup();
-				}
+				// ヒエラルキーウィンドウ内の操作
+				HierarchyControl();
 
 				// メニュー表示
 				Mene();
+
+				// オブジェクト作成用ポップアップの処理
+				createObject.Popup();
 
 				// シーン内のオブジェクトツリー
 				ObjectTree();
