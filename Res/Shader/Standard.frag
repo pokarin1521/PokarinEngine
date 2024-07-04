@@ -273,7 +273,8 @@ void main()
 	// Æ“x
 	float illnuminance = theta / 3.14159265;
 
-	// •½sŒõŒ¹‚Ì–¾‚é‚³‚ğ‰ÁZ
+	// --------- •½sŒõŒ¹‚Ì–¾‚é‚³‚ğ‰ÁZ ---------
+
 	diffuse += directionalLight.color * illnuminance;
 
 	// --------- ŠÂ‹«Œõ‚Ì–¾‚é‚³‚ğ‰ÁZ -----------

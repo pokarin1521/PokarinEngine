@@ -5,7 +5,8 @@
 #define RIGIDBODY_H_INCLUDED
 
 #include "Component.h"
-#include "../GameObject.h"
+
+#include "../Math/Vector.h"
 
 namespace PokarinEngine
 {
@@ -26,18 +27,7 @@ namespace PokarinEngine
 		/// </summary>
 		void Update_PlayGame() override;
 
-	public: // ---------------- 名前の取得 ------------------
-
-		/// <summary>
-		/// コンポーネントの名前を取得する
-		/// </summary>
-		/// <returns> コンポーネントの名前 </returns>
-		const std::string& GetName() override
-		{
-			return name;
-		}
-
-	public: // ------------------- 情報 ---------------------
+	public: // -------------------- 情報 -----------------------
 
 		// 重力加速度
 		const float gravity = 9.81f;
@@ -48,15 +38,20 @@ namespace PokarinEngine
 		// 速度
 		Vector3 velocity = { 0, 0, 0 };
 
-		// コンポーネントの名前
-		inline static const std::string name = "Rigidbody";
-
 	private: // --------------- エディタ用 -----------------
 
 		/// <summary>
 		/// 情報を編集できるように表示する
 		/// </summary>
 		void InfoEditor() override {}
+
+	private: // ------------------- 保存 -------------------
+
+		/// <summary>
+		/// コンポーネントの情報を保存する
+		/// </summary>
+		/// <param name="[in] folderName"> 保存先のフォルダ </param>
+		void SaveInfo(const std::string& folderName) const override {}
 	};
 
 } // namespace PokarinEngine

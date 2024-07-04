@@ -32,16 +32,12 @@ namespace PokarinEngine
 		/// <summary>
 		/// バッファオブジェクトを作成する
 		/// </summary>
-		/// <param name="size"> 
-		/// バッファオブジェクトのバイト数 
+		/// <param name="[in] size"> バッファオブジェクトのバイト数  </param>
+		/// <param name="[in] data"> 
+		/// <para> バッファにコピーするデータのアドレス、 </para>
+		/// <para> nullptrを指定すると空のバッファが作成される </para>
 		/// </param>
-		/// <param name="data"> 
-		/// バッファにコピーするデータのアドレス、
-		/// nullptrを指定すると空のバッファが作成される 
-		/// </param>
-		/// <param name="flags"> 
-		/// メモリの使用方法を示すフラグ
-		/// </param>
+		/// <param name="[in] flags"> メモリの使用方法を示すフラグ </param>
 		/// <returns> 作成したバッファオブジェクトへのポインタ </returns>
 		static BufferObjectPtr Create(GLsizeiptr size,
 			const void* data = nullptr, GLbitfield flags = 0)
@@ -52,11 +48,14 @@ namespace PokarinEngine
 	public: // --------- コンストラクタ・デストラクタ ----------
 
 		/// <summary>
-		/// バッファオブジェクト作成用コンストラクタ
+		/// バッファオブジェクトを作成するコンストラクタ
 		/// </summary>
-		/// <param name="size"> バッファサイズ(バイト数) </param>
-		/// <param name="data"> コピーするデータのアドレス </param>
-		/// <param name="flags"> メモリの使用方法を示すフラグ </param>
+		/// <param name="[in] size"> バッファオブジェクトのバイト数  </param>
+		/// <param name="[in] data"> 
+		/// <para> バッファにコピーするデータのアドレス、 </para>
+		/// <para> nullptrを指定すると空のバッファが作成される </para>
+		/// </param>
+		/// <param name="[in] flags"> メモリの使用方法を示すフラグ </param>
 		BufferObject(GLsizeiptr size, const void* data, GLbitfield flags)
 		{
 			// バッファサイズを設定

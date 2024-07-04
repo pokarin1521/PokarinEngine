@@ -4,8 +4,6 @@
 #ifndef VECTOR_H_INCLUDED
 #define VECTOR_H_INCLUDED
 
-#include "ImGui/imgui.h"
-
 #include <cmath>
 
 namespace PokarinEngine
@@ -57,11 +55,6 @@ namespace PokarinEngine
 		float& operator[](size_t i) { return *(&x + i); }
 		float operator[](size_t i)const { return *(&x + i); }
 
-	public: // ------------------------- 変換 -------------------------
-
-		// ImVec2に変換
-		operator ImVec2() { return ImVec2(x, y); }
-
 	public: // ------------------------- 情報 -------------------------
 
 		float x, y;
@@ -107,8 +100,8 @@ namespace PokarinEngine
 		/// <summary>
 		/// ベクトルの内積を求める
 		/// </summary>
-		/// <param name="a"> ベクトルA </param>
-		/// <param name="b"> ベクトルB </param>
+		/// <param name="[in] a"> ベクトルA </param>
+		/// <param name="[in] b"> ベクトルB </param>
 		/// <returns> ベクトルの内積 </returns>
 		static float Dot(const Vector3& a, const Vector3& b);
 
@@ -775,8 +768,8 @@ namespace PokarinEngine
 	/// <summary>
 	/// ベクトルの内積を求める
 	/// </summary>
-	/// <param name="a"> ベクトルA </param>
-	/// <param name="b"> ベクトルB </param>
+	/// <param name="[in] a"> ベクトルA </param>
+	/// <param name="[in] b"> ベクトルB </param>
 	/// <returns> ベクトルの内積 </returns>
 	inline float Vector3::Dot(const Vector3& a, const Vector3& b)
 	{

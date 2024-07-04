@@ -3,9 +3,14 @@
 */
 #include "Transform.h"
 
-#include "../Engine.h"
+#include "ImGui/imgui.h"
 
+#include "../Engine.h"
 #include "../EditorInfoRenderer.h"
+
+#include"../Math/VectorToJson.h"
+
+#include <fstream>
 
 // Vector3型のfor文
 #define ForVector3() for(int i = 0; i < 3; ++i)
@@ -103,9 +108,9 @@ namespace PokarinEngine
 	}
 
 	/// <summary>
-	/// 親オブジェクトを設定
+	/// 親オブジェクトを設定する
 	/// </summary>
-	/// <param name="parent"> 
+	/// <param name="[out] parent"> 
 	/// <para> 親にするゲームオブジェクトのトランスフォーム </para>
 	/// <para> nullptrを指定すると親子関係を解除する </para>
 	/// </param>
@@ -156,9 +161,9 @@ namespace PokarinEngine
 	}
 
 	/// <summary>
-	/// 親オブジェクトを設定
+	/// 親オブジェクトを設定する
 	/// </summary>
-	/// <param name="parent"> 
+	/// <param name="[out] parent"> 
 	/// <para> 親にするゲームオブジェクトのトランスフォーム </para>
 	/// <para> nullptrを指定すると親子関係を解除する </para>
 	/// </param>
@@ -190,8 +195,11 @@ namespace PokarinEngine
 		// 位置
 		// -----------------------
 
+		// 識別番号の文字列
+		const std::string id_string = GetID_String();
+
 		// 位置
-		EditorInfoRenderer::DragVector3(position, sliderWidth, "Position", startX);
+		EditorInfoRenderer::DragVector3(position, "Position", id_string, sliderWidth, startX);
 
 		// ----------------------------
 		// 回転角度(度数法)
@@ -201,7 +209,7 @@ namespace PokarinEngine
 		Vector3 rotationDeg = Degrees(rotation);
 
 		// 分かりやすいように度数法で表示
-		EditorInfoRenderer::DragVector3(rotationDeg, sliderWidth, "Rotation", startX);
+		EditorInfoRenderer::DragVector3(rotationDeg, "Rotation", id_string, sliderWidth, startX);
 
 		// 弧度法に変換
 		rotation = Radians(rotationDeg);
@@ -210,7 +218,37 @@ namespace PokarinEngine
 		// 拡大率
 		// ----------------------------
 
-		EditorInfoRenderer::DragVector3(scale, sliderWidth, "Scale", startX);
+		EditorInfoRenderer::DragVector3(scale, "Scale", id_string, sliderWidth, startX);
+	}
+
+	/// <summary>
+	/// コンポーネントの情報を保存する
+	/// </summary>
+	/// <param name="[in] folderName"> 保存先のフォルダ </param>
+	void Transform::SaveInfo(const std::string& folderName) const
+	{
+		// ------------------------------------
+		// 情報をJsonに格納する
+		// ------------------------------------
+
+		// 情報を格納するJson
+		Json data;
+
+		// 名前を格納する
+		//data["ID"] = GetName();
+
+		// 情報を格納する
+		VectorToJson(position, data["Position"]);
+		VectorToJson(rotation, data["Rotation"]);
+		VectorToJson(scale, data["Scale"]);
+
+		//// -------------------------------------
+		//// ファイルに保存する
+		//// -------------------------------------
+
+		//std::string fileName = folderName + "/" + std::to_string(GetID());
+
+		//std::ofstream file;
 	}
 
 } // namespace PokarinEngine

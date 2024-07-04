@@ -32,9 +32,9 @@ namespace PokarinEngine
 		/// <summary>
 		/// RBOを作成する
 		/// </summary>
-		/// <param name="width"> 幅 </param>
-		/// <param name="height"> 高さ </param>
-		/// <param name="internalformat"> 保持する情報のバッファ </param>
+		/// <param name="[in] width"> 幅 </param>
+		/// <param name="[in] height"> 高さ </param>
+		/// <param name="[in] internalformat"> 保持する情報のバッファ </param>
 		/// <returns> 作成したRBO </returns>
 		static RenderbufferObjectPtr Create(
 			GLsizei width, GLsizei height, GLenum internalformat)
@@ -48,9 +48,9 @@ namespace PokarinEngine
 		/// <summary>
 		/// RBOを作成する
 		/// </summary>
-		/// <param name="width"> 幅 </param>
-		/// <param name="height"> 高さ </param>
-		/// <param name="internalformat"> 保持する情報のバッファ </param>
+		/// <param name="[in] width"> 幅 </param>
+		/// <param name="[in] height"> 高さ </param>
+		/// <param name="[in] internalformat"> 保持する情報のバッファ </param>
 		RenderbufferObject(
 			GLsizei width, GLsizei height, GLenum internalformat);
 

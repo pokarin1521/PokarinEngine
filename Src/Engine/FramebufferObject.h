@@ -40,10 +40,10 @@ namespace PokarinEngine
 		/// <summary>
 		/// FBOを作成する
 		/// </summary>
-		/// <param name="engine"> エンジンクラスの参照 </param>
-		/// <param name="_windowID"> ウィンドウ番号 </param>
-		/// <param name="fboWidth"> FBOの幅 </param>
-		/// <param name="fboHeight"> FBOの高さ </param>
+		/// <param name="[in] engine"> エンジンクラスの参照 </param>
+		/// <param name="[in] _windowID"> ウィンドウ番号 </param>
+		/// <param name="[in] fboWidth"> FBOの幅 </param>
+		/// <param name="[in] fboHeight"> FBOの高さ </param>
 		static FramebufferObjectPtr Create(
 			Engine& engine, WindowID _windowID, GLsizei fboWidth, GLsizei fboHeight)
 		{
@@ -56,10 +56,10 @@ namespace PokarinEngine
 		/// <summary>
 		/// FBOを作成するコンストラクタ
 		/// </summary>
-		/// <param name="engine"> エンジンクラスの参照 </param>
-		/// <param name="_windowID"> ウィンドウ番号 </param>
-		/// <param name="fboWidth"> FBOの幅 </param>
-		/// <param name="fboHeight"> FBOの高さ </param>
+		/// <param name="[in] engine"> エンジンクラスの参照 </param>
+		/// <param name="[in] _windowID"> ウィンドウ番号 </param>
+		/// <param name="[in] fboWidth"> FBOの幅 </param>
+		/// <param name="[in] fboHeight"> FBOの高さ </param>
 		FramebufferObject(
 			Engine& engine, WindowID _windowID, GLsizei fboWidth, GLsizei fboHeight);
 
@@ -93,10 +93,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// カラーバッファ用テクスチャをクリア
 		/// </summary>
-		/// <param name="red"> 赤 </param>
-		/// <param name="green"> 緑 </param>
-		/// <param name="blue"> 青 </param>
-		/// <param name="alpha"> 透明度 </param>
+		/// <param name="Color"> クリア色 </param>
 		void ClearColor(const Color& color);
 
 	public: // ----------------- サイズ --------------------
@@ -104,8 +101,8 @@ namespace PokarinEngine
 		/// <summary>
 		/// FBOの大きさを設定する
 		/// </summary>
-		/// <param name="fboWidth"> 幅 </param>
-		/// <param name="fboHeight"> 高さ </param>
+		/// <param name="[in] fboWidth"> 幅 </param>
+		/// <param name="[in] fboHeight"> 高さ </param>
 		void SetSize(GLsizei fboWidth, GLsizei fboHeight)
 		{
 			width = fboWidth;

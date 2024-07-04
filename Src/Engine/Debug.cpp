@@ -19,9 +19,9 @@ namespace PokarinEngine
 		/// <summary>
 		/// 書式付き文字列をデバッグウィンドウに表示する
 		/// </summary>
-		/// <param name="type"> メッセージの種類 </param>
-		/// <param name="func"> 関数名 </param>
-		/// <param name="format"> 書式付き文字列 </param>
+		/// <param name="[in] type"> メッセージの種類 </param>
+		/// <param name="[in] func"> 関数名 </param>
+		/// <param name="[in] format"> 書式付き文字列 </param>
 		void Log(Type type, const char* func, const char* format, ...)
 		{
 			// メッセージ格納用

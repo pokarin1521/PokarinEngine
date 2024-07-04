@@ -4,6 +4,8 @@
 #ifndef IMGUICONFIG_H_INCLUDED
 #define IMGUICONFIG_H_INCLUDED
 
+#include "ImGui/imgui.h"
+
 namespace PokarinEngine
 {
 	/// <summary>
@@ -19,8 +21,11 @@ namespace PokarinEngine
 			// ImGui情報の保存先ファイル
 			inline constexpr const char* setting = "Settings/imgui.ini";
 
-			// ImGuiで使用するフォントのファイル
-			inline constexpr const char* font = "Res/Fonts/arial.ttf";
+			// テキスト用フォントのファイル
+			inline constexpr const char* textFont = "Res/Fonts/arial.ttf";
+
+			// アイコン用フォントのファイル
+			inline constexpr const char* iconFont = "Res/Fonts/fa-solid-900.ttf";
 		}
 
 		// ImGuiのフォントサイズ

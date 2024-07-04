@@ -19,7 +19,6 @@ namespace PokarinEngine
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	/// <param name="object"> 持ち主になるゲームオブジェクト </param>
 	NodeEditor::NodeEditor(GameObject& gameObject)
 		: ownerObject(&gameObject), name(gameObject.GetName())
 	{
@@ -128,9 +127,9 @@ namespace PokarinEngine
 	/// <summary>
 	/// ノードを追加する
 	/// </summary>
-	/// <param name="node"> 追加するノード </param>
+	/// <param name="[in] node"> 追加するノード </param>
 	/// <returns> 追加したノードの識別番号 </returns>
-	int NodeEditor::AddNode(NodePtr node)
+	int NodeEditor::AddNode(const NodePtr& node)
 	{
 		// 識別番号
 		int singleID = Random::Range(INT_MIN, INT_MAX);
@@ -148,7 +147,7 @@ namespace PokarinEngine
 	/// <summary>
 	/// ノードを削除する
 	/// </summary>
-	/// <param name="nodeID"> 削除するノードの識別番号 </param>
+	/// <param name="[in] nodeID"> 削除するノードの識別番号 </param>
 	void NodeEditor::DestroyNode(int nodeID)
 	{
 		// 登録されていない識別番号なら何もしない
@@ -208,8 +207,8 @@ namespace PokarinEngine
 	/// <summary>
 	/// ノードのピンを作成する
 	/// </summary>
-	/// <param name="pinID"> ピンの持ち主になるノードの識別番号 </param>
-	/// <param name="pinType"> 作成するピンの種類 </param>
+	/// <param name="[in] pinID"> ピンの持ち主になるノードの識別番号 </param>
+	/// <param name="[in] pinType"> 作成するピンの種類 </param>
 	/// <returns> 作成したピンの識別番号 </returns>
 	int NodeEditor::CreatePin(int nodeID, PinType pinType)
 	{
@@ -297,7 +296,7 @@ namespace PokarinEngine
 	/// <summary>
 	/// リンクする組を追加する
 	/// </summary>
-	/// <param name="linkPair"> 追加する組 </param>
+	/// <param name="[in] linkPair"> 追加する組 </param>
 	void NodeEditor::AddLinkPair(const LinkPair& linkPair)
 	{
 		// 識別番号
@@ -334,7 +333,7 @@ namespace PokarinEngine
 	/// <summary>
 	/// 指定した組のリンクを削除する
 	/// </summary>
-	/// <param name="linkPairID"> 削除するリンクの識別番号 </param>
+	/// <param name="[in] linkPairID"> 削除するリンクの識別番号 </param>
 	void NodeEditor::DestroyLink(int linkPairID)
 	{
 		// ピンの識別番号

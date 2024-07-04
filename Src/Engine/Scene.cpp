@@ -11,7 +11,10 @@
 
 #include "Configs/ShaderConfig.h"
 
+#include "Collision/Collision.h"
+
 #include <algorithm>
+#include <filesystem>
 
 namespace PokarinEngine
 {
@@ -20,9 +23,9 @@ namespace PokarinEngine
 	/// <summary>
 	/// シーン作成用コンストラクタ
 	/// </summary>
-	/// <param name="e"> エンジンクラスの参照 </param>
-	/// <param name="sceneID"> シーン識別番号 </param>
-	/// <param name="sceneName"> シーン名 </param>
+	/// <param name="[in] e"> エンジンクラスの参照 </param>
+	/// <param name="[in] sceneID"> シーン識別番号 </param>
+	/// <param name="[in] sceneName"> シーン名 </param>
 	Scene::Scene(Engine& e, int sceneID, const char* sceneName)
 		:engine(&e), id(sceneID), name(sceneName)
 	{
@@ -41,10 +44,10 @@ namespace PokarinEngine
 	/// ゲームオブジェクトを作成する
 	/// </summary>
 	/// <typeparam name="T"> ゲームオブジェクトクラスまたはその派生 </typeparam>
-	/// <param name="name"> オブジェクトの名前 </param>
-	/// <param name="position"> オブジェクトを配置する座標 </param>
-	/// <param name="rotation"> オブジェクトの回転角度 </param>
-	/// <param name="staticMeshFile"> スタティックメッシュのファイル名 </param>
+	/// <param name="[in] name"> オブジェクトの名前 </param>
+	/// <param name="[in] position"> オブジェクトを配置する座標 </param>
+	/// <param name="[in] rotation"> オブジェクトの回転角度 </param>
+	/// <param name="[in] staticMeshFile"> スタティックメッシュのファイル名 </param>
 	/// <returns> 追加したゲームオブジェクトのポインタ </returns>
 	GameObjectPtr Scene::CreateGameObject(const std::string& name,
 		const Vector3& position, const Vector3& rotation, const char* staticMeshFile)
@@ -80,7 +83,7 @@ namespace PokarinEngine
 		}
 
 		// 重複しないように識別番号を設定
-		object->id = AddSingleObjectID();
+		object->id = GetSingleObjectID();
 
 		// ゲームオブジェクトの初期化
 		// 識別番号が必要になるので、このタイミングで行う
@@ -110,8 +113,8 @@ namespace PokarinEngine
 	/// <summary>
 	/// ゲームオブジェクトを複製する
 	/// </summary>
-	/// <param name="object"> 複製元のゲームオブジェクト </param>
-	void Scene::CopyGameObject(GameObjectPtr object)
+	/// <param name="[in] object"> 複製元のゲームオブジェクト </param>
+	void Scene::CopyGameObject(const GameObjectPtr& object)
 	{
 		// メインカメラは複製しない
 		if (object == mainCamera)
@@ -134,7 +137,7 @@ namespace PokarinEngine
 	/// <summary>
 	/// オブジェクト名の後ろに付いてる数字を取得する
 	/// </summary>
-	/// <param name="objectName"> オブジェクト名 </param>
+	/// <param name="[in] objectName"> オブジェクト名 </param>
 	/// <returns> ()の中にある数字 </returns>
 	int GetBackNumber(const std::string& objectName)
 	{
@@ -170,9 +173,9 @@ namespace PokarinEngine
 	/// <summary>
 	/// ゲームオブジェクトの名前を変更する
 	/// </summary>
-	/// <param name="object"> 名前を変更するオブジェクト </param>
-	/// <param name="afterName"> 変更後の名前 </param>
-	void Scene::ChangeObjectName(GameObjectPtr object, const std::string& afterName)
+	/// <param name="[out] object"> 名前を変更するオブジェクト </param>
+	/// <param name="[in] afterName"> 変更後の名前 </param>
+	void Scene::ChangeObjectName(GameObjectPtr& object, const std::string& afterName)
 	{
 		// 変更前の種類名
 		std::string beforName = object->typeName;
@@ -205,7 +208,7 @@ namespace PokarinEngine
 	/// <para> 他のオブジェクトと重複しない名前を取得する </para>
 	/// <para> (重複していた場合は、後ろに数字を付ける) </para>
 	/// </summary>
-	/// <param name="objectName"> オブジェクト名 </param>
+	/// <param name="[in] typeName"> オブジェクトの種類名 </param>
 	/// <returns> 
 	/// <para> 重複しないように変更した名前 </para>
 	/// <para> (重複していないならそのままの名前) </para>
@@ -242,12 +245,10 @@ namespace PokarinEngine
 	}
 
 	/// <summary>
-	/// <para> 他のオブジェクトと重複しない識別番号を配列に追加する </para>
+	/// オブジェクトの識別番号を取得する
 	/// </summary>
-	/// <returns> 
-	/// <para> 重複しない識別番号(乱数) </para>
-	/// </returns>
-	int Scene::AddSingleObjectID()
+	/// <returns> 重複しない識別番号 </returns>
+	int Scene::GetSingleObjectID()
 	{
 		// オブジェクト数がint型の最大値まで達したらIDを生成しない
 		// INT_MIN ～ INT_MAXまで作れるが余裕を持つために半分にする
@@ -278,16 +279,18 @@ namespace PokarinEngine
 	/// </summary>
 	void Scene::UpdateGameObject()
 	{
-		// ------------------------------------------
 		// ゲームオブジェクトを更新
-		// ------------------------------------------
-
 		for (const auto& gameObject : gameObjectList)
 		{
 			if (!gameObject->IsDestroyed())
 			{
 				gameObject->Update(engine->IsPlayGame());
 			}
+		}
+
+		if (engine->IsPlayGame())
+		{
+			Collision::GameObjectCollision(gameObjectList);
 		}
 
 	} // UpdateGameObject
@@ -309,7 +312,7 @@ namespace PokarinEngine
 
 		// ゲームオブジェクトを全削除
 		gameObjectList.clear();
-		
+
 		// オブジェクトの種類名と識別番号を全削除
 		objectTypeNameList.clear();
 		objectIDList.clear();
@@ -318,8 +321,8 @@ namespace PokarinEngine
 	/// <summary>
 	/// ゲームオブジェクトを削除する
 	/// </summary>
-	/// <param name="object"> 削除するゲームオブジェクト </param>
-	void Scene::DestroyObject(GameObjectPtr object)
+	/// <param name="[in] object"> 削除するゲームオブジェクト </param>
+	void Scene::DestroyObject(GameObjectPtr& object)
 	{
 		// メインカメラは削除しない
 		if (object == mainCamera)
@@ -407,15 +410,15 @@ namespace PokarinEngine
 	/// <summary>
 	/// ゲームオブジェクトのパラメータをGPUにコピーする
 	/// </summary>
-	/// <param name="prog"> シェーダプログラムの管理番号 </param>
-	/// <param name="gameObject"> パラメータをコピーするゲームオブジェクト </param>
-	void CopyGameObjectParameters(GLuint prog, const GameObject& gameObject)
+	/// <param name="[in] prog"> シェーダプログラムの管理番号 </param>
+	/// <param name="[in] gameObject"> パラメータをコピーするゲームオブジェクト </param>
+	void CopyGameObjectParameters(GLuint prog, const GameObjectPtr& gameObject)
 	{
 		// 座標変換行列
-		Matrix4x4 transformMatrix = gameObject.transform->GetTransformMatrix();
+		Matrix4x4 transformMatrix = gameObject->transform->GetTransformMatrix();
 
 		// 法線変換行列
-		Matrix3x3 normalMatrix = gameObject.transform->GetNormalMatrix();
+		Matrix3x3 normalMatrix = gameObject->transform->GetNormalMatrix();
 
 		// ------------------------------------
 		// パラメータをGPUにコピー
@@ -423,7 +426,7 @@ namespace PokarinEngine
 
 		// オブジェクトの色
 		glProgramUniform4fv(prog,
-			UniformLocation::color, 1, &gameObject.color.r);
+			UniformLocation::color, 1, &gameObject->color.r);
 
 		// 座標変換行列
 		glProgramUniformMatrix4fv(
@@ -443,9 +446,9 @@ namespace PokarinEngine
 	/// <summary>
 	/// ゲームオブジェクトを描画する
 	/// </summary>
-	/// <param name="prog"> シェーダプログラムの管理番号 </param>
-	/// <param name="begin"> 描画するゲームオブジェクト配列の先頭イテレータ </param>
-	/// <param name="end"> 描画するゲームオブジェクト配列の末尾イテレータ </param>
+	/// <param name="[in] prog"> シェーダプログラムの管理番号 </param>
+	/// <param name="[in] begin"> 描画するゲームオブジェクト配列の先頭イテレータ </param>
+	/// <param name="[in] end"> 描画するゲームオブジェクト配列の末尾イテレータ </param>
 	void DrawGameObject(GLuint prog,
 		GameObjectList::const_iterator begin, GameObjectList::const_iterator end)
 	{
@@ -478,7 +481,7 @@ namespace PokarinEngine
 			glUseProgram(prog);
 
 			// パラメータをコピー
-			CopyGameObjectParameters(prog, *gameObject);
+			CopyGameObjectParameters(prog, gameObject);
 
 			// ------------- 図形を描画 --------------
 
@@ -487,14 +490,14 @@ namespace PokarinEngine
 			{
 				// 共有マテリアルを使って
 				// スタティックメッシュを描画
-				Draw(*gameObject->staticMesh, prog, gameObject->staticMesh->materials);
+				Draw(gameObject->staticMesh, prog, gameObject->staticMesh->materials);
 			}
 			// 固有マテリアルがある
 			else
 			{
 				// 固有マテリアルを使って
 				// スタティックメッシュを描画
-				Draw(*gameObject->staticMesh, prog, gameObject->materials);
+				Draw(gameObject->staticMesh, prog, gameObject->materials);
 			}
 		}
 	}
@@ -583,6 +586,49 @@ namespace PokarinEngine
 		// 描画
 		// UIにライティングはいらないのでアンリットシェーダを使う
 		DrawGameObject(progUnlit, overlayBegin, drawObjectList.end());
+	}
+
+#pragma endregion
+
+#pragma region Save
+
+	/// <summary>
+	/// シーンの情報をファイルに保存する
+	/// </summary>
+	void Scene::SaveScene() const
+	{
+		// 保存先のフォルダ
+		std::string folderName = "C:/PokarinEngine/My project/Scenes/" + name;
+
+		// シーン保存用のフォルダが存在しない場合は、作成する
+		std::filesystem::create_directories(folderName);
+
+		// ゲームオブジェクトの情報を保存する
+		for (const auto& gameObject : gameObjectList)
+		{
+			gameObject->SaveGameObject(folderName);
+		}
+	}
+
+	/// <summary>
+	/// シーンの情報をファイルから読み込む
+	/// </summary>
+	void Scene::LoadScene() const
+	{
+		// 保存先のフォルダ
+		std::string folderName = "C:/PokarinEngine/My project/Scenes/" + name;
+
+		// フォルダが存在しない場合は何もしない
+		if (!std::filesystem::exists(folderName))
+		{
+			return;
+		}
+
+		// ゲームオブジェクトの情報を保存する
+		for (const auto& gameObject : gameObjectList)
+		{
+			gameObject->SaveGameObject(folderName);
+		}
 	}
 
 #pragma endregion

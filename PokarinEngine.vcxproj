@@ -160,10 +160,14 @@
     </Xdcmake>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Src\Engine\Collision.cpp" />
+    <ClCompile Include="Src\Engine\Collision\Collision.cpp" />
+    <ClCompile Include="Src\Engine\Collision\Intersect.cpp" />
     <ClCompile Include="Src\Engine\Components\Camera.cpp" />
     <ClCompile Include="Src\Engine\Components\Colliders\AabbCollider.cpp" />
+    <ClCompile Include="Src\Engine\Components\Colliders\Collider.cpp" />
     <ClCompile Include="Src\Engine\Components\Colliders\SphereCollider.cpp" />
+    <ClCompile Include="Src\Engine\Components\Component.cpp" />
+    <ClCompile Include="Src\Engine\Components\ComponentName.cpp" />
     <ClCompile Include="Src\Engine\Components\Light.cpp" />
     <ClCompile Include="Src\Engine\Components\Rigidbody.cpp" />
     <ClCompile Include="Src\Engine\Components\Transform.cpp" />
@@ -174,6 +178,7 @@
     <ClCompile Include="Src\Engine\GameObject.cpp" />
     <ClCompile Include="Src\Engine\InputManager.cpp" />
     <ClCompile Include="Src\Engine\LightParameter.cpp" />
+    <ClCompile Include="Src\Engine\MainEditor\ComponentAdder.cpp" />
     <ClCompile Include="Src\Engine\MainEditor\GameView.cpp" />
     <ClCompile Include="Src\Engine\MainEditor\Hierarchy.cpp" />
     <ClCompile Include="Src\Engine\MainEditor\Inspector.cpp" />
@@ -199,6 +204,7 @@
     <ClCompile Include="Src\Main.cpp" />
     <ClCompile Include="Src\Packages\glad\glad.c" />
     <ClCompile Include="Src\Packages\ImGui\imgui.cpp" />
+    <ClCompile Include="Src\Packages\ImGui\ImGuizmo.cpp" />
     <ClCompile Include="Src\Packages\ImGui\imgui_demo.cpp" />
     <ClCompile Include="Src\Packages\ImGui\imgui_draw.cpp" />
     <ClCompile Include="Src\Packages\ImGui\imgui_impl_glfw.cpp" />
@@ -216,13 +222,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Engine\BufferObject.h" />
-    <ClInclude Include="Src\Engine\Collision.h" />
+    <ClInclude Include="Src\Engine\Collision\Collision.h" />
+    <ClInclude Include="Src\Engine\Collision\CollisionType.h" />
+    <ClInclude Include="Src\Engine\Collision\Intersect.h" />
     <ClInclude Include="Src\Engine\Color.h" />
     <ClInclude Include="Src\Engine\Components\Camera.h" />
     <ClInclude Include="Src\Engine\Components\Colliders\AabbCollider.h" />
     <ClInclude Include="Src\Engine\Components\Colliders\Collider.h" />
     <ClInclude Include="Src\Engine\Components\Colliders\SphereCollider.h" />
     <ClInclude Include="Src\Engine\Components\Component.h" />
+    <ClInclude Include="Src\Engine\Components\ComponentName.h" />
     <ClInclude Include="Src\Engine\Components\Light.h" />
     <ClInclude Include="Src\Engine\Components\Rigidbody.h" />
     <ClInclude Include="Src\Engine\Components\Transform.h" />
@@ -234,6 +243,7 @@
     <ClInclude Include="Src\Engine\Engine.h" />
     <ClInclude Include="Src\Engine\FramebufferObject.h" />
     <ClInclude Include="Src\Engine\GameObject.h" />
+    <ClInclude Include="Src\Engine\ImGuiFontSetter.h" />
     <ClInclude Include="Src\Engine\InputManager.h" />
     <ClInclude Include="Src\Engine\LightParameter.h" />
     <ClInclude Include="Src\Engine\MainEditor\GameView.h" />
@@ -246,6 +256,7 @@
     <ClInclude Include="Src\Engine\Math\Angle.h" />
     <ClInclude Include="Src\Engine\Math\Matrix.h" />
     <ClInclude Include="Src\Engine\Math\Vector.h" />
+    <ClInclude Include="Src\Engine\Math\VectorToJson.h" />
     <ClInclude Include="Src\Engine\Mesh.h" />
     <ClInclude Include="Src\Engine\NodeScript\NodeEditor.h" />
     <ClInclude Include="Src\Engine\NodeScript\NodeScript.h" />
@@ -263,15 +274,18 @@
     <ClInclude Include="Src\Engine\Shader\Shader.h" />
     <ClInclude Include="Src\Engine\Texture.h" />
     <ClInclude Include="Src\Engine\Time.h" />
+    <ClInclude Include="Src\Engine\UsingNames\UsingCollider.h" />
     <ClInclude Include="Src\Engine\UsingNames\UsingGameObject.h" />
     <ClInclude Include="Src\Engine\UsingNames\UsingMesh.h" />
     <ClInclude Include="Src\Engine\UsingNames\UsingNodeEditor.h" />
     <ClInclude Include="Src\Engine\VertexArrayObject.h" />
     <ClInclude Include="Src\Engine\Window.h" />
+    <ClInclude Include="Src\Packages\Enum\magic_enum.hpp" />
     <ClInclude Include="Src\Packages\glad\glad.h" />
     <ClInclude Include="Src\Packages\glad\khrplatform.h" />
     <ClInclude Include="Src\Packages\ImGui\imconfig.h" />
     <ClInclude Include="Src\Packages\ImGui\imgui.h" />
+    <ClInclude Include="Src\Packages\ImGui\ImGuizmo.h" />
     <ClInclude Include="Src\Packages\ImGui\imgui_impl_glfw.h" />
     <ClInclude Include="Src\Packages\ImGui\imgui_impl_opengl3.h" />
     <ClInclude Include="Src\Packages\ImGui\imgui_impl_opengl3_loader.h" />

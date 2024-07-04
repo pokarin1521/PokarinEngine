@@ -23,8 +23,9 @@ namespace PokarinEngine
 	/// <summary>
 	/// ノード作成時の処理
 	/// </summary>
-	/// <param name="nodeEditor"> 持ち主であるノードエディタ </param>
-	/// <param name="nodeID"> ノードの識別番号 </param>
+	/// <param name="[in] nodeEditor"> 持ち主であるノードエディタ </param>
+	/// <param name="[in] nodeID"> ノードの識別番号 </param>
+	/// <param name="[in] nodeTitle"> ノードのタイトル </param>
 	void Node::CreateNode(NodeEditor& nodeEditor, int nodeID, const std::string& nodeTitle)
 	{
 		// 持ち主であるノードエディタを設定
@@ -37,8 +38,8 @@ namespace PokarinEngine
 		title = nodeTitle;
 
 		// マウスカーソルの位置にノードを設置
-		ImVec2 mousePos = Input::Mouse::GetScreenPos(WindowID::NodeScript);
-		ImNodes::SetNodeScreenSpacePos(id, mousePos);
+		Vector2 mousePos = Input::Mouse::GetScreenPos(WindowID::NodeScript);
+		ImNodes::SetNodeScreenSpacePos(id, ImVec2(mousePos.x, mousePos.y));
 
 		// 初期化
 		Initialize();
@@ -85,7 +86,7 @@ namespace PokarinEngine
 	/// <summary>
 	/// ピンを作成する
 	/// </summary>
-	/// <param name="pinType"> ピンの種類 </param>
+	/// <param name="[in] pinType"> ピンの種類 </param>
 	/// <returns> 作成したピンの識別番号 </returns>
 	int Node::CreatePin(PinType pinType)
 	{
@@ -108,9 +109,9 @@ namespace PokarinEngine
 	/// <summary>
 	/// ピンの表示を開始する
 	/// </summary>
-	/// <param name="pinID"> ピンの識別番号 </param>
-	/// <param name="pinAttribute"> ピンの属性 </param>
-	/// <param name="pinShape"> ピンの形 </param>
+	/// <param name="[in] pinID"> ピンの識別番号 </param>
+	/// <param name="[in] pinAttribute"> ピンの属性 </param>
+	/// <param name="[in] pinShape"> ピンの形 </param>
 	void Node::BeginPin(int pinID, PinAttribute pinAttribute, PinShape pinShape)
 	{
 		// 入力用ピン
@@ -128,8 +129,8 @@ namespace PokarinEngine
 	/// <summary>
 	/// データピンの表示を開始する
 	/// </summary>
-	/// <param name="pinID"> ピンの識別番号 </param>
-	/// <param name="pinAttribute"> ピンの属性 </param>
+	/// <param name="[in] pinID"> ピンの識別番号 </param>
+	/// <param name="[in] pinAttribute"> ピンの属性 </param>
 	void Node::BeginDataPin(int pinID, PinAttribute pinAttribute)
 	{
 		BeginPin(pinID, pinAttribute, PinShape::Circle);
@@ -138,8 +139,8 @@ namespace PokarinEngine
 	/// <summary>
 	/// 実行ピンの表示を開始する
 	/// </summary>
-	/// <param name="pinID"> ピンの識別番号 </param>
-	/// <param name="pinAttribute"> ピンの属性 </param>
+	/// <param name="[in] pinID"> ピンの識別番号 </param>
+	/// <param name="[in] pinAttribute"> ピンの属性 </param>
 	void Node::BeginRunPin(int pinID, PinAttribute pinAttribute)
 	{
 		BeginPin(pinID, pinAttribute, PinShape::Triangle);
@@ -148,7 +149,7 @@ namespace PokarinEngine
 	/// <summary>
 	/// ピンの表示を終了する
 	/// </summary>
-	/// <param name="pinAttribute"> ピンの属性 </param>
+	/// <param name="[in] pinAttribute"> ピンの属性 </param>
 	void Node::EndPin(PinAttribute pinAttribute)
 	{
 		// 入力用ピン

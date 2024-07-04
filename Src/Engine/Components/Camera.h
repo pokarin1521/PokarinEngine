@@ -43,7 +43,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// 垂直視野角を設定する
 		/// </summary>
-		/// <param name="fovY"> 設定する垂直視野角(度数法) </param>
+		/// <param name="[in] fovY"> 設定する垂直視野角(度数法) </param>
 		void SetFovY(float fovY)
 		{
 			// 垂直視野角(度数法)を設定
@@ -76,30 +76,22 @@ namespace PokarinEngine
 			return drawRange.far;
 		}
 
-	public: // --------------------------- エディタ用 ----------------------------
+	private: // -------------------------- エディタ用 ----------------------------
 
 		/// <summary>
 		/// 情報を編集できるように表示する
 		/// </summary>
 		void InfoEditor() override;
 
-	public: // -------------------------- 名前の取得 -----------------------------
+	private: // ------------------------------ 保存 ------------------------------
 
 		/// <summary>
-		/// コンポーネントの名前を取得する
+		/// コンポーネントの情報を保存する
 		/// </summary>
-		/// <returns> コンポーネントの名前 </returns>
-		const std::string& GetName() override
-		{
-			return name;
-		}
+		/// <param name="[in] folderName"> 保存先のフォルダ </param>
+		void SaveInfo(const std::string& folderName) const override;
 
-	public: // ----------------------------- 名前 --------------------------------
-
-		// コンポーネントの名前
-		inline static const std::string name = "Camera";
-
-	private: // ---------------------------- 視野角 ------------------------------
+	private: // ----------------------------- 視野角 -----------------------------
 
 		// 垂直視野角(度数法)
 		float degFovY = 60;
@@ -113,7 +105,9 @@ namespace PokarinEngine
 
 	private: // ---------------------------- 描画範囲 ----------------------------
 
-		// 描画範囲
+		/// <summary>
+		/// 描画範囲
+		/// </summary>
 		struct DrawRange
 		{
 			// 最小描画範囲

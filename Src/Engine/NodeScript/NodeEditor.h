@@ -66,8 +66,8 @@ namespace PokarinEngine
 		/// <summary>
 		/// ノードのピンを作成する
 		/// </summary>
-		/// <param name="pinID"> ピンの持ち主になるノードの識別番号 </param>
-		/// <param name="pinType"> 作成するピンの種類 </param>
+		/// <param name="[in] pinID"> ピンの持ち主になるノードの識別番号 </param>
+		/// <param name="[in] pinType"> 作成するピンの種類 </param>
 		/// <returns> 作成したピンの識別番号 </returns>
 		int CreatePin(int nodeID, PinType pinType);
 
@@ -149,7 +149,7 @@ namespace PokarinEngine
 		/// ノード作成用ボタンの処理
 		/// </summary>
 		/// <typeparam name="T"> ノードクラス </typeparam>
-		/// <param name="nodeTitle"> ノードのタイトル </param>
+		/// <param name="[in] nodeTitle"> ノードのタイトル </param>
 		template <class T>
 		void CreateNodeButton(const std::string& nodeTitle)
 		{
@@ -161,6 +161,9 @@ namespace PokarinEngine
 			{
 				// 押されたらノード作成
 				CreateNode<T>(nodeTitle);
+
+				// ポップアップを閉じる
+				ImGui::CloseCurrentPopup();
 			}
 		}
 
@@ -168,7 +171,7 @@ namespace PokarinEngine
 		/// ノード作成用ボタンの処理
 		/// </summary>
 		/// <typeparam name="T"> ノードクラス </typeparam>
-		/// <param name="nodeTitle"> ノードのタイトル </param>
+		/// <param name="[in] nodeTitle"> ノードのタイトル </param>
 		template <class T>
 		void CreateNode(const std::string& nodeTitle)
 		{
@@ -198,16 +201,16 @@ namespace PokarinEngine
 		/// <summary>
 		/// ノードを追加する
 		/// </summary>
-		/// <param name="node"> 追加するノード </param>
+		/// <param name="[in] node"> 追加するノード </param>
 		/// <returns> 追加したノードの識別番号 </returns>
-		int AddNode(NodePtr node);
+		int AddNode(const NodePtr& node);
 
 	private: // ------------------------- ノード削除用 -------------------------
 
 		/// <summary>
 		/// ノードを削除する
 		/// </summary>
-		/// <param name="nodeID"> 削除するノードの識別番号 </param>
+		/// <param name="[in] nodeID"> 削除するノードの識別番号 </param>
 		void DestroyNode(int nodeID);
 
 	private: // ------------------------- ノード制御用 -------------------------
@@ -232,13 +235,13 @@ namespace PokarinEngine
 		/// <summary>
 		/// リンクする組を追加する
 		/// </summary>
-		/// <param name="linkPair"> 追加する組 </param>
+		/// <param name="[in] linkPair"> 追加する組 </param>
 		void AddLinkPair(const LinkPair& linkPair);
 
 		/// <summary>
 		/// 指定した組のリンクを削除する
 		/// </summary>
-		/// <param name="linkPairID"> 削除するリンクの識別番号 </param>
+		/// <param name="[in] linkPairID"> 削除するリンクの識別番号 </param>
 		void DestroyLink(int linkPairID);
 
 	private: // --------------------------- 終了処理 ---------------------------

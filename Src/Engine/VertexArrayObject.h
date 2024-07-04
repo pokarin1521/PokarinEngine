@@ -68,10 +68,10 @@ namespace PokarinEngine
 		/// <summary>
 		/// 頂点属性を設定
 		/// </summary>
-		/// <param name="index"> 設定する頂点属性の番号(0～15) </param>
-		/// <param name="size"> 要素のデータ数(float = 1, vec2 = 2, vec3 = 3) </param>
-		/// <param name="stride"> 次の頂点データにある同一要素までの間隔(バイト数) </param>
-		/// <param name="offset"> 頂点データ内における要素の位置(バイト数) </param>
+		/// <param name="[in] index"> 設定する頂点属性の番号(0～15) </param>
+		/// <param name="[in] size"> 要素のデータ数(float = 1, vec2 = 2, vec3 = 3) </param>
+		/// <param name="[in] stride"> 次の頂点データにある同一要素までの間隔(バイト数) </param>
+		/// <param name="[in] offset"> 頂点データ内における要素の位置(バイト数) </param>
 		void SetAttribute(GLuint index, GLuint size, size_t stride, size_t offset)
 		{
 			/* void glVertexAttribPointer(頂点属性配列のインデックス, データの要素数,

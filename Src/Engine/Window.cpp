@@ -31,7 +31,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// ウィンドウが作成されているかを取得する
 		/// </summary>
-		/// <param name="windowID"> ウィンドウ識別番号 </param>
+		/// <param name="[in] windowID"> ウィンドウ識別番号 </param>
 		/// <returns>
 		/// <para> true : 指定した番号のウィンドウが作成されている </para>
 		/// <para> false : 指定した番号のウィンドウが作成されていない </para>
@@ -45,8 +45,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// ウィンドウオブジェクトを作成する
 		/// </summary>
-		/// <param name="windowID"> ウィンドウ識別番号 </param>
-		/// <param name="windowTitle"> ウィンドウタイトル </param>
+		/// <param name="[in] windowID"> ウィンドウ識別番号 </param>
 		/// <returns>
 		/// <para> true : ウィンドウオブジェクトの作成に成功、または作成済み </para> 
 		/// <para> false : ウィンドウオブジェクトの作成に失敗 </para> 
@@ -148,8 +147,8 @@ namespace PokarinEngine
 		/// <summary>
 		/// ウィンドウを開く
 		/// </summary>
-		/// <param name="windowID"> ウィンドウ識別番号 </param>
-		/// <param name="windowTitle"> ウィンドウタイトル </param>
+		/// <param name="[in] windowID"> ウィンドウ識別番号 </param>
+		/// <param name="[in] windowTitle"> ウィンドウタイトル </param>
 		void OpenWindow(WindowID windowID, const char* windowTitle)
 		{
 			// ウィンドウオブジェクトがないので中断
@@ -181,7 +180,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// ウィンドウを閉じる
 		/// </summary>
-		/// <param name="windowID"> ウィンドウ識別番号 </param>
+		/// <param name="[in] windowID"> ウィンドウ識別番号 </param>
 		void CloseWindow(WindowID windowID)
 		{
 			// 指定したウィンドウが無い場合は何もしない
@@ -196,7 +195,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// ウィンドウの使用を開始する
 		/// </summary>
-		/// <param name="windowID"> 使用するウィンドウ識別番号 </param>
+		/// <param name="[in] windowID"> 使用するウィンドウ識別番号 </param>
 		/// <returns>
 		/// <para> true : 指定したウィンドウがアクティブ </para>
 		/// <para> false : 指定したウィンドウが非アクティブ </para>
@@ -255,7 +254,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// ウィンドウが閉じているかを取得する
 		/// </summary>
-		/// <param name="windowID"> ウィンドウ識別番号 </param>
+		/// <param name="[in] windowID"> ウィンドウ識別番号 </param>
 		/// <returns>
 		/// <para> true : ウィンドウが閉じている </para>
 		/// <para> false : ウィンドウが閉じていない </para>
@@ -275,7 +274,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// ウィンドウを取得する
 		/// </summary>
-		/// <param name="windowID"> ウィンドウ識別番号 </param>
+		/// <param name="[in] windowID"> ウィンドウ識別番号 </param>
 		/// <returns> 
 		/// <para> 指定したウィンドウのウィンドウオブジェクト </para>
 		/// <para> 指定した番号のウィンドウが無い場合は、メインウィンドウを返す </para>
@@ -302,7 +301,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// ウィンドウの大きさを取得する
 		/// </summary>
-		/// <param name="windowID"> ウィンドウ識別番号 </param>
+		/// <param name="[in] windowID"> ウィンドウ識別番号 </param>
 		/// <returns> 指定したウィンドウの大きさ </returns>
 		Vector2 GetWindowSize(WindowID windowID)
 		{
@@ -337,7 +336,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// ウィンドウのアスペクト比を取得する
 		/// </summary>
-		/// <param name="windowID"> ウィンドウ識別番号 </param>
+		/// <param name="[in] windowID"> ウィンドウ識別番号 </param>
 		/// <returns> ウィンドウのアスペクト比</returns>
 		float GetAspectRatio(WindowID windowID)
 		{
@@ -366,7 +365,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// 使用するウィンドウを設定する
 		/// </summary>
-		/// <param name="windowID"> ウィンドウ識別番号 </param>
+		/// <param name="[in] windowID"> ウィンドウ識別番号 </param>
 		void SetCurrentWindow(WindowID windowID)
 		{
 			glfwMakeContextCurrent(windowList[windowID]);

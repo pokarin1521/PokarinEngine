@@ -5,7 +5,8 @@
 #define GAMEOBJECT_H_INCLUDED
 
 #include "Components/Transform.h"
-#include "Components/Colliders/AabbCollider.h"
+#include "Components/ComponentName.h"
+
 #include "Texture.h"
 
 #include "Math/Vector.h"
@@ -13,6 +14,7 @@
 
 #include "UsingNames/UsingMesh.h"
 #include "UsingNames/UsingNodeEditor.h"
+#include "UsingNames/UsingCollider.h"
 
 #include <string>
 #include <vector>
@@ -27,6 +29,7 @@ namespace PokarinEngine
 	// ----------------
 
 	class Scene;
+	class Rigidbody;
 
 	/// int型としても使うので、普通の列挙型
 	/// <summary>
@@ -67,7 +70,6 @@ namespace PokarinEngine
 		/// ゲームオブジェクトにコンポーネント、コライダーを追加する 
 		/// </summary>
 		/// <typeparam name="T"> コンポーネントクラス </typeparam>
-		/// <param name="coponentName"> コンポーネントの名前 </param>
 		/// <returns> 
 		/// <para> first : 追加したコンポーネントのポインタ </para>
 		/// <para> second : 追加できたらtrue, 追加済みで追加できなかったらfalse </para> 
@@ -78,37 +80,63 @@ namespace PokarinEngine
 			// コライダーならtrue
 			constexpr bool isCollider = std::is_base_of_v<Collider, T>;
 
-			// 追加済みのコンポーネントか確認するために取得を試みる
-			auto component = GetComponent<T>();
+			// ---------------------------------------------------
+			// コンポーネントが追加済みか確認する
+			// ---------------------------------------------------
 
-			// コライダー以外で、追加済みのコンポーネントなら
-			// 取得したコンポーネントを返す
-			if (component && !isCollider)
+			// コライダーは複数追加可能なので確認しない
+			if (!isCollider)
 			{
-				return { component, false };
+				// 追加済みのコンポーネントか確認するために取得を試みる
+				auto component = GetComponent<T>();
+
+				// 追加済みのコンポーネントなら
+				// 取得したコンポーネントを返す
+				if (component)
+				{
+					return { component, false };
+				}
 			}
 
-			// コンポーネント作成
-			auto p = std::make_shared<T>();
+			// -------------------------------------------
+			// コンポーネントを追加する
+			// -------------------------------------------
 
-			// コンポーネントの所有者を登録
-			p->ownerObject = this;
+			// コンポーネント作成
+			auto component = std::make_shared<T>();
+
+			// コンポーネントの名前
+			const std::string componentName = ComponentName::Get<T>();
+
+			// コンポーネントの表示用タイトル
+			// 区別できるように、名前の後ろにゲームオブジェクトの識別番号を付ける
+			// (エディタでは非表示になるように、##を付ける)
+			const std::string componentTitle = componentName + "##" + std::to_string(id);
+
+			// コンポーネント識別番号
+			const int componentID = GetSingleComponentID();
+
+			// 追加時の処理を実行
+			component->AddComponent(*this, componentName, componentTitle, componentID);
 
 			// コライダーなのか判定する
 			// Tが判定するベースクラスと同じ、または基底クラスならtrueを返す
 			if constexpr (isCollider)
 			{
 				// コライダーの追加
-				colliderList.push_back(p);
+				colliderList.push_back(component);
 			}
 
 			// コンポーネントの追加
-			componentList.push_back(p);
+			componentList.push_back(component);
 
-			// コンポーネント追加時の処理を実行
-			p->Awake();
+			// 物理挙動用コンポーネントなら保持
+			if (std::is_base_of_v<Rigidbody, T>)
+			{
+				rigidbody = component;
+			}
 
-			return { p, true };
+			return { component, true };
 		}
 
 		/// <summary>
@@ -173,7 +201,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// 更新
 		/// </summary>
-		/// <param name="isPlayGame"> 作成中のゲームが再生中ならtrue </param>
+		/// <param name="[in] isPlayGame"> 作成中のゲームが再生中ならtrue </param>
 		void Update(bool isPlayGame);
 
 		/// <summary>
@@ -181,12 +209,17 @@ namespace PokarinEngine
 		/// </summary>
 		void OnDestroy();
 
-	public: // ------------------------- ノードエディタ -------------------------
+	public: // ---------------------------- エディタ ----------------------------
 
 		/// <summary>
 		/// ノードエディタを開く
 		/// </summary>
 		void OpenNodeEditor() const;
+
+		/// <summary>
+		/// コンポーネントをエディタに表示する
+		/// </summary>
+		void RenderComponent();
 
 	public: // --------------------------- 情報の取得 ---------------------------
 
@@ -235,16 +268,39 @@ namespace PokarinEngine
 			return id;
 		}
 
+		/// <summary>
+		/// 物理挙動用コンポーネントを持っているか取得する
+		/// </summary>
+		/// <returns>
+		/// <para> true : 持っている </para>
+		/// <para> false : 持っていない </para>
+		/// </returns>
+		bool HasRigidbody()
+		{
+			return rigidbody != nullptr;
+		}
+
+	public: // ----------------------------- 保存 ------------------------------
+
+		/// <summary>
+		/// ゲームオブジェクトの情報を保存する
+		/// </summary>
+		/// <param name="[in] sceneFolderName"> シーンフォルダ名 </param>
+		void SaveGameObject(const std::string& sceneFolderName) const;
+
 	public: // -------------------------- 基本の情報 ---------------------------
 
 		// 座標・回転・拡大率の制御用コンポーネント
 		TransformPtr transform;
 
 		// 物体の色
-		Color color = { 1,1,1,1 };
+		Color color = Color::white;
 
-
+		// 地面に着地しているならtrue
 		bool isGrounded = false;
+
+		// コライダー管理用配列
+		std::vector<ColliderPtr> colliderList;
 
 	public: // ------------------------- 描画系の情報 --------------------------
 
@@ -257,34 +313,20 @@ namespace PokarinEngine
 		// 描画の優先度
 		int renderQueue = renderQueue_geometry;
 
-	public: // ------------------------ コンポーネント -------------------------
+	private: // --------------------- コンポーネント追加 -----------------------
 
-		// コンポーネント管理用配列
-		std::vector<ComponentPtr> componentList;
-
-	public: // -------------------------- コライダー ---------------------------
-
-		// コライダー管理用配列
-		std::vector<ColliderPtr> colliderList;
-
-	private: // --------------------------- シーン -----------------------------
-
-		// 持ち主であるシーン
-		Scene* ownerScene = nullptr;
-
-	public: // ----------------------- ノードエディタ -------------------------
-
-		/* ヘッダにインクルードしたくないのでポインタ */
-
-		// ノードエディタ
-		NodeEditorPtr nodeEditor;
+		/// <summary>
+		/// コンポーネント識別番号を取得する
+		/// </summary>
+		/// <returns> 重複しない識別番号 </returns>
+		int GetSingleComponentID();
 
 	private: // ---------------------------- 更新 ------------------------------
 
 		/// <summary>
 		/// ゲームオブジェクトにあるコンポーネントを更新する
 		/// </summary>
-		/// <param name="isPlayGame"> 作成中のゲームが再生中ならtrue </param>
+		/// <param name="[in] isPlayGame"> 作成中のゲームが再生中ならtrue </param>
 		void UpdateComponent(bool isPlayGame);
 
 		/// <summary>
@@ -299,6 +341,27 @@ namespace PokarinEngine
 
 		// 識別番号
 		int id = 0;
+
+	private: // --------------------------- シーン -----------------------------
+
+		// 持ち主であるシーン
+		Scene* ownerScene = nullptr;
+
+	private: // ----------------------- ノードエディタ -------------------------
+
+		// ノードエディタ
+		NodeEditorPtr nodeEditor;
+
+	private: // ----------------------- コンポーネント -------------------------
+
+		// コンポーネント管理用配列
+		std::vector<ComponentPtr> componentList;
+
+		// コンポーネント識別番号の管理用配列
+		std::unordered_set<int> componentIDList;
+
+		// 物理挙動用コンポーネント
+		ComponentPtr rigidbody;
 
 	private: // ---------------------------- 名前 ------------------------------
 

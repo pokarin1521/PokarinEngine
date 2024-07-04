@@ -11,6 +11,7 @@ namespace PokarinEngine
 	/// <summary>
 	/// 初期化
 	/// </summary>
+	/// <param name="[in] engine"> エンジンクラスの参照 </param> 
 	void RenderView::Initialize(Engine& engine)
 	{
 		// ---------------------------

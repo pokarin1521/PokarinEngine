@@ -3,13 +3,17 @@
 */
 #include "SphereCollider.h"
 
+#include "ImGui/imgui.h"
+
+#include "../../EditorInfoRenderer.h"
+
 namespace PokarinEngine
 {
 	/// <summary>
 	/// 座標変換したコライダーを取得する
 	/// </summary>
-	/// <param name="transform"></param>
-	/// <returns></returns>
+	/// <param name="[in] transform"> 座標変換行列 </param>
+	/// <returns> 座標変換したコライダー </returns>
 	ColliderPtr SphereCollider::GetTransformedCollider(
 		const Matrix4x4& transform) const
 	{
@@ -18,11 +22,11 @@ namespace PokarinEngine
 		// -------------------------------
 
 		// 座標変換した球体コライダーを格納する変数
-		auto p = std::make_shared<SphereCollider>();
+		auto collider = std::make_shared<SphereCollider>();
 
 		// 座標変換
-		p->sphere.position = Vector3(
-			transform * Vector4(sphere.position, 1));
+		collider->sphere.center = Vector3(
+			transform * Vector4(sphere.center, 1));
 
 		// -------------------------------
 		// 球体の拡大率を反映
@@ -42,9 +46,33 @@ namespace PokarinEngine
 		const float maxScale = std::max({ scale.x, scale.y, scale.z });
 
 		// 拡大率を反映
-		p->sphere.radius = sphere.radius * maxScale;
+		collider->sphere.radius = sphere.radius * maxScale;
 
 		// 座標変換した球体コライダー
-		return p;
+		return collider;
+	}
+
+	/// <summary>
+	/// 情報を編集できるように表示する
+	/// </summary>
+	void SphereCollider::InfoEditor()
+	{
+		// ---------------------
+		// 重複
+		// ---------------------
+
+		ImGui::Checkbox("Is Trigger", &isTrigger);
+
+		// ---------------------
+		// 中心座標
+		// ---------------------
+
+		EditorInfoRenderer::DragVector3(sphere.center, "Center", "SphereCollider", sliderWidth);		
+		
+		// ---------------------
+		// 大きさ
+		// ---------------------
+
+		ImGui::DragFloat("Center##SphereCollider", &sphere.radius);
 	}
 }

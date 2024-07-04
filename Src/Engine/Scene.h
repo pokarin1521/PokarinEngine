@@ -47,9 +47,9 @@ namespace PokarinEngine
 		/// <summary>
 		/// シーン作成用コンストラクタ
 		/// </summary>
-		/// <param name="e"> エンジンクラスの参照 </param>
-		/// <param name="sceneID"> シーン識別番号 </param>
-		/// <param name="sceneName"> シーン名 </param>
+		/// <param name="[in] e"> エンジンクラスの参照 </param>
+		/// <param name="[in] sceneID"> シーン識別番号 </param>
+		/// <param name="[in] sceneName"> シーン名 </param>
 		Scene(Engine& e, int sceneID, const char* sceneName);
 
 		~Scene() = default;
@@ -68,10 +68,10 @@ namespace PokarinEngine
 		/// ゲームオブジェクトを作成する
 		/// </summary>
 		/// <typeparam name="T"> ゲームオブジェクトクラスまたはその派生 </typeparam>
-		/// <param name="name"> オブジェクトの名前 </param>
-		/// <param name="position"> オブジェクトを配置する座標 </param>
-		/// <param name="rotation"> オブジェクトの回転角度 </param>
-		/// <param name="staticMeshFile"> スタティックメッシュのファイル名 </param>
+		/// <param name="[in] name"> オブジェクトの名前 </param>
+		/// <param name="[in] position"> オブジェクトを配置する座標 </param>
+		/// <param name="[in] rotation"> オブジェクトの回転角度 </param>
+		/// <param name="[in] staticMeshFile"> スタティックメッシュのファイル名 </param>
 		/// <returns> 追加したゲームオブジェクトのポインタ </returns>
 		GameObjectPtr CreateGameObject(const std::string& name,
 			const Vector3& position = { 0,0,0 }, const Vector3& rotation = { 0,0,0 },
@@ -80,23 +80,23 @@ namespace PokarinEngine
 		/// <summary>
 		/// ゲームオブジェクトを複製する
 		/// </summary>
-		/// <param name="copyObject"> 複製元のゲームオブジェクト </param>
-		void CopyGameObject(GameObjectPtr object);
+		/// <param name="[in] copyObject"> 複製元のゲームオブジェクト </param>
+		void CopyGameObject(const GameObjectPtr& object);
 
 	public: // ------------------- ゲームオブジェクト制御 -------------------
 
 		/// <summary>
 		/// ゲームオブジェクトの名前を変更する
 		/// </summary>
-		/// <param name="object"> 名前を変更するオブジェクト </param>
-		/// <param name="afterName"> 変更後の名前 </param>
-		void ChangeObjectName(GameObjectPtr object, const std::string& afterName);
+		/// <param name="[out] object"> 名前を変更するオブジェクト </param>
+		/// <param name="[in] afterName"> 変更後の名前 </param>
+		void ChangeObjectName(GameObjectPtr& object, const std::string& afterName);
 
 		/// <summary>
 		/// ゲームオブジェクトを削除する
 		/// </summary>
-		/// <param name="object"> 削除するゲームオブジェクト </param>
-		void DestroyObject(GameObjectPtr object);
+		/// <param name="[in] object"> 削除するゲームオブジェクト </param>
+		void DestroyObject(GameObjectPtr& object);
 
 		/// <summary>
 		/// ゲームエンジンから全てのゲームオブジェクトを破棄する
@@ -156,6 +156,20 @@ namespace PokarinEngine
 			return name.c_str();
 		}
 
+	public: // ---------------------------- 保存 -----------------------------
+
+		/// <summary>
+		/// シーンの情報をファイルに保存する
+		/// </summary>
+		void SaveScene() const;
+
+	public: // -------------------------- 読み込み ---------------------------
+
+		/// <summary>
+		/// シーンの情報をファイルから読み込む
+		/// </summary>
+		void LoadScene() const;
+
 	private: // ----------------------- 型の別名を定義 -----------------------
 
 		// 数字付きのオブジェクト名配列
@@ -175,7 +189,7 @@ namespace PokarinEngine
 		/// <para> 他のオブジェクトと重複しない名前を取得する </para>
 		/// <para> (重複していた場合は、後ろに数字を付ける) </para>
 		/// </summary>
-		/// <param name="objectName"> オブジェクト名 </param>
+		/// <param name="[in] typeName"> オブジェクトの種類名 </param>
 		/// <returns> 
 		/// <para> 重複しないように変更した名前 </para>
 		/// <para> (重複していないならそのままの名前) </para>
@@ -183,10 +197,10 @@ namespace PokarinEngine
 		std::string GetSingleObjectName(const std::string& typeName) const;
 
 		/// <summary>
-		/// 他のオブジェクトと重複しない識別番号を配列に追加する
+		/// オブジェクトの識別番号を取得する
 		/// </summary>
-		/// <returns> 重複しない識別番号(乱数) </returns>
-		int AddSingleObjectID();
+		/// <returns> 重複しない識別番号 </returns>
+		int GetSingleObjectID();
 
 	private: // ---------------------- ゲームオブジェクト ----------------------
 

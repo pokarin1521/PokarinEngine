@@ -40,11 +40,6 @@ namespace PokarinEngine
 		float& operator[](size_t i) { return *(&r + i); }
 		float operator[](size_t i)const { return *(&r + i); }
 
-	public: // ------------------------- 変換 -------------------------
-
-		operator ImVec4() { return ImVec4(r, g, b, a); }
-		operator const ImVec4() const { return ImVec4(r, g, b, a); }
-
 	public: // ------------------------- 変数 -------------------------
 
 		// 赤・青・緑・透明度
@@ -67,10 +62,13 @@ namespace PokarinEngine
 	// 基本色の定義
 	// ---------------------------------
 
+	// 白色
 	inline const Color Color::white = { 1.0f, 1.0f, 1.0f, 1.0f };
 
+	// 黒色
 	inline const Color Color::black = { 0, 0, 0, 1.0f };
 
+	// 灰色
 	inline const Color Color::gray = { 0.2f, 0.2f, 0.2f, 1.0f };
 
 #pragma region Operator

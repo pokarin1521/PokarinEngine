@@ -3,6 +3,8 @@
 */
 #include "SceneView.h"
 
+#include "ImGui/ImGuizmo.h"
+
 #include "../Window.h"
 #include "../InputManager.h"
 #include "../Time.h"
@@ -33,11 +35,11 @@ namespace PokarinEngine
 		// ------------------------------------
 
 		// 正面ベクトル
-		Vector3 forward = { -cameraSin.y, cameraSin.x, cameraCos.x * cameraCos.y };
+		Vector3 front = sceneCamera.Front();
 
 		if (Input::GetKey(KeyCode::W))
 		{
-			sceneCamera.position += moveSpeed * forward;
+			sceneCamera.position += moveSpeed * front;
 		}
 
 		// ------------------------------------
@@ -46,7 +48,7 @@ namespace PokarinEngine
 
 		if (Input::GetKey(KeyCode::S))
 		{
-			sceneCamera.position -= moveSpeed * forward;
+			sceneCamera.position -= moveSpeed * front;
 		}
 
 		// ------------------------------------
@@ -126,8 +128,15 @@ namespace PokarinEngine
 	/// </summary>
 	void SceneView::Update()
 	{
-		// FBOからテクスチャを取得
+		// -------------------------------
+		// FBOからテクスチャを取得する
+		// -------------------------------
+
 		texture = ImTextureID(*fbo->GetTexture());
+
+		// -------------------------------
+		// ウィンドウを作成
+		// -------------------------------
 
 		// ウィンドウの丸みを無くす
 		ImGui::PushStyleVar(ImGuiStyleVar_::ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
@@ -179,8 +188,17 @@ namespace PokarinEngine
 			ImGui::End();
 		}
 
+		// ----------------------------------
 		// カラーバッファをクリア
+		// ----------------------------------
+
 		fbo->ClearColor(backGround);
+
+		// ----------------------------------
+		// ギズモを無効にする
+		// ----------------------------------
+
+		ImGuizmo::Enable(false);
 	}
 
 } // namespace PokarinEngine

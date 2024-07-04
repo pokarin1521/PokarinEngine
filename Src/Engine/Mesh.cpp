@@ -19,10 +19,10 @@ namespace PokarinEngine
 	/// <summary>
 	/// メッシュを描画する
 	/// </summary>
-	/// <param name="mesh"> 描画するスタティックメッシュ </param>
-	/// <param name="program"> 使用するシェーダプログラムの管理番号 </param>
-	/// <param name="materials"> 使用するマテリアル配列 </param>
-	void Draw(const StaticMesh& mesh, GLuint program, const MaterialList& materials)
+	/// <param name="[in] mesh"> 描画するスタティックメッシュ </param>
+	/// <param name="[in] program"> 使用するシェーダプログラムの管理番号 </param>
+	/// <param name="[in] materials"> 使用するマテリアル配列 </param>
+	void Draw(const StaticMeshPtr& mesh, GLuint program, const MaterialList& materials)
 	{
 		// カラーパラメータを取得
 		Color objectColor = Color(0);
@@ -43,7 +43,7 @@ namespace PokarinEngine
 		これに対応するため、StaticMesh構造体は
 		DrawParamsを配列で管理するようにしている */
 
-		for (const auto& drawParameter : mesh.drawParamList)
+		for (const auto& drawParameter : mesh->drawParamList)
 		{
 			// マテリアルを設定
 			// マテリアルがあるか確認
@@ -104,7 +104,7 @@ namespace PokarinEngine
 	/// <summary>
 	/// 共有マテリアル配列をコピー
 	/// </summary>
-	/// <param name="original"> コピー元マテリアル配列の持ち主 </param>
+	/// <param name="[in] original"> コピー元マテリアル配列の持ち主 </param>
 	/// <returns> 共有マテリアル配列のクローン </returns>
 	MaterialList CloneMaterialList(const StaticMeshPtr& original)
 	{
@@ -123,10 +123,10 @@ namespace PokarinEngine
 	/// <summary>
 	/// 欠けている法線を補う
 	/// </summary>
-	/// <param name="vertices"> 頂点配列 </param>
-	/// <param name="vertexCount"> 頂点配列の要素数 </param>
-	/// <param name="indices"> インデックス配列 </param>
-	/// <param name="indexCount"> インデックス配列の要素数 </param>
+	/// <param name="[in,out] vertices"> 頂点配列 </param>
+	/// <param name="[in] vertexCount"> 頂点配列の要素数 </param>
+	/// <param name="[in] indices"> インデックス配列 </param>
+	/// <param name="[in] indexCount"> インデックス配列の要素数 </param>
 	void FillMissingNormals(Vertex* vertices, size_t vertexCount,
 		const uint16_t* indices, size_t indexCount)
 	{
@@ -238,13 +238,66 @@ namespace PokarinEngine
 	}
 
 	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="[in] bufferSize"> バッファサイズ(バイト数) </param>
+	MeshBuffer::MeshBuffer(size_t bufferSize)
+	{
+		// バッファオブジェクトを作成
+		// 動的にメモリを確保出来るようにフラグを設定する
+		buffer = BufferObject::Create(
+			bufferSize, nullptr, GL_DYNAMIC_STORAGE_BIT);
+
+		// VAOを作成
+		vao = VertexArrayObject::Create();
+
+		/* 基本的にOpenGLの関数は、
+		OpenGLコンテキストに割り当てられているオブジェクトを操作する仕組み
+		そのため、関数を実行する前に、
+		操作したいオブジェクトをOpenGLコンテキストに割り当てる */
+
+		// VAOをOpenGLコンテキストにバインド
+		glBindVertexArray(*vao);
+
+		/* VBOは個々の頂点属性にバインドされる
+		これは頂点属性ごとに異なるVBOをバインド出来るということ
+
+		バインドは「glVertexAttribArray関数が実行されたとき」に行われる
+		glBindBuffer関数は「VBOをOpenGLコンテキストにバインド」するだけで、
+		頂点属性にはバインドされない
+
+		IBOの場合はglBindBuffer関数によってVAOにバインドされる */
+
+		// VBOとIBOを
+		// VAOとOpenGLコンテキストにバインド
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *buffer);
+		glBindBuffer(GL_ARRAY_BUFFER, *buffer);
+
+		// 頂点属性を設定
+		vao->SetAttribute(0, 3, sizeof(Vertex), offsetof(Vertex, position));
+		vao->SetAttribute(1, 2, sizeof(Vertex), offsetof(Vertex, texcoord));
+		vao->SetAttribute(2, 3, sizeof(Vertex), offsetof(Vertex, normal));
+
+		// 誤った操作が行われないようにバインドを解除
+		glBindVertexArray(0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		// スタティックメッシュの容量を予約
+		staticMeshList.reserve(100);
+
+		// 描画パラメータの容量を予約
+		drawParamList.reserve(100);
+	}
+
+	/// <summary>
 	/// MTLファイルを読み込む
 	/// </summary>
-	/// <param name="foldername"> OBJファイルのあるフォルダ名 </param>
-	/// <param name="filename"> MTLファイル名 </param>
+	/// <param name="[in] folderName"> OBJファイルのあるフォルダ名 </param>
+	/// <param name="[in] fileName"> MTLファイル名 </param>
 	/// <returns> MTLファイルに含まれるマテリアル配列 </returns>
 	std::vector<MaterialPtr> MeshBuffer::LoadMTL(
-		const std::string& foldername, const char* filename)
+		const std::string& folderName, const char* fileName)
 	{
 		// ---------------------
 		// MTLファイルを開く
@@ -253,7 +306,7 @@ namespace PokarinEngine
 		// MTLファイルのパス
 		// OBJファイルにおいて、MTLファイル名は相対パスで指定される
 		// そのため、OBJファイルのフォルダ名を補足する必要がある
-		const std::string fullpath = foldername + filename;
+		const std::string fullpath = folderName + fileName;
 		std::ifstream file(fullpath);
 
 		// ファイルが開けない
@@ -345,7 +398,7 @@ namespace PokarinEngine
 				// テクスチャファイルのパス
 				// MTLファイル名と同様に、map_Kd構文のテクスチャ名は相対パスで指定される
 				// そのため、OBJファイルのフォルダ名を補足する
-				const std::string fullpath = foldername + textureName;
+				const std::string fullpath = folderName + textureName;
 
 				// 指定したファイルまたはフォルダが
 				// 存在する
@@ -380,7 +433,7 @@ namespace PokarinEngine
 			if (sscanf(line.data(), " map_Ke %999s", &textureName) == 1)
 			{
 				// テクスチャファイル
-				const std::string filename = foldername + textureName;
+				const std::string filename = folderName + textureName;
 
 				// ファイルが存在する
 				if (std::filesystem::exists(filename))
@@ -406,67 +459,14 @@ namespace PokarinEngine
 	}
 
 	/// <summary>
-	/// コンストラクタ
-	/// </summary>
-	/// <param name="bufferSize"> バッファサイズ(バイト数) </param>
-	MeshBuffer::MeshBuffer(size_t bufferSize)
-	{
-		// バッファオブジェクトを作成
-		// 動的にメモリを確保出来るようにフラグを設定する
-		buffer = BufferObject::Create(
-			bufferSize, nullptr, GL_DYNAMIC_STORAGE_BIT);
-
-		// VAOを作成
-		vao = VertexArrayObject::Create();
-
-		/* 基本的にOpenGLの関数は、
-		OpenGLコンテキストに割り当てられているオブジェクトを操作する仕組み
-		そのため、関数を実行する前に、
-		操作したいオブジェクトをOpenGLコンテキストに割り当てる */
-
-		// VAOをOpenGLコンテキストにバインド
-		glBindVertexArray(*vao);
-
-		/* VBOは個々の頂点属性にバインドされる
-		これは頂点属性ごとに異なるVBOをバインド出来るということ
-
-		バインドは「glVertexAttribArray関数が実行されたとき」に行われる
-		glBindBuffer関数は「VBOをOpenGLコンテキストにバインド」するだけで、
-		頂点属性にはバインドされない
-
-		IBOの場合はglBindBuffer関数によってVAOにバインドされる */
-
-		// VBOとIBOを
-		// VAOとOpenGLコンテキストにバインド
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *buffer);
-		glBindBuffer(GL_ARRAY_BUFFER, *buffer);
-
-		// 頂点属性を設定
-		vao->SetAttribute(0, 3, sizeof(Vertex), offsetof(Vertex, position));
-		vao->SetAttribute(1, 2, sizeof(Vertex), offsetof(Vertex, texcoord));
-		vao->SetAttribute(2, 3, sizeof(Vertex), offsetof(Vertex, normal));
-
-		// 誤った操作が行われないようにバインドを解除
-		glBindVertexArray(0);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-		// スタティックメッシュの容量を予約
-		staticMeshList.reserve(100);
-
-		// 描画パラメータの容量を予約
-		drawParamList.reserve(100);
-	}
-
-	/// <summary>
 	/// OBJファイルを読み込む
 	/// </summary>
-	/// <param name="filename"> OBJファイル名 </param>
+	/// <param name="[in] fileName"> OBJファイル名 </param>
 	/// <returns> 
 	/// <para> filenameから作成したスタティックメッシュ </para>
 	/// <para> ファイルを開けなかった場合はnullptrを返す </para>
 	/// </returns>
-	StaticMeshPtr MeshBuffer::LoadOBJ(const char* filename)
+	StaticMeshPtr MeshBuffer::LoadOBJ(const char* fileName)
 	{
 		// --------------------------------------------------------
 		// 以前に読み込んだファイルなら、作成済みのメッシュを返す
@@ -475,7 +475,7 @@ namespace PokarinEngine
 			// ファイル名と関連付けられたデータがあるか調べる
 
 			// キーで検索
-			auto itr = staticMeshList.find(filename);
+			auto itr = staticMeshList.find(fileName);
 
 			// 見つかったらメッシュを返す
 			if (itr != staticMeshList.end())
@@ -488,7 +488,7 @@ namespace PokarinEngine
 		// ------------------------------
 		// OBJファイルを開く
 		// ------------------------------
-		std::ifstream file(filename);
+		std::ifstream file(fileName);
 
 		// ファイルが開けない
 		if (!file)
@@ -500,7 +500,7 @@ namespace PokarinEngine
 		// ------ OBJファイルのあるフォルダ名を取得 -------
 
 		// OBJファイルのあるフォルダ名
-		std::string foldername(filename);
+		std::string foldername(fileName);
 		{
 			// 一番最後の区切り文字の位置を探す
 			const size_t p = foldername.find_last_of("\\ /");
@@ -996,14 +996,14 @@ namespace PokarinEngine
 		// ------------------------
 
 		// OBJファイル名を登録
-		pMesh->filename = filename;
+		pMesh->filename = fileName;
 
 		// 作成したメッシュを管理用配列に追加
 		staticMeshList.emplace(pMesh->filename, pMesh);
 
 		// 読み込みを通知
 		LOG("%sを読み込みました(頂点数 = %d, インデックス数 = %d)",
-			filename, vertices.size(), indices.size());
+			fileName, vertices.size(), indices.size());
 
 		// 作成したメッシュを返す
 		return pMesh;
@@ -1012,11 +1012,11 @@ namespace PokarinEngine
 	/// <summary>
 	/// 頂点データの追加
 	/// </summary>
-	/// <param name="vertices"> 頂点データ </param>
-	/// <param name="vertexBytes"> 頂点データのバイト数 </param>
-	/// <param name="indices"> インデックスデータ </param>
-	/// <param name="indexBytes"> インデックスデータのバイト数 </param>
-	/// <param name="mode"> プリミティブの種類(デフォルトで三角形) </param>
+	/// <param name="[in] vertices"> 頂点データ </param>
+	/// <param name="[in] vertexBytes"> 頂点データのバイト数 </param>
+	/// <param name="[in] indices"> インデックスデータ </param>
+	/// <param name="[in] indexBytes"> インデックスデータのバイト数 </param>
+	/// <param name="[in] mode"> プリミティブの種類(デフォルトで三角形) </param>
 	void MeshBuffer::AddVertexData(const Vertex* vertices, size_t vertexBytes,
 		const uint16_t* indices, size_t indexBytes, GLenum mode)
 	{
@@ -1143,15 +1143,15 @@ namespace PokarinEngine
 	/// <summary>
 	/// スタティックメッシュを取得する
 	/// </summary>
-	/// <param name="filename"> ファイル名 </param>
+	/// <param name="[in] fileName"> ファイル名 </param>
 	/// <returns> ファイル名が一致するスタティックメッシュ </returns>
-	StaticMeshPtr MeshBuffer::GetStaticMesh(const char* filename)
+	StaticMeshPtr MeshBuffer::GetStaticMesh(const char* fileName)
 	{
 		// スタティックメッシュが登録されているなら検索
 		if (!staticMeshList.empty())
 		{
 			// 検索結果
-			auto itr = staticMeshList.find(filename);
+			auto itr = staticMeshList.find(fileName);
 
 			// 要素が見つかった
 			if (itr != staticMeshList.end())
@@ -1163,7 +1163,7 @@ namespace PokarinEngine
 
 		// 見つからない場合
 		// 初期化時に読み込めていない可能性があるので再読み込み
-		StaticMeshPtr obj = LoadOBJ(filename);
+		StaticMeshPtr obj = LoadOBJ(fileName);
 
 		// 読み込んだスタティックメッシュを返す
 		return obj;

@@ -30,18 +30,18 @@ namespace PokarinEngine
 		/// <summary>
 		/// シェーダファイルを読み込んでコンパイルする
 		/// </summary>
-		/// <param name="type"> シェーダの種類 </param>
-		/// <param name="filename"> シェーダファイル名 </param>
+		/// <param name="[in] type"> シェーダの種類 </param>
+		/// <param name="[in] fileName"> シェーダファイル名 </param>
 		/// <returns> シェーダの管理番号 </returns>
-		GLuint Compile(GLenum type, const char* filename)
+		GLuint Compile(GLenum type, const char* fileName)
 		{
 			// バイナリモードを指定
 			// 改行文字の変換等を行わないので、読み込みが速い
-			std::ifstream file(filename, std::ios::binary);
+			std::ifstream file(fileName, std::ios::binary);
 
 			if (!file)
 			{
-				LOG_ERROR("%sを開けません", filename);
+				LOG_ERROR("%sを開けません", fileName);
 
 				return 0;
 			}
@@ -49,7 +49,7 @@ namespace PokarinEngine
 			//	ファイルを読み込む
 
 			// ファイル全体を一気に読み込むために、ファイルサイズ取得
-			const size_t filesize = std::filesystem::file_size(filename);
+			const size_t filesize = std::filesystem::file_size(fileName);
 			std::vector<char> buffer(filesize);
 
 			// ファイルを読み込み、bufferに格納
@@ -73,9 +73,9 @@ namespace PokarinEngine
 		/// <summary>
 		/// 頂点シェーダとフラグメントシェーダをリンク
 		/// </summary>
-		/// <param name="prog"> プログラムオブジェクトの管理番号 </param>
-		/// <param name="vertex"> 頂点シェーダの管理番号 </param>
-		/// <param name="fragment"> フラグメントシェーダの管理番号 </param>
+		/// <param name="[in] prog"> プログラムオブジェクトの管理番号 </param>
+		/// <param name="[in] vertex"> 頂点シェーダの管理番号 </param>
+		/// <param name="[in] fragment"> フラグメントシェーダの管理番号 </param>
 		void Link(GLuint prog, GLuint vertex, GLuint fragment)
 		{
 			// 頂点シェーダを指定
@@ -147,9 +147,9 @@ namespace PokarinEngine
 		/// <summary>
 		/// シェーダプログラムの管理番号を取得する
 		/// </summary>
-		/// <param name="progType"> シェーダプログラムの種類 </param>
+		/// <param name="[in] progType"> シェーダプログラムの種類 </param>
 		/// <returns> 指定した種類のシェーダプログラムの管理番号 </returns>
-		GLuint GetProgram(const ProgType& progType)
+		GLuint GetProgram(ProgType progType)
 		{
 			return progList[progType];
 		}
@@ -161,7 +161,7 @@ namespace PokarinEngine
 		/// <para> 全てのシェーダプログラムの管理番号 </para>
 		/// <para> [シェーダプログラムの種類, シェーダプログラムの管理番号] </para>
 		/// </returns>
-		const ProgList& GetAllProgram()
+		ProgList GetAllProgram()
 		{
 			return progList;
 		}

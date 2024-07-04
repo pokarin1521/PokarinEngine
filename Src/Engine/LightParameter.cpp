@@ -12,7 +12,7 @@
 namespace PokarinEngine
 {
 	/// <summary>
-	/// ライトのパラメータ管理用
+	/// ライトパラメータ管理用
 	/// </summary>
 	namespace LightParameter
 	{
@@ -37,24 +37,67 @@ namespace PokarinEngine
 
 		// 環境光(青空をイメージ)
 		// 方向を持たないので色だけ
-		Color ambientLight = { 0.05f, 0.15f, 0.25f, 1.0f };
+		const Color ambientLight = { 0.05f, 0.15f, 0.25f, 1.0f };
+
+		// 標準シェーダの管理番号
+		GLuint progStandard = 0;
 
 		// -----------------------------
 		// 関数
 		// -----------------------------
 
+		/// ここでしか使わないので、cppのみに書く
+		/// <summary>
+		/// 平行光源のライトデータをGPUにコピーする
+		/// </summary>
+		void CopyDirectionalLight()
+		{
+			// 標準シェーダの管理番号
+			static const GLuint progStandard = Shader::GetProgram(Shader::ProgType::Standard);
+
+			// 平行光源がない場合は
+			// 黒色の光源としてGPUにコピーする
+			if (!directionalLight)
+			{
+				glProgramUniform3fv(progStandard,
+					UniformLocation::directionalLightColor, 1, &Color::black.r);
+
+				return;
+			}
+
+			// 色
+			const Color color = directionalLight->color * directionalLight->intensity;
+
+			// 色をコピー
+			glProgramUniform3fv(progStandard,
+				UniformLocation::directionalLightColor, 1, &color.r);
+
+			// 向きをコピー
+			glProgramUniform3fv(progStandard,
+				UniformLocation::directionalLightDirection, 1, &directionalLight->direction.x);
+		}
+
 		/// <summary>
 		/// ライト情報をGPUにコピーする
 		/// </summary>
-		/// <param name="mainCamera"> カメラ </param>
+		/// <param name="[in] mainCamera"> カメラ </param>
 		void CopyGPU(const GameObject& mainCamera)
 		{
-			// ------------------------------------
-			// 環境光をGPUメモリーにコピー
-			// ------------------------------------
+			// -----------------------------------------------
+			// 平行光源のライトデータをGPUにコピー
+			// -----------------------------------------------
+			
+			CopyDirectionalLight();
 
-			// シェーダプログラム(標準)の管理番号
-			const GLuint progStandard = Shader::GetProgram(Shader::ProgType::Standard);
+			// ----------------------------------- 
+			// 環境光のデータをGPUにコピー 
+			// -----------------------------------
+
+			// 標準シェーダの管理番号
+			static const GLuint progStandard = Shader::GetProgram(Shader::ProgType::Standard);
+
+			glProgramUniform3fv(progStandard,
+				UniformLocation::ambientLight, 1, &ambientLight.r);
 
 			// -------------------------
 			// 使用中ライトを確認
@@ -68,21 +111,14 @@ namespace PokarinEngine
 				return;
 			}
 
-			// -------------------------------
-			// カメラの正面ベクトルを計算
-			// -------------------------------
-
-			// カメラの正面ベクトル
-			const Vector3 front = {
-				-sin(mainCamera.transform->rotation.y),
-				0,
-				-cos(mainCamera.transform->rotation.y) };
-
 			// -----------------------------------------
 			// カメラからライトまでの距離を計算
 			// -----------------------------------------
 
 			// -------------- 下準備 ----------------
+
+			// カメラの正面ベクトル
+			const Vector3 front = mainCamera.transform->Front();
 
 			// カメラからライトまでの距離を管理する構造体
 			struct Distance
@@ -105,7 +141,8 @@ namespace PokarinEngine
 			// 使用中ライトの要素番号
 			for (auto& light : lightList)
 			{
-				// 平行光源は距離関係なく使うので別の変数で保持
+				// 平行光源は距離関係なく使うので
+				// 別で処理ができるように変数に保持して次のライトへ
 				if (light->type == Type::directional)
 				{
 					directionalLight = light;
@@ -130,25 +167,6 @@ namespace PokarinEngine
 				distanceList.push_back({ distance, light });
 
 			} // for indexs
-
-			// ------------ 平行光源のデータをGPUにコピー -------------
-
-			if (directionalLight)
-			{
-				// 色
-				const Color color = directionalLight->color * directionalLight->intensity;
-
-				// GPUにコピー
-				glProgramUniform3fv(progStandard,
-					UniformLocation::directionalLightColor, 1, &color.r);
-
-				glProgramUniform3fv(progStandard,
-					UniformLocation::directionalLightDirection, 1, &directionalLight->direction.x);
-			}
-
-
-			glProgramUniform3fv(progStandard,
-				UniformLocation::ambientLight, 1, &ambientLight.r);
 
 			// ----------- 画面に影響するライトがなければ -------------
 			// ----------- ライト数を0に設定する		  -------------
@@ -231,7 +249,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// ライトデータを追加する
 		/// </summary>
-		/// <param name="lightData"> 追加するライトデータ </param>
+		/// <param name="[in] lightData"> 追加するライトデータ </param>
 		void AddLightData(LightData& lightData)
 		{
 			lightList.emplace(&lightData);
@@ -240,9 +258,17 @@ namespace PokarinEngine
 		/// <summary>
 		/// ライトデータを削除する
 		/// </summary>
-		/// <param name="lightData"> 削除するライトデータ </param>
+		/// <param name="[in] lightData"> 削除するライトデータ </param>
 		void EraseLightData(LightData& lightData)
 		{
+			// 平行光源のライトデータなら
+			// 使用中の平行光源を削除する
+			if (directionalLight == &lightData)
+			{
+				directionalLight = nullptr;
+			}
+
+			// ライトデータを削除する
 			lightList.erase(&lightData);
 		}
 

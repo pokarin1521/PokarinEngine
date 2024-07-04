@@ -14,7 +14,7 @@
 namespace PokarinEngine
 {
 	/// <summary>
-	/// ライトのパラメータ管理用
+	/// ライトパラメータ管理用
 	/// </summary>
 	namespace LightParameter
 	{
@@ -75,19 +75,19 @@ namespace PokarinEngine
 		/// <summary>
 		/// ライト情報をGPUにコピーする
 		/// </summary>
-		/// <param name="mainCamera"> メインカメラ </param>
+		/// <param name="[in] mainCamera"> メインカメラ </param>
 		void CopyGPU(const GameObject& mainCamera);
 
 		/// <summary>
 		/// ライトデータを追加する
 		/// </summary>
-		/// <param name="lightData"> 追加するライトデータ </param>
+		/// <param name="[in] lightData"> 追加するライトデータ </param>
 		void AddLightData(LightData& lightData);
 
 		/// <summary>
 		/// ライトデータを削除する
 		/// </summary>
-		/// <param name="lightData"> 削除するライトデータ </param>
+		/// <param name="[in] lightData"> 削除するライトデータ </param>
 		void EraseLightData(LightData& lightData);
 
 	} // namespace LightData

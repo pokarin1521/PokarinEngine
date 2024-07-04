@@ -23,6 +23,7 @@ namespace PokarinEngine
 	/// </summary>
 	void Light::Awake()
 	{
+		lightData.type = LightParameter::Type::directional;
 		LightParameter::AddLightData(lightData);
 	}
 
@@ -95,7 +96,7 @@ namespace PokarinEngine
 	/// </summary>
 	void Light::InfoEditor()
 	{
-		ImGui::Text("Light Information");
+		ImGui::Text("DirectionalLight");
 	}
 
 } // namespace PokarinEngine

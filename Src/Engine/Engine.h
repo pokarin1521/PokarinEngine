@@ -7,9 +7,12 @@
 
 #include "glad/glad.h"
 
+#include "MainEditor/MainEditor.h"
+
 #include "Scene.h"
 #include "GameObject.h"
 #include "Mesh.h"
+
 #include "Math/Vector.h"
 
 #include "Shader/Shader.h"
@@ -47,7 +50,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// シーンを作成する
 		/// </summary>
-		/// <param name="name"> シーン名 </param>
+		/// <param name="[in] name"> シーン名 </param>
 		/// <returns> 作成したシーンのポインタ </returns>
 		ScenePtr CreateScene(const char* name);
 
@@ -80,18 +83,18 @@ namespace PokarinEngine
 		/// <para> 0 : 正常に実行が完了した </para>
 		/// <para> 0以外 : エラーが発生した </para>
 		/// </returns>
-		bool Run();
+		int Run();
 
 	public: // ---------------------- スタティックメッシュ ----------------------
 
 		/// <summary>
 		/// スタティックメッシュを取得する
 		/// </summary>
-		/// <param name="name"> ファイル名 </param>
+		/// <param name="[in] fileName"> ファイル名 </param>
 		/// <returns> ファイル名前が一致するスタティックメッシュ </returns>
-		StaticMeshPtr GetStaticMesh(const char* filename)
+		StaticMeshPtr GetStaticMesh(const char* fileName)
 		{
-			return meshBuffer->GetStaticMesh(filename);
+			return meshBuffer->GetStaticMesh(fileName);
 		}
 
 	public: // -------------------------- テクスチャ -----------------------------
@@ -100,17 +103,15 @@ namespace PokarinEngine
 		/// <para> テクスチャを取得する </para>
 		/// <para> 作成する場合、サイズを指定する </para>
 		/// </summary>
-		/// <param name="name"> テクスチャファイル名 </param>
-		///	<param name="width"> 作成する場合、テクスチャ幅を指定する </param>
-		///	<param name="height"> 作成する場合、テクスチャの高さを指定する </param>
+		/// <param name="[in] name"> テクスチャファイル名 </param>
 		/// <returns> 名前がnameと一致するテクスチャ </returns>
 		TexturePtr GetTexture(const char* name);
 
 		/// <summary>
 		/// テクスチャを取得する
 		/// </summary>
-		/// <param name="width"> 幅 </param>
-		/// <param name="height"> 高さ </param>
+		/// <param name="[in] width"> 幅 </param>
+		/// <param name="[in] height"> 高さ </param>
 		/// <returns> 指定した大きさのテクスチャ </returns>
 		TexturePtr GetTexture(GLsizei width, GLsizei height);
 
@@ -119,8 +120,8 @@ namespace PokarinEngine
 		/// <summary>
 		/// スカイスフィアを描画する
 		/// </summary>
-		/// <param name="skySphereMaterial"> スカイスフィア用マテリアル </param>
-		void DrawSkySphere(const MaterialPtr skySphereMaterial = nullptr);
+		/// <param name="[in] skySphereMaterial"> スカイスフィア用マテリアル </param>
+		void DrawSkySphere(const MaterialPtr& skySphereMaterial = nullptr);
 
 	public: // ------------------------- ゲームの再生 -------------------------
 
@@ -170,9 +171,9 @@ namespace PokarinEngine
 		/// <summary>
 		/// 描画用ビューにカメラからの描画情報を保持させる
 		/// </summary>
-		/// <param name="camera"> 使用するカメラ </param>
-		/// <param name="renderView"> 描画情報を保持する描画用ビュー </param>
-		void DrawRenderView(const Transform& camera, const RenderView& view);
+		/// <param name="[in] camera"> 使用するカメラ </param>
+		/// <param name="[in] renderView"> 描画情報を保持する描画用ビュー </param>
+		void DrawRenderView(const Transform& camera, const RenderView& renderView);
 
 	private: // ---------------------- 図形データ ------------------------
 
@@ -211,6 +212,11 @@ namespace PokarinEngine
 
 		// シーンの最大数
 		const int sceneMax = 1000;
+
+	private: // -------------------- メインエディタ --------------------
+
+		// メインエディタ
+		MainEditor mainEditor;
 
 	private: // ------------------- ゲーム再生確認用 -------------------
 

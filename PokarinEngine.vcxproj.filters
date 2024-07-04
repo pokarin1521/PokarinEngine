@@ -30,9 +30,6 @@
     <Filter Include="Src\Engine\Mesh">
       <UniqueIdentifier>{b6d4782b-e801-45c8-b993-601bf878bdff}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Engine\Random">
-      <UniqueIdentifier>{ff0aad65-a468-4205-910f-763d3888fa53}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Src\Engine\Components">
       <UniqueIdentifier>{da93753a-de43-4a7b-a5b6-ecf28c31b62d}</UniqueIdentifier>
     </Filter>
@@ -108,9 +105,6 @@
     <Filter Include="Src\Engine\Time">
       <UniqueIdentifier>{ebad3738-f9c0-4f35-975b-0b49c11b71a2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Engine\EditorInfoSetter">
-      <UniqueIdentifier>{f3c12434-fbe2-4daf-902d-22ee8b41463f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Src\Packages">
       <UniqueIdentifier>{97db61aa-2d1e-4021-b95a-5d370b9152d1}</UniqueIdentifier>
     </Filter>
@@ -132,6 +126,18 @@
     <Filter Include="Src\Engine\Color">
       <UniqueIdentifier>{356c702c-94a0-4877-b425-8acd29d21054}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Engine\Random">
+      <UniqueIdentifier>{ff0aad65-a468-4205-910f-763d3888fa53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Engine\EditorInfoRenderer">
+      <UniqueIdentifier>{f3c12434-fbe2-4daf-902d-22ee8b41463f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Engine\ImGuiSetter">
+      <UniqueIdentifier>{5e4df9e4-c431-45f1-9bbe-81dcc5ddc8c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Packages\Enum">
+      <UniqueIdentifier>{dba27f82-ef46-4d23-9dc3-aebcbab4ec56}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Main.cpp">
@@ -142,9 +148,6 @@
     </ClCompile>
     <ClCompile Include="Src\Engine\Texture.cpp">
       <Filter>Src\Engine\Texture</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Engine\Collision.cpp">
-      <Filter>Src\Engine\Collision</Filter>
     </ClCompile>
     <ClCompile Include="Src\Engine\Engine.cpp">
       <Filter>Src\Engine\Engine</Filter>
@@ -231,7 +234,7 @@
       <Filter>Src\Engine\Editor\NodeEditor\Nodes\Functional</Filter>
     </ClCompile>
     <ClCompile Include="Src\Engine\EditorInfoRenderer.cpp">
-      <Filter>Src\Engine\EditorInfoSetter</Filter>
+      <Filter>Src\Engine\EditorInfoRenderer</Filter>
     </ClCompile>
     <ClCompile Include="Src\Engine\NodeScript\Nodes\Functional\AddWorldPositionNode.cpp">
       <Filter>Src\Engine\Editor\NodeEditor\Nodes\Functional</Filter>
@@ -272,6 +275,27 @@
     <ClCompile Include="Src\Engine\NodeScript\NodeCreator.cpp">
       <Filter>Src\Engine\Editor\NodeEditor</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Engine\Components\Component.cpp">
+      <Filter>Src\Engine\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\MainEditor\ComponentAdder.cpp">
+      <Filter>Src\Engine\Editor\MainEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\Collision\Intersect.cpp">
+      <Filter>Src\Engine\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\Collision\Collision.cpp">
+      <Filter>Src\Engine\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\Components\Colliders\Collider.cpp">
+      <Filter>Src\Engine\Components\Colliders</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Packages\ImGui\ImGuizmo.cpp">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\Components\ComponentName.cpp">
+      <Filter>Src\Engine\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Res\Shader\Standard.frag">
@@ -309,9 +333,6 @@
     </ClInclude>
     <ClInclude Include="Src\Engine\BufferObject.h">
       <Filter>Src\Engine\Buffer</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Engine\Collision.h">
-      <Filter>Src\Engine\Collision</Filter>
     </ClInclude>
     <ClInclude Include="Src\Engine\Random.h">
       <Filter>Src\Engine\Random</Filter>
@@ -428,7 +449,7 @@
       <Filter>Src\Engine\Editor\NodeEditor\Nodes\Functional</Filter>
     </ClInclude>
     <ClInclude Include="Src\Engine\EditorInfoRenderer.h">
-      <Filter>Src\Engine\EditorInfoSetter</Filter>
+      <Filter>Src\Engine\EditorInfoRenderer</Filter>
     </ClInclude>
     <ClInclude Include="Src\Engine\NodeScript\Nodes\Functional\AddWorldPositionNode.h">
       <Filter>Src\Engine\Editor\NodeEditor\Nodes\Functional</Filter>
@@ -492,6 +513,33 @@
     </ClInclude>
     <ClInclude Include="Src\Engine\Color.h">
       <Filter>Src\Engine\Color</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\ImGuiFontSetter.h">
+      <Filter>Src\Engine\ImGuiSetter</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\Collision\CollisionType.h">
+      <Filter>Src\Engine\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\Collision\Intersect.h">
+      <Filter>Src\Engine\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\Collision\Collision.h">
+      <Filter>Src\Engine\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\UsingNames\UsingCollider.h">
+      <Filter>Src\Engine\UsingNames</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Packages\ImGui\ImGuizmo.h">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\Math\VectorToJson.h">
+      <Filter>Src\Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Packages\Enum\magic_enum.hpp">
+      <Filter>Src\Packages\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\Components\ComponentName.h">
+      <Filter>Src\Engine\Components</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

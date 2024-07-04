@@ -7,6 +7,7 @@
 
 #include "../Engine.h"
 #include "../Scene.h"
+#include "../GameObject.h"
 
 #include "../InputManager.h"
 
@@ -14,319 +15,270 @@
 
 namespace PokarinEngine
 {
+#pragma region Hierarchy
+
 	/// <summary>
-	/// 変数
+	/// 初期化
 	/// </summary>
-	namespace
+	/// <param name="[in] engine"> エンジンクラスの参照 </param>
+	void Hierarchy::Initialize(Engine& e)
 	{
-		// 非選択時の要素番号
-		const int unselected = -1;
-
-		// 選択中オブジェクトの要素番号
-		int selectObjectIndex = unselected;
-
-		// 選択中のオブジェクト
-		GameObjectPtr selectObject;
-
-		// エンジンクラスのポインタ
-		Engine* engine = nullptr;
+		engine = &e;
 	}
 
 	/// <summary>
-	/// オブジェクト作成用
+	/// 更新
 	/// </summary>
-	namespace
+	void Hierarchy::Update()
 	{
-		/// <summary>
-		/// オブジェクト作成用クラス
-		/// </summary>
-		class CreateObject
+		// 現在のシーン
+		Scene& currentScene = engine->GetCurrentScene();
+
+		// シーン内のゲームオブジェクト
+		GameObjectList gameObjectList = currentScene.GetGameObjectAll();
+
+		// 選択中のオブジェクトに対する操作を可能にする
+		ScelectObjectControl();
+
+		// ヒエラルキーウィンドウ
+		ImGui::Begin("Hierarchy", nullptr,
+			ImGuiWindowFlags_::ImGuiWindowFlags_MenuBar);
 		{
-		public: // -------------------- ポップアップ制御 --------------------
+			// ヒエラルキーウィンドウ内の操作
+			HierarchyControl();
 
-			/// <summary>
-			/// ゲームオブジェクト作成用ポップアップを開く
-			/// </summary>
-			void OpenPopup()
-			{
-				ImGui::OpenPopup(popupName);
-			}
+			// メニュー表示
+			Mene();
 
-			/// <summary>
-			/// ゲームオブジェクト作成用ポップアップの処理
-			/// </summary>
-			void Popup()
-			{
-				// -----------------------------------
-				// ポップアップ開始
-				// -----------------------------------
+			// オブジェクト作成用ポップアップの処理
+			CreateObjectPopup();
 
-				// 開いていなければ何もせずに終了
-				if (!ImGui::BeginPopup(popupName))
-				{
-					return;
-				}
+			// シーン内のオブジェクトツリー
+			ObjectTree();
 
-				// -----------------------------------
-				// ポップアップ内の処理
-				// -----------------------------------
-
-				// 3Dオブジェクト作成用メニュー
-				if (ImGui::BeginMenu("3D Object"))
-				{
-					// 球体生成用ボタン
-					Button("Sphere", StaticMeshFile_OBJ::sphere);
-
-					// ロボット生成用ボタン
-					Button("Robot", StaticMeshFile_OBJ::robot);
-
-					ImGui::EndMenu();
-				}
-
-				// --------------------------------
-				// ポップアップの終了
-				// --------------------------------
-
-				ImGui::EndPopup();
-			}
-
-		private: // --------------------- 作成用ボタン ----------------------
-
-			/// <summary>
-			/// ゲームオブジェクト作成用ボタンの処理
-			/// </summary>
-			/// <param name="kindName"> 作成するゲームオブジェクトの種類 </param>
-			/// <param name="staticMeshFile"> スタティックメッシュのファイル名 </param>
-			void Button(const char* typeName, const char* staticMeshFile)
-			{
-				// ボタンの色を無色に設定
-				ImGui::PushStyleColor(ImGuiCol_::ImGuiCol_Button, ImVec4(0, 0, 0, 0));
-
-				// オブジェクト作成用ボタン
-				if (ImGui::Button(typeName))
-				{
-					// ボタンが押されたので
-					// 現在のシーンにオブジェクトを作成
-					GameObjectPtr object = engine->GetCurrentScene().CreateGameObject(
-						typeName, Vector3(0), Vector3(0), staticMeshFile);
-				}
-
-				// ボタン色の設定を終了
-				ImGui::PopStyleColor();
-			}
-
-		private: // --------------------- ポップアップ ----------------------
-
-			// オブジェクト作成用ポップアップの名前
-			const char* popupName = "CreateObject";
-		};
-
-		// オブジェクト作成用
-		CreateObject createObject;
+			// ヒエラルキーウィンドウを終了
+			ImGui::End();
+		}
 	}
 
 	/// <summary>
-	/// ヒエラルキー(シーン内のオブジェクト管理用ウィンドウ)
+	/// ヒエラルキーウィンドウ内での操作
 	/// </summary>
-	namespace Hierarchy
+	void Hierarchy::HierarchyControl()
 	{
-		/// ここでしか使わないので、cppのみに書く
-		/// <summary>
-		/// ヒエラルキーウィンドウ内での操作
-		/// </summary>
-		void HierarchyControl()
+		// ウィンドウ内で右クリックした時に
+		// オブジェクト作成用ポップアップを展開する
+		if (ImGui::IsWindowHovered() &&
+			Input::GetKeyUp(KeyCode::MouseRight))
 		{
-			// ウィンドウ内で右クリックした時に
-			// オブジェクト作成用ポップアップを展開する
-			if (ImGui::IsWindowHovered() &&
-				Input::GetKeyUp(KeyCode::MouseRight))
-			{
-				createObject.OpenPopup();
-			}
+			ImGui::OpenPopup(createObjectPopupName);
 		}
+	}
 
-		/// ここでしか使わないので、cppのみに書く
-		/// <summary>
-		/// メニューの処理
-		/// </summary>
-		void Mene()
+	/// <summary>
+	/// メニューの処理
+	/// </summary>
+	void Hierarchy::Mene()
+	{
+		// メニューバーの中に
+		// ゲームオブジェクト作成用ボタンを配置する
+		ImGui::BeginMenuBar();
 		{
-			// メニューバーの中に
-			// ゲームオブジェクト作成用ボタンを配置する
-			ImGui::BeginMenuBar();
-			{
-				// ボタンの色を設定
-				ImGui::PushStyleColor(ImGuiCol_::ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+			// ボタンの色を設定
+			ImGui::PushStyleColor(ImGuiCol_::ImGuiCol_Button, ImVec4(0, 0, 0, 0));
 
-				// ゲームオブジェクト作成ポップアップ用ボタン
-				if (ImGui::Button("Object +"))
+			// ゲームオブジェクト作成ポップアップ用ボタン
+			if (ImGui::Button("Object +"))
+			{
+				// ボタンを押した時に
+				// ゲームオブジェクト作成用ポップアップを展開する
+				ImGui::OpenPopup(createObjectPopupName);
+			}
+
+			// ボタンの色設定を終了
+			ImGui::PopStyleColor();
+
+			// ゲームオブジェクト作成用ポップアップの処理
+			CreateObjectPopup();
+
+			ImGui::EndMenuBar();
+		}
+	}
+
+	/// <summary>
+	/// ゲームオブジェクト表示用ツリーノードの処理
+	/// </summary>
+	void Hierarchy::ObjectTree()
+	{
+		// 現在のシーン
+		Scene& currentScene = engine->GetCurrentScene();
+
+		// シーン内のゲームオブジェクト
+		GameObjectList gameObjectList = currentScene.GetGameObjectAll();
+
+		// ツリーノードの機能
+		ImGuiTreeNodeFlags treeFlags = ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_DefaultOpen;
+
+		// シーン内のオブジェクトを表示するためのツリーノード
+		if (ImGui::TreeNodeEx(currentScene.GetName(), treeFlags))
+		{
+			// シーン内のオブジェクトを表示
+			for (int i = 0; i < gameObjectList.size(); ++i)
+			{
+				// ゲームオブジェクト
+				const GameObject& gameObject = *gameObjectList[i];
+
+				// ゲームオブジェクトの名前
+				std::string objectName = gameObject.GetName();
+
+				// 重複しないように識別番号を追加
+				// ##で非表示にする
+				objectName += "##" + std::to_string(gameObject.GetID());
+
+				// 選択可能な項目として表示
+				// 選択中なら強調表示するように引数で設定
+				if (ImGui::Selectable(objectName.c_str(), selectObjectIndex == i))
 				{
-					// ボタンを押した時に
-					// ゲームオブジェクト作成用ポップアップを展開する
-					createObject.OpenPopup();
+					// 選択中オブジェクトの要素番号を設定
+					selectObjectIndex = i;
+
+					// 選択中のオブジェクトを設定
+					selectObject = gameObjectList[i];
 				}
 
-				// ボタンの色設定を終了
-				ImGui::PopStyleColor();
-
-				// ゲームオブジェクト作成用ポップアップの処理
-				createObject.Popup();
-
-				ImGui::EndMenuBar();
-			}
-		}
-
-		/// ここでしか使わないので、cppのみに書く
-		/// <summary>
-		/// ゲームオブジェクト表示用ツリーノードの処理
-		/// </summary>
-		void ObjectTree()
-		{
-			// 現在のシーン
-			Scene& currentScene = engine->GetCurrentScene();
-
-			// シーン内のゲームオブジェクト
-			GameObjectList gameObjectList = currentScene.GetGameObjectAll();
-
-			// ツリーノードの機能
-			ImGuiTreeNodeFlags treeFlags = ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_DefaultOpen;
-
-			// シーン内のオブジェクトを表示するためのツリーノード
-			if (ImGui::TreeNodeEx(currentScene.GetName(), treeFlags))
-			{
-				// シーン内のオブジェクトを表示
-				for (int i = 0; i < gameObjectList.size(); ++i)
+				// オブジェクトの項目をダブルクリックしたら
+				// ウィンドウを表示
+				if (ImGui::IsItemHovered() &&
+					Input::Mouse::IsDoubleClick(MouseButton::Left))
 				{
-					// ゲームオブジェクト
-					const GameObject& gameObject = *gameObjectList[i];
-
-					// ゲームオブジェクトの名前
-					std::string objectName = gameObject.GetName();
-
-					// 重複しないように識別番号を追加
-					// ##で非表示にする
-					objectName += "##" + std::to_string(gameObject.GetID());
-
-					// 選択可能な項目として表示
-					// 選択中なら強調表示するように引数で設定
-					if (ImGui::Selectable(objectName.c_str(), selectObjectIndex == i))
-					{
-						// 選択中オブジェクトの要素番号を設定
-						selectObjectIndex = i;
-
-						// 選択中のオブジェクトを設定
-						selectObject = gameObjectList[i];
-					}
-
-					// オブジェクトの項目をダブルクリックしたら
-					// ウィンドウを表示
-					if (ImGui::IsItemHovered() &&
-						Input::Mouse::IsDoubleClick(MouseButton::Left))
-					{
-						// テスト用に
-						// ダブルクリックしたオブジェクトの名前をタイトルにする
-						Window::OpenWindow(WindowID::NodeScript, "NodeScript");
-						gameObject.OpenNodeEditor();
-					}
+					// テスト用に
+					// ダブルクリックしたオブジェクトの名前をタイトルにする
+					Window::OpenWindow(WindowID::NodeScript, "NodeScript");
+					gameObject.OpenNodeEditor();
 				}
-
-				ImGui::TreePop();
 			}
-		}
 
-		/// ここでしか使わないので、cppのみに書く
-		/// <summary>
-		/// 選択中のオブジェクトに対する操作をまとめた関数
-		/// </summary>
-		void ScelectObjectControl()
+			ImGui::TreePop();
+		}
+	}
+
+	/// <summary>
+	/// 選択中のオブジェクトに対する操作をまとめた関数
+	/// </summary>
+	void Hierarchy::ScelectObjectControl()
+	{
+		// 選択中のオブジェクトが無い場合は何もしない
+		if (!selectObject)
 		{
-			// 選択中のオブジェクトが無い場合は何もしない
-			if (!selectObject)
-			{
-				return;
-			}
-
-			// 現在のシーン
-			Scene& currentScene = engine->GetCurrentScene();
-
-			// ------------------------------------------------------
-			// 「Ctrl + D」で選択中のオブジェクトを複製する
-			// ------------------------------------------------------
-
-			if (Input::GetKey(KeyCode::LeftCtrl) &&
-				Input::GetKeyDown(KeyCode::D))
-			{
-				// 選択中のオブジェクトを複製する
-				currentScene.CopyGameObject(selectObject);
-			}
-
-			// -------------------------------------------------------
-			// 「Delete」で選択中のオブジェクトを削除する
-			// -------------------------------------------------------
-
-			if (Input::GetKey(KeyCode::Delete))
-			{
-				// 選択中のオブジェクトを削除
-				currentScene.DestroyObject(selectObject);
-
-				// 非選択状態にする
-				selectObjectIndex = unselected;
-				selectObject.reset();
-			}
+			return;
 		}
 
-		/// <summary>
-		/// 初期化
-		/// </summary>
-		void Initialize(Engine& e)
+		// 現在のシーン
+		Scene& currentScene = engine->GetCurrentScene();
+
+		// ------------------------------------------------------
+		// 「Ctrl + D」で選択中のオブジェクトを複製する
+		// ------------------------------------------------------
+
+		if (Input::GetKey(KeyCode::LeftCtrl) &&
+			Input::GetKeyDown(KeyCode::D))
 		{
-			engine = &e;
+			// 選択中のオブジェクトを複製する
+			currentScene.CopyGameObject(selectObject);
 		}
 
-		/// <summary>
-		/// 更新
-		/// </summary>
-		void Update()
+		// -------------------------------------------------------
+		// 「Delete」で選択中のオブジェクトを削除する
+		// -------------------------------------------------------
+
+		if (Input::GetKey(KeyCode::Delete))
 		{
-			// 現在のシーン
-			Scene& currentScene = engine->GetCurrentScene();
+			// 選択中のオブジェクトを削除
+			currentScene.DestroyObject(selectObject);
 
-			// シーン内のゲームオブジェクト
-			GameObjectList gameObjectList = currentScene.GetGameObjectAll();
-
-			// 選択中のオブジェクトに対する操作を可能にする
-			ScelectObjectControl();
-
-			// ヒエラルキーウィンドウ
-			ImGui::Begin("Hierarchy", nullptr,
-				ImGuiWindowFlags_::ImGuiWindowFlags_MenuBar);
-			{
-				// ヒエラルキーウィンドウ内の操作
-				HierarchyControl();
-
-				// メニュー表示
-				Mene();
-
-				// オブジェクト作成用ポップアップの処理
-				createObject.Popup();
-
-				// シーン内のオブジェクトツリー
-				ObjectTree();
-
-				// ヒエラルキーウィンドウを終了
-				ImGui::End();
-			}
+			// 非選択状態にする
+			selectObjectIndex = unselected;
+			selectObject.reset();
 		}
+	}
 
-		/// <summary>
-		/// 選択中のオブジェクトの要素番号を取得する
-		/// </summary>
-		/// <returns> ウィンドウ内で選択中のオブジェクトの要素番号 </returns>
-		GameObjectPtr GetSelectObject()
+	/// <summary>
+	/// 選択中のオブジェクトを取得する
+	/// </summary>
+	/// <returns> ウィンドウ内で選択中のオブジェクト </returns>
+	GameObjectPtr& Hierarchy::GetSelectObject()
+	{
+		return selectObject;
+	}
+
+#pragma endregion
+
+#pragma region CreateObject
+
+	/// <summary>
+	/// ゲームオブジェクト作成用ポップアップの処理
+	/// </summary>
+	void Hierarchy::CreateObjectPopup()
+	{
+		// -----------------------------------
+		// ポップアップ開始
+		// -----------------------------------
+
+		// 開いていなければ何もせずに終了
+		if (!ImGui::BeginPopup(createObjectPopupName))
 		{
-			return selectObject;
+			return;
 		}
 
-	} // namespace Hierarchy
+		// -----------------------------------
+		// ポップアップ内の処理
+		// -----------------------------------
+
+		// 3Dオブジェクト作成用メニュー
+		if (ImGui::BeginMenu("3D Object"))
+		{
+			// 球体生成用ボタン
+			CreateObjectButton("Sphere", StaticMeshFile_OBJ::sphere);
+
+			// 板生成用ボタン
+			CreateObjectButton("Plane", StaticMeshFile_OBJ::plane);
+
+			// ロボット生成用ボタン
+			CreateObjectButton("Robot", StaticMeshFile_OBJ::robot);
+
+			ImGui::EndMenu();
+		}
+
+		// --------------------------------
+		// ポップアップの終了
+		// --------------------------------
+
+		ImGui::EndPopup();
+	}
+
+	/// <summary>
+	/// ゲームオブジェクト作成用ボタンの処理
+	/// </summary>
+	/// <param name="[in] kindName"> 作成するゲームオブジェクトの種類 </param>
+	/// <param name="[in] staticMeshFile"> スタティックメッシュのファイル名 </param>
+	void Hierarchy::CreateObjectButton(const char* typeName, const char* staticMeshFile)
+	{
+		// ボタンの色を無色に設定
+		ImGui::PushStyleColor(ImGuiCol_::ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+
+		// オブジェクト作成用ボタン
+		if (ImGui::Button(typeName))
+		{
+			// ボタンが押されたので
+			// 現在のシーンにオブジェクトを作成
+			GameObjectPtr object = engine->GetCurrentScene().CreateGameObject(
+				typeName, Vector3(0), Vector3(0), staticMeshFile);
+		}
+
+		// ボタン色の設定を終了
+		ImGui::PopStyleColor();
+	}
+
+#pragma endregion
 
 } // namespace PokarinEngine

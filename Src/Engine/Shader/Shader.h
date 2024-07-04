@@ -55,9 +55,9 @@ namespace PokarinEngine
 		/// <summary>
 		/// シェーダプログラムの管理番号を取得する
 		/// </summary>
-		/// <param name="progType"> シェーダプログラムの種類 </param>
+		/// <param name="[in] progType"> シェーダプログラムの種類 </param>
 		/// <returns> 指定した種類のシェーダプログラムの管理番号 </returns>
-		GLuint GetProgram(const ProgType& progType);
+		GLuint GetProgram(ProgType progType);
 
 		/// <summary>
 		/// 全てのシェーダプログラムの管理番号を取得する
@@ -66,7 +66,7 @@ namespace PokarinEngine
 		/// <para> 全てのシェーダプログラムの管理番号 </para>
 		/// <para> [シェーダプログラムの種類, シェーダプログラムの管理番号] </para>
 		/// </returns>
-		const ProgList& GetAllProgram();
+		ProgList GetAllProgram();
 
 	} // namespace Shader
 

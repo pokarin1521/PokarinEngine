@@ -38,37 +38,31 @@ namespace PokarinEngine
 		/// </summary>
 		void Update() override;
 
-		/// <summary>
-		/// 情報を編集できるように表示する
-		/// </summary>
-		void InfoEditor() override;
-
 	public: // ----------------- 種類の設定 ----------------
 
 		/// <summary>
 		/// ライトの種類を設定する
 		/// </summary>
-		/// <param name="type"> ライトの種類 </param>
+		/// <param name="[in] type"> ライトの種類 </param>
 		void SetType(LightParameter::Type type)
 		{
 			lightData.type = type;
 		}
 
-	public: // ----------------- 名前の取得 ----------------
+	private: // ---------------- エディタ用 ----------------
 
 		/// <summary>
-		/// コンポーネントの名前を取得する
+		/// 情報を編集できるように表示する
 		/// </summary>
-		/// <returns> コンポーネントの名前 </returns>
-		const std::string& GetName() override
-		{
-			return name;
-		}
+		void InfoEditor() override;
 
-	public: // -------------------- 名前 -------------------
+	private: // ------------------- 保存 -------------------
 
-		// コンポーネントの名前
-		inline static const std::string name = "Light";
+		/// <summary>
+		/// コンポーネントの情報を保存する
+		/// </summary>
+		/// <param name="[in] folderName"> 保存先のフォルダ </param>
+		void SaveInfo(const std::string& folderName) const override {}
 
 	private: // ------------------- 情報 -------------------
 

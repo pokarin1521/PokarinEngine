@@ -5,6 +5,7 @@
 #define TRANSFORM_H_INCLUDED
 
 #include "Component.h"
+
 #include "../Math/Vector.h"
 #include "../Math/Matrix.h"
 
@@ -64,18 +65,18 @@ namespace PokarinEngine
 		}
 
 		/// <summary>
-		/// 親オブジェクトを設定
+		/// 親オブジェクトを設定する
 		/// </summary>
-		/// <param name="parent"> 
+		/// <param name="[out] parent"> 
 		/// <para> 親にするゲームオブジェクトのトランスフォーム </para>
 		/// <para> nullptrを指定すると親子関係を解除する </para>
 		/// </param>
 		void SetParent(Transform* parent);
 
 		/// <summary>
-		/// 親オブジェクトを設定
+		/// 親オブジェクトを設定する
 		/// </summary>
-		/// <param name="parent"> 
+		/// <param name="[out] parent"> 
 		/// <para> 親にするゲームオブジェクトのトランスフォーム </para>
 		/// <para> nullptrを指定すると親子関係を解除する </para>
 		/// </param>
@@ -95,7 +96,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// 子オブジェクトを取得する
 		/// </summary>
-		/// <param name="index"> 子オブジェクトの要素番号 </param>
+		/// <param name="[in] index"> 子オブジェクトの要素番号 </param>
 		/// <returns> index番の子オブジェクトのトランスフォーム </returns>
 		Transform* GetChild(size_t index) const
 		{
@@ -127,8 +128,8 @@ namespace PokarinEngine
 		/// <summary>
 		/// 正面ベクトルを取得する
 		/// </summary>
-		/// <returns></returns>
-		inline Vector3 Forward() const
+		/// <returns> 現在の正面ベクトル </returns>
+		inline Vector3 Front() const
 		{
 			// 回転角度のSin
 			Vector2 rotationSin = { std::sin(rotation.x), std::sin(rotation.y) };
@@ -137,24 +138,6 @@ namespace PokarinEngine
 			Vector2 rotationCos = { std::cos(rotation.x), std::cos(rotation.y) };
 
 			return { -rotationSin.y, rotationSin.x, rotationCos.x * rotationCos.y };
-		}
-
-	public: // ----------------------- エディタ用 ----------------------
-
-		/// <summary>
-		/// 情報を編集できるように表示する
-		/// </summary>
-		void InfoEditor() override;
-
-	public: // ----------------------- 名前の取得 ----------------------
-
-		/// <summary>
-		/// コンポーネントの名前を取得する
-		/// </summary>
-		/// <returns> コンポーネントの名前 </returns>
-		const std::string& GetName() override
-		{
-			return name;
 		}
 
 	public: // -------------------- ワールド軸の情報 -------------------
@@ -168,10 +151,20 @@ namespace PokarinEngine
 		// 拡大率
 		Vector3 scale = { 1, 1, 1 };
 
-	public: // -------------------------- 名前 ------------------------
+	private: // ---------------------- エディタ用 ----------------------
 
-		// コンポーネントの名前
-		inline static const std::string name = "Transform";
+		/// <summary>
+		/// 情報を編集できるように表示する
+		/// </summary>
+		void InfoEditor() override;
+
+	private: // ------------------------- 保存 -------------------------
+
+		/// <summary>
+		/// コンポーネントの情報を保存する
+		/// </summary>
+		/// <param name="[in] folderName"> 保存先のフォルダ </param>
+		void SaveInfo(const std::string& folderName) const override;
 
 	private: // ----------------------- 変換行列 -----------------------
 

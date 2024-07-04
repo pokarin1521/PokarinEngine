@@ -29,8 +29,9 @@ namespace PokarinEngine
 		/// <summary>
 		/// ノード作成時の処理
 		/// </summary>
-		/// <param name="nodeEditor"> 持ち主であるノードエディタ </param>
-		/// <param name="nodeID"> ノードの識別番号 </param>
+		/// <param name="[in] nodeEditor"> 持ち主であるノードエディタ </param>
+		/// <param name="[in] nodeID"> ノードの識別番号 </param>
+		/// <param name="[in] nodeTitle"> ノードのタイトル </param>
 		void CreateNode(NodeEditor& nodeEditor, int nodeID, const std::string& nodeTitle);
 
 	public: // ------------------------------- 制御 -------------------------------
@@ -50,7 +51,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// 次に実行するノードを設定する
 		/// </summary>
-		/// <param name="node"> 次に実行するノード </param>
+		/// <param name="[in] node"> 次に実行するノード </param>
 		void SetNextNode(Node* node)
 		{
 			nextNode = node;
@@ -72,7 +73,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// ピンを作成する
 		/// </summary>
-		/// <param name="pinType"> ピンの種類 </param>
+		/// <param name="[in] pinType"> ピンの種類 </param>
 		/// <returns> 作成したピンの識別番号 </returns>
 		int CreatePin(PinType pinType);
 
@@ -90,21 +91,21 @@ namespace PokarinEngine
 		/// <summary>
 		/// データピンの表示を開始する
 		/// </summary>
-		/// <param name="pinID"> ピンの識別番号 </param>
-		/// <param name="pinAttribute"> ピンの属性 </param>
+		/// <param name="[in] pinID"> ピンの識別番号 </param>
+		/// <param name="[in] pinAttribute"> ピンの属性 </param>
 		void BeginDataPin(int pinID, PinAttribute pinAttribute);
 
 		/// <summary>
 		/// 実行ピンの表示を開始する
 		/// </summary>
-		/// <param name="pinID"> ピンの識別番号 </param>
-		/// <param name="pinAttribute"> ピンの属性 </param>
+		/// <param name="[in] pinID"> ピンの識別番号 </param>
+		/// <param name="[in] pinAttribute"> ピンの属性 </param>
 		void BeginRunPin(int pinID, PinAttribute pinAttribute);
 
 		/// <summary>
 		/// ピンの表示を終了する
 		/// </summary>
-		/// <param name="pinAttribute"> ピンの属性 </param>
+		/// <param name="[in] pinAttribute"> ピンの属性 </param>
 		void EndPin(PinAttribute pinAttribute);
 
 		/// <summary>
@@ -130,9 +131,9 @@ namespace PokarinEngine
 		/// <summary>
 		/// ピンの設定を開始する
 		/// </summary>
-		/// <param name="pinID"> ピンの識別番号 </param>
-		/// <param name="pinAttribute"> ピンの属性 </param>
-		/// <param name="pinShape"> ピンの形 </param>
+		/// <param name="[in] pinID"> ピンの識別番号 </param>
+		/// <param name="[in] pinAttribute"> ピンの属性 </param>
+		/// <param name="[in] pinShape"> ピンの形 </param>
 		void BeginPin(int pinID, PinAttribute pinAttribute, PinShape pinShape);
 
 	private: // ------------------------------ 実行 ------------------------------

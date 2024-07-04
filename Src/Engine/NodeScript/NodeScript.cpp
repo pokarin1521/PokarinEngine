@@ -14,9 +14,10 @@
 #include "NodeEditor.h"
 
 #include "../Configs/ImGuiConfig.h"
+#include "../ImGuiFontSetter.h"
+
 #include "../Window.h"
 #include "../InputManager.h"
-
 #include "../Color.h"
 
 #include <GLFW/glfw3.h>
@@ -27,250 +28,240 @@
 namespace PokarinEngine
 {
 	/// <summary>
-	/// クラス
+	/// コンテキスト管理用クラス
 	/// </summary>
-	namespace
+	class ContextManager
 	{
+	public: // ------------------------ コンテキスト制御 -------------------------
+
 		/// <summary>
-		/// コンテキスト管理用クラス
+		/// コンテキストを作成する
 		/// </summary>
-		class ContextManager
+		static void CreateContext()
 		{
-		public: // ------------------------ コンテキスト制御 -------------------------
+			imGuiContext = ImGui::CreateContext();
+			imNodesContext = ImNodes::CreateContext();
+		}
 
-			/// <summary>
-			/// コンテキストを作成する
-			/// </summary>
-			void CreateContext()
+		/// <summary>
+		/// コンテキストを削除する
+		/// </summary>
+		static void DestroyContext()
+		{
+			// ImNodesコンテキストを削除
+			if (imNodesContext)
 			{
-				imGuiContext = ImGui::CreateContext();
-				imNodesContext = ImNodes::CreateContext();
+				ImNodes::SetCurrentContext(imNodesContext);
+				ImNodes::DestroyContext(imNodesContext);
 			}
 
-			/// <summary>
-			/// コンテキストを削除する
-			/// </summary>
-			void DestroyContext()
-			{
-				// ImNodesコンテキストを削除
-				if (imNodesContext)
-				{
-					ImNodes::SetCurrentContext(imNodesContext);
-					ImNodes::DestroyContext(imNodesContext);
-				}
-
-				// ImGuiコンテキストを削除
-				if (imGuiContext)
-				{
-					ImGui::SetCurrentContext(imGuiContext);
-
-					ImGui_ImplGlfw_Shutdown();
-					ImGui_ImplOpenGL3_Shutdown();
-					ImGui::DestroyContext(imGuiContext);
-				}
-			}
-
-			/// <summary>
-			/// コンテキストを使用する
-			/// </summary>
-			void UsingContext() const
+			// ImGuiコンテキストを削除
+			if (imGuiContext)
 			{
 				ImGui::SetCurrentContext(imGuiContext);
-				ImNodes::SetCurrentContext(imNodesContext);
+
+				ImGui_ImplGlfw_Shutdown();
+				ImGui_ImplOpenGL3_Shutdown();
+				ImGui::DestroyContext(imGuiContext);
 			}
-
-		public: // ---------------------------- フォーカス ---------------------------
-
-			/// <summary>
-			/// ノードエディタをフォーカスする
-			/// </summary>
-			/// <param name="nodeEditor"> フォーカスするノードエディタ </param>
-			void FocusEditor(NodeEditorPtr nodeEditor) const
-			{
-				imGuiContext->NavWindow = &nodeEditor->GetImGuiWindow();
-			}
-
-		private:
-
-			// ImGui用コンテキスト
-			ImGuiContext* imGuiContext = nullptr;
-
-			// ImNodes用コンテキスト
-			ImNodesContext* imNodesContext = nullptr;
-		};
+		}
 
 		/// <summary>
-		/// ノードエディタ管理用クラス
+		/// コンテキストを使用する
 		/// </summary>
-		class NodeEditorManager
+		static void UsingContext()
 		{
-		public: // -------------------- ノードエディタの更新 ----------------------
+			ImGui::SetCurrentContext(imGuiContext);
+			ImNodes::SetCurrentContext(imNodesContext);
+		}
 
-			/// <summary>
-			/// ノードエディタを更新する
-			/// </summary>
-			void UpdateEditor(const ImGuiID& dockSpaceID, const ContextManager& contextManager)
-			{
-				// ノードスクリプトウィンドウが閉じられたら
-				// 全てのノードエディタウィンドウを閉じる
-				if (glfwWindowShouldClose(&Window::GetWindow(WindowID::NodeScript)))
-				{
-					openEditorList.clear();
-					return;
-				}
-
-				// ------------------------------------
-				// ノードエディタを更新
-				// ------------------------------------
-
-				// 開いているノードエディタ
-				for (auto& nodeEditor : openEditorList)
-				{
-					// ImGuiウィンドウが最初からドッキングされるように設定
-					ImGui::DockBuilderDockWindow(nodeEditor->GetName(), dockSpaceID);
-
-					// ノードエディタの更新
-					if (nodeEditor->Update())
-					{
-						// 選択中のノードエディタを設定
-						selectEditor = nodeEditor;
-					}
-
-					// ノードエディタが閉じられたら
-					// 後で削除できるように変数に入れる
-					if (!nodeEditor->IsOpen())
-					{
-						closedEditor = nodeEditor;
-					}
-				}
-
-				// ----------------------------------------------------------
-				// 閉じているノードエディタがあるのなら削除する
-				// ----------------------------------------------------------
-
-				if (closedEditor)
-				{
-					EraseClosedEditor(contextManager);
-				}
-			}
-
-		public: // -------------------- ノードエディタ管理用 ----------------------
-
-			/// <summary>
-			/// ノードエディタを追加する
-			/// </summary>
-			/// <param name="nodeEditor"> 追加するノードエディタ </param>
-			void AddEditor(NodeEditorPtr nodeEditor)
-			{
-				openEditorList.emplace(nodeEditor);
-			}
-
-			/// <summary>
-			/// 閉じているノードエディタを配列から削除する
-			/// </summary>
-			void EraseClosedEditor(const ContextManager& contextManager)
-			{
-				// 閉じているノードエディタを配列から削除
-				openEditorList.erase(closedEditor);
-
-				// 開いているノードエディタがなくなった場合
-				if (openEditorList.empty())
-				{
-					// 所有権を放棄
-					selectEditor.reset();
-
-					// 表示する意味がないので
-					// ウィンドウを閉じる
-					Window::CloseWindow(WindowID::NodeScript);
-				}
-
-				// 選択中のノードエディタが閉じられた場合
-				if (closedEditor == selectEditor)
-				{
-					// 先頭のノードエディタを選択中にする
-					selectEditor = *openEditorList.begin();
-				}
-
-				if (selectEditor)
-				{
-					// 選択中ノードエディタのウィンドウをフォーカスする
-					contextManager.FocusEditor(selectEditor);
-				}
-
-				// 削除したノードエディタの所有権を放棄
-				closedEditor.reset();
-			}
-
-			void EraseEditor(const NodeEditorPtr nodeEditor)
-			{
-				openEditorList.erase(nodeEditor);
-			}
-
-		private: // -------------------- 型の別名を定義 -----------------------
-
-			using OpenEditorList = std::unordered_set<NodeEditorPtr>;
-			using ClosedEditorList = std::vector<NodeEditorPtr>;
-
-		private: // -------------------- ノードエディタ -----------------------
-
-			// 開いているノードエディタ配列
-			OpenEditorList openEditorList;
-
-			// 閉じているノードエディタ配列
-			NodeEditorPtr closedEditor;
-
-			// 選択中のノードエディタ
-			NodeEditorPtr selectEditor;
-		};
+	public: // ---------------------------- フォーカス ---------------------------
 
 		/// <summary>
-		/// ImGuiの色設定用クラス
+		/// ノードエディタをフォーカスする
 		/// </summary>
-		class SetUpColor
+		/// <param name="[in] nodeEditor"> フォーカスするノードエディタ </param>
+		static void FocusEditor(const NodeEditorPtr& nodeEditor)
 		{
-		public: // ----------------------- 色設定 --------------------------
+			imGuiContext->NavWindow = &nodeEditor->GetImGuiWindow();
+		}
 
-			/// <summary>
-			/// ImGuiの色設定を開始する
-			/// </summary>
-			/// <param name="style"> 色を設定したい項目 </param>
-			/// <param name="styleColor"> 設定する色 </param>
-			void Push(ImGuiCol style, const Color& styleColor)
-			{
-				ImGui::PushStyleColor(style, styleColor);
-				pushColorCount++;
-			}
+	private:
 
-			/// <summary>
-			/// ImGuiの色設定を終了する
-			/// </summary>
-			void Pop()
-			{
-				ImGui::PopStyleColor(pushColorCount);
-				pushColorCount = 0;
-			}
+		// ImGui用コンテキスト
+		inline static ImGuiContext* imGuiContext = nullptr;
 
-		private: // -------------------------- 情報 --------------------------
-
-			// ImGuiの色設定の回数
-			int pushColorCount = 0;
-		};
-	}
+		// ImNodes用コンテキスト
+		inline static ImNodesContext* imNodesContext = nullptr;
+	};
 
 	/// <summary>
-	/// 変数
+	/// ノードエディタ管理用クラス
 	/// </summary>
-	namespace
+	class NodeEditorManager
 	{
-		// コンテキスト管理用
-		ContextManager contextManager;
+	public: // -------------------- ノードエディタの更新 ----------------------
 
-		// ノードエディタ管理用
-		NodeEditorManager nodeEditorManager;
+		/// <summary>
+		/// ノードエディタを更新する
+		/// </summary>
+		/// <param name="[in] dockSpaceID"> ドックスペースの識別番号 </param>
+		static void UpdateEditor(const ImGuiID& dockSpaceID)
+		{
+			// ノードスクリプトウィンドウが閉じられたら
+			// 全てのノードエディタウィンドウを閉じる
+			if (glfwWindowShouldClose(&Window::GetWindow(WindowID::NodeScript)))
+			{
+				openEditorList.clear();
+				return;
+			}
 
-		// ImGuiの色設定用
-		SetUpColor setUpColor;
-	}
+			// ------------------------------------
+			// ノードエディタを更新
+			// ------------------------------------
+
+			// 開いているノードエディタ
+			for (auto& nodeEditor : openEditorList)
+			{
+				// ImGuiウィンドウが最初からドッキングされるように設定
+				ImGui::DockBuilderDockWindow(nodeEditor->GetName(), dockSpaceID);
+
+				// ノードエディタの更新
+				if (nodeEditor->Update())
+				{
+					// 選択中のノードエディタを設定
+					selectEditor = nodeEditor;
+				}
+
+				// ノードエディタが閉じられたら
+				// 後で削除できるように変数に入れる
+				if (!nodeEditor->IsOpen())
+				{
+					closedEditor = nodeEditor;
+				}
+			}
+
+			// ----------------------------------------------------------
+			// 閉じているノードエディタがあるのなら削除する
+			// ----------------------------------------------------------
+
+			if (closedEditor)
+			{
+				EraseClosedEditor();
+			}
+		}
+
+	public: // -------------------- ノードエディタ管理用 ----------------------
+
+		/// <summary>
+		/// ノードエディタを追加する
+		/// </summary>
+		/// <param name="[in] nodeEditor"> 追加するノードエディタ </param>
+		static void AddEditor(const NodeEditorPtr& nodeEditor)
+		{
+			openEditorList.emplace(nodeEditor);
+		}
+
+		/// <summary>
+		/// 閉じているノードエディタを配列から削除する
+		/// </summary>
+		static void EraseClosedEditor()
+		{
+			// 閉じているノードエディタを配列から削除
+			openEditorList.erase(closedEditor);
+
+			// 開いているノードエディタがなくなった場合
+			if (openEditorList.empty())
+			{
+				// 所有権を放棄
+				selectEditor.reset();
+
+				// 表示する意味がないので
+				// ウィンドウを閉じる
+				Window::CloseWindow(WindowID::NodeScript);
+			}
+
+			// 選択中のノードエディタが閉じられた場合
+			if (closedEditor == selectEditor)
+			{
+				// 先頭のノードエディタを選択中にする
+				selectEditor = *openEditorList.begin();
+			}
+
+			if (selectEditor)
+			{
+				// 選択中ノードエディタのウィンドウをフォーカスする
+				ContextManager::FocusEditor(selectEditor);
+			}
+
+			// 削除したノードエディタの所有権を放棄
+			closedEditor.reset();
+		}
+
+		/// <summary>
+		/// ノードエディタを削除する
+		/// </summary>
+		/// <param name="[in] nodeEditor"> 削除するノードエディタ </param>
+		static void EraseEditor(const NodeEditorPtr& nodeEditor)
+		{
+			openEditorList.erase(nodeEditor);
+		}
+
+	private: // -------------------- 型の別名を定義 -----------------------
+
+		using OpenEditorList = std::unordered_set<NodeEditorPtr>;
+		using ClosedEditorList = std::vector<NodeEditorPtr>;
+
+	private: // -------------------- ノードエディタ -----------------------
+
+		// 開いているノードエディタ配列
+		inline static OpenEditorList openEditorList;
+
+		// 閉じているノードエディタ配列
+		inline static NodeEditorPtr closedEditor;
+
+		// 選択中のノードエディタ
+		inline static NodeEditorPtr selectEditor;
+	};
+
+	/// <summary>
+	/// ImGuiの色設定用クラス
+	/// </summary>
+	class SetUpColor
+	{
+	public: // ----------------------- 色設定 --------------------------
+
+		/// <summary>
+		/// ImGuiの色設定を開始する
+		/// </summary>
+		/// <param name="[in] style"> 色を設定したい項目 </param>
+		/// <param name="[in] styleColor"> 設定する色 </param>
+		static void Push(ImGuiCol style, const Color& styleColor)
+		{
+			// ImVec4型に変換
+			const ImVec4 color = { styleColor.r,styleColor.g,styleColor.b,styleColor.a };
+
+			// 色を設定
+			ImGui::PushStyleColor(style, color);
+
+			// 設定数をカウント
+			pushColorCount++;
+		}
+
+		/// <summary>
+		/// ImGuiの色設定を終了する
+		/// </summary>
+		static void Pop()
+		{
+			ImGui::PopStyleColor(pushColorCount);
+			pushColorCount = 0;
+		}
+
+	private: // -------------------------- 情報 --------------------------
+
+		// ImGuiの色設定の回数
+		inline static int pushColorCount = 0;
+	};
 
 	/// <summary>
 	/// ノードエディタを管理する機能
@@ -293,10 +284,10 @@ namespace PokarinEngine
 			IMGUI_CHECKVERSION();
 
 			// コンテキスト作成
-			contextManager.CreateContext();
+			ContextManager::CreateContext();
 
 			// コンテキストを使用する
-			contextManager.UsingContext();
+			ContextManager::UsingContext();
 
 			// ----------------------------------------
 			// ImGuiの保存先ファイルを設定
@@ -325,8 +316,7 @@ namespace PokarinEngine
 			// フォントを設定
 			// ------------------------
 
-			io.Fonts->Clear();
-			io.Fonts->AddFontFromFileTTF(ImGuiConfig::File::font, ImGuiConfig::fontSize);
+			ImGuiFontSetter::SetFont(io);
 
 			// ------------------------
 			// ImGuiの初期化
@@ -349,7 +339,7 @@ namespace PokarinEngine
 			// ----------------------------------------
 
 			// コンテキストの使用
-			contextManager.UsingContext();
+			ContextManager::UsingContext();
 
 			// ImGuiの更新
 			ImGui_ImplGlfw_NewFrame();
@@ -367,8 +357,8 @@ namespace PokarinEngine
 			// ImGuiの色設定
 			// ------------------------------------
 
-			setUpColor.Push(ImGuiCol_::ImGuiCol_Tab, Color::gray);
-			setUpColor.Push(ImGuiCol_::ImGuiCol_TitleBgActive, Color::gray);
+			SetUpColor::Push(ImGuiCol_::ImGuiCol_Tab, Color::gray);
+			SetUpColor::Push(ImGuiCol_::ImGuiCol_TitleBgActive, Color::gray);
 
 			// -----------------------------------------------------------------------
 			// ウィンドウ全体でウィンドウをドッキング出来るようにする
@@ -389,7 +379,7 @@ namespace PokarinEngine
 			// ノードエディタを更新
 			// --------------------------------------
 
-			nodeEditorManager.UpdateEditor(dockSpaceID, contextManager);
+			NodeEditorManager::UpdateEditor(dockSpaceID);
 
 			// --------------------------------------
 			// ImGuiの丸み設定を終了する
@@ -401,7 +391,7 @@ namespace PokarinEngine
 			// ImGuiの色設定を終了する
 			// -------------------------------------
 
-			setUpColor.Pop();
+			SetUpColor::Pop();
 
 			// ----------------------------------------
 			// カラーバッファをクリアする
@@ -421,7 +411,7 @@ namespace PokarinEngine
 		void Render()
 		{
 			// コンテキストを設定
-			contextManager.UsingContext();
+			ContextManager::UsingContext();
 
 			// ImGuiの描画
 			ImGui::Render();
@@ -433,32 +423,32 @@ namespace PokarinEngine
 		/// </summary>
 		void Finalize()
 		{
-			contextManager.DestroyContext();
+			ContextManager::DestroyContext();
 		}
 
 		/// <summary>
 		/// ノードエディタを開く
 		/// </summary>
-		/// <param name="nodeEditor"> ノードエディタ </param>
-		void OpenNodeEditor(const NodeEditorPtr nodeEditor)
+		/// <param name="[in] nodeEditor"> ノードエディタ </param>
+		void OpenNodeEditor(const NodeEditorPtr& nodeEditor)
 		{
 			// ノードエディタを開く
 			nodeEditor->OpenEditor();
 
 			// 管理用配列に追加
-			nodeEditorManager.AddEditor(nodeEditor);
+			NodeEditorManager::AddEditor(nodeEditor);
 
 			// 開いたノードエディタをフォーカスする
-			contextManager.FocusEditor(nodeEditor);
+			ContextManager::FocusEditor(nodeEditor);
 		}
 
 		/// <summary>
 		/// ノードエディタを閉じる
 		/// </summary>
-		/// <param name="nodeEditor"> ノードエディタ </param>
-		void CloseNodeEditor(const NodeEditorPtr nodeEditor)
+		/// <param name="[in] nodeEditor"> ノードエディタ </param>
+		void CloseNodeEditor(const NodeEditorPtr& nodeEditor)
 		{
-			nodeEditorManager.EraseEditor(nodeEditor);
+			NodeEditorManager::EraseEditor(nodeEditor);
 		}
 
 	} // namespace NodeScript

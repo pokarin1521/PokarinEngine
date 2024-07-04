@@ -93,15 +93,15 @@ namespace PokarinEngine
 		/// テクスチャを読み込むコンストラクタ
 		/// (暗黙的キャストを禁止)
 		/// </summary>
-		/// <param name="filename"> 読み込むテクスチャファイルの名前 </param>
-		explicit Texture(const char* filename);
+		/// <param name="[in] fileName"> 読み込むテクスチャファイルの名前 </param>
+		explicit Texture(const char* fileName);
 
 		/// <summary>
 		/// テクスチャを作成するコンストラクタ
 		/// (暗黙的キャストを禁止)
 		/// </summary>
-		/// <param name="width"> 幅 </param>
-		/// <param name="height"> 高さ </param>
+		/// <param name="[in] width"> 幅 </param>
+		/// <param name="[in] height"> 高さ </param>
 		explicit Texture(GLsizei w, GLsizei h);
 
 		/// <summary>

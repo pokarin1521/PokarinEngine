@@ -4,164 +4,150 @@
 #include "Inspector.h"
 
 #include "../Engine.h"
+#include "../GameObject.h"
 #include "../Color.h"
-
-#include "../Components/Rigidbody.h"
 
 namespace PokarinEngine
 {
+#pragma region Inspector
+
 	/// <summary>
-	/// コンポーネント追加用
+	/// オブジェクト名を表示する
 	/// </summary>
-	namespace AddComponent
+	void Inspector::RenderName()
 	{
-		// -----------------------------
-		// 変数
-		// -----------------------------
+		// 選択中オブジェクトの名前
+		std::string selectObjectName = selectObject->GetName();
 
-		// ポップアップの名前
-		const char* popupName = "AddComponent";
-
-		// ----------------------------------
-		// 関数
-		// ----------------------------------
-
-		/// <summary>
-		/// コンポーネント追加用ボタン
-		/// </summary>
-		/// <typeparam name="T">  </typeparam>
-		template<class T>
-		void AddButton(GameObjectPtr object)
+		// オブジェクト名を入力するテキスト欄
+		// ##でテキストを非表示する
+		if (ImGui::InputText("##ObjectName", selectObjectName.data(), selectObject->GetNameSize(),
+			ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue))
 		{
-
-		}
-
-		/// <summary>
-		/// ポップアップ展開用ボタン
-		/// </summary>
-		/// <returns>
-		/// <para> true : 展開中 </para>
-		/// <para> false : 展開していない </para>
-		/// </returns>
-		bool OpenPopupButton()
-		{
-			static bool isOpen = false;
-
-			// ボタンのX位置
-			const float posX = 5.0f;
-
-			// ボタンの大きさ
-			const ImVec2 size = { ImGui::GetWindowWidth() , 25.0f };
-
-			// そのままだと位置がずれてしまうので、
-			// X位置を設定
-			ImGui::SetCursorPosX(posX);
-
-			// コンポーネント追加用ボタン
-			// 押されたらポップアップ展開
-			if (ImGui::Button("Add Component", size))
+			// 新しい名前が入力されている
+			if (selectObjectName[0] != '\0' &&
+				selectObjectName != selectObject->GetName())
 			{
-				//ImGui::OpenPopup(popupName);
-				isOpen = true;
+				// 終端位置
+				size_t endLine = selectObjectName.find_first_of('\0');
+
+				// 名前を変更
+				// 余計な空白が入ると困るので、最初の\0までを渡す
+				selectObject->GetOwnerScene().ChangeObjectName(
+					selectObject, selectObjectName.substr(0, endLine));
 			}
-
-			return isOpen;
-		}
-
-		/// <summary>
-		/// ポップアップ展開中の処理
-		/// </summary>
-		/// <param name="object"> ゲームオブジェクト </param>
-		void DownMenu(GameObjectPtr object)
-		{
-
-			if (ImGui::CollapsingHeader("Add Component", ImGuiTreeNodeFlags_Bullet))
-			{
-				ImGui::Text("Select Component");
-			}
-
-			//AddButton<Rigidbody>(object);
 		}
 	}
 
 	/// <summary>
-	/// インスペクター(シーン内のオブジェクト制御用ウィンドウ)
+	/// 更新
 	/// </summary>
-	namespace Inspector
+	/// <param name="[in,out] hierarchySelect"> ヒエラルキーで選択中のオブジェクト </param>
+	void Inspector::Update(GameObjectPtr& hierarchySelect)
 	{
-		/// ここでしか使わないので、cppのみに書く
-		/// <summary>
-		/// オブジェクト名を表示する
-		/// </summary>
-		/// <param name="selectObject"> ヒエラルキーで選択中のオブジェクト </param>
-		void RenderName(GameObjectPtr selectObject)
+		// インスペクターウィンドウ
+		ImGui::Begin("Inspector");
 		{
-			// 選択中オブジェクトの名前
-			std::string selectObjectName = selectObject->GetName();
+			// 選択中のオブジェクトを更新
+			selectObject = hierarchySelect;
 
-			// オブジェクト名を入力するテキスト欄
-				// ##でテキストを非表示する
-			if (ImGui::InputText("##ObjectName", selectObjectName.data(), selectObject->GetNameSize(),
-				ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue))
+			// ヒエラルキーでオブジェクトを選択していないなら
+			// 何も表示しない
+			if (!selectObject)
 			{
-				// 新しい名前が入力されている
-				if (selectObjectName[0] != '\0' &&
-					selectObjectName != selectObject->GetName())
-				{
-					// 終端位置
-					size_t endLine = selectObjectName.find_first_of('\0');
-
-					// 名前を変更
-					// 余計な空白が入ると困るので、最初の\0までを渡す
-					selectObject->GetOwnerScene().ChangeObjectName(
-						selectObject, selectObjectName.substr(0, endLine));
-				}
-			}
-		}
-
-		/// <summary>
-		/// 更新
-		/// </summary>
-		/// <param name="selectObject"> ヒエラルキーで選択中のオブジェクト </param>
-		void Update(GameObjectPtr selectObject)
-		{
-			// インスペクターウィンドウ
-			ImGui::Begin("Inspector");
-			{
-				// ヒエラルキーでオブジェクトを選択していないなら
-				// 何も表示しない
-				if (!selectObject)
-				{
-					ImGui::End();
-					return;
-				}
-
-				// オブジェクト名を表示
-				RenderName(selectObject);
-
-				// 区切り線を入れる
-				ImGui::Separator();
-
-				// コンポーネントを表示
-				for (auto& component : selectObject->componentList)
-				{
-					// 表示するコンポーネント名
-					// 区別できるように、オブジェクトの識別番号を付けておく(非表示)
-					const std::string componentName = component->GetName() + "##" + std::to_string(selectObject->GetID());
-
-					// 折り畳み可能なヘッダーで表示
-					if (ImGui::CollapsingHeader(componentName.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
-					{
-						// ヘッダーを展開中に情報の編集ができるように表示する
-						component->InfoEditor();
-					}
-				}
-
-				//AddComponent::DownMenu(selectObject);
-
 				ImGui::End();
+				return;
 			}
+
+			// オブジェクト名を表示
+			RenderName();
+
+			// 区切り線を入れる
+			ImGui::Separator();
+
+			// コンポーネントを表示
+			selectObject->RenderComponent();
+
+			// コンポーネント追加用ポップアップ
+			AddComponentPopup();
+
+			ImGui::End();
 		}
 	}
+
+#pragma endregion
+
+#pragma region AddComponent
+
+	/// ここでしか使わないので、cppのみに書く
+	/// <summary>
+	/// ポップアップ展開用ボタンの設定
+	/// </summary>
+	void PopupButtonSetting()
+	{
+		// ボタンのX位置
+		const float posX = 5.0f;
+
+		// ボタンの大きさ
+		const ImVec2 size = { ImGui::GetWindowWidth() , 25.0f };
+
+		// そのままだと位置がずれてしまうので、
+		// X位置を設定
+		ImGui::SetCursorPosX(posX);
+	}
+
+	/// ここでしか使わないので、cppのみに書く
+	/// <summary>
+	/// ポップアップの設定
+	/// </summary>
+	void PopupSetting()
+	{
+		// ポップアップの幅
+		// ウィンドウ幅に合わせる
+		const float width = ImGui::GetWindowWidth();
+
+		// ポップアップの大きさを設定
+		// 高さは表示する数に応じて変わるようにするために、0に設定する
+		ImGui::SetNextWindowSize(ImVec2(width, 0));
+
+		// ポップアップの位置
+		// ポップアップ展開用ボタンの下に表示する
+		const ImVec2 pos = { ImGui::GetItemRectMin().x, ImGui::GetItemRectMax().y };
+
+		// ポップアップの位置を設定
+		ImGui::SetNextWindowPos(pos);
+	}
+
+	/// <summary>
+	/// コンポーネント追加用ポップアップの処理
+	/// </summary>
+	void Inspector::AddComponentPopup()
+	{
+		// ポップアップ名
+		static const char* popupName = "AddComponent Popup";
+
+		// ポップアップ展開用ボタンの設定
+		PopupButtonSetting();
+
+		// ポップアップ展開用ボタン
+		if (ImGui::Button("Add Component"))
+		{
+			ImGui::OpenPopup(popupName);
+		}
+
+		// ポップアップの設定
+		PopupSetting();
+
+		// ポップアップ展開中
+		// コンポーネント追加用リストを表示
+		if (ImGui::BeginPopup(popupName, ImGuiWindowFlags_::ImGuiWindowFlags_NoMove))
+		{
+			AddComponentList();
+
+			ImGui::EndPopup();
+		}
+	}
+
+#pragma endregion
 
 } // namespace PokarinEngine

@@ -18,11 +18,6 @@
 
 #include "Configs/ShaderConfig.h"
 
-#include "MainEditor/MainEditor.h"
-#include "MainEditor/RenderView.h"
-#include "MainEditor/SceneView.h"
-#include "MainEditor/GameView.h"
-
 #include "NodeScript/NodeScript.h"
 
 #include <fstream>
@@ -38,8 +33,8 @@ namespace PokarinEngine
 	/// <summary>
 	/// カメラのパラメータをGPUにコピー
 	/// </summary>
-	/// <param name="prog"> 使用するシェーダプログラムの管理番号 </param>
-	/// <param name="camera"> GPUにコピーするカメラ </param>
+	/// <param name="[in] prog"> 使用するシェーダプログラムの管理番号 </param>
+	/// <param name="[in] camera"> GPUにコピーするカメラ </param>
 	void CopyCameraParameters(
 		GLuint prog, const Transform& camera)
 	{
@@ -74,7 +69,7 @@ namespace PokarinEngine
 	/// <summary>
 	/// シーンを作成する
 	/// </summary>
-	/// <param name="name"> シーン名 </param>
+	/// <param name="[in] name"> シーン名 </param>
 	/// <returns> 作成したシーンのポインタ </returns>
 	ScenePtr Engine::CreateScene(const char* name)
 	{
@@ -124,16 +119,16 @@ namespace PokarinEngine
 	/// ゲームエンジンを実行する
 	/// </summary>
 	/// <returns>
-	/// <para> true : 正常に実行が完了した </para>
-	/// <para> false : エラーが発生した </para>
+	/// <para> 0 : 正常に実行が完了した </para>
+	/// <para> 0以外 : エラーが発生した </para>
 	/// </returns>
-	bool Engine::Run()
+	int Engine::Run()
 	{
 		// ゲームエンジンを初期化する
 		// 初期化に失敗したら異常終了
 		if (!Initialize())
 		{
-			return false;
+			return 1;
 		}
 
 		// メインウィンドウを開く
@@ -155,7 +150,7 @@ namespace PokarinEngine
 				Window::End();
 			}
 
-			// スクリプトグラフウィンドウ
+			// ノードスクリプトウィンドウ
 			if (Window::Begin(WindowID::NodeScript))
 			{
 				NodeScript::Update();
@@ -166,7 +161,7 @@ namespace PokarinEngine
 		}
 
 		// エディタを終了
-		MainEditor::Finalize();
+		mainEditor.Finalize();
 
 		// ノードスクリプトの終了
 		NodeScript::Finalize();
@@ -174,7 +169,7 @@ namespace PokarinEngine
 		// GLFWの終了
 		glfwTerminate();
 
-		return true;
+		return 0;
 	}
 
 	/// <summary>
@@ -227,7 +222,7 @@ namespace PokarinEngine
 		// -----------------------------
 
 		// メインエディタ
-		MainEditor::Initialize(*this);
+		mainEditor.Initialize(*this);
 
 		// -----------------------
 		// シェーダの初期化
@@ -303,7 +298,7 @@ namespace PokarinEngine
 		// エディタを更新
 		// ------------------------
 
-		MainEditor::Update(isPlayGame);
+		mainEditor.Update(isPlayGame);
 	}
 
 	/// <summary>
@@ -345,10 +340,10 @@ namespace PokarinEngine
 		// ------------------------------------------
 
 		// メインカメラを使用してゲームビューに描画する
-		DrawRenderView(*currentScene->GetMainCamera().transform, MainEditor::GetGameView());
+		DrawRenderView(*currentScene->GetMainCamera().transform, mainEditor.GetGameView());
 
 		// シーンビュー
-		const SceneView& sceneView = MainEditor::GetSceneView();
+		const SceneView& sceneView = mainEditor.GetSceneView();
 
 		// シーンビュー用カメラを使用してシーンビューに描画する
 		DrawRenderView(sceneView.GetCamera(), sceneView);
@@ -357,14 +352,14 @@ namespace PokarinEngine
 		// エディタ画面の描画
 		// --------------------------
 
-		MainEditor::Render();
+		mainEditor.Render();
 	}
 
 	/// <summary>
 	/// 描画用ビューにカメラからの描画情報を保持させる
 	/// </summary>
-	/// <param name="camera"> 使用するカメラ </param>
-	/// <param name="renderView"> 描画情報を保持する描画用ビュー </param>
+	/// <param name="[in] camera"> 使用するカメラ </param>
+	/// <param name="[in] renderView"> 描画情報を保持する描画用ビュー </param>
 	void Engine::DrawRenderView(const Transform& camera, const RenderView& renderView)
 	{
 		// -------------------------------------
@@ -448,7 +443,7 @@ namespace PokarinEngine
 	/// <summary>
 	/// <para> テクスチャを取得する </para>
 	/// </summary>
-	/// <param name="name"> テクスチャファイル名 </param>
+	/// <param name="[in] name"> テクスチャファイル名 </param>
 	/// <returns> 名前がnameと一致するテクスチャ </returns>
 	TexturePtr Engine::GetTexture(const char* name)
 	{
@@ -493,8 +488,8 @@ namespace PokarinEngine
 	/// <summary>
 	/// テクスチャを取得する
 	/// </summary>
-	/// <param name="width"> 幅 </param>
-	/// <param name="height"> 高さ </param>
+	/// <param name="[in] width"> 幅 </param>
+	/// <param name="[in] height"> 高さ </param>
 	/// <returns> 指定した大きさのテクスチャ </returns>
 	TexturePtr Engine::GetTexture(GLsizei width, GLsizei height)
 	{
@@ -519,8 +514,8 @@ namespace PokarinEngine
 	/// <summary>
 	/// スカイスフィアを描画する
 	/// </summary>
-	/// <param name="skySphereMaterial"> スカイスフィア用マテリアル </param>
-	void Engine::DrawSkySphere(const MaterialPtr skySphereMaterial)
+	/// <param name="[in] skySphereMaterial"> スカイスフィア用マテリアル </param>
+	void Engine::DrawSkySphere(const MaterialPtr& skySphereMaterial)
 	{
 		// --------------------------------------------------------
 		// スカイスフィア用モデルがない場合は描画しない
@@ -613,13 +608,13 @@ namespace PokarinEngine
 		if (skySphereMaterial)
 		{
 			// スカイスフィアを描画する
-			Draw(*skySphere, progUnlit, materials);
+			Draw(skySphere, progUnlit, materials);
 		}
 		// 指定されていないならスタティックメッシュにあるマテリアルを使う
 		else
 		{
 			// スカイスフィアを描画する
-			Draw(*skySphere, progUnlit, skySphere->materials);
+			Draw(skySphere, progUnlit, skySphere->materials);
 		}
 
 		// カメラの座標を元に戻す

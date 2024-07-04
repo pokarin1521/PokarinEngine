@@ -14,7 +14,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// 乱数を初期化する
 		/// </summary>
-		/// <param name="seed"> 乱数の種 </param>
+		/// <param name="[in] seed"> 乱数の種 </param>
 		void Initialize(int seed);
 
 		/// <summary>
@@ -26,16 +26,16 @@ namespace PokarinEngine
 		/// <summary>
 		/// 指定されたの範囲の一様乱数を取得する
 		/// </summary>
-		/// <param name="min"> 生成範囲の最小値 </param>
-		/// <param name="max"> 生成範囲の最大値 </param>
+		/// <param name="[in] min"> 生成範囲の最小値 </param>
+		/// <param name="[in] max"> 生成範囲の最大値 </param>
 		/// <returns> 生成した乱数 </returns>
 		float Range(float min, float max);
 
 		/// <summary>
 		/// 指定されたの範囲の一様乱数を取得する
 		/// </summary>
-		/// <param name="min"> 生成範囲の最小値 </param>
-		/// <param name="max"> 生成範囲の最大値 </param>
+		/// <param name="[in] min"> 生成範囲の最小値 </param>
+		/// <param name="[in] max"> 生成範囲の最大値 </param>
 		/// <returns> 生成した乱数 </returns>
 		int Range(int min, int max);
 

@@ -1,122 +1,23 @@
 /**
-* @file Collision.cpp
+* @file Intersect.cpp
 */
-#include "Collision.h"
+#include "Intersect.h"
 
 #include <algorithm>
 
 namespace PokarinEngine
 {
+	/// <summary>
+	/// 衝突用
+	/// </summary>
 	namespace Collision
 	{
 		/// ここでしか使わないので、cppのみに書く
 		/// <summary>
-		/// スラブ(ある軸に垂直な平面)と光線の交差判定
-		/// </summary>
-		/// <param name="[in] min"> スラブの開始位置 </param>
-		/// <param name="[in] max"> スラブの終了位置 </param>
-		/// <param name="[in] start"> 光線の発射点 </param>
-		/// <param name="[in] direction"> 光線の向き </param>
-		/// <param name="[out] tmin"> AABBと光線の交差開始時間 </param>
-		/// <param name="[out] tmax"> AABBと光線の交差終了時間 </param>
-		/// <returns>
-		/// <para> true : 交差している </para>
-		/// <para> false : 交差していない </para>
-		/// </returns>
-		bool IntersectSlab(float min, float max, float start, float direction,
-			float& tmin, float& tmax)
-		{
-			// ----------------------------
-			// 光線とスラブが平行か確認
-			// ----------------------------
-
-			/* 光線とスラブが平行な場合、
-			軸成分が0になるため時間を求めることができない
-			この場合は「発射点がスラブ内にあるかどうか」で判定する*/
-
-			// 光線がスラブと平行な場合
-			// 発射点がスラブ内にあれば交差している、外にあれば交差していない
-			if (abs(direction) < 0.0001f)
-			{
-				return (start >= min) && (start <= max);
-			}
-
-			// ----------------------------------------------------
-			// 光線とスラブが交差する開始時間と終了時間を求める
-			// ----------------------------------------------------
-
-			/* 光線の向きベクトルは
-			「光線がX,Y,Zの各軸方向に進む速度」と考えられる
-
-			そのため、ある軸における「発射点からスラブまでの距離」を
-			向きベクトルの同じ軸成分で割ることで、
-			「交差開始時間(光線が出てから交差し始めるまでの時間)」と
-			「交差終了時間(光線が出てから交差が終わるまでの時間)」が求められる */
-
-			// 光線とスラブが交差する開始時間
-			// (光線が出てから交差し始めるまでの時間)
-			float t0 = (min - start) / direction;
-
-			// 光線とスラブが交差する終了時間
-			// (光線が出てから交差が終わるまでの時間)
-			float t1 = (max - start) / direction;
-
-			// 時間の早い側を開始時間とする
-			if (t0 > t1)
-			{
-				// t0とt1を入れ替え
-				std::swap(t0, t1);
-			}
-
-			// -------------------------
-			// 共通の交差範囲を求める
-			// -------------------------
-
-			/* 光線がXスラブと交差している最中に、
-			Yスラブと交差した場合、
-
-			X : 交差開始時間 <------------------> 交差終了時間
-			Y :          交差開始時間 <=================> 交差終了時間
-
-			となるか
-
-			X : 交差開始時間 <---------------------------------> 交差終了時間
-			Y :          交差開始時間 <=================> 交差終了時間
-
-			となる
-
-			このとき、共通の交差範囲は
-			「遅い方の交差開始時間 ～ 早い方の交差終了時間」となる */
-
-			// 以前の交差開始時間と今回の交差開始時間を比較し、
-			// 遅い方を選択
-			if (t0 > tmin)
-			{
-				tmin = t0;
-			}
-
-			// 以前の交差終了時間と今回の交差終了時間を比較し、
-			// 早い方を選択
-			if (t1 < tmax)
-			{
-				tmax = t1;
-			}
-
-			// ------------
-			// 交差判定
-			// ------------
-
-			// 「交差開始時間 <= 交差終了時間」の場合は交差している
-			// それ以外は「共通の交差範囲」がないことになる
-			return tmin <= tmax;
-		}
-
-		/// ここでしか使わないので、cppのみに書く
-		/// <summary>
 		/// AABBから点への最近接点を求める
 		/// </summary>
-		/// <param name="aabb"> 判定対象のAABB </param>
-		/// <param name="point"> 判定対象の点 </param>
+		/// <param name="[in] aabb"> 判定対象のAABB </param>
+		/// <param name="[in] point"> 判定対象の点 </param>
 		/// <returns> AABBの中で最も点に近い座標 </returns>
 		Vector3 ClosestPoint(const AABB& aabb, const Vector3& point)
 		{
@@ -138,16 +39,16 @@ namespace PokarinEngine
 		/// <summary>
 		/// OBBから点への最近接点を求める
 		/// </summary>
-		/// <param name="box"> 判定対象のOBB </param>
-		/// <param name="point"> 判定対象の点 </param>
+		/// <param name="[in] box"> 判定対象のOBB </param>
+		/// <param name="[in] point"> 判定対象の点 </param>
 		/// <returns> OBBの中で最も点に近い座標 </returns>
 		Vector3 ClosestPoint(const Box& box, const Vector3& point)
 		{
 			// OBBの中心から点に向かうベクトル
-			const Vector3 vector = point - box.position;
+			const Vector3 vector = point - box.center;
 
 			// OBBの中で最も点に近い座標
-			Vector3 closestPoint = box.position;
+			Vector3 closestPoint = box.center;
 
 			// X,Y,Z軸それぞれで求める
 			for (int i = 0; i < Vector3::size; ++i)
@@ -323,7 +224,7 @@ namespace PokarinEngine
 			// ---------------------------------
 
 			// aの中心からbの中心までのベクトル
-			const Vector3 vector = b.position - a.position;
+			const Vector3 vector = b.center - a.center;
 
 			// a～bまでの距離の2乗
 			// (平方根を避けるため、2乗同士の比較に使う)
@@ -378,10 +279,10 @@ namespace PokarinEngine
 			// --------------------------------------------------
 
 			// 球体の中心からの最近接点
-			const Vector3 point = ClosestPoint(aabb, sphere.position);
+			const Vector3 point = ClosestPoint(aabb, sphere.center);
 
 			// 最近接点から球体の中心までのベクトル
-			const Vector3 vector = sphere.position - point;
+			const Vector3 vector = sphere.center - point;
 
 			// 最近接点から球体の中心までの距離の2乗
 			const float sqrDistance = vector.SprMagnitude();
@@ -467,202 +368,5 @@ namespace PokarinEngine
 
 			return true;
 		}
-
-		/// <summary>
-		/// OBBと球体の交差判定
-		/// </summary>
-		/// <param name="[in] aabb"> 判定対象のOBB </param>
-		/// <param name="[in] sphere"> 判定対象の球体 </param>
-		/// <param name="[out] penetration"> OBBが球体に貫通した距離 </param>
-		/// <returns> 
-		/// <para> true : 交差している </para> 
-		/// <para> false : 交差していない </para> 
-		/// </returns>
-		bool Intersect(const Box& box, const Sphere& sphere, Vector3& penetration)
-		{
-			return false;
-		}
-
-		/// <summary>
-		/// AABBと光線の交差判定
-		/// </summary>
-		/// <param name="[in] aabb"> 判定対象のAABB </param>
-		/// <param name="[in] ray"> 判定対象の光線 </param>
-		/// <param name="[out] distance"> 光線がAABBと最初に交差するまでの距離 </param>
-		/// <returns>
-		/// <para> true : 交差している </para>
-		/// <para> false : 交差していない </para>
-		/// </returns>
-		bool Intersect(const AABB& aabb, const Ray& ray, float& distance)
-		{
-			// ------------------------------
-			// 共通の交差範囲
-			// 最初は0 ～ 最大値にしておく
-			// ------------------------------
-
-			// 交差開始時間
-			float tmin = 0;
-
-			// 交差終了時間
-			float tmax = FLT_MAX;
-
-			// --------------------------------
-			// 各軸のスラブと光線の交差判定
-			// --------------------------------
-
-			/* 光線がAABBと交差するというのは、
-			光線が各軸のスラブと同時に交差するということ
-
-			IntersectSlab関数で「共通の交差範囲」を求め
-			同時に交差しているか確認する */
-
-			// Xスラブと光線の交差判定
-			if (!IntersectSlab(aabb.min.x, aabb.max.x,
-				ray.start.x, ray.direction.x, tmin, tmax))
-			{
-				// 交差していない
-				return false;
-			}
-
-			// Yスラブと光線の交差判定
-			if (!IntersectSlab(aabb.min.y, aabb.max.y,
-				ray.start.y, ray.direction.y, tmin, tmax))
-			{
-				// 交差していない
-				return false;
-			}
-
-			// Zスラブと光線の交差判定
-			if (!IntersectSlab(aabb.min.z, aabb.max.z,
-				ray.start.z, ray.direction.z, tmin, tmax))
-			{
-				// 交差していない
-				return false;
-			}
-
-			// --------------------------------
-			// 交点までの距離を設定し、
-			// 交差していることを確定させる
-			// --------------------------------
-
-			// 交差し始めるまでの時間が、
-			// そのまま交点までの距離になる
-
-			// 交点までの距離を設定
-			// 光線とコライダーの交差開始時間が
-			// そのまま交点までの距離になる
-			distance = tmin;
-
-			// 交差している
-			return true;
-		}
-
-		/// <summary>
-		/// 球体と光線の交差判定
-		/// </summary>
-		/// <param name="[in] sphere"> 判定対象の球体 </param>
-		/// <param name="[in] ray"> 判定対象の光線 </param>
-		/// <param name="[out] distance"> 光線がAABBと最初に交差するまでの距離 </param>
-		/// <returns>
-		/// <para> true : 交差している </para>
-		/// <para> false : 交差していない </para>
-		/// </returns>
-		bool Intersect(const Sphere& sphere, const Ray& ray, float& distance)
-		{
-			/* 光線(直線)の式Rは、
-			「始点P、向きD、光線上の任意の位置を表す変数t」で定義できる
-
-			R(t) = P + t * D
-
-			球体の式は、
-			「球体の中心C、半径r、球体表面の任意の座標X」で定義できる
-
-			(X - C)・(X - C) = r^2		(・は内積)
-
-			球体と光線が交差する座標は、
-			Xに光線の式R(t)を代入し、球体の式を満たす変数tを求めることで見つかる
-
-			m = P - C とする
-			(t * D + m)・(t * D + m) = r^2
-
-			展開する(Dは向きベクトルなので長さは1、D・D = 1)
-
-			t^2 + 2(m・D)t + m・m = r^2
-
-			t以外の記号は定数なので、tの2次方程式になる
-			解の公式を使ってtを求める (b = m・D, c = m・m - r^2)
-			ただし、光線には始点があるので、
-			tが始点より手前を指す場合を除外しなくてはならない */
-
-			// ---------------------------------------------
-			// 「球体と光線が交差する座標t」を
-			// 求めるのに必要な「m, b, c」を求める
-			// ---------------------------------------------
-
-			// 球体の中心から光線の始点までのベクトル
-			const Vector3 m = ray.start - sphere.position;
-
-			// 球体に対する光線の方向(内積で判断する)
-			// プラス   : 球体から離れていく方向
-			// マイナス : 球体に向かっていく方向
-			const float b = Vector3::Dot(m, ray.direction);
-
-			//「球体の中心から光線の始点までの距離」と「球体の半径」の差
-			// 平方根を避けるために2乗値同士で計算
-			// プラス   : 光線の始点が球体の外にある
-			// マイナス : 光線の始点が球体の中にある
-			const float c = m.SprMagnitude() - sphere.radius * sphere.radius;
-
-			// ------------------------------------------
-			// 球体と光線が交差するのか判定する
-			// ------------------------------------------
-
-			// 光線の始点が球体の外にあり、
-			// 光線が球体から離れていく方向に発射された場合、
-			if (c > 0 && b > 0)
-			{
-				// 交差しない
-				return false;
-			}
-
-			// --------------------------------------
-			// 「球体と光線が交差する座標t」が
-			// 求められるのか判定する
-			// --------------------------------------
-
-			// 判別式
-			const float d = b * b - c;
-
-			// 判別式が負の場合は
-			// 解なし
-			if (d < 0)
-			{
-				return false;
-			}
-
-			// ---------------------------------
-			// 最初に交差する座標を計算
-			// ---------------------------------
-
-			distance = -b - sqrt(d);
-
-			// ---------------------------------------------
-			// 光線の始点より後ろ側で交差している場合
-			// 0にして「始点 = 交点」とする
-			// ---------------------------------------------
-
-			// 求めた交点が負の場合、光線の始点より手前を指し
-			// 光線が球体内から発射されたことを意味する
-			// (始点が球体外にある状況は、交差するかの判定で除外済み)
-			if (distance < 0)
-			{
-				// 始点 = 交点とする
-				distance = 0;
-			}
-
-			return true;
-		}
-
-	} // namespace Collision
-
-} // namespace PokarinEngine
+	}
+}

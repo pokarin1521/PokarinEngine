@@ -13,10 +13,10 @@ namespace PokarinEngine
 	/// <summary>
 	/// FBOを作成するコンストラクタ
 	/// </summary>
-	/// <param name="engine"> エンジンクラスの参照 </param>
-	/// <param name="_windowID"> ウィンドウ番号 </param>
-	/// <param name="fboWidth"> FBOの幅 </param>
-	/// <param name="fboHeight"> FBOの高さ </param>
+	/// <param name="[in] engine"> エンジンクラスの参照 </param>
+	/// <param name="[in] _windowID"> ウィンドウ番号 </param>
+	/// <param name="[in] fboWidth"> FBOの幅 </param>
+	/// <param name="[in] fboHeight"> FBOの高さ </param>
 	FramebufferObject::FramebufferObject(
 		Engine& engine, WindowID _windowID, GLsizei fboWidth, GLsizei fboHeight)
 	{
@@ -118,6 +118,7 @@ namespace PokarinEngine
 	/// <summary>
 	/// カラーバッファ用テクスチャをクリア
 	/// </summary>
+	/// <param name="[in] color"> クリア色 </param>
 	void FramebufferObject::ClearColor(const Color& color)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, id);

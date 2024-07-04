@@ -26,21 +26,21 @@ namespace PokarinEngine
 		/// <summary>
 		/// 書式付き文字列をデバッグウィンドウに表示する
 		/// </summary>
-		/// <param name="type"> メッセージの種類 </param>
-		/// <param name="func"> 関数名 </param>
-		/// <param name="format"> 書式付き文字列 </param>
+		/// <param name="[in] type"> メッセージの種類 </param>
+		/// <param name="[in] func"> 関数名 </param>
+		/// <param name="[in] format"> 書式付き文字列 </param>
 		void Log(Type type, const char* func, const char* format, ...);
 
 		/// <summary>
 		/// OpenGLからのメッセージを処理するコールバック関数
 		/// </summary>
-		/// <param name="source"> メッセージの発信者(OpenGL、Windows、シェーダなど) </param>
-		/// <param name="type"> メッセージの種類(エラー、警告など) </param>
-		/// <param name="id"> メッセージを一位に識別する値 </param>
-		/// <param name="serity"> メッセージの重要度(高、中、低、最低) </param>
-		/// <param name="length"> メッセージの文字数. 負数ならメッセージは0終端されている </param>
-		/// <param name="message"> メッセージ本体 </param>
-		/// <param name="userParam"> コールバック設定時に指定したポインタ </param>
+		/// <param name="[in] source"> メッセージの発信者(OpenGL、Windows、シェーダなど) </param>
+		/// <param name="[in] type"> メッセージの種類(エラー、警告など) </param>
+		/// <param name="[in] id"> メッセージを一位に識別する値 </param>
+		/// <param name="[in] serity"> メッセージの重要度(高、中、低、最低) </param>
+		/// <param name="[in] length"> メッセージの文字数. 負数ならメッセージは0終端されている </param>
+		/// <param name="[in] message"> メッセージ本体 </param>
+		/// <param name="[in] userParam"> コールバック設定時に指定したポインタ </param>
 		void APIENTRY Callback(GLenum source, GLenum type,
 			GLuint id, GLenum serity, GLsizei length,
 			const GLchar* message, const void* userParam);

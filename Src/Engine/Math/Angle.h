@@ -14,7 +14,7 @@ namespace PokarinEngine
 	/// <summary>
 	/// 度数法を弧度法に変換する
 	/// </summary>
-	/// <param name="deg"> 角度(度数法) </param>
+	/// <param name="[in] deg"> 角度(度数法) </param>
 	/// <returns> 角度(弧度法) </returns>
 	constexpr float Radians(float deg)
 	{
@@ -24,9 +24,9 @@ namespace PokarinEngine
 	/// <summary>
 	/// 度数法を弧度法に変換する
 	/// </summary>
-	/// <param name="deg"> 角度(度数法) </param>
+	/// <param name="[in] deg"> 角度(度数法) </param>
 	/// <returns> 角度(弧度法) </returns>
-	constexpr Vector3 Radians(Vector3 deg)
+	constexpr Vector3 Radians(const Vector3& deg)
 	{
 		return Vector3(Radians(deg.x), Radians(deg.y), Radians(deg.z));
 	}
@@ -34,7 +34,7 @@ namespace PokarinEngine
 	/// <summary>
 	/// 弧度法を度数法に変換する
 	/// </summary>
-	/// <param name="rad"> 角度(弧度法) </param>
+	/// <param name="[in] rad"> 角度(弧度法) </param>
 	/// <returns> 角度(度数法) </returns>
 	constexpr float Degrees(float rad)
 	{
@@ -44,9 +44,9 @@ namespace PokarinEngine
 	/// <summary>
 	/// 弧度法を度数法に変換する
 	/// </summary>
-	/// <param name="rad"> 角度(弧度法) </param>
+	/// <param name="[in] rad"> 角度(弧度法) </param>
 	/// <returns> 角度(度数法) </returns>
-	constexpr Vector3 Degrees(Vector3 rad)
+	constexpr Vector3 Degrees(const Vector3& rad)
 	{
 		return Vector3(Degrees(rad.x), Degrees(rad.y), Degrees(rad.z));
 	}

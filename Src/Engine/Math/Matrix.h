@@ -54,14 +54,14 @@ namespace PokarinEngine
 		/// <summary>
 		/// Mat4型で初期化するコンストラクタ
 		/// </summary>
-		explicit Matrix3x3(const struct Matrix4x4& m);
+		explicit Matrix3x3(const Matrix4x4& m);
 
 	public: // ------------------------- 関数 -------------------------
 
 		/// <summary>
 		/// 回転角度から回転行列を作成
 		/// </summary>
-		/// <param name="rotation"> 回転角度 </param>
+		/// <param name="[in] rotation"> 回転角度 </param>
 		/// <returns> 作成した回転行列 </returns>
 		static Matrix3x3 CreateRotationMatrix(const Vector3& rotation);
 
@@ -123,9 +123,9 @@ namespace PokarinEngine
 		/// <summary>
 		/// 座標変換行列を作成する
 		/// </summary>
-		/// <param name="translate"> 平行移動量 </param>
-		/// <param name="rotation"> 回転角度 </param>
-		/// <param name="scale"> 拡大率 </param>
+		/// <param name="[in] translate"> 平行移動量 </param>
+		/// <param name="[in] rotation"> 回転角度 </param>
+		/// <param name="[in] scale"> 拡大率 </param>
 		/// <returns> 作成した座標変換行列 </returns>
 		static Matrix4x4 CreateTransformMatrix(
 			const Vector3& translate, const Vector3& rotation, const Vector3& scale);
@@ -133,21 +133,21 @@ namespace PokarinEngine
 		/// <summary>
 		/// 座標変換行列から移動量を取得する
 		/// </summary>
-		/// <param name="transform"> 移動量を取得する行列 </param>
+		/// <param name="[in] transform"> 座標変換行列 </param>
 		/// <returns> 平行移動量 </returns>
 		static Vector3 Translate(const Matrix4x4& transform);
 
 		/// <summary>
 		/// 座標変換行列から拡大率を取得する
 		/// </summary>
-		/// <param name="transform"> 拡大率を取得する行列 </param>
+		/// <param name="[in] transform"> 座標変換行列 </param>
 		/// <returns> 拡大率 </returns>
 		static Vector3 Scale(const Matrix4x4& transform);
 	
 		/// <summary>
 		/// 座標変換行列から回転行列を取得する
 		/// </summary>
-		/// <param name="transform"> 回転行列を取得する行列 </param>
+		/// <param name="[in] transform"> 座標変換行列 </param>
 		/// <returns> 回転行列 </returns>
 		static Matrix3x3 Rotate(const Matrix4x4& transform);
 

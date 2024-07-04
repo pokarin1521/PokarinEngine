@@ -14,8 +14,8 @@ namespace PokarinEngine
 	/// テクスチャを読み込むコンストラクタ
 	/// (暗黙的キャストを禁止)
 	/// </summary>
-	/// <param name="filename"> 読み込むテクスチャファイルの名前 </param>
-	Texture::Texture(const char* filename)
+	/// <param name="[in] fileName"> 読み込むテクスチャファイルの名前 </param>
+	Texture::Texture(const char* fileName)
 	{
 		// ---------------------
 		// ファイルを開く
@@ -23,12 +23,12 @@ namespace PokarinEngine
 
 		// バイナリモードを指定
 		// 改行文字の変換等を行わないので、読み込みが速い
-		std::ifstream file(filename, std::ios::binary);
+		std::ifstream file(fileName, std::ios::binary);
 
 		// ファイルが開いてなければ終了
 		if (!file)
 		{
-			LOG_ERROR("%sを開けません", filename);
+			LOG_ERROR("%sを開けません", fileName);
 			return;
 		}
 
@@ -37,7 +37,7 @@ namespace PokarinEngine
 		// --------------------------
 
 		// ファイル全体を一気に読み込むために、ファイルサイズ取得
-		const size_t filesize = std::filesystem::file_size(filename);
+		const size_t filesize = std::filesystem::file_size(fileName);
 		std::vector<uint8_t> buffer(filesize);
 
 		// ファイルを読み込み、bufferに格納
@@ -353,7 +353,7 @@ namespace PokarinEngine
 			buffer.data() + tgaHeaderSize);
 
 		id = object; // テクスチャオブジェクト番号
-		name = filename; // ファイル名
+		name = fileName; // ファイル名
 
 		// --------------------------------
 		// アラインメントを元に戻す
@@ -403,8 +403,8 @@ namespace PokarinEngine
 	/// テクスチャを作成するコンストラクタ
 	/// (暗黙的キャストを禁止)
 	/// </summary>
-	/// <param name="width"> 幅 </param>
-	/// <param name="height"> 高さ </param>
+	/// <param name="[in] width"> 幅 </param>
+	/// <param name="[in] height"> 高さ </param>
 	Texture::Texture(GLsizei w, GLsizei h)
 	{
 		// ------------------------

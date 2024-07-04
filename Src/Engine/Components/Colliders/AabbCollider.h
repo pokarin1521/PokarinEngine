@@ -5,7 +5,6 @@
 #define AABBCOLLIDER_H_INCLUDED
 
 #include "Collider.h"
-#include "../../Collision.h"
 
 #include "../../Debug.h"
 
@@ -36,9 +35,9 @@ namespace PokarinEngine
 	public: // ------------------- 座標 ---------------------
 
 		/// <summary>
-		/// コライダーの座標を変更する
+		/// コライダーを移動させる
 		/// </summary>
-		/// <param name="translate"> 移動量 </param>
+		/// <param name="[in] translate"> 移動量 </param>
 		void AddPosition(const Vector3& translate) override
 		{
 			aabb.min += translate;
@@ -50,7 +49,7 @@ namespace PokarinEngine
 		/// <para> 回転角度は90度単位で指定すること </para>
 		/// <para> それ以外の角度では正しい交差判定が行えない </para>
 		/// </summary>
-		/// <param name="transform"> 座標変換行列 </param>
+		/// <param name="[in] transform"> 座標変換行列 </param>
 		/// <returns> 座標変換したコライダー </returns>
 		ColliderPtr GetTransformedCollider(
 			const Matrix4x4& transform) const override;
@@ -60,7 +59,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// 図形の種類を取得する
 		/// </summary>
-		/// <returns> 軸平行境界ボックスを表すType </returns>
+		/// <returns> 図形の種類 </returns>
 		Type GetType() const override
 		{
 			return Type::AABB;
@@ -75,29 +74,17 @@ namespace PokarinEngine
 			return aabb;
 		}
 
-		/// <summary>
-		/// コンポーネントの名前を取得する
-		/// </summary>
-		/// <returns> コンポーネントの名前 </returns>
-		const std::string& GetName() override
-		{
-			return name;
-		}
-
 	public: // ------------------- 情報 ---------------------
 
 		// 図形(軸平行境界ボックス)
-		Collision::AABB aabb = { Vector3(-1), Vector3(1) };
+		Collision::AABB aabb;
 
-		// コンポーネントの名前
-		inline static const std::string name = "Aabb Collider";
-
-	private: // --------------- エディタ用 ------------------
+	private: // ---------------- エディタ用 -----------------
 
 		/// <summary>
 		/// 情報を編集できるように表示する
 		/// </summary>
-		void InfoEditor() override {}
+		void InfoEditor() override;
 	};
 
 } // namespace PokarinEngine

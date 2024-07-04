@@ -12,16 +12,19 @@ namespace PokarinEngine
 	/// </summary>
 	namespace EditorInfoRenderer
 	{
+		/// ここでしか使わないので、cppのみに書く
 		/// <summary>
 		/// 値をドラッグ操作用スライダーで表示する
 		/// </summary>
-		/// <param name="value"> 表示する値 </param>
-		/// <param name="valueName"> 表示する値の名前 </param>
-		/// <param name="infoName"> 表示する情報の名前 </param>
-		void DragValue(float& value, const std::string& valueName, const std::string& infoName)
+		/// <param name="[in,out] value"> 表示する値 </param>
+		/// <param name="[in] valueName"> 表示する値の名前 </param>
+		/// <param name="[in] title"> 表示する情報のタイトル </param>
+		/// <param name="[in] id_string"> 識別番号の文字列 </param>
+		void DragValue(float& value, const std::string& valueName, 
+			const std::string& title, const std::string& id_string)
 		{
 			// 識別用ラベル(非表示にしたいので##)
-			const std::string label = "##" + infoName + "." + valueName;
+			const std::string label = "##" + title + id_string + "." + valueName;
 
 			// ドラッグ操作用スライダーのImGuiウィンドウ幅に対する割合
 			static const float sliderRatio = 6.0f;
@@ -49,18 +52,20 @@ namespace PokarinEngine
 		/// <summary>
 		///	Vector3型の情報をドラッグ操作用スライダーで表示する
 		/// </summary>
-		/// <param name="info"> 表示する情報 </param>
-		/// <param name="width"> 表示するスライダーの幅 </param>
-		/// <param name="infoName"> 表示する情報の名前 </param>
-		/// <param name="startX"> 表示の開始位置(X座標) </param>
-		void DragVector3(Vector3& info, const float width, const std::string& infoName, const float startX)
+		/// <param name="[in,out] info"> 表示する情報 </param>
+		/// <param name="[in] title"> 表示するタイトル </param>
+		/// <param name="[in] id_string"> 識別番号の文字列 </param>
+		/// <param name="[in] width"> 表示するスライダーの幅 </param>
+		/// <param name="[in] startX"> 表示の開始位置(X座標) </param>
+		void DragVector3(Vector3& info, const std::string& title, const std::string& id_string,
+			const float width, const float startX)
 		{
 			// ----------------------------
 			// 情報の名前を表示
 			// ----------------------------
 
 			// 名前と同じ行に値を表示できるようにする
-			ImGui::Text(infoName.c_str());
+			ImGui::Text(title.c_str());
 			ImGui::SameLine();
 
 			// ----------------------------
@@ -76,13 +81,13 @@ namespace PokarinEngine
 			// 幅を設定
 			ImGui::PushItemWidth(width);
 			{
-				DragValue(info.x, "X", infoName);
+				DragValue(info.x, "X", title, id_string);
 
 				ImGui::SameLine();
-				DragValue(info.y, "Y", infoName);
+				DragValue(info.y, "Y", title, id_string);
 
 				ImGui::SameLine();
-				DragValue(info.z, "Z", infoName);
+				DragValue(info.z, "Z", title, id_string);
 
 				ImGui::PopItemWidth();
 			}

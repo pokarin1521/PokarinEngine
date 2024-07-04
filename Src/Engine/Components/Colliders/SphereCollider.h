@@ -5,7 +5,6 @@
 #define SPHERECOLLIDER_H_INCLUDED
 
 #include "Collider.h"
-#include "../../Collision.h"
 
 namespace PokarinEngine
 {
@@ -22,19 +21,19 @@ namespace PokarinEngine
 	public: // -------------------- 座標 ---------------------
 
 		/// <summary>
-		/// コライダーの座標を変更する
+		/// コライダーを移動させる
 		/// </summary>
-		/// <param name="translate"> 移動量 </param>
+		/// <param name="[in] translate"> 移動量 </param>
 		void AddPosition(const Vector3& translate) override
 		{
-			sphere.position += translate;
+			sphere.center += translate;
 		}
 
 		/// <summary>
 		/// 座標変換したコライダーを取得する
 		/// </summary>
-		/// <param name="transform"></param>
-		/// <returns></returns>
+		/// <param name="[in] transform"> 座標変換行列 </param>
+		/// <returns> 座標変換したコライダー </returns>
 		ColliderPtr GetTransformedCollider(
 			const Matrix4x4& transform) const override;
 
@@ -43,7 +42,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// 図形の種類を取得する
 		/// </summary>
-		/// <returns> 球体を表すType </returns>
+		/// <returns> 図形の種類 </returns>
 		Type GetType() const override
 		{
 			return Type::Sphere;
@@ -58,29 +57,17 @@ namespace PokarinEngine
 			return sphere;
 		}
 
-		/// <summary>
-		/// コンポーネントの名前を取得する
-		/// </summary>
-		/// <returns> コンポーネントの名前 </returns>
-		const std::string& GetName() override
-		{
-			return name;
-		}
-
 	public: // -------------------- 情報 ---------------------
-	
+
 		// 図形(球体)
-		Collision::Sphere sphere = { Vector3(0), 1 };
+		Collision::Sphere sphere;
 
-		// コンポーネントの名前
-		inline static const std::string name = "Sphere Collider";
-
-	private: // ---------------- エディタ用 ------------------
+	private: // ----------------- エディタ用 -----------------
 
 		/// <summary>
 		/// 情報を編集できるように表示する
 		/// </summary>
-		void InfoEditor() override {}
+		void InfoEditor() override;
 	};
 
 } // namespace PokarinEngine

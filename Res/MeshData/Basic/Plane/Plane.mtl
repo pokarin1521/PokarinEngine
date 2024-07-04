@@ -1,5 +1,4 @@
-newmtl Default-Material
-Kd 1 1 1
-Ke 0 0 0
+newmtl Default-Line
 map_Kd White.tga
 illum 2
+

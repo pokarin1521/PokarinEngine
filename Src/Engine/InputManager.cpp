@@ -13,7 +13,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// キーを押しているか取得する
 		/// </summary>
-		/// <param name="key"> キー </param>
+		/// <param name="[in] key"> キー </param>
 		/// <returns> キーを押している間trueになる </returns>
 		bool GetKey(KeyCode key)
 		{
@@ -23,7 +23,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// キーを押したか取得する
 		/// </summary>
-		/// <param name="key"> キー </param>
+		/// <param name="[in] key"> キー </param>
 		/// <returns> キーを押した瞬間だけtrueになる </returns>
 		bool GetKeyDown(KeyCode key)
 		{
@@ -33,7 +33,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// キーを離したか取得する
 		/// </summary>
-		/// <param name="key"> キー </param>
+		/// <param name="[in] key"> キー </param>
 		/// <returns> キーを離した瞬間だけtrueになる </returns>
 		bool GetKeyUp(KeyCode key)
 		{
@@ -48,7 +48,7 @@ namespace PokarinEngine
 			/// <summary>
 			/// ダブルクリックしたか取得する
 			/// </summary>
-			/// <param name="mouseButton"> マウスボタン </param>
+			/// <param name="[in] mouseButton"> マウスボタン </param>
 			/// <returns>
 			/// <para> true : ダブルクリックした </para>
 			/// <para> false : ダブルクリックしていない </para>
@@ -61,7 +61,7 @@ namespace PokarinEngine
 			/// <summary>
 			/// マウスカーソルが画面端にいるか取得する
 			/// </summary>
-			/// <param name="windowID"> ウィンドウ識別番号 </param>
+			/// <param name="[in] windowID"> ウィンドウ識別番号 </param>
 			/// <returns>
 			/// <para> true : マウスカーソルが画面端にいる </para>
 			/// <para> false : マウスカーソルが画面端にいない </para>
@@ -86,7 +86,7 @@ namespace PokarinEngine
 			/// <summary>
 			/// マウスカーソルの座標を取得する
 			/// </summary>
-			/// <param name="windowID"> ウィンドウ識別番号 </param>
+			/// <param name="[in] windowID"> ウィンドウ識別番号 </param>
 			/// <returns> スクリーン座標系のマウスカーソル座標 </returns>
 			Vector2 GetScreenPos(WindowID windowID)
 			{
@@ -98,7 +98,7 @@ namespace PokarinEngine
 			/// <summary>
 			/// マウスカーソルの座標を取得する
 			/// </summary>
-			/// <param name="windowID"> ウィンドウ識別番号 </param>
+			/// <param name="[in] windowID"> ウィンドウ識別番号 </param>
 			/// <returns> ビュー座標系のカーソル座標 </returns>
 			Vector2 GetViewPos(WindowID windowID)
 			{
@@ -132,9 +132,9 @@ namespace PokarinEngine
 			/// <summary>
 			/// スクリーン座標系のマウスカーソル座標を設定する
 			/// </summary>
-			/// <param name="windowID"> ウィンドウ識別番号 </param>
-			/// <param name="mousePos"> マウスカーソルの座標 </param>
-			void SetScreenPos(WindowID windowID, Vector2 mousePos)
+			/// <param name="[in] windowID"> ウィンドウ識別番号 </param>
+			/// <param name="[in] mousePos"> マウスカーソルの座標 </param>
+			void SetScreenPos(WindowID windowID, const Vector2& mousePos)
 			{
 				glfwSetCursorPos(&Window::GetWindow(windowID), mousePos.x, mousePos.y);
 			}

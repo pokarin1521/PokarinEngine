@@ -40,7 +40,7 @@ namespace PokarinEngine
 		static const float sliderWidth = 50.0f;
 
 		// 移動量を表示
-		EditorInfoRenderer::DragVector3(translate, sliderWidth, "Translate");
+		EditorInfoRenderer::DragVector3(translate, "Translate", "AddWorldPositionNode", sliderWidth);
 
 		// データピンの表示を終了
 		EndPin(PinAttribute::Input);

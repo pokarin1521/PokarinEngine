@@ -14,4 +14,13 @@ namespace PokarinEngine
 	{
 		ImGui::Text("Camera Information");
 	}
+
+	/// <summary>
+	/// コンポーネントの情報を保存する
+	/// </summary>
+	/// <param name="[in] folderName"> 保存先のフォルダ </param>
+	void Camera::SaveInfo(const std::string& folderName) const
+	{
+
+	}
 }
