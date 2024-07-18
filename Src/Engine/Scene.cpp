@@ -3,6 +3,8 @@
 */
 #include "Scene.h"
 
+#include "Json/Json.h"
+
 #include "Engine.h"
 #include "Random.h"
 #include "Debug.h"
@@ -12,8 +14,6 @@
 #include "Configs/ShaderConfig.h"
 
 #include "Collision/Collision.h"
-
-#include "Json/Json.h"
 
 #include <algorithm>
 #include <filesystem>

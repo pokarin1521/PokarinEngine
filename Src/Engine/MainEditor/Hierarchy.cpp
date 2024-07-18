@@ -84,19 +84,14 @@ namespace PokarinEngine
 		// ゲームオブジェクト作成用ボタンを配置する
 		ImGui::BeginMenuBar();
 		{
-			// ボタンの色を設定
-			ImGui::PushStyleColor(ImGuiCol_::ImGuiCol_Button, ImVec4(0, 0, 0, 0));
-
 			// ゲームオブジェクト作成ポップアップ用ボタン
-			if (ImGui::Button("Object +"))
+			// 黒色で表示
+			if (ImGui::Button("Object +", ImVec4(0,0,0,0)))
 			{
 				// ボタンを押した時に
 				// ゲームオブジェクト作成用ポップアップを展開する
 				ImGui::OpenPopup(createObjectPopupName);
 			}
-
-			// ボタンの色設定を終了
-			ImGui::PopStyleColor();
 
 			// ゲームオブジェクト作成用ポップアップの処理
 			CreateObjectPopup();
@@ -263,20 +258,14 @@ namespace PokarinEngine
 	/// <param name="[in] staticMeshFile"> スタティックメッシュのファイル名 </param>
 	void Hierarchy::CreateObjectButton(const char* typeName, const char* staticMeshFile)
 	{
-		// ボタンの色を無色に設定
-		ImGui::PushStyleColor(ImGuiCol_::ImGuiCol_Button, ImVec4(0, 0, 0, 0));
-
 		// オブジェクト作成用ボタン
-		if (ImGui::Button(typeName))
+		if (ImGui::Button(typeName, Color::black))
 		{
 			// ボタンが押されたので
 			// 現在のシーンにオブジェクトを作成
 			GameObjectPtr object = engine->GetCurrentScene().CreateGameObject(
 				typeName, Vector3(0), Vector3(0), staticMeshFile);
 		}
-
-		// ボタン色の設定を終了
-		ImGui::PopStyleColor();
 	}
 
 #pragma endregion

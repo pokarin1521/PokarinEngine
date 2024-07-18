@@ -44,7 +44,7 @@ namespace PokarinEngine
 		static const float sliderWidth = 50.0f;
 
 		// 回転量(度数法)を表示
-		EditorInfoRenderer::DragVector3(rotationDeg, "Degree", "AddWorldRotationNode", sliderWidth);
+		rotationDeg.RenderDrag("Degree", "AddWorldRotationNode", sliderWidth);
 
 		// データピンの表示を終了
 		EndPin(PinAttribute::Input);

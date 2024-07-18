@@ -6,8 +6,6 @@
 
 #include "../Node.h"
 
-#include "../../../EditorInfoRenderer.h"
-
 namespace PokarinEngine
 {
 	/// <summary>

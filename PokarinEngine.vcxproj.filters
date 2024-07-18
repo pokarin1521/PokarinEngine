@@ -129,14 +129,8 @@
     <Filter Include="Src\Engine\Random">
       <UniqueIdentifier>{ff0aad65-a468-4205-910f-763d3888fa53}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Engine\EditorInfoRenderer">
-      <UniqueIdentifier>{f3c12434-fbe2-4daf-902d-22ee8b41463f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Src\Engine\ImGuiSetter">
       <UniqueIdentifier>{5e4df9e4-c431-45f1-9bbe-81dcc5ddc8c9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Packages\Enum">
-      <UniqueIdentifier>{dba27f82-ef46-4d23-9dc3-aebcbab4ec56}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -233,9 +227,6 @@
     <ClCompile Include="Src\Engine\NodeScript\Nodes\Functional\AddWorldRotationNode.cpp">
       <Filter>Src\Engine\Editor\NodeEditor\Nodes\Functional</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Engine\EditorInfoRenderer.cpp">
-      <Filter>Src\Engine\EditorInfoRenderer</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Engine\NodeScript\Nodes\Functional\AddWorldPositionNode.cpp">
       <Filter>Src\Engine\Editor\NodeEditor\Nodes\Functional</Filter>
     </ClCompile>
@@ -244,33 +235,6 @@
     </ClCompile>
     <ClCompile Include="Src\Engine\MainEditor\Toolbar.cpp">
       <Filter>Src\Engine\Editor\MainEditor</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Packages\ImGui\imgui.cpp">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Packages\ImGui\imgui_demo.cpp">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Packages\ImGui\imgui_draw.cpp">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Packages\ImGui\imgui_impl_glfw.cpp">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Packages\ImGui\imgui_impl_opengl3.cpp">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Packages\ImGui\imgui_tables.cpp">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Packages\ImGui\imgui_widgets.cpp">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Packages\ImGui\imnodes.cpp">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Packages\glad\glad.c">
-      <Filter>Src\Packages\glad</Filter>
     </ClCompile>
     <ClCompile Include="Src\Engine\NodeScript\NodeCreator.cpp">
       <Filter>Src\Engine\Editor\NodeEditor</Filter>
@@ -287,11 +251,41 @@
     <ClCompile Include="Src\Engine\Components\Colliders\Collider.cpp">
       <Filter>Src\Engine\Components\Colliders</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Packages\ImGui\ImGuizmo.cpp">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Engine\Components\ComponentAdder.cpp">
       <Filter>Src\Engine\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\Math\Vector.cpp">
+      <Filter>Src\Engine\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="packages\glad\glad.c">
+      <Filter>Src\Packages\glad</Filter>
+    </ClCompile>
+    <ClCompile Include="packages\ImGui\imgui.cpp">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="packages\ImGui\imgui_demo.cpp">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="packages\ImGui\imgui_draw.cpp">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="packages\ImGui\imgui_impl_glfw.cpp">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="packages\ImGui\imgui_impl_opengl3.cpp">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="packages\ImGui\imgui_tables.cpp">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="packages\ImGui\imgui_widgets.cpp">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="packages\ImGui\ImGuizmo.cpp">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="packages\ImGui\imnodes.cpp">
+      <Filter>Src\Packages\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -409,9 +403,6 @@
     <ClInclude Include="Src\Engine\Math\Matrix.h">
       <Filter>Src\Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Engine\Math\Vector.h">
-      <Filter>Src\Engine\Math</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Engine\Math\Angle.h">
       <Filter>Src\Engine\Math</Filter>
     </ClInclude>
@@ -445,62 +436,17 @@
     <ClInclude Include="Src\Engine\NodeScript\Nodes\Functional\AddWorldRotationNode.h">
       <Filter>Src\Engine\Editor\NodeEditor\Nodes\Functional</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Engine\EditorInfoRenderer.h">
-      <Filter>Src\Engine\EditorInfoRenderer</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Engine\NodeScript\Nodes\Functional\AddWorldPositionNode.h">
       <Filter>Src\Engine\Editor\NodeEditor\Nodes\Functional</Filter>
     </ClInclude>
     <ClInclude Include="Src\Engine\MainEditor\Toolbar.h">
       <Filter>Src\Engine\Editor\MainEditor</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Packages\ImGui\imconfig.h">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Packages\ImGui\imgui.h">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Packages\ImGui\imgui_impl_glfw.h">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Packages\ImGui\imgui_impl_opengl3.h">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Packages\ImGui\imgui_impl_opengl3_loader.h">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Packages\ImGui\imgui_internal.h">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Packages\ImGui\imnodes.h">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Packages\ImGui\imnodes_internal.h">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Packages\ImGui\imstb_rectpack.h">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Packages\ImGui\imstb_textedit.h">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Packages\ImGui\imstb_truetype.h">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Packages\glad\glad.h">
-      <Filter>Src\Packages\glad</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Packages\glad\khrplatform.h">
-      <Filter>Src\Packages\glad</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Engine\Configs\MeshConfig.h">
       <Filter>Src\Engine\Configs</Filter>
     </ClInclude>
     <ClInclude Include="Src\Engine\Configs\ShaderConfig.h">
       <Filter>Src\Engine\Configs</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Packages\Json\Json.h">
-      <Filter>Src\Packages\Json</Filter>
     </ClInclude>
     <ClInclude Include="Src\Engine\Configs\ImGuiConfig.h">
       <Filter>Src\Engine\Configs</Filter>
@@ -523,26 +469,65 @@
     <ClInclude Include="Src\Engine\UsingNames\UsingCollider.h">
       <Filter>Src\Engine\UsingNames</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Packages\ImGui\ImGuizmo.h">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Engine\Math\VectorToJson.h">
-      <Filter>Src\Engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Packages\Enum\magic_enum.hpp">
-      <Filter>Src\Packages\Enum</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Engine\Components\ComponentAdder.h">
       <Filter>Src\Engine\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Packages\Json\nlohmann\json.hpp">
-      <Filter>Src\Packages\Json\nlohmann</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Packages\Json\UsingNameJson.h">
-      <Filter>Src\Packages\Json</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Engine\UsingNames\UsingComponent.h">
       <Filter>Src\Engine\UsingNames</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\Math\Vector.h">
+      <Filter>Src\Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="packages\glad\glad.h">
+      <Filter>Src\Packages\glad</Filter>
+    </ClInclude>
+    <ClInclude Include="packages\glad\khrplatform.h">
+      <Filter>Src\Packages\glad</Filter>
+    </ClInclude>
+    <ClInclude Include="packages\ImGui\imconfig.h">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="packages\ImGui\imgui.h">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="packages\ImGui\imgui_impl_glfw.h">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="packages\ImGui\imgui_impl_opengl3.h">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="packages\ImGui\imgui_impl_opengl3_loader.h">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="packages\ImGui\imgui_internal.h">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="packages\ImGui\ImGuizmo.h">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="packages\ImGui\imnodes.h">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="packages\ImGui\imnodes_internal.h">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="packages\ImGui\imstb_rectpack.h">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="packages\ImGui\imstb_textedit.h">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="packages\ImGui\imstb_truetype.h">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="packages\Json\Json.h">
+      <Filter>Src\Packages\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="packages\Json\UsingNameJson.h">
+      <Filter>Src\Packages\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="packages\Json\nlohmann\json.hpp">
+      <Filter>Src\Packages\Json\nlohmann</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

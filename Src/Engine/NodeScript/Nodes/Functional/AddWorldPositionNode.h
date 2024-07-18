@@ -6,6 +6,8 @@
 
 #include "FunctionalNode.h"
 
+#include "../../../Math/Vector.h"
+
 namespace PokarinEngine
 {
 	/// <summary>

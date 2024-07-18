@@ -4,6 +4,8 @@
 #ifndef COLOR_H_INCLUDED
 #define COLOR_H_INCLUDED
 
+#include "ImGui/imgui.h"
+
 namespace PokarinEngine
 {
 	/// <summary>
@@ -26,6 +28,11 @@ namespace PokarinEngine
 		/// </summary>
 		constexpr Color(float _r, float _g, float _b, float _a)
 			: r(_r), g(_g), b(_b), a(_a) {}
+
+	public: // ------------------------- •ÏŠ· -------------------------
+
+		// ImVec4Œ^‚É•ÏŠ·
+		operator ImVec4() const { return ImVec4(r, g, b, a); }
 
 	public: // ---------------------- “YŽš‰‰ŽZŽq ----------------------
 

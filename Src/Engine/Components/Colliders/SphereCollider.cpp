@@ -5,8 +5,6 @@
 
 #include "ImGui/imgui.h"
 
-#include "../../EditorInfoRenderer.h"
-
 namespace PokarinEngine
 {
 	/// <summary>
@@ -67,7 +65,7 @@ namespace PokarinEngine
 		// ’†SÀ•W
 		// ---------------------
 
-		EditorInfoRenderer::DragVector3(sphere.center, "Center", "SphereCollider", sliderWidth);		
+		sphere.center.RenderDrag("Center", "SphereCollider", sliderWidth);		
 		
 		// ---------------------
 		// ‘å‚«‚³

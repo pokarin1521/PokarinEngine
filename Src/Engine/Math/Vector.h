@@ -4,6 +4,9 @@
 #ifndef VECTOR_H_INCLUDED
 #define VECTOR_H_INCLUDED
 
+#include "Json/UsingNameJson.h"
+
+#include <string>
 #include <cmath>
 
 namespace PokarinEngine
@@ -98,7 +101,7 @@ namespace PokarinEngine
 		/// </summary>
 		constexpr Vector3(const Vector2& v, float _z) : x(v.x), y(v.y), z(_z) {}
 
-	public: // ------------------------- 関数 -------------------------
+	public: // ------------------------- 計算 -------------------------
 
 		/// <summary>
 		/// ベクトルの内積を求める
@@ -125,6 +128,32 @@ namespace PokarinEngine
 		/// </summary>
 		/// <returns> 単位ベクトル </returns>
 		inline Vector3 Normalize() const;
+
+	public: // ----------------------- エディタ -----------------------
+
+		/// <summary>
+		///	エディタに情報をドラッグ操作用スライダーで表示する
+		/// </summary>
+		/// <param name="[in] title"> 表示するタイトル </param>
+		/// <param name="[in] id_string"> 識別番号の文字列 </param>
+		/// <param name="[in] startX"> 表示の開始位置(X座標) </param>
+		/// <param name="[in] width"> 表示するスライダーの幅 </param>
+		void RenderDrag(const std::string& title, const std::string& id_string,
+			const float width, const float startX = 0);
+
+	public: // ------------------------- Json -------------------------
+
+		/// <summary>
+		/// 情報をJson型に格納する
+		/// </summary>
+		/// <param name="[out] data"> 情報を格納するJson型 </param>
+		void ToJson(Json& data) const;
+
+		/// <summary>
+		/// 情報をJson型から取得する
+		/// </summary>
+		/// <param name="[in] data"> 情報を格納しているJson型 </param>
+		void FromJson(const Json& data);
 
 	public: // ---------------------- 添字演算子 ----------------------
 

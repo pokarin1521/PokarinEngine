@@ -19,7 +19,7 @@ namespace PokarinEngine
 	/// ƒRƒ“ƒ|[ƒlƒ“ƒg‚Ìî•ñ‚ğJsonŒ^‚ÉŠi”[‚·‚é
 	/// </summary>
 	/// <param name="[out] Json"> î•ñ‚ğŠi”[‚·‚éJsonŒ^ </param>
-	void Camera::ComponentToJson(Json& data) const
+	void Camera::ToJson(Json& data) const
 	{
 
 	}

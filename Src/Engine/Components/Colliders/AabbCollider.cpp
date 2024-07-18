@@ -5,8 +5,6 @@
 
 #include "ImGui/imgui.h"
 
-#include "../../EditorInfoRenderer.h"
-
 namespace PokarinEngine
 {
 	/// <summary>
@@ -66,7 +64,7 @@ namespace PokarinEngine
 		// 中心座標
 		// -------------------------
 
-		EditorInfoRenderer::DragVector3(aabb.center, "Center", id_string, sliderWidth);
+		aabb.center.RenderDrag("Center", id_string, sliderWidth);
 
 		// 中心座標と大きさから
 		// 最小座標と最大座標を求める
@@ -77,6 +75,6 @@ namespace PokarinEngine
 		// 大きさ
 		// --------------------------
 
-		EditorInfoRenderer::DragVector3(aabb.size, "Size", id_string, sliderWidth);
+		aabb.size.RenderDrag("Size", id_string, sliderWidth);
 	}
 }

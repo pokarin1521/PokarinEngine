@@ -4,11 +4,9 @@
 #include "Transform.h"
 
 #include "ImGui/imgui.h"
+#include "Json/Json.h"
 
 #include "../Engine.h"
-#include "../EditorInfoRenderer.h"
-
-#include"../Math/VectorToJson.h"
 
 #include <fstream>
 
@@ -199,7 +197,7 @@ namespace PokarinEngine
 		const std::string id_string = GetID_String();
 
 		// ˆÊ’u
-		EditorInfoRenderer::DragVector3(position, "Position", id_string, sliderWidth, startX);
+		position.RenderDrag("Position", id_string, sliderWidth, startX);
 
 		// ----------------------------
 		// ‰ñ“]Šp“x(“x”–@)
@@ -209,7 +207,7 @@ namespace PokarinEngine
 		Vector3 rotationDeg = Degrees(rotation);
 
 		// •ª‚©‚è‚â‚·‚¢‚æ‚¤‚É“x”–@‚Å•\¦
-		EditorInfoRenderer::DragVector3(rotationDeg, "Rotation", id_string, sliderWidth, startX);
+		rotationDeg.RenderDrag("Rotation", id_string, sliderWidth, startX);
 
 		// ŒÊ“x–@‚É•ÏŠ·
 		rotation = Radians(rotationDeg);
@@ -218,22 +216,33 @@ namespace PokarinEngine
 		// Šg‘å—¦
 		// ----------------------------
 
-		EditorInfoRenderer::DragVector3(scale, "Scale", id_string, sliderWidth, startX);
+		scale.RenderDrag("Scale", id_string, sliderWidth, startX);
 	}
 
 	/// <summary>
 	/// ƒRƒ“ƒ|[ƒlƒ“ƒg‚Ìî•ñ‚ğJsonŒ^‚ÉŠi”[‚·‚é
 	/// </summary>
 	/// <param name="[out] Json"> î•ñ‚ğŠi”[‚·‚éJsonŒ^ </param>
-	void Transform::ComponentToJson(Json& data) const
+	void Transform::ToJson(Json& data) const
 	{
 		// ------------------------------------
 		// î•ñ‚ğJson‚ÉŠi”[‚·‚é
 		// ------------------------------------
 
-		VectorToJson(position, data["Position"]);
-		VectorToJson(rotation, data["Rotation"]);
-		VectorToJson(scale, data["Scale"]);
+		position.ToJson(data["Position"]);
+		rotation.ToJson(data["Rotation"]);
+		scale.ToJson(data["Scale"]);
+	}
+
+	/// <summary>
+	/// ƒRƒ“ƒ|[ƒlƒ“ƒg‚Ìî•ñ‚ğJsonŒ^‚©‚çæ“¾‚·‚é
+	/// </summary>
+	/// <param name="[out] data"> î•ñ‚ğŠi”[‚µ‚Ä‚¢‚éJsonŒ^ </param>
+	void Transform::FromJson(const Json& data)
+	{
+		position.FromJson(data["Position"]);
+		rotation.FromJson(data["Rotation"]);
+		scale.FromJson(data["Scale"]);
 	}
 
 } // namespace PokarinEngine

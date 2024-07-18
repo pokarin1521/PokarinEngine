@@ -74,6 +74,20 @@ namespace PokarinEngine
 			return aabb;
 		}
 
+	public: // ------------------- Json ---------------------
+
+		/// <summary>
+		/// コンポーネントの情報をJson型に格納する
+		/// </summary>
+		/// <param name="[out] Json"> 情報を格納するJson型 </param>
+		void ToJson(Json& data) const override {}
+
+		/// <summary>
+		/// コンポーネントの情報をJson型から取得する
+		/// </summary>
+		/// <param name="[out] data"> 情報を格納しているJson型 </param>
+		void FromJson(const Json& data) override {}
+
 	public: // ------------------- 情報 ---------------------
 
 		// 図形(軸平行境界ボックス)
@@ -85,14 +99,6 @@ namespace PokarinEngine
 		/// 情報を編集できるように表示する
 		/// </summary>
 		void InfoEditor() override;
-
-	private: // ------------------- 保存 --------------------
-
-		/// <summary>
-		/// コンポーネントの情報をJson型に格納する
-		/// </summary>
-		/// <param name="[out] Json"> 情報を格納するJson型 </param>
-		void ComponentToJson(Json& data) const override {}
 	};
 
 } // namespace PokarinEngine

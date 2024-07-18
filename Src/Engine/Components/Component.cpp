@@ -4,11 +4,10 @@
 #include "Component.h"
 
 #include "IconFont/IconFont.h"
+#include "Json/Json.h"
 
 #include "../GameObject.h"
 #include "../Scene.h"
-
-#include "Json/Json.h"
 
 namespace PokarinEngine
 {
@@ -85,18 +84,5 @@ namespace PokarinEngine
 		{
 			InfoEditor();
 		}
-	}
-
-	/// <summary>
-	/// ƒRƒ“ƒ|[ƒlƒ“ƒg‚Ìî•ñ‚ğJsonŒ^‚ÉŠi”[‚·‚é
-	/// </summary>
-	/// <param name="[out] data"> î•ñ‚ğŠi”[‚·‚éJsonŒ^ </param>
-	void Component::ToJson(Json& data) const
-	{
-		// –¼‘O‚ğJsonŒ^‚ÉŠi”[‚·‚é
-		data["Name"] = name;
-
-		// ŠeƒRƒ“ƒ|[ƒlƒ“ƒg‚Ìî•ñ‚ğJsonŒ^‚ÉŠi”[‚·‚é
-		ComponentToJson(data);
 	}
 }

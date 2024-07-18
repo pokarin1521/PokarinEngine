@@ -306,7 +306,14 @@ namespace PokarinEngine
 
 		for (auto& component : componentList)
 		{
-			component->ToJson(data[component->GetID_String()]);
+			// コンポーネントの識別番号(文字列)
+			const std::string id_string = component->GetID_String();
+
+			// コンポーネントの名前
+			data[id_string]["Name"] = component->GetName();
+
+			// 各コンポーネントの情報
+			component->ToJson(data[id_string]);
 		}
 	}
 

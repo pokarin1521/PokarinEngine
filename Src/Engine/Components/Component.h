@@ -4,10 +4,10 @@
 #ifndef COMPONENT_H_INCLUDED
 #define COMPONENT_H_INCLUDED
 
+#include "Json/UsingNameJson.h"
+
 #include "../UsingNames/UsingComponent.h"
 #include "../UsingNames/UsingGameObject.h"
-
-#include "Json/UsingNameJson.h"
 
 #include <string>
 
@@ -46,7 +46,7 @@ namespace PokarinEngine
 		/// <param name="[in] componentName"> コンポーネントの名前 </param>
 		/// <param name="[in] componentTitle"> コンポーネントの表示用タイトル </param>
 		/// <param name="[in] componentID"> コンポーネントの識別番号 </param>
-		void AddComponent(GameObject& owner, const std::string& componentName, 
+		void AddComponent(GameObject& owner, const std::string& componentName,
 			const std::string& componentTitle, int componentID)
 		{
 			ownerObject = &owner;
@@ -114,14 +114,25 @@ namespace PokarinEngine
 		/// <summary>
 		/// コンポーネントの情報をJson型に格納する
 		/// </summary>
-		/// <param name="[out] data"> 情報を格納するJson型 </param>
-		void ToJson(Json& data) const;
+		/// <param name="[out] Json"> 情報を格納するJson型 </param>
+		virtual void ToJson(Json& data) const = 0;
 
 		/// <summary>
 		/// コンポーネントの情報をJson型から取得する
 		/// </summary>
 		/// <param name="[out] data"> 情報を格納しているJson型 </param>
-		void FromJson(const Json& data) {}
+		virtual void FromJson(const Json& data) = 0;
+
+	public: // --------------------------------- 名前 --------------------------------
+
+		/// <summary>
+		/// 名前を取得する
+		/// </summary>
+		/// <returns> コンポーネントの名前 </returns>
+		std::string GetName() const
+		{
+			return name;
+		}
 
 	public: // ------------------------------- 識別番号 ------------------------------
 
@@ -168,14 +179,6 @@ namespace PokarinEngine
 		/// コンポーネント操作用ポップアップの処理
 		/// </summary>
 		void ControlPopup();
-
-	private: // -------------------------------- 保存 ---------------------------------
-
-		/// <summary>
-		/// 各コンポーネントの情報をJson型に格納する
-		/// </summary>
-		/// <param name="[out] Json"> 情報を格納するJson型 </param>
-		virtual void ComponentToJson(Json& data) const = 0;
 
 	private: // -------------------------------- 情報 ---------------------------------
 

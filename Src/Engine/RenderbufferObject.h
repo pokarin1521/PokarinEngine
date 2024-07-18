@@ -59,7 +59,7 @@ namespace PokarinEngine
 		/// </summary>
 		~RenderbufferObject();
 
-	public: // ----------------- 禁止事項 -------------------
+	public: // -------------------- 禁止事項 ---------------------
 
 		// コピーコンストラクタの禁止
 		RenderbufferObject(const RenderbufferObject&) = delete;
@@ -67,7 +67,7 @@ namespace PokarinEngine
 		// 代入の禁止
 		RenderbufferObject operator=(const RenderbufferObject&) = delete;
 
-	public: // ------------------- キャスト ----------------------
+	public: // ---------------------- 変換 -----------------------
 
 		// GLuint型に変換(管理番号を返す)
 		operator GLuint() const { return id; }
