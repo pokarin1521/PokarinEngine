@@ -7,12 +7,15 @@
 
 #include "Components/Colliders/Collider.h"
 
+#include "Components/ComponentAdder.h"
+
 #include "Math/Matrix.h"
 
 #include "NodeScript/NodeScript.h"
 #include "NodeScript/NodeEditor.h"
 
 #include "Scene.h"
+#include "Mesh.h"
 #include "Random.h"
 
 #include <algorithm>
@@ -81,9 +84,45 @@ namespace PokarinEngine
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void GameObject::Initialize()
+	/// <param name="[in] scene"> 持ち主であるシーン </param>
+	/// <param name="[in] objectID"> 識別番号 </param>
+	/// <param name="[in] meshFile"> スタティックメッシュのファイル名 </param>
+	/// <param name="[in] objectName"> 名前 </param>
+	/// <param name="[in] position"> 位置 </param>
+	/// <param name="[in] rotation"> 回転角度 </param>
+	void GameObject::Initialize(Scene& scene, int objectID,
+		const std::string& meshFile, const std::string& objectName,
+		const Vector3& position, const Vector3& rotation)
 	{
-		// Transformコンポーネントを追加
+		// ----------------------------------
+		// 情報の設定
+		// ----------------------------------
+
+		// 持ち主であるシーンを登録
+		ownerScene = &scene;
+
+		// 識別番号を設定
+		id = objectID;
+
+		// 名前を設定
+		name = objectName;
+
+		// スタティックメッシュを設定
+		staticMesh = scene.GetStaticMesh(meshFile);
+
+		// スタティックメッシュがあるなら固有マテリアルを設定
+		if (staticMesh)
+		{
+			// 共有マテリアルのコピーを
+			// 固有マテリアルとして設定する
+			materials = CloneMaterialList(staticMesh);
+		}
+
+		// ------------------------------------
+		// コンポーネントの追加
+		// ------------------------------------
+
+		// 位置などの制御用コンポーネントを追加
 		if (!transform)
 		{
 			transform = AddComponent<Transform>().first;
@@ -94,6 +133,13 @@ namespace PokarinEngine
 		{
 			nodeEditor = std::make_shared<NodeEditor>(*this);
 		}
+
+		// --------------------------------------
+		// 位置・回転角度の設定
+		// --------------------------------------
+
+		transform->position = position;
+		transform->rotation = rotation;
 	}
 
 	/// <summary>
@@ -228,28 +274,76 @@ namespace PokarinEngine
 	}
 
 	/// <summary>
-	/// ゲームオブジェクトの情報を保存する
+	/// ゲームオブジェクトの情報をJson型に格納する
 	/// </summary>
-	/// <param name="[in] sceneFolderName"> シーンフォルダ名 </param>
-	void GameObject::SaveGameObject(const std::string& sceneFolderName) const
+	/// <param name="[out] data"> 情報を格納するJson型 </param>
+	void GameObject::ToJson(Json& data) const
 	{
-		// ----------------------------------
-		// フォルダを作成する
-		// ----------------------------------
+		// -----------------------------------------------
+		// ゲームオブジェクトの情報をJson型に格納する
+		// -----------------------------------------------
 
-		// 保存先のフォルダ名
-		std::string folderName = sceneFolderName + "/" + std::to_string(id);
+		// 名前
+		data["Name"] = name;
 
-		// フォルダが存在しない場合は作成する
-		std::filesystem::create_directories(folderName);
+		// スタティックメッシュのファイル名
+		// なければ「null」にする
+		if (staticMesh)
+		{
+			data["StaticMeshFile"] = staticMesh->filename;
+		}
+		else
+		{
+			data["StaticMeshFile"] = "null";
+		}
 
-		// ----------------------------------------
-		// コンポーネントの情報を保存する
-		// ----------------------------------------
+		// コンポーネント識別番号の管理用配列
+		data["ComponentIDList"] = componentIDList;
+
+		// -------------------------------------------
+		// コンポーネントの情報をJson型に格納する
+		// -------------------------------------------
 
 		for (auto& component : componentList)
 		{
-			//component->SaveInfo(folderName);
+			component->ToJson(data[component->GetID_String()]);
+		}
+	}
+
+	/// <summary>
+	/// ゲームオブジェクトの情報をJson型から取得する
+	/// </summary>
+	/// <param name="[in] data"> 情報を格納しているJson型 </param>
+	void GameObject::FromJson(const Json& data)
+	{
+		// --------------------------------------------------
+		// ゲームオブジェクトの情報をJson型から取得する
+		// --------------------------------------------------
+
+		// 名前
+		name = data["Name"];
+
+		// スタティックメッシュのファイル名
+		const std::string fileName = data["StaticMeshFile"];
+		staticMesh = ownerScene->GetStaticMesh(fileName);
+		
+		// --------------------------------------------------
+		// コンポーネントの情報をJson型から取得する
+		// --------------------------------------------------
+
+		for (int componentID : data["ComponentIDList"])
+		{
+			// コンポーネントの識別番号(文字列)
+			const std::string id_string = std::to_string(componentID);
+
+			// コンポーネントの名前
+			const std::string componentName = data[id_string]["Name"];
+
+			// 名前に対応したコンポーネントを追加
+			ComponentPtr component = ComponentAdder::AddComponent(componentName, *this);
+
+			// 追加したコンポーネントの情報をJson型から取得
+			component->FromJson(data[id_string]);
 		}
 	}
 

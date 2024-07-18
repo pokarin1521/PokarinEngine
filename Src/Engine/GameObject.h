@@ -5,7 +5,7 @@
 #define GAMEOBJECT_H_INCLUDED
 
 #include "Components/Transform.h"
-#include "Components/ComponentName.h"
+#include "Components/ComponentAdder.h"
 
 #include "Texture.h"
 
@@ -15,6 +15,8 @@
 #include "UsingNames/UsingMesh.h"
 #include "UsingNames/UsingNodeEditor.h"
 #include "UsingNames/UsingCollider.h"
+
+#include "Json/UsingNameJson.h"
 
 #include <string>
 #include <vector>
@@ -48,9 +50,6 @@ namespace PokarinEngine
 	/// </summary>
 	class GameObject
 	{
-		// シーンに情報を公開
-		friend Scene;
-
 	public: // ---------------- コンストラクタ・デストラクタ ----------------
 
 		GameObject() = default;
@@ -67,7 +66,7 @@ namespace PokarinEngine
 	public: // ----------------------- コンポーネント -----------------------
 
 		/// <summary>
-		/// ゲームオブジェクトにコンポーネント、コライダーを追加する 
+		/// ゲームオブジェクトにコンポーネントを追加する 
 		/// </summary>
 		/// <typeparam name="T"> コンポーネントクラス </typeparam>
 		/// <returns> 
@@ -106,7 +105,7 @@ namespace PokarinEngine
 			auto component = std::make_shared<T>();
 
 			// コンポーネントの名前
-			const std::string componentName = ComponentName::Get<T>();
+			const std::string componentName = ComponentAdder::GetName<T>();
 
 			// コンポーネントの表示用タイトル
 			// 区別できるように、名前の後ろにゲームオブジェクトの識別番号を付ける
@@ -192,11 +191,19 @@ namespace PokarinEngine
 		void RemoveDestroyedComponent();
 
 	public: // ------------------- ゲームオブジェクト制御 -------------------
-
+		
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		void Initialize();
+		/// <param name="[in] scene"> 持ち主であるシーン </param>
+		/// <param name="[in] objectID"> 識別番号 </param>
+		/// <param name="[in] meshFile"> スタティックメッシュのファイル名 </param>
+		/// <param name="[in] objectName"> 名前 </param>
+		/// <param name="[in] position"> 位置 </param>
+		/// <param name="[in] rotation"> 回転角度 </param>
+		void Initialize(Scene& scene, int objectID,
+			const std::string& meshFile, const std::string& objectName,
+			const Vector3& position, const Vector3& rotation);
 
 		/// <summary>
 		/// 更新
@@ -242,30 +249,21 @@ namespace PokarinEngine
 		}
 
 		/// <summary>
-		/// ゲームオブジェクトの名前を取得する
-		/// </summary>
-		/// <returns> ゲームオブジェクトの名前 </returns>
-		const char* GetName() const
-		{
-			return name.c_str();
-		}
-
-		/// <summary>
-		/// オブジェクト名の最大文字数を取得する
-		/// </summary>
-		/// <returns> オブジェクト名の最大文字数 </returns>
-		size_t GetNameSize() const
-		{
-			return nameSize;
-		}
-
-		/// <summary>
 		/// 識別番号を取得する
 		/// </summary>
 		/// <returns> 識別番号 </returns>
 		int GetID() const
 		{
 			return id;
+		}
+
+		/// <summary>
+		/// 識別番号を文字列で取得する
+		/// </summary>
+		/// <returns> 識別番号(文字列) </returns>
+		std::string GetID_String() const
+		{
+			return std::to_string(id);
 		}
 
 		/// <summary>
@@ -283,10 +281,18 @@ namespace PokarinEngine
 	public: // ----------------------------- 保存 ------------------------------
 
 		/// <summary>
-		/// ゲームオブジェクトの情報を保存する
+		/// ゲームオブジェクトの情報をJson型に格納する
 		/// </summary>
-		/// <param name="[in] sceneFolderName"> シーンフォルダ名 </param>
-		void SaveGameObject(const std::string& sceneFolderName) const;
+		/// <param name="[out] data"> 情報を格納するJson型 </param>
+		void ToJson(Json& data) const;
+
+	public: // --------------------------- 読み込み ----------------------------
+
+		/// <summary>
+		/// ゲームオブジェクトの情報をJson型から取得する
+		/// </summary>
+		/// <param name="[in] data"> 情報を格納しているJson型 </param>
+		void FromJson(const Json& data);
 
 	public: // -------------------------- 基本の情報 ---------------------------
 
@@ -302,6 +308,12 @@ namespace PokarinEngine
 		// コライダー管理用配列
 		std::vector<ColliderPtr> colliderList;
 
+		// オブジェクトの名前
+		std::string name = "";
+
+		// オブジェクト名の最大文字数
+		const size_t nameSize = 32;
+
 	public: // ------------------------- 描画系の情報 --------------------------
 
 		// 表示するスタティックメッシュ
@@ -315,6 +327,12 @@ namespace PokarinEngine
 
 	private: // --------------------- コンポーネント追加 -----------------------
 
+		/// <summary>
+		/// ゲームオブジェクトにコンポーネントを追加する
+		/// </summary>
+		/// <param name="componentName"> 追加するコンポーネントの名前 </param>
+		void AddComponent(const std::string& componentName);
+		
 		/// <summary>
 		/// コンポーネント識別番号を取得する
 		/// </summary>
@@ -362,17 +380,6 @@ namespace PokarinEngine
 
 		// 物理挙動用コンポーネント
 		ComponentPtr rigidbody;
-
-	private: // ---------------------------- 名前 ------------------------------
-
-		// オブジェクトの名前
-		std::string name = "";
-
-		// オブジェクトの種類名
-		std::string typeName = "";
-
-		// オブジェクト名の最大文字数
-		size_t nameSize = 32;
 	};
 
 } // namespace PokarinEngine

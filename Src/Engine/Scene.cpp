@@ -13,6 +13,8 @@
 
 #include "Collision/Collision.h"
 
+#include "Json/Json.h"
+
 #include <algorithm>
 #include <filesystem>
 
@@ -45,7 +47,7 @@ namespace PokarinEngine
 	/// </summary>
 	/// <typeparam name="T"> ゲームオブジェクトクラスまたはその派生 </typeparam>
 	/// <param name="[in] name"> オブジェクトの名前 </param>
-	/// <param name="[in] position"> オブジェクトを配置する座標 </param>
+	/// <param name="[in] position"> オブジェクトを配置する位置 </param>
 	/// <param name="[in] rotation"> オブジェクトの回転角度 </param>
 	/// <param name="[in] staticMeshFile"> スタティックメッシュのファイル名 </param>
 	/// <returns> 追加したゲームオブジェクトのポインタ </returns>
@@ -62,47 +64,10 @@ namespace PokarinEngine
 		// ゲームオブジェクト作成
 		GameObjectPtr object = std::make_shared<GameObject>();
 
-		// シーンを設定
-		object->ownerScene = this;
-
-		// 作成時の名前を種類名として設定
-		object->typeName = name;
-
-		// 名前を設定
-		object->name = name;
-
-		// オブジェクト種類名を追加
-		// 重複している場合は、名前を再設定する
-		if (!objectTypeNameList.emplace(object->typeName, SetNumberNameList()).second)
-		{
-			// 重複しないように名前を設定
-			object->name = GetSingleObjectName(object->typeName);
-
-			// 重複しているので、数字付きになっている名前を追加する
-			objectTypeNameList[object->typeName].emplace(object->name);
-		}
-
-		// 重複しないように識別番号を設定
-		object->id = GetSingleObjectID();
-
 		// ゲームオブジェクトの初期化
-		// 識別番号が必要になるので、このタイミングで行う
-		object->Initialize();
-
-		// 位置と角度を設定
-		object->transform->position = position;
-		object->transform->rotation = rotation;
-
-		// スタティックメッシュ
-		object->staticMesh = engine->GetStaticMesh(staticMeshFile);
-
-		// スタティックメッシュがあるなら固有マテリアルを設定
-		if (object->staticMesh)
-		{
-			// 共有マテリアルのコピーを
-			// 固有マテリアルとして設定する
-			object->materials = CloneMaterialList(object->staticMesh);
-		}
+		object->Initialize(*this, GetSingleObjectID(),
+			staticMeshFile, name,
+			position, rotation);
 
 		// ゲームオブジェクト管理用配列に追加
 		gameObjectList.push_back(object);
@@ -124,125 +89,14 @@ namespace PokarinEngine
 
 		// 複製元と同じパラメータのオブジェクトを作成
 		// 名前の重複確認が出来るように種類名を使う
-		GameObjectPtr copyObject = CreateGameObject(object->typeName,
+		GameObjectPtr copyObject = CreateGameObject(object->name,
 			object->transform->position, object->transform->rotation,
 			object->staticMesh->filename.c_str());
 	}
 
 #pragma endregion
 
-#pragma region Name,ID
-
-	/// ここでしか使わないので、cppのみに書く
-	/// <summary>
-	/// オブジェクト名の後ろに付いてる数字を取得する
-	/// </summary>
-	/// <param name="[in] objectName"> オブジェクト名 </param>
-	/// <returns> ()の中にある数字 </returns>
-	int GetBackNumber(const std::string& objectName)
-	{
-		/* 数字は()の中にあるので
-		()の位置から数字の位置と数を求める */
-
-		// 数字の始め
-		// 「(」の次から数字が入るので+1
-		size_t first = objectName.find_last_of("(") + 1;
-
-		// 数字の終わり
-		// 「)」が終わりの合図なので「)」の位置を求める
-		size_t last = objectName.find_last_of(")");
-
-		// ()がない場合、0を返す
-		if (first == objectName.npos ||
-			last == objectName.npos)
-		{
-			return 0;
-		}
-
-		// 数字の数
-		// 「終わりの位置」と「始めの位置」の差から数を求める
-		size_t numSize = last - first;
-
-		// 名前の後ろに付いてる数字(文字列)
-		std::string backNum_str = objectName.substr(first, numSize);
-
-		// int型に変換して返す
-		return std::stoi(backNum_str);
-	}
-
-	/// <summary>
-	/// ゲームオブジェクトの名前を変更する
-	/// </summary>
-	/// <param name="[out] object"> 名前を変更するオブジェクト </param>
-	/// <param name="[in] afterName"> 変更後の名前 </param>
-	void Scene::ChangeObjectName(GameObjectPtr& object, const std::string& afterName)
-	{
-		// 変更前の種類名
-		std::string beforName = object->typeName;
-
-		// 名前を変更
-		object->name = afterName;
-
-		// 種類名を変更
-		object->typeName = afterName;
-
-		// 数字付きのオブジェクト名配列
-		auto& setNumberNameList = objectTypeNameList[object->typeName];
-
-		// 数字付きの名前として登録されているならそれを削除
-		if (setNumberNameList.size() > 0)
-		{
-			setNumberNameList.erase(object->name);
-		}
-		// 登録されていないなら種類名を削除
-		else
-		{
-			objectTypeNameList.erase(object->typeName);
-		}
-
-		// 変更後の種類名を追加する
-		objectTypeNameList.emplace(afterName, SetNumberNameList());
-	}
-
-	/// <summary>
-	/// <para> 他のオブジェクトと重複しない名前を取得する </para>
-	/// <para> (重複していた場合は、後ろに数字を付ける) </para>
-	/// </summary>
-	/// <param name="[in] typeName"> オブジェクトの種類名 </param>
-	/// <returns> 
-	/// <para> 重複しないように変更した名前 </para>
-	/// <para> (重複していないならそのままの名前) </para>
-	/// </returns>
-	std::string Scene::GetSingleObjectName(const std::string& typeName) const
-	{
-		// 新しいオブジェクト名
-		std::string newObjectName = typeName;
-
-		// 数字付きの名前の数
-		size_t setNumberNameCount = objectTypeNameList.at(typeName).size();
-
-		// 数字付きの名前の数が0なら
-		// (1)を付けて返す
-		if (setNumberNameCount == 0)
-		{
-			return newObjectName += " (1)";
-		}
-
-		/* set型は自動でソートするので、
-		最後の要素から現在使われている最大の数字を取得できる */
-
-		// 最後の数字付きの名前
-		std::string lastName = *objectTypeNameList.at(typeName).rbegin();
-
-		// オブジェクト名の後ろに付ける数字
-		// 「現在使われている最大の数字 + 1」の数字を付ける
-		int backNumber = GetBackNumber(lastName) + 1;
-
-		// 名前の後ろに番号を付ける
-		newObjectName += " (" + std::to_string(backNumber) + ")";
-
-		return newObjectName;
-	}
+#pragma region ID
 
 	/// <summary>
 	/// オブジェクトの識別番号を取得する
@@ -268,6 +122,20 @@ namespace PokarinEngine
 		}
 
 		return objectID;
+	}
+
+#pragma endregion
+
+#pragma region StaticMesh
+
+	/// <summary>
+	/// スタティックメッシュを取得する
+	/// </summary>
+	/// <param name="[in] fileName"> ファイル名 </param>
+	/// <returns> ファイル名が一致するスタティックメッシュ </returns>
+	StaticMeshPtr Scene::GetStaticMesh(const std::string& fileName)
+	{
+		return engine->GetStaticMesh(fileName);
 	}
 
 #pragma endregion
@@ -313,8 +181,7 @@ namespace PokarinEngine
 		// ゲームオブジェクトを全削除
 		gameObjectList.clear();
 
-		// オブジェクトの種類名と識別番号を全削除
-		objectTypeNameList.clear();
+		// オブジェクトの識別番号を全削除
 		objectIDList.clear();
 	}
 
@@ -340,25 +207,7 @@ namespace PokarinEngine
 		// オブジェクト識別番号を削除
 		// -------------------------------------
 
-		objectIDList.erase(object->id);
-
-		// -----------------------------------
-		// オブジェクト種類名を削除
-		// -----------------------------------
-
-		// 数字付きの名前の配列
-		auto& setNumberNameList = objectTypeNameList[object->typeName];
-
-		// 数字付きの名前として登録されているならそれを削除
-		if (setNumberNameList.size() > 0)
-		{
-			setNumberNameList.erase(object->name);
-		}
-		// 登録されていないなら種類名を削除
-		else
-		{
-			objectTypeNameList.erase(object->typeName);
-		}
+		objectIDList.erase(object->GetID());
 	}
 
 	/// <summary>
@@ -597,37 +446,66 @@ namespace PokarinEngine
 	/// </summary>
 	void Scene::SaveScene() const
 	{
-		// 保存先のフォルダ
-		std::string folderName = "C:/PokarinEngine/My project/Scenes/" + name;
+		// ---------------------------------------
+		// シーンの情報をJson型に格納する
+		// ---------------------------------------
 
-		// シーン保存用のフォルダが存在しない場合は、作成する
-		std::filesystem::create_directories(folderName);
+		// 保存するデータ
+		Json data;
 
-		// ゲームオブジェクトの情報を保存する
+		// シーンの名前
+		data["Scene"] = name;
+
+		// ゲームオブジェクト識別番号の管理用配列
+		data["ObjectIDList"] = objectIDList;
+
+		// ----------------------------------------------------
+		// ゲームオブジェクトの情報をJson型に格納する
+		// ----------------------------------------------------
+
 		for (const auto& gameObject : gameObjectList)
 		{
-			gameObject->SaveGameObject(folderName);
+			gameObject->ToJson(data[gameObject->GetID_String()]);
 		}
+
+		// ----------------------------------------------
+		// Jsonファイルに情報を保存する
+		// ----------------------------------------------
+
+		// 保存先のディレクトリがなければ作成する
+		std::filesystem::create_directories(folderName);
+
+		// 保存先のファイル名
+		const std::string fileName = GetFileName();
+
+		// 保存
+		JsonFile::Save(fileName, data);
 	}
 
 	/// <summary>
 	/// シーンの情報をファイルから読み込む
 	/// </summary>
-	void Scene::LoadScene() const
+	void Scene::LoadScene()
 	{
-		// 保存先のフォルダ
-		std::string folderName = "C:/PokarinEngine/My project/Scenes/" + name;
-
 		// フォルダが存在しない場合は何もしない
 		if (!std::filesystem::exists(folderName))
 		{
 			return;
 		}
 
-		// ゲームオブジェクトの情報を保存する
-		for (const auto& gameObject : gameObjectList)
+		// 現在生成されているゲームオブジェクトを削除する
+		ClearGameObject();
+
+		// 情報を格納するJson型
+		Json data;
+
+		// シーンの情報を読み込む
+		JsonFile::Load(GetFileName(), data);
+
+		for (int objectID : data["ObjectIDList"])
 		{
-			gameObject->SaveGameObject(folderName);
+			GameObjectPtr gameObject = CreateGameObject("New Object");
+			gameObject->FromJson(data[std::to_string(objectID)]);
 		}
 	}
 

@@ -20,7 +20,7 @@ namespace PokarinEngine
 	/// コンストラクタ
 	/// </summary>
 	NodeEditor::NodeEditor(GameObject& gameObject)
-		: ownerObject(&gameObject), name(gameObject.GetName())
+		: ownerObject(&gameObject), name(gameObject.name)
 	{
 		// ノードエディタの名前を設定
 		// 分かりやすいように「持ち主の名前 + #持ち主の識別番号」にする

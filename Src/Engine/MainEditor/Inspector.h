@@ -45,11 +45,6 @@ namespace PokarinEngine
 		/// </summary>
 		void AddComponentPopup();
 
-		/// <summary>
-		/// コンポーネント追加用リストを表示する
-		/// </summary>
-		void AddComponentList();
-
 	private: // ------------------- 選択中のオブジェクト ---------------------
 
 		// 選択中のゲームオブジェクト

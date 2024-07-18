@@ -16,10 +16,10 @@ namespace PokarinEngine
 	}
 
 	/// <summary>
-	/// コンポーネントの情報を保存する
+	/// コンポーネントの情報をJson型に格納する
 	/// </summary>
-	/// <param name="[in] folderName"> 保存先のフォルダ </param>
-	void Camera::SaveInfo(const std::string& folderName) const
+	/// <param name="[out] Json"> 情報を格納するJson型 </param>
+	void Camera::ComponentToJson(Json& data) const
 	{
 
 	}

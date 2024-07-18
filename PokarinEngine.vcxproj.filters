@@ -278,9 +278,6 @@
     <ClCompile Include="Src\Engine\Components\Component.cpp">
       <Filter>Src\Engine\Components</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Engine\MainEditor\ComponentAdder.cpp">
-      <Filter>Src\Engine\Editor\MainEditor</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Engine\Collision\Intersect.cpp">
       <Filter>Src\Engine\Collision</Filter>
     </ClCompile>
@@ -293,7 +290,7 @@
     <ClCompile Include="Src\Packages\ImGui\ImGuizmo.cpp">
       <Filter>Src\Packages\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Engine\Components\ComponentName.cpp">
+    <ClCompile Include="Src\Engine\Components\ComponentAdder.cpp">
       <Filter>Src\Engine\Components</Filter>
     </ClCompile>
   </ItemGroup>
@@ -502,9 +499,6 @@
     <ClInclude Include="Src\Engine\Configs\ShaderConfig.h">
       <Filter>Src\Engine\Configs</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Packages\Json\nlohmann\json.hpp">
-      <Filter>Src\Packages\Json\nlohmann</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Packages\Json\Json.h">
       <Filter>Src\Packages\Json</Filter>
     </ClInclude>
@@ -538,8 +532,17 @@
     <ClInclude Include="Src\Packages\Enum\magic_enum.hpp">
       <Filter>Src\Packages\Enum</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Engine\Components\ComponentName.h">
+    <ClInclude Include="Src\Engine\Components\ComponentAdder.h">
       <Filter>Src\Engine\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Packages\Json\nlohmann\json.hpp">
+      <Filter>Src\Packages\Json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Packages\Json\UsingNameJson.h">
+      <Filter>Src\Packages\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\UsingNames\UsingComponent.h">
+      <Filter>Src\Engine\UsingNames</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

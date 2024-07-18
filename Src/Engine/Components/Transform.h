@@ -29,7 +29,7 @@ namespace PokarinEngine
 	using TransformPtr = std::shared_ptr<Transform>;
 
 	/// <summary>
-	/// 位置、回転、拡大率を保持するコンポーネント
+	/// 位置、回転、拡大率を制御するコンポーネント
 	/// </summary>
 	class Transform : public Component
 	{
@@ -142,7 +142,7 @@ namespace PokarinEngine
 
 	public: // -------------------- ワールド軸の情報 -------------------
 
-		// ワールド軸の座標
+		// ワールド軸の位置
 		Vector3 position = { 0, 0, 0 };
 
 		// ワールド軸の回転角度(弧度法)
@@ -161,10 +161,10 @@ namespace PokarinEngine
 	private: // ------------------------- 保存 -------------------------
 
 		/// <summary>
-		/// コンポーネントの情報を保存する
+		/// コンポーネントの情報をJson型に格納する
 		/// </summary>
-		/// <param name="[in] folderName"> 保存先のフォルダ </param>
-		void SaveInfo(const std::string& folderName) const override;
+		/// <param name="[out] Json"> 情報を格納するJson型 </param>
+		void ComponentToJson(Json& data) const override;
 
 	private: // ----------------------- 変換行列 -----------------------
 

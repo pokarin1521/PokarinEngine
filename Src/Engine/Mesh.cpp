@@ -466,7 +466,7 @@ namespace PokarinEngine
 	/// <para> filenameから作成したスタティックメッシュ </para>
 	/// <para> ファイルを開けなかった場合はnullptrを返す </para>
 	/// </returns>
-	StaticMeshPtr MeshBuffer::LoadOBJ(const char* fileName)
+	StaticMeshPtr MeshBuffer::LoadOBJ(const std::string& fileName)
 	{
 		// --------------------------------------------------------
 		// 以前に読み込んだファイルなら、作成済みのメッシュを返す
@@ -482,7 +482,6 @@ namespace PokarinEngine
 			{
 				return itr->second;
 			}
-
 		}
 
 		// ------------------------------
@@ -1145,7 +1144,7 @@ namespace PokarinEngine
 	/// </summary>
 	/// <param name="[in] fileName"> ファイル名 </param>
 	/// <returns> ファイル名が一致するスタティックメッシュ </returns>
-	StaticMeshPtr MeshBuffer::GetStaticMesh(const char* fileName)
+	StaticMeshPtr MeshBuffer::GetStaticMesh(const std::string& fileName)
 	{
 		// スタティックメッシュが登録されているなら検索
 		if (!staticMeshList.empty())

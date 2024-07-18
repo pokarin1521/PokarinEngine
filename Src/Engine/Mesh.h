@@ -168,7 +168,7 @@ namespace PokarinEngine
 		/// </summary>
 		/// <param name="[in] fileName"> OBJファイル名 </param>
 		/// <returns> filenameから作成したメッシュ </returns>
-		StaticMeshPtr LoadOBJ(const char* fileName);
+		StaticMeshPtr LoadOBJ(const std::string& fileName);
 
 	public: // --------------------------- 頂点データの管理 -------------------------
 
@@ -195,7 +195,7 @@ namespace PokarinEngine
 		/// </summary>
 		/// <param name="[in] fileName"> ファイル名 </param>
 		/// <returns> ファイル名が一致するスタティックメッシュ </returns>
-		StaticMeshPtr GetStaticMesh(const char* fileName);
+		StaticMeshPtr GetStaticMesh(const std::string& fileName);
 
 		/// <summary>
 		/// 描画パラメータを取得する

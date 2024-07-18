@@ -61,6 +61,9 @@ namespace PokarinEngine
 
 		// 要素数
 		static constexpr int size = 2;
+
+		// 全ての値が0
+		static const Vector2 zero;
 	};
 
 	/// <summary>
@@ -134,6 +137,9 @@ namespace PokarinEngine
 
 		// 要素数
 		static constexpr int size = 3;
+
+		// 全ての値が0
+		static const Vector3 zero;
 	};
 
 	/// <summary>
@@ -180,7 +186,23 @@ namespace PokarinEngine
 
 		// 要素数
 		static constexpr int size = 4;
+
+		// 全ての値が0
+		static const Vector4 zero;
 	};
+
+	// -------------------------------
+	// static変数定義
+	// -------------------------------
+
+	// 全ての値が0
+	inline const Vector2 Vector2::zero = { 0,0 };
+
+	// 全ての値が0
+	inline const Vector3 Vector3::zero = { 0,0,0 };
+
+	// 全ての値が0
+	inline const Vector4 Vector4::zero = { 0,0,0,0 };
 
 	// -------------------------------
 	// オペレーター

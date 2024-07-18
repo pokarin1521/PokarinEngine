@@ -53,7 +53,7 @@ namespace PokarinEngine
 			{
 				if (ImGui::Button("Load"))
 				{
-					engine->GetCurrentScene().SaveScene();
+					engine->GetCurrentScene().LoadScene();
 				}
 
 				ImGui::EndMenu();

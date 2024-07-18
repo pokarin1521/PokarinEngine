@@ -92,7 +92,7 @@ namespace PokarinEngine
 		/// </summary>
 		/// <param name="[in] fileName"> ファイル名 </param>
 		/// <returns> ファイル名前が一致するスタティックメッシュ </returns>
-		StaticMeshPtr GetStaticMesh(const char* fileName)
+		StaticMeshPtr GetStaticMesh(const std::string& fileName)
 		{
 			return meshBuffer->GetStaticMesh(fileName);
 		}

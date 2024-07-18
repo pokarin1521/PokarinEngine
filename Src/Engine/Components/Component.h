@@ -4,25 +4,15 @@
 #ifndef COMPONENT_H_INCLUDED
 #define COMPONENT_H_INCLUDED
 
+#include "../UsingNames/UsingComponent.h"
 #include "../UsingNames/UsingGameObject.h"
 
+#include "Json/UsingNameJson.h"
+
 #include <string>
-#include <memory>
 
 namespace PokarinEngine
 {
-	// ------------------
-	// 前方宣言
-	// ------------------
-
-	class Component;
-
-	// -----------------------
-	// 型の別名を定義
-	// -----------------------
-
-	using ComponentPtr = std::shared_ptr<Component>;
-
 	/// <summary>
 	/// コンポーネント基底クラス
 	/// </summary>
@@ -119,15 +109,21 @@ namespace PokarinEngine
 		/// </summary>
 		void RenderInfo();
 
-	public: // --------------------------------- 保存 --------------------------------
+	public: // --------------------------- 保存・読み込み ----------------------------
 
 		/// <summary>
-		/// コンポーネントの情報を保存する
+		/// コンポーネントの情報をJson型に格納する
 		/// </summary>
-		/// <param name="[in] folderName"> フォルダ名 </param>
-		void SaveComponent(const std::string& folderName) const;
+		/// <param name="[out] data"> 情報を格納するJson型 </param>
+		void ToJson(Json& data) const;
 
-	protected: // ---------------------------- 情報の取得 ----------------------------
+		/// <summary>
+		/// コンポーネントの情報をJson型から取得する
+		/// </summary>
+		/// <param name="[out] data"> 情報を格納しているJson型 </param>
+		void FromJson(const Json& data) {}
+
+	public: // ------------------------------- 識別番号 ------------------------------
 
 		/// <summary>
 		/// 識別番号を取得する
@@ -139,12 +135,12 @@ namespace PokarinEngine
 		}
 
 		/// <summary>
-		/// 識別番号の文字列を取得する
+		/// 識別番号を文字列で取得する
 		/// </summary>
-		/// <returns> 識別番号の文字列 </returns>
+		/// <returns> 識別番号(文字列) </returns>
 		std::string GetID_String() const
 		{
-			return "##" + std::to_string(id);
+			return std::to_string(id);
 		}
 
 	private: // ------------------------------- 初期化 -------------------------------
@@ -176,10 +172,10 @@ namespace PokarinEngine
 	private: // -------------------------------- 保存 ---------------------------------
 
 		/// <summary>
-		/// 各コンポーネントの情報を保存する
+		/// 各コンポーネントの情報をJson型に格納する
 		/// </summary>
-		/// <param name="[in] folderName"> 保存先のフォルダ </param>
-		virtual void SaveInfo(const std::string& folderName) const = 0;
+		/// <param name="[out] Json"> 情報を格納するJson型 </param>
+		virtual void ComponentToJson(Json& data) const = 0;
 
 	private: // -------------------------------- 情報 ---------------------------------
 

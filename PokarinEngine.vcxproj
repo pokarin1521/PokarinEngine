@@ -167,7 +167,7 @@
     <ClCompile Include="Src\Engine\Components\Colliders\Collider.cpp" />
     <ClCompile Include="Src\Engine\Components\Colliders\SphereCollider.cpp" />
     <ClCompile Include="Src\Engine\Components\Component.cpp" />
-    <ClCompile Include="Src\Engine\Components\ComponentName.cpp" />
+    <ClCompile Include="Src\Engine\Components\ComponentAdder.cpp" />
     <ClCompile Include="Src\Engine\Components\Light.cpp" />
     <ClCompile Include="Src\Engine\Components\Rigidbody.cpp" />
     <ClCompile Include="Src\Engine\Components\Transform.cpp" />
@@ -178,7 +178,6 @@
     <ClCompile Include="Src\Engine\GameObject.cpp" />
     <ClCompile Include="Src\Engine\InputManager.cpp" />
     <ClCompile Include="Src\Engine\LightParameter.cpp" />
-    <ClCompile Include="Src\Engine\MainEditor\ComponentAdder.cpp" />
     <ClCompile Include="Src\Engine\MainEditor\GameView.cpp" />
     <ClCompile Include="Src\Engine\MainEditor\Hierarchy.cpp" />
     <ClCompile Include="Src\Engine\MainEditor\Inspector.cpp" />
@@ -231,7 +230,7 @@
     <ClInclude Include="Src\Engine\Components\Colliders\Collider.h" />
     <ClInclude Include="Src\Engine\Components\Colliders\SphereCollider.h" />
     <ClInclude Include="Src\Engine\Components\Component.h" />
-    <ClInclude Include="Src\Engine\Components\ComponentName.h" />
+    <ClInclude Include="Src\Engine\Components\ComponentAdder.h" />
     <ClInclude Include="Src\Engine\Components\Light.h" />
     <ClInclude Include="Src\Engine\Components\Rigidbody.h" />
     <ClInclude Include="Src\Engine\Components\Transform.h" />
@@ -275,6 +274,7 @@
     <ClInclude Include="Src\Engine\Texture.h" />
     <ClInclude Include="Src\Engine\Time.h" />
     <ClInclude Include="Src\Engine\UsingNames\UsingCollider.h" />
+    <ClInclude Include="Src\Engine\UsingNames\UsingComponent.h" />
     <ClInclude Include="Src\Engine\UsingNames\UsingGameObject.h" />
     <ClInclude Include="Src\Engine\UsingNames\UsingMesh.h" />
     <ClInclude Include="Src\Engine\UsingNames\UsingNodeEditor.h" />
@@ -297,6 +297,7 @@
     <ClInclude Include="Src\Packages\ImGui\imstb_truetype.h" />
     <ClInclude Include="Src\Packages\Json\Json.h" />
     <ClInclude Include="Src\Packages\Json\nlohmann\json.hpp" />
+    <ClInclude Include="Src\Packages\Json\UsingNameJson.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

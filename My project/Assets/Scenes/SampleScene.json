@@ -1,0 +1,99 @@
+{
+  "Scene": "SampleScene",
+  "ObjectIDList": [
+    215560889,
+    -42309334,
+    1411374102
+  ],
+  "215560889": {
+    "Name": "MainCamera",
+    "StaticMeshFile": "null",
+    "ComponentIDList": [
+      1467752338,
+      448544737
+    ],
+    "1467752338": {
+      "Name": "Transform",
+      "Position": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "Rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "Scale": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0
+      }
+    },
+    "448544737": {
+      "Name": "Camera"
+    }
+  },
+  "-42309334": {
+    "Name": "Directional Light",
+    "StaticMeshFile": "null",
+    "ComponentIDList": [
+      -1077462135,
+      2113604973
+    ],
+    "2113604973": {
+      "Name": "Transform",
+      "Position": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "Rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "Scale": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0
+      }
+    },
+    "-1077462135": {
+      "Name": "Light"
+    }
+  },
+  "1411374102": {
+    "Name": "Robot",
+    "StaticMeshFile": "Res/MeshData/Robot/Robot.obj",
+    "ComponentIDList": [
+      1866848708,
+      -575861271,
+      -1560738940
+    ],
+    "1866848708": {
+      "Name": "Transform",
+      "Position": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "Rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "Scale": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0
+      }
+    },
+    "-575861271": {
+      "Name": "Rigidbody"
+    },
+    "-1560738940": {
+      "Name": "Aabb Collider"
+    }
+  }
+}

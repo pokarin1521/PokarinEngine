@@ -88,17 +88,15 @@ namespace PokarinEngine
 	}
 
 	/// <summary>
-	/// コンポーネントの情報を保存する
+	/// コンポーネントの情報をJson型に格納する
 	/// </summary>
-	/// <param name="[in] folderName"> フォルダ名 </param>
-	void Component::SaveComponent(const std::string& folderName) const
+	/// <param name="[out] data"> 情報を格納するJson型 </param>
+	void Component::ToJson(Json& data) const
 	{
-		Json data;
-
-		// 名前を保存する
+		// 名前をJson型に格納する
 		data["Name"] = name;
 
-		// 各コンポーネントの情報を保存する
-		SaveInfo(folderName);
+		// 各コンポーネントの情報をJson型に格納する
+		ComponentToJson(data);
 	}
 }

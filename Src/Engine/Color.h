@@ -4,8 +4,6 @@
 #ifndef COLOR_H_INCLUDED
 #define COLOR_H_INCLUDED
 
-#include "Math/Vector.h"
-
 namespace PokarinEngine
 {
 	/// <summary>
@@ -28,12 +26,6 @@ namespace PokarinEngine
 		/// </summary>
 		constexpr Color(float _r, float _g, float _b, float _a)
 			: r(_r), g(_g), b(_b), a(_a) {}
-
-		/// <summary>
-		/// Vec4型で初期化するコンストラクタ
-		/// </summary>
-		constexpr Color(const Vector4& v)
-			: r(v.x), g(v.y), b(v.z), a(v.w) {}
 
 	public: // ---------------------- 添字演算子 ----------------------
 

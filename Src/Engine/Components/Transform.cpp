@@ -23,14 +23,14 @@ namespace PokarinEngine
 	void Transform::Update()
 	{
 		// -------------------------------
-		// 座標を制限
+		// 位置を制限
 		// -------------------------------
 
-		// 座標の最大値
+		// 位置の最大値
 		// Unityを参考に10万で設定する
 		static const float positionMax = 100000;
 
-		// 座標を±10万の範囲になるように制限する
+		// 位置を±10万の範囲になるように制限する
 		ForVector3()
 		{
 			// プラス方向の制限
@@ -72,7 +72,7 @@ namespace PokarinEngine
 		// -------------------------------
 
 		// 拡大率の最大値
-		// 座標と同じにしておく
+		// 位置と同じにしておく
 		static const float scaleMax = 100000;
 
 		// 拡大率を±10万の範囲になるように制限する
@@ -222,33 +222,18 @@ namespace PokarinEngine
 	}
 
 	/// <summary>
-	/// コンポーネントの情報を保存する
+	/// コンポーネントの情報をJson型に格納する
 	/// </summary>
-	/// <param name="[in] folderName"> 保存先のフォルダ </param>
-	void Transform::SaveInfo(const std::string& folderName) const
+	/// <param name="[out] Json"> 情報を格納するJson型 </param>
+	void Transform::ComponentToJson(Json& data) const
 	{
 		// ------------------------------------
 		// 情報をJsonに格納する
 		// ------------------------------------
 
-		// 情報を格納するJson
-		Json data;
-
-		// 名前を格納する
-		//data["ID"] = GetName();
-
-		// 情報を格納する
 		VectorToJson(position, data["Position"]);
 		VectorToJson(rotation, data["Rotation"]);
 		VectorToJson(scale, data["Scale"]);
-
-		//// -------------------------------------
-		//// ファイルに保存する
-		//// -------------------------------------
-
-		//std::string fileName = folderName + "/" + std::to_string(GetID());
-
-		//std::ofstream file;
 	}
 
 } // namespace PokarinEngine

@@ -69,12 +69,12 @@ namespace PokarinEngine
 		/// </summary>
 		/// <typeparam name="T"> ゲームオブジェクトクラスまたはその派生 </typeparam>
 		/// <param name="[in] name"> オブジェクトの名前 </param>
-		/// <param name="[in] position"> オブジェクトを配置する座標 </param>
+		/// <param name="[in] position"> オブジェクトを配置する位置 </param>
 		/// <param name="[in] rotation"> オブジェクトの回転角度 </param>
 		/// <param name="[in] staticMeshFile"> スタティックメッシュのファイル名 </param>
 		/// <returns> 追加したゲームオブジェクトのポインタ </returns>
 		GameObjectPtr CreateGameObject(const std::string& name,
-			const Vector3& position = { 0,0,0 }, const Vector3& rotation = { 0,0,0 },
+			const Vector3& position = Vector3::zero, const Vector3& rotation = Vector3::zero,
 			const char* staticMeshFile = "");
 
 		/// <summary>
@@ -84,13 +84,6 @@ namespace PokarinEngine
 		void CopyGameObject(const GameObjectPtr& object);
 
 	public: // ------------------- ゲームオブジェクト制御 -------------------
-
-		/// <summary>
-		/// ゲームオブジェクトの名前を変更する
-		/// </summary>
-		/// <param name="[out] object"> 名前を変更するオブジェクト </param>
-		/// <param name="[in] afterName"> 変更後の名前 </param>
-		void ChangeObjectName(GameObjectPtr& object, const std::string& afterName);
 
 		/// <summary>
 		/// ゲームオブジェクトを削除する
@@ -156,6 +149,15 @@ namespace PokarinEngine
 			return name.c_str();
 		}
 
+	public: // --------------------- スタティックメッシュ --------------------
+
+		/// <summary>
+		/// スタティックメッシュを取得する
+		/// </summary>
+		/// <param name="[in] fileName"> ファイル名 </param>
+		/// <returns> ファイル名が一致するスタティックメッシュ </returns>
+		StaticMeshPtr GetStaticMesh(const std::string& fileName);
+
 	public: // ---------------------------- 保存 -----------------------------
 
 		/// <summary>
@@ -168,33 +170,16 @@ namespace PokarinEngine
 		/// <summary>
 		/// シーンの情報をファイルから読み込む
 		/// </summary>
-		void LoadScene() const;
+		void LoadScene();
 
 	private: // ----------------------- 型の別名を定義 -----------------------
-
-		// 数字付きのオブジェクト名配列
-		using SetNumberNameList = std::set<std::string>;
-
-		// <オブジェクト種類名, 数字付きオブジェクト名>
-		using ObjectTypeNameList = std::unordered_map<std::string, SetNumberNameList>;
 
 		/* 検索をメインで使うので、検索が得意なset型を使う */
 
 		// 識別番号は1つずつしかないので重複禁止
 		using ObjectIDList = std::unordered_set<int>;
 
-	private: // ---------------------- 名前・識別番号 ------------------------
-
-		/// <summary>
-		/// <para> 他のオブジェクトと重複しない名前を取得する </para>
-		/// <para> (重複していた場合は、後ろに数字を付ける) </para>
-		/// </summary>
-		/// <param name="[in] typeName"> オブジェクトの種類名 </param>
-		/// <returns> 
-		/// <para> 重複しないように変更した名前 </para>
-		/// <para> (重複していないならそのままの名前) </para>
-		/// </returns>
-		std::string GetSingleObjectName(const std::string& typeName) const;
+	private: // -------------------------- 識別番号 ----------------------------
 
 		/// <summary>
 		/// オブジェクトの識別番号を取得する
@@ -202,20 +187,26 @@ namespace PokarinEngine
 		/// <returns> 重複しない識別番号 </returns>
 		int GetSingleObjectID();
 
+	private: // ------------------------- ファイル名 ---------------------------
+
+		/// <summary>
+		/// 保存先のファイル名を取得する
+		/// </summary>
+		/// <returns> 保存先のファイル名 </returns>
+		const std::string GetFileName() const
+		{
+			return folderName + name + ".json";
+		}
+
 	private: // ---------------------- ゲームオブジェクト ----------------------
 
 		// ゲームオブジェクト管理用配列
 		GameObjectList gameObjectList;
 
-		// オブジェクト種類名の管理用配列
-		// <オブジェクトの種類名, 数字付きオブジェクト名>
-		ObjectTypeNameList objectTypeNameList;
-
 		// オブジェクト識別番号の管理用配列
 		ObjectIDList objectIDList;
 
 		// ゲームオブジェクトの最大数
-		// 余裕を持てるように少なめに設定
 		const size_t gameObjectMax = 1000000;
 
 	private: // ------------------------- メインカメラ ------------------------
@@ -238,6 +229,11 @@ namespace PokarinEngine
 
 		// エンジンクラスのポインタ
 		Engine* engine = nullptr;
+
+	private: // ---------------------------- 保存用 ---------------------------
+
+		// 保存先のフォルダ
+		const std::string folderName = "My project/Assets/Scenes/";
 	};
 
 } // namespace PokarinEngine

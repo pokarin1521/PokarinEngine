@@ -7,6 +7,8 @@
 #include "../GameObject.h"
 #include "../Color.h"
 
+#include "../Components/ComponentAdder.h"
+
 namespace PokarinEngine
 {
 #pragma region Inspector
@@ -17,24 +19,23 @@ namespace PokarinEngine
 	void Inspector::RenderName()
 	{
 		// 選択中オブジェクトの名前
-		std::string selectObjectName = selectObject->GetName();
+		std::string selectObjectName = selectObject->name;
 
 		// オブジェクト名を入力するテキスト欄
 		// ##でテキストを非表示する
-		if (ImGui::InputText("##ObjectName", selectObjectName.data(), selectObject->GetNameSize(),
+		if (ImGui::InputText("##ObjectName", selectObjectName.data(), selectObject->nameSize,
 			ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue))
 		{
 			// 新しい名前が入力されている
 			if (selectObjectName[0] != '\0' &&
-				selectObjectName != selectObject->GetName())
+				selectObjectName != selectObject->name)
 			{
 				// 終端位置
 				size_t endLine = selectObjectName.find_first_of('\0');
 
 				// 名前を変更
 				// 余計な空白が入ると困るので、最初の\0までを渡す
-				selectObject->GetOwnerScene().ChangeObjectName(
-					selectObject, selectObjectName.substr(0, endLine));
+				selectObject->name = selectObjectName.substr(0, endLine);
 			}
 		}
 	}
@@ -142,7 +143,7 @@ namespace PokarinEngine
 		// コンポーネント追加用リストを表示
 		if (ImGui::BeginPopup(popupName, ImGuiWindowFlags_::ImGuiWindowFlags_NoMove))
 		{
-			AddComponentList();
+			ComponentAdder::RenderList(selectObject);
 
 			ImGui::EndPopup();
 		}

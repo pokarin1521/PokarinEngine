@@ -80,14 +80,6 @@ namespace PokarinEngine
 
 		// ドラッグ操作用スライダーの幅
 		const float sliderWidth = 90.0f;
-
-	private: // ------------------ 保存 -------------------
-
-		/// <summary>
-		/// コンポーネントの情報を保存する
-		/// </summary>
-		/// <param name="[in] folderName"> 保存先のフォルダ </param>
-		void SaveInfo(const std::string& folderName) const override {}
 	};
 
 } // namespace PokarinEngine
