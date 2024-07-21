@@ -232,6 +232,9 @@ namespace PokarinEngine
 		// 3Dオブジェクト作成用メニュー
 		if (ImGui::BeginMenu("3D Object"))
 		{
+			// 直方体生成用ボタン
+			CreateObjectButton("Cube", StaticMeshFile_OBJ::cube);
+
 			// 球体生成用ボタン
 			CreateObjectButton("Sphere", StaticMeshFile_OBJ::sphere);
 

@@ -115,7 +115,7 @@ namespace PokarinEngine
 		/// ベクトルの大きさ(2乗値)を求める
 		/// </summary>
 		/// <returns> ベクトルの大きさ(2乗値) </returns>
-		inline float SprMagnitude() const;
+		inline float SqrMagnitude() const;
 
 		/// <summary>
 		/// ベクトルの大きさを求める
@@ -831,7 +831,7 @@ namespace PokarinEngine
 	/// ベクトルの大きさ(2乗値)を求める
 	/// </summary>
 	/// <returns> ベクトルの大きさ(2乗値) </returns>
-	inline float Vector3::SprMagnitude() const
+	inline float Vector3::SqrMagnitude() const
 	{
 		Vector3 v = { x, y, z };
 		return Dot(v, v);
@@ -843,7 +843,7 @@ namespace PokarinEngine
 	/// <returns> ベクトルの大きさ </returns>
 	inline float Vector3::Length() const
 	{
-		return sqrt(SprMagnitude());
+		return sqrt(SqrMagnitude());
 	}
 
 	/// <summary>

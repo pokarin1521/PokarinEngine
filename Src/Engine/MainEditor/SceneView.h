@@ -21,8 +21,8 @@ namespace PokarinEngine
 
 		SceneView()
 		{
-			// オブジェクトが見えるように少し後ろに配置する
-			sceneCamera.position.z = -5;
+			// カメラの初期位置を設定
+			sceneCamera.position = cameraStartPos;
 		}
 
 		~SceneView() = default;
@@ -61,6 +61,9 @@ namespace PokarinEngine
 
 		// シーンビュー用カメラ
 		Transform sceneCamera;
+
+		// カメラの初期位置
+		const Vector3 cameraStartPos = { 0.0f, 1.0f, -5.0f };
 
 		// 背景色
 		Color backGround = { 0.3f, 0.3f, 0.3f, 1.0f };

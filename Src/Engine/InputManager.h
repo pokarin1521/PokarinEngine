@@ -9,7 +9,6 @@
 #include "Math/Vector.h"
 #include "Window.h"
 
-#include <GLFW/glfw3.h>
 #include <memory>
 
 namespace PokarinEngine

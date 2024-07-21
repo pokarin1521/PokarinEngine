@@ -17,6 +17,9 @@ namespace PokarinEngine
 		// Šî–{Œ`
 		// ------------------------
 
+		// ’¼•û‘Ì
+		inline constexpr const char* cube = "Res/MeshData/Basic/Cube/Cube.obj";
+
 		// ‹…‘Ì
 		inline constexpr const char* sphere = "Res/MeshData/Basic/Sphere/Sphere.obj";
 

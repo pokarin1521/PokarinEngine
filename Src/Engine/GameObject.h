@@ -325,14 +325,8 @@ namespace PokarinEngine
 		// 描画の優先度
 		int renderQueue = renderQueue_geometry;
 
-	private: // --------------------- コンポーネント追加 -----------------------
+	private: // ------------------- コンポーネント識別番号 ---------------------
 
-		/// <summary>
-		/// ゲームオブジェクトにコンポーネントを追加する
-		/// </summary>
-		/// <param name="componentName"> 追加するコンポーネントの名前 </param>
-		void AddComponent(const std::string& componentName);
-		
 		/// <summary>
 		/// コンポーネント識別番号を取得する
 		/// </summary>

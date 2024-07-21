@@ -228,7 +228,7 @@ namespace PokarinEngine
 
 			// a～bまでの距離の2乗
 			// (平方根を避けるため、2乗同士の比較に使う)
-			const float sprDistance = vector.SprMagnitude();
+			const float sprDistance = vector.SqrMagnitude();
 
 			//-------------------------------------
 			// 距離(2乗)が半径の合計より長い場合は
@@ -278,14 +278,14 @@ namespace PokarinEngine
 			// 交差していない
 			// --------------------------------------------------
 
-			// 球体の中心からの最近接点
+			// AABBから球体の中心への最近接点
 			const Vector3 point = ClosestPoint(aabb, sphere.center);
 
 			// 最近接点から球体の中心までのベクトル
 			const Vector3 vector = sphere.center - point;
 
 			// 最近接点から球体の中心までの距離の2乗
-			const float sqrDistance = vector.SprMagnitude();
+			const float sqrDistance = vector.SqrMagnitude();
 
 			// 平方根を避けるため、2乗同士で比較
 			if (sqrDistance > sphere.radius * sphere.radius)
@@ -364,6 +364,69 @@ namespace PokarinEngine
 
 				// 貫通距離が一番短い方向の貫通ベクトルを求める
 				penetration = faceNormals[faceIndex] * penetrationDistance;
+			}
+
+			return true;
+		}
+
+		/// <summary>
+		/// OBBと球体の交差判定
+		/// </summary>
+		/// <param name="[in] box"> 判定対象のOBB </param>
+		/// <param name="[in] sphere"> 判定対象の球体 </param>
+		/// <param name="[out] penetration"> OBBの球体に対する貫通ベクトル </param>
+		/// <returns> 
+		/// <para> true : 交差している </para> 
+		/// <para> false : 交差していない </para> 
+		/// </returns>
+		bool Intersect(const Box& box, const Sphere& sphere, Vector3& penetration)
+		{
+			// OBBから球体の中心への最近接点
+			const Vector3 point = ClosestPoint(box, sphere.center);
+
+			// 最近接点から球体の中心までのベクトル
+			const Vector3 vector = sphere.center - point;
+
+			// 最近接点から球体の中心までの距離の2乗
+			// 平方根を避けるために2乗の値を使う
+			const float sqrDistance = vector.SqrMagnitude();
+
+			// 最近接点から球体の中心までの距離が
+			// 球体の半径より大きい場合は、交差していない
+			if (sqrDistance > sphere.radius * sphere.radius)
+			{
+				return false;
+			}
+
+			// 距離が0より大きい場合、球体の中心はOBBの外側にある
+			// この場合、最近接点から球体の中心へ向かう方向から衝突したとみなす
+			if (sqrDistance > 0)
+			{
+				// 最近接点から球体の中心まで距離
+				const float distance = sqrt(sqrDistance);
+
+				// 貫通距離
+				const float penetrationDistance = (sphere.radius - distance);
+
+				// 最近接点から球体の中心への単位ベクトル
+				const Vector3 normalize = vector / distance;
+
+				// 最近接点から球体の中心へ向かう方向から衝突したとみなすので、
+				// 単位ベクトルに距離を反映することで、貫通ベクトルを求める
+				penetration = normalize * penetrationDistance;
+			}
+			else
+			{
+				// 距離が0の場合、球体の中心はOBBの内部にある
+				// この場合、貫通距離が最も短い面から衝突したとみなす
+
+				// OBBの中心から球体の中心へのベクトル
+				const Vector3 obbVector = sphere.center - box.center;
+
+				// 貫通方向を示すインデックス
+				int faceIndex = 0;
+
+
 			}
 
 			return true;
