@@ -7,7 +7,7 @@
 
 #include "../GameObject.h"
 
-#include "../Components/Colliders/AabbCollider.h"
+#include "../Components/Colliders/BoxCollider.h"
 #include "../Components/Colliders/SphereCollider.h"
 
 #include "../Math/Vector.h"
@@ -72,7 +72,7 @@ namespace PokarinEngine
 		/// <para> true : 交差した </para>
 		/// <para> false : 交差していない </para>
 		/// </returns>
-		template<class T, class U>
+		template <class T, class U>
 		bool CallIntersect(
 			const ColliderPtr& a, const ColliderPtr& b, Vector3& penetration)
 		{
@@ -94,7 +94,7 @@ namespace PokarinEngine
 		/// <para> true  : 交差した </para>
 		/// <para> false : 交差していない </para>
 		/// </returns>
-		template<class T, class U>
+		template <class T, class U>
 		bool CallIntersectReverse(
 			const ColliderPtr& a, const ColliderPtr& b, Vector3& penetration)
 		{
@@ -108,6 +108,17 @@ namespace PokarinEngine
 				return true;
 			}
 
+			return false;
+		}
+
+		/// ここでしか使わないので、cppのみに書く
+		/// <summary>
+		/// 未実装または実装予定のない交差判定の組み合わせ用
+		/// </summary>
+		/// <returns> 常にfalseを返す </returns>
+		template <class T, class U>
+		bool NotImplemented(const ColliderPtr& a, const ColliderPtr& b, Vector3& penetration)
+		{
 			return false;
 		}
 
@@ -188,11 +199,11 @@ namespace PokarinEngine
 			// 組み合わせに対応する交差判定関数を選ぶための配列
 			static const FuncType funcList[2][2] = {
 				{
-					CallIntersect<AabbCollider, AabbCollider>,
-					CallIntersect<AabbCollider, SphereCollider>,
+					NotImplemented<BoxCollider, BoxCollider>,
+					CallIntersect<BoxCollider, SphereCollider>,
 				},
 				{
-					CallIntersectReverse<SphereCollider, AabbCollider>,
+					CallIntersectReverse<SphereCollider, BoxCollider>,
 					CallIntersect<SphereCollider, SphereCollider>,
 				},
 			};
@@ -348,7 +359,7 @@ namespace PokarinEngine
 					worldColliderList[i].origin = collider;
 
 					// 座標変換をしたコライダーを設定
-					worldColliderList[i].world = collider->GetTransformedCollider(transformMatrix);
+					worldColliderList[i].world = collider->GetTransformedCollider();
 				}
 
 				// ワールド座標系コライダーを追加

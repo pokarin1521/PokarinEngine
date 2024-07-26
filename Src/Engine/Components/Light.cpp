@@ -4,6 +4,7 @@
 #include "Light.h"
 
 #include "ImGui/imgui.h"
+#include "Json/Json.h"
 
 #include "../Engine.h"
 
@@ -18,8 +19,7 @@ namespace PokarinEngine
 	}
 
 	/// <summary>
-	/// <para> コンポーネントを初期化 </para> 
-	/// <para> ゲームオブジェクトに追加したときに実行 </para>
+	/// ゲームオブジェクトに追加された時の初期化
 	/// </summary>
 	void Light::Awake()
 	{
@@ -97,6 +97,24 @@ namespace PokarinEngine
 	void Light::InfoEditor()
 	{
 		ImGui::Text("DirectionalLight");
+	}
+
+	/// <summary>
+	/// コンポーネントの情報をJson型に格納する
+	/// </summary>
+	/// <param name="[out] Json"> 情報を格納するJson型 </param>
+	void Light::ToJson(Json& data) const
+	{
+
+	}
+
+	/// <summary>
+	/// コンポーネントの情報をJson型から取得する
+	/// </summary>
+	/// <param name="[out] data"> 情報を格納しているJson型 </param>
+	void Light::FromJson(const Json& data)
+	{
+
 	}
 
 } // namespace PokarinEngine

@@ -129,7 +129,7 @@ namespace PokarinEngine
 		/// 名前を取得する
 		/// </summary>
 		/// <returns> コンポーネントの名前 </returns>
-		std::string GetName() const
+		const std::string& GetName() const
 		{
 			return name;
 		}
@@ -156,15 +156,15 @@ namespace PokarinEngine
 
 	private: // ------------------------------- 初期化 -------------------------------
 
+		/// 持ち主と自身以外にアクセスしない場合
 		/// <summary>
-		/// <para> ゲームオブジェクトに追加された時に呼び出される </para>
-		/// <para> 自分以外を参照しない場合は、この関数で初期化する </para>
+		/// ゲームオブジェクトに追加された時の初期化
 		/// </summary>
 		virtual void Awake() {}
 
+		/// 持ち主と自身以外にアクセスする場合
 		/// <summary>
-		/// <para> 最初の更新の直前で呼び出される </para>
-		/// <para> 自分以外を参照する場合は、この関数で初期化する </para>
+		/// 最初の更新の直前での初期化
 		/// </summary>
 		virtual void Start() {}
 

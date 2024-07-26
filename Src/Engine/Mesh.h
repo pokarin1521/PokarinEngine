@@ -91,7 +91,7 @@ namespace PokarinEngine
 	/// <param name="[in] mesh"> 描画するスタティックメッシュ </param>
 	/// <param name="[in] program"> 使用するシェーダプログラムの管理番号 </param>
 	/// <param name="[in] materialss"> 使用するマテリアル配列 </param>
-	void Draw(const StaticMeshPtr& mesh, GLuint program, const MaterialList& materials);
+	void DrawMesh(const StaticMeshPtr& mesh, GLuint program, const MaterialList& materials);
 
 	/// <summary>
 	/// 共有マテリアル配列をコピー

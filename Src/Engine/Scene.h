@@ -117,7 +117,7 @@ namespace PokarinEngine
 		/// シーン内の全てのゲームオブジェクトを取得する
 		/// </summary>
 		/// <returns> ゲームオブジェクト配列 </returns>
-		GameObjectList GetGameObjectAll() const
+		const GameObjectList& GetGameObjectAll() const
 		{
 			return gameObjectList;
 		}
@@ -193,7 +193,7 @@ namespace PokarinEngine
 		/// 保存先のファイル名を取得する
 		/// </summary>
 		/// <returns> 保存先のファイル名 </returns>
-		const std::string GetFileName() const
+		std::string GetFileName() const
 		{
 			return folderName + name + ".json";
 		}

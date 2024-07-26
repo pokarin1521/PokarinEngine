@@ -64,7 +64,7 @@ namespace PokarinEngine
 
 		// <コンポーネントの名前, コンポーネント追加用関数>
 		using FunctionList = std::unordered_map<
-			std::string, std::function<std::pair<ComponentPtr, bool>(GameObject&)>>;
+			std::string, std::function<ComponentPtr(GameObject&)>>;
 
 		// 名前判別用
 		// <型(typeid), コンポーネントの名前>

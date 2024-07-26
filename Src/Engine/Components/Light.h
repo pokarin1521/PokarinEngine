@@ -28,8 +28,7 @@ namespace PokarinEngine
 	public: // ------------- コンポーネント制御 -------------
 
 		/// <summary>
-		/// <para> コンポーネントを初期化 </para> 
-		/// <para> ゲームオブジェクトに追加したときに実行 </para>
+		/// ゲームオブジェクトに追加された時の初期化
 		/// </summary>
 		void Awake() override;
 
@@ -55,13 +54,13 @@ namespace PokarinEngine
 		/// コンポーネントの情報をJson型に格納する
 		/// </summary>
 		/// <param name="[out] Json"> 情報を格納するJson型 </param>
-		void ToJson(Json& data) const override {}
+		void ToJson(Json& data) const override;
 
 		/// <summary>
 		/// コンポーネントの情報をJson型から取得する
 		/// </summary>
 		/// <param name="[out] data"> 情報を格納しているJson型 </param>
-		void FromJson(const Json& data) override {}
+		void FromJson(const Json& data) override;
 
 	private: // ---------------- エディタ用 ----------------
 

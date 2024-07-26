@@ -33,9 +33,6 @@ namespace PokarinEngine
 	/// </summary>
 	class Transform : public Component
 	{
-		// ゲームオブジェクトに情報を公開
-		friend GameObject;
-
 	public: // ---------------- コンストラクタ・デストラクタ -----------------
 
 		Transform() = default;
@@ -157,13 +154,27 @@ namespace PokarinEngine
 	public: // -------------------- ワールド軸の情報 -------------------
 
 		// ワールド軸の位置
-		Vector3 position = { 0, 0, 0 };
+		Vector3 position = Vector3::zero;
 
 		// ワールド軸の回転角度(弧度法)
-		Vector3 rotation = { 0, 0, 0 };
+		Vector3 rotation = Vector3::zero;
 
 		// 拡大率
-		Vector3 scale = { 1, 1, 1 };
+		Vector3 scale = Vector3::one;
+
+	private: // ---------------------- 情報の制限 ----------------------
+
+		/// <summary>
+		/// 位置・回転角度・拡大率の値を制限する
+		/// </summary>
+		void ClampInfo();
+
+	private: // -------------------- 変換行列の更新 --------------------
+
+		/// <summary>
+		/// 変換行列を更新する
+		/// </summary>
+		void UpdateMatrix();
 
 	private: // ---------------------- エディタ用 ----------------------
 
@@ -171,14 +182,6 @@ namespace PokarinEngine
 		/// 情報を編集できるように表示する
 		/// </summary>
 		void InfoEditor() override;
-
-	private: // ----------------------- 変換行列 -----------------------
-
-		// 座標変換行列
-		Matrix4x4 transformMatrix = Matrix4x4(0);
-
-		// 法線変換行列
-		Matrix3x3 normalMatrix = Matrix3x3(0);
 
 	private: // ------------------------- 親子 -------------------------
 
@@ -189,6 +192,14 @@ namespace PokarinEngine
 
 		// 子オブジェクトのトランスフォーム
 		std::vector<Transform*> children;
+
+	private: // ----------------------- 変換行列 -----------------------
+
+		// 座標変換行列
+		Matrix4x4 transformMatrix = Matrix4x4();
+
+		// 法線変換行列
+		Matrix3x3 normalMatrix = Matrix3x3();
 	};
 
 } // namespace PokarinEngine

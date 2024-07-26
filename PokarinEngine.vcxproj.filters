@@ -212,9 +212,6 @@
     <ClCompile Include="Src\Engine\LightParameter.cpp">
       <Filter>Src\Engine\LightParameter</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Engine\Components\Colliders\AabbCollider.cpp">
-      <Filter>Src\Engine\Components\Colliders</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Engine\Components\Colliders\SphereCollider.cpp">
       <Filter>Src\Engine\Components\Colliders</Filter>
     </ClCompile>
@@ -287,6 +284,9 @@
     <ClCompile Include="packages\ImGui\imnodes.cpp">
       <Filter>Src\Packages\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Engine\Components\Colliders\BoxCollider.cpp">
+      <Filter>Src\Engine\Components\Colliders</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Res\Shader\Standard.frag">
@@ -333,9 +333,6 @@
     </ClInclude>
     <ClInclude Include="Src\Engine\Components\Transform.h">
       <Filter>Src\Engine\Components\Transform</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Engine\Components\Colliders\AabbCollider.h">
-      <Filter>Src\Engine\Components\Colliders</Filter>
     </ClInclude>
     <ClInclude Include="Src\Engine\Components\Colliders\SphereCollider.h">
       <Filter>Src\Engine\Components\Colliders</Filter>
@@ -528,6 +525,9 @@
     </ClInclude>
     <ClInclude Include="packages\Json\nlohmann\json.hpp">
       <Filter>Src\Packages\Json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\Components\Colliders\BoxCollider.h">
+      <Filter>Src\Engine\Components\Colliders</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

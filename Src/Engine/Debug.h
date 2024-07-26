@@ -7,6 +7,7 @@
 #include "glad/glad.h"
 
 #include <GLFW/glfw3.h>
+#include <string>
 
 namespace PokarinEngine
 {
@@ -48,7 +49,7 @@ namespace PokarinEngine
 	} // namespace Debug
 
 	// Releseビルドの時だけ定義されるマクロ
-	// デバッグ機能なし
+	// 定義されてない時はデバッグありとみなす
 #ifndef NDEBUG
 
 // このマクロを定義するとデバッグ出力が有効になる

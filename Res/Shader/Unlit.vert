@@ -115,12 +115,10 @@ void main()
 	vec3 pos = gl_Position.xyz - cameraPosition;
 
 	// カメラの回転を反映
-	pos = RotateZXY(pos, sin(cameraRotation.xyz), cos(cameraRotation.xyz));
+	pos = RotateZXY(pos, sin(cameraRotation), cos(cameraRotation));
 
 	// カメラの回転を反映した座標を代入
-	gl_Position.x = pos.x;
-	gl_Position.y = pos.y;
-	gl_Position.z = pos.z;
+	gl_Position.xyz = pos;
 
 	// ---------------------------------------------
 	// ビュー座標系からクリップ座標系に変換

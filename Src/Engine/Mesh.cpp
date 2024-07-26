@@ -22,10 +22,16 @@ namespace PokarinEngine
 	/// <param name="[in] mesh"> 描画するスタティックメッシュ </param>
 	/// <param name="[in] program"> 使用するシェーダプログラムの管理番号 </param>
 	/// <param name="[in] materials"> 使用するマテリアル配列 </param>
-	void Draw(const StaticMeshPtr& mesh, GLuint program, const MaterialList& materials)
+	void DrawMesh(const StaticMeshPtr& mesh, GLuint program, const MaterialList& materials)
 	{
+		// メッシュがなければ何もしない
+		if (!mesh)
+		{
+			return;
+		}
+
 		// カラーパラメータを取得
-		Color objectColor = Color(0);
+		Color objectColor = Color::white;
 
 		// シェーダからオブジェクトの色を取得
 		if (program)
@@ -78,6 +84,12 @@ namespace PokarinEngine
 
 					// 通常の色用テクスチャをバインド
 					glBindTextures(TextureBinding::color, 1, &tex);
+
+				}
+				else
+				{
+					// 通常の色用テクスチャをバインド
+					glBindTextures(TextureBinding::color, 1, 0);
 				}
 
 				// エミッションテクスチャがある
@@ -400,8 +412,7 @@ namespace PokarinEngine
 				// そのため、OBJファイルのフォルダ名を補足する
 				const std::string fullpath = folderName + textureName;
 
-				// 指定したファイルまたはフォルダが
-				// 存在する
+				// 指定したファイルまたはフォルダが存在する
 				if (std::filesystem::exists(fullpath))
 				{
 					// テクスチャを読み込む
@@ -452,6 +463,28 @@ namespace PokarinEngine
 				continue;
 
 			} // if map_Ke
+		}
+
+		// 基本色テクスチャがない場合は、
+		// 他のオブジェクトのテクスチャが適用されるのを防ぐために
+		// 白色のテクスチャで代用する
+		if (!materials[0]->texBaseColor)
+		{
+			// テクスチャのファイル名
+			const char* path = "Res/Textures/White.tga";
+			
+			// 指定したファイルまたはフォルダが存在する
+			if (std::filesystem::exists(path))
+			{
+				// テクスチャを読み込む
+				materials[0]->texBaseColor = textureCallback(path);
+			}
+			// 存在しない
+			else
+			{
+				// 警告を表示
+				LOG_WARNING("%sを開けません", fullpath);
+			}
 		}
 
 		// 読み込んだマテリアルの配列を返す
@@ -1002,7 +1035,7 @@ namespace PokarinEngine
 
 		// 読み込みを通知
 		LOG("%sを読み込みました(頂点数 = %d, インデックス数 = %d)",
-			fileName, vertices.size(), indices.size());
+			fileName.c_str(), vertices.size(), indices.size());
 
 		// 作成したメッシュを返す
 		return pMesh;

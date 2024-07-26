@@ -4,6 +4,9 @@
 #ifndef GAMEOBJECT_H_INCLUDED
 #define GAMEOBJECT_H_INCLUDED
 
+#include "Json/UsingNameJson.h"
+
+#include "Components/Rigidbody.h"
 #include "Components/Transform.h"
 #include "Components/ComponentAdder.h"
 
@@ -16,7 +19,7 @@
 #include "UsingNames/UsingNodeEditor.h"
 #include "UsingNames/UsingCollider.h"
 
-#include "Json/UsingNameJson.h"
+#include "Configs/MeshConfig.h"
 
 #include <string>
 #include <vector>
@@ -74,7 +77,7 @@ namespace PokarinEngine
 		/// <para> second : 追加できたらtrue, 追加済みで追加できなかったらfalse </para> 
 		/// </returns>
 		template <class T>
-		std::pair<std::shared_ptr<T>, bool> AddComponent()
+		std::shared_ptr<T> AddComponent()
 		{
 			// コライダーならtrue
 			constexpr bool isCollider = std::is_base_of_v<Collider, T>;
@@ -93,7 +96,7 @@ namespace PokarinEngine
 				// 取得したコンポーネントを返す
 				if (component)
 				{
-					return { component, false };
+					return component;
 				}
 			}
 
@@ -130,12 +133,12 @@ namespace PokarinEngine
 			componentList.push_back(component);
 
 			// 物理挙動用コンポーネントなら保持
-			if (std::is_base_of_v<Rigidbody, T>)
+			if constexpr (std::is_base_of_v<Rigidbody, T>)
 			{
 				rigidbody = component;
 			}
 
-			return { component, true };
+			return component;
 		}
 
 		/// <summary>
@@ -191,7 +194,7 @@ namespace PokarinEngine
 		void RemoveDestroyedComponent();
 
 	public: // ------------------- ゲームオブジェクト制御 -------------------
-		
+
 		/// <summary>
 		/// 初期化
 		/// </summary>
@@ -215,6 +218,11 @@ namespace PokarinEngine
 		/// 削除
 		/// </summary>
 		void OnDestroy();
+
+		/// <summary>
+		/// コライダーを描画する
+		/// </summary>
+		void DrawCollider();
 
 	public: // ---------------------------- エディタ ----------------------------
 
@@ -296,7 +304,7 @@ namespace PokarinEngine
 
 	public: // -------------------------- 基本の情報 ---------------------------
 
-		// 座標・回転・拡大率の制御用コンポーネント
+		// 位置・回転・拡大率の制御用コンポーネント
 		TransformPtr transform;
 
 		// 物体の色
@@ -341,11 +349,6 @@ namespace PokarinEngine
 		/// <param name="[in] isPlayGame"> 作成中のゲームが再生中ならtrue </param>
 		void UpdateComponent(bool isPlayGame);
 
-		/// <summary>
-		/// ゲームオブジェクトの座標変換行列を更新する
-		/// </summary>
-		void UpdateMatrix();
-
 	private: // --------------------------- 管理用 -----------------------------
 
 		// 削除されたらtrue
@@ -373,7 +376,7 @@ namespace PokarinEngine
 		std::unordered_set<int> componentIDList;
 
 		// 物理挙動用コンポーネント
-		ComponentPtr rigidbody;
+		RigidbodyPtr rigidbody;
 	};
 
 } // namespace PokarinEngine

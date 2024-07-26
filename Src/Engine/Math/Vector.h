@@ -67,6 +67,9 @@ namespace PokarinEngine
 
 		// 全ての値が0
 		static const Vector2 zero;
+
+		// 全ての値が1
+		static const Vector2 one;
 	};
 
 	/// <summary>
@@ -169,6 +172,9 @@ namespace PokarinEngine
 
 		// 全ての値が0
 		static const Vector3 zero;
+
+		// 全ての値が1
+		static const Vector3 one;
 	};
 
 	/// <summary>
@@ -218,11 +224,16 @@ namespace PokarinEngine
 
 		// 全ての値が0
 		static const Vector4 zero;
+
+		// 全ての値が1
+		static const Vector4 one;
 	};
 
 	// -------------------------------
 	// static変数定義
 	// -------------------------------
+
+#pragma region Vector_Zero
 
 	// 全ての値が0
 	inline const Vector2 Vector2::zero = { 0,0 };
@@ -232,6 +243,21 @@ namespace PokarinEngine
 
 	// 全ての値が0
 	inline const Vector4 Vector4::zero = { 0,0,0,0 };
+
+#pragma endregion
+
+#pragma region Vector_One
+
+	// 全ての値が1
+	inline const Vector2 Vector2::one = { 1,1 };
+
+	// 全ての値が1
+	inline const Vector3 Vector3::one = { 1,1,1 };
+
+	// 全ての値が1
+	inline const Vector4 Vector4::one = { 1,1,1,1 };
+
+#pragma endregion
 
 	// -------------------------------
 	// オペレーター

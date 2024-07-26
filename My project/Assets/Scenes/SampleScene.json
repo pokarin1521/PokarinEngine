@@ -1,18 +1,9 @@
 {
   "Scene": "SampleScene",
-  "ObjectIDList": [
-    -1622304430,
-    856213101,
-    926944034
-  ],
-  "-1622304430": {
+  "-654237640": {
     "Name": "MainCamera",
     "StaticMeshFile": "null",
-    "ComponentIDList": [
-      840224451,
-      -1053832083
-    ],
-    "840224451": {
+    "191677169": {
       "Name": "Transform",
       "Position": {
         "x": 0.0,
@@ -30,18 +21,18 @@
         "z": 1.0
       }
     },
-    "-1053832083": {
+    "344382930": {
       "Name": "Camera"
-    }
+    },
+    "ComponentIDList": [
+      "191677169",
+      "344382930"
+    ]
   },
-  "856213101": {
+  "1801384571": {
     "Name": "Directional Light",
     "StaticMeshFile": "null",
-    "ComponentIDList": [
-      -1413331174,
-      -660716496
-    ],
-    "-1413331174": {
+    "1440418784": {
       "Name": "Transform",
       "Position": {
         "x": 0.0,
@@ -59,28 +50,28 @@
         "z": 1.0
       }
     },
-    "-660716496": {
+    "-575279552": {
       "Name": "Light"
-    }
-  },
-  "926944034": {
-    "Name": "Robot",
-    "StaticMeshFile": "Res/MeshData/Robot/Robot.obj",
+    },
     "ComponentIDList": [
-      369439436,
-      993965716
-    ],
-    "369439436": {
+      "1440418784",
+      "-575279552"
+    ]
+  },
+  "1315417601": {
+    "Name": "Cube",
+    "StaticMeshFile": "Res/MeshData/Basic/Cube/Cube.obj",
+    "1308263145": {
       "Name": "Transform",
       "Position": {
-        "x": -3.200000047683716,
-        "y": 0.0,
+        "x": 0.0,
+        "y": 5.0,
         "z": 0.0
       },
       "Rotation": {
         "x": 0.0,
         "y": 0.0,
-        "z": -0.8377580642700195
+        "z": 0.0
       },
       "Scale": {
         "x": 1.0,
@@ -88,8 +79,51 @@
         "z": 1.0
       }
     },
-    "993965716": {
-      "Name": "Aabb Collider"
-    }
-  }
+    "-1192316828": {
+      "Name": "Box Collider"
+    },
+    "601788038": {
+      "Name": "Rigidbody"
+    },
+    "ComponentIDList": [
+      "1308263145",
+      "-1192316828",
+      "601788038"
+    ]
+  },
+  "-1304939411": {
+    "Name": "Sphere",
+    "StaticMeshFile": "Res/MeshData/Basic/Sphere/Sphere.obj",
+    "467682344": {
+      "Name": "Transform",
+      "Position": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "Rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "Scale": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0
+      }
+    },
+    "1939918959": {
+      "Name": "Sphere Collider"
+    },
+    "ComponentIDList": [
+      "467682344",
+      "1939918959"
+    ]
+  },
+  "ObjectIDList": [
+    "-654237640",
+    "1801384571",
+    "1315417601",
+    "-1304939411"
+  ]
 }

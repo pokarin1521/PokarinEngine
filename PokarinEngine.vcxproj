@@ -173,7 +173,7 @@
     <ClCompile Include="Src\Engine\Collision\Collision.cpp" />
     <ClCompile Include="Src\Engine\Collision\Intersect.cpp" />
     <ClCompile Include="Src\Engine\Components\Camera.cpp" />
-    <ClCompile Include="Src\Engine\Components\Colliders\AabbCollider.cpp" />
+    <ClCompile Include="Src\Engine\Components\Colliders\BoxCollider.cpp" />
     <ClCompile Include="Src\Engine\Components\Colliders\Collider.cpp" />
     <ClCompile Include="Src\Engine\Components\Colliders\SphereCollider.cpp" />
     <ClCompile Include="Src\Engine\Components\Component.cpp" />
@@ -243,7 +243,7 @@
     <ClInclude Include="Src\Engine\Collision\Intersect.h" />
     <ClInclude Include="Src\Engine\Color.h" />
     <ClInclude Include="Src\Engine\Components\Camera.h" />
-    <ClInclude Include="Src\Engine\Components\Colliders\AabbCollider.h" />
+    <ClInclude Include="Src\Engine\Components\Colliders\BoxCollider.h" />
     <ClInclude Include="Src\Engine\Components\Colliders\Collider.h" />
     <ClInclude Include="Src\Engine\Components\Colliders\SphereCollider.h" />
     <ClInclude Include="Src\Engine\Components\Component.h" />

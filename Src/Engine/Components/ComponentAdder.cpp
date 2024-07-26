@@ -3,7 +3,7 @@
 */
 #include "ComponentAdder.h"
 
-#include "Colliders/AabbCollider.h"
+#include "Colliders/BoxCollider.h"
 #include "Colliders/SphereCollider.h"
 
 #include "Camera.h"
@@ -24,7 +24,7 @@ namespace PokarinEngine
 	// 名前判別用
 	// <型(typeid), コンポーネントの名前>
 	ComponentAdder::NameList ComponentAdder::nameList = {
-		{typeid(AabbCollider), "Aabb Collider"},
+		{typeid(BoxCollider), "Box Collider"},
 		{typeid(SphereCollider), "Sphere Collider"},
 
 		{typeid(Camera), "Camera"},
@@ -36,7 +36,7 @@ namespace PokarinEngine
 	// コンポーネント追加用関数の配列
 	// <コンポーネントの名前, コンポーネント追加用関数>
 	ComponentAdder::FunctionList ComponentAdder::functionList = {
-		{"Aabb Collider", &GameObject::AddComponent<AabbCollider>},
+		{"Box Collider", &GameObject::AddComponent<BoxCollider>},
 		{"Sphere Collider", &GameObject::AddComponent<SphereCollider>},
 
 		{"Camera", &GameObject::AddComponent<Camera>},
@@ -60,7 +60,7 @@ namespace PokarinEngine
 	void AddButton(GameObjectPtr& object)
 	{
 		// 追加用ボタンを表示
-		if (ImGui::Button(ComponentAdder::GetName<T>().c_str()))
+		if (ImGui::Button(ComponentAdder::GetName<T>().c_str(), Color::black))
 		{
 			// ボタンが押されたら追加する
 			object->AddComponent<T>();
@@ -78,7 +78,7 @@ namespace PokarinEngine
 	{
 		AddButton<Rigidbody>(gameObject);
 		AddButton<Light>(gameObject);
-		AddButton<AabbCollider>(gameObject);
+		AddButton<BoxCollider>(gameObject);
 		AddButton<SphereCollider>(gameObject);
 	}
 
@@ -95,6 +95,6 @@ namespace PokarinEngine
 			return nullptr;
 		}
 
-		return functionList[name](gameObject).first;
+		return functionList[name](gameObject);
 	}
 }

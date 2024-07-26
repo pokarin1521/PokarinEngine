@@ -6,12 +6,13 @@
 
 #include "../Component.h"
 
+#include "../../UsingNames/UsingCollider.h"
+#include "../../UsingNames/UsingMesh.h"
+
 #include "../../Collision/CollisionType.h"
 
 #include "../../Math/Vector.h"
 #include "../../Math/Matrix.h"
-
-#include "../../UsingNames/UsingCollider.h"
 
 #include <memory>
 
@@ -34,6 +35,11 @@ namespace PokarinEngine
 		/// </summary>
 		void Update() override;
 
+		/// <summary>
+		/// 描画
+		/// </summary>
+		void Draw();
+
 	public: // --------------- 図形の種類 -----------------
 
 		/// <summary>
@@ -41,7 +47,7 @@ namespace PokarinEngine
 		/// </summary>
 		enum class Type
 		{
-			AABB,   // 軸平行境界ボックス
+			Box,	// 有向境界ボックス
 			Sphere, // 球体
 		};
 
@@ -61,10 +67,8 @@ namespace PokarinEngine
 		/// <summary>
 		/// 座標変換したコライダーを取得する
 		/// </summary>
-		/// <param name="[in] transform"> 座標変換行列 </param>
 		/// <returns> 座標変換したコライダー </returns>
-		virtual ColliderPtr GetTransformedCollider(
-			const Matrix4x4& transform) const = 0;
+		virtual ColliderPtr GetTransformedCollider() const = 0;
 
 	public: // ------------- コライダーの情報 -------------
 
@@ -76,10 +80,36 @@ namespace PokarinEngine
 		// false = 動く物体
 		bool isStatic = false;
 
+		// スタティックメッシュ
+		StaticMeshPtr staticMesh;
+
+	//protected: // ------------ 座標変換行列 ---------------
+
+	//	// 座標変換行列
+	//	Matrix4x4 transformMatrix = Matrix4x4();
+
+	//	// 座標変換したコライダー
+	//	ColliderPtr transformedCollider;
+
 	protected: // ------------- エディタ用 ----------------
 
 		// ドラッグ操作用スライダーの幅
 		const float sliderWidth = 90.0f;
+
+	private: // ----------------- 初期化 ------------------
+
+		/// <summary>
+		/// ゲームオブジェクトに追加された時の初期化
+		/// </summary>
+		void Awake() override;
+
+	private: // -------------- 座標変換行列 ---------------
+
+		/// <summary>
+		/// 座標変換行列を取得する
+		/// </summary>
+		/// <returns> 座標変換行列 </returns>
+		virtual Matrix4x4 GetTransformMatrix() const = 0;
 	};
 
 } // namespace PokarinEngine

@@ -78,7 +78,7 @@ namespace PokarinEngine
 		float cameraRotateSpeed = 0.5f;
 
 		// ƒJƒƒ‰‚ÌˆÚ“®‘¬“x
-		float cameraMoveSpeed = 1.0f;
+		float cameraMoveSpeed = 2.0f;
 
 		// ƒJƒƒ‰‘€ìó‘Ô‚È‚çtrue
 		bool isControlCamera = false;

@@ -47,7 +47,6 @@ namespace PokarinEngine
 			}
 
 			//	ファイルを読み込む
-
 			// ファイル全体を一気に読み込むために、ファイルサイズ取得
 			const size_t filesize = std::filesystem::file_size(fileName);
 			std::vector<char> buffer(filesize);
@@ -161,7 +160,7 @@ namespace PokarinEngine
 		/// <para> 全てのシェーダプログラムの管理番号 </para>
 		/// <para> [シェーダプログラムの種類, シェーダプログラムの管理番号] </para>
 		/// </returns>
-		ProgList GetAllProgram()
+		const ProgList& GetAllProgram()
 		{
 			return progList;
 		}

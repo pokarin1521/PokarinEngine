@@ -32,10 +32,8 @@ namespace PokarinEngine
 		/// <summary>
 		/// 座標変換したコライダーを取得する
 		/// </summary>
-		/// <param name="[in] transform"> 座標変換行列 </param>
 		/// <returns> 座標変換したコライダー </returns>
-		ColliderPtr GetTransformedCollider(
-			const Matrix4x4& transform) const override;
+		ColliderPtr GetTransformedCollider() const override;
 
 	public: // ----------------- 情報の取得 ------------------
 
@@ -52,7 +50,7 @@ namespace PokarinEngine
 		/// 図形を取得する
 		/// </summary>
 		/// <returns> 球体 </returns>
-		const Collision::Sphere& GetShape() const
+		Collision::Sphere GetShape() const
 		{
 			return sphere;
 		}
@@ -75,6 +73,14 @@ namespace PokarinEngine
 
 		// 図形(球体)
 		Collision::Sphere sphere;
+
+	private: // ---------------- 座標変換行列 ----------------
+
+		/// <summary>
+		/// 座標変換行列を取得する
+		/// </summary>
+		/// <returns> 座標変換行列 </returns>
+		Matrix4x4 GetTransformMatrix() const;
 
 	private: // ----------------- エディタ用 -----------------
 

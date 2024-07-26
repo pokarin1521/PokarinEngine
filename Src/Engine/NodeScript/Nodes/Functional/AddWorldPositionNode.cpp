@@ -39,7 +39,7 @@ namespace PokarinEngine
 		static const float sliderWidth = 50.0f;
 
 		// 移動量を表示
-		translate.RenderDrag("Translate", "AddWorldPositionNode", sliderWidth);
+		translate.RenderDrag("Translate", GetID_String(), sliderWidth);
 
 		// データピンの表示を終了
 		EndPin(PinAttribute::Input);

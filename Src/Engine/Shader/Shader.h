@@ -66,7 +66,7 @@ namespace PokarinEngine
 		/// <para> 全てのシェーダプログラムの管理番号 </para>
 		/// <para> [シェーダプログラムの種類, シェーダプログラムの管理番号] </para>
 		/// </returns>
-		ProgList GetAllProgram();
+		const ProgList& GetAllProgram();
 
 	} // namespace Shader
 

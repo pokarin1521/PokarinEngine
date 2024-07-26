@@ -14,18 +14,6 @@ namespace PokarinEngine
 	namespace Collision
 	{
 		/// <summary>
-		/// AABB“¯m‚ÌŒğ·”»’è
-		/// </summary>
-		/// <param name="[in] a"> ”»’è‘ÎÛ‚ÌAABB(A) </param>
-		/// <param name="[in] b"> ”»’è‘ÎÛ‚ÌAABB(B) </param>
-		/// <param name="[out] penetration"> A‚ªB‚ÉŠÑ’Ê‚µ‚½‹——£ </param>
-		/// <returns> 
-		/// <para> true : Œğ·‚µ‚Ä‚¢‚é </para> 
-		/// <para> false : Œğ·‚µ‚Ä‚¢‚È‚¢ </para> 
-		/// </returns>
-		bool Intersect(const AABB& a, const AABB& b, Vector3& penetration);
-
-		/// <summary>
 		/// ‹…‘Ì“¯m‚ÌŒğ·”»’è
 		/// </summary>
 		/// <param name="[in] a"> ”»’è‘ÎÛ‚Ì‹…‘ÌA </param>
@@ -36,18 +24,6 @@ namespace PokarinEngine
 		/// <para> false : Œğ·‚µ‚Ä‚¢‚È‚¢ </para> 
 		/// </returns>
 		bool Intersect(const Sphere& a, const Sphere& b, Vector3& penetration);
-
-		/// <summary>
-		/// AABB‚Æ‹…‘Ì‚ÌŒğ·”»’è
-		/// </summary>
-		/// <param name="[in] aabb"> ”»’è‘ÎÛ‚ÌAABB </param>
-		/// <param name="[in] sphere"> ”»’è‘ÎÛ‚Ì‹…‘Ì </param>
-		/// <param name="[out] penetration"> AABB‚Ì‹…‘Ì‚É‘Î‚·‚éŠÑ’ÊƒxƒNƒgƒ‹ </param>
-		/// <returns> 
-		/// <para> true : Œğ·‚µ‚Ä‚¢‚é </para> 
-		/// <para> false : Œğ·‚µ‚Ä‚¢‚È‚¢ </para> 
-		/// </returns>
-		bool Intersect(const AABB& aabb, const Sphere& sphere, Vector3& penetration);
 
 		/// <summary>
 		/// OBB‚Æ‹…‘Ì‚ÌŒğ·”»’è

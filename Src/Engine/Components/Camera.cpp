@@ -23,4 +23,13 @@ namespace PokarinEngine
 	{
 
 	}
+
+	/// <summary>
+	/// コンポーネントの情報をJson型から取得する
+	/// </summary>
+	/// <param name="[out] data"> 情報を格納しているJson型 </param>
+	void Camera::FromJson(const Json& data)
+	{
+
+	}
 }

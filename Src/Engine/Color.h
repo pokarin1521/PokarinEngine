@@ -55,6 +55,9 @@ namespace PokarinEngine
 
 		// 灰色
 		static const Color gray;
+
+		// 緑色
+		static const Color green;
 	};
 
 	// ---------------------------------
@@ -68,7 +71,10 @@ namespace PokarinEngine
 	inline const Color Color::black = { 0, 0, 0, 1.0f };
 
 	// 灰色
-	inline const Color Color::gray = { 0.2f, 0.2f, 0.2f, 1.0f };
+	inline const Color Color::gray = { 0.2f, 0.2f, 0.2f, 1.0f };	
+	
+	// 緑色
+	inline const Color Color::green = { 0.0f, 1.0f, 0.0f, 1.0f };
 
 #pragma region Operator
 

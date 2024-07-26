@@ -1,36 +1,22 @@
 /**
-* @file AabbCollider.h
+* @file BoxCollider.h
 */
-#ifndef AABBCOLLIDER_H_INCLUDED
-#define AABBCOLLIDER_H_INCLUDED
+#ifndef BOXCOLLIDER_H_INCLUDED
+#define BOXCOLLIDER_H_INCLUDED
 
 #include "Collider.h"
 
-#include "../../Debug.h"
-
 namespace PokarinEngine
 {
-	// -----------------
-	// 前方宣言
-	// -----------------
-
-	class AabbCollider;
-
-	// -----------------------
-	// 型の別名を定義
-	// -----------------------
-
-	using AabbColliderPtr = std::shared_ptr<AabbCollider>;
-
 	/// <summary>
-	/// AABBコライダー
+	/// Boxコライダー
 	/// </summary>
-	class AabbCollider : public Collider
+	class BoxCollider : public Collider
 	{
 	public: // -------- コンストラクタ・デストラクタ --------
 
-		AabbCollider() = default;
-		~AabbCollider() = default;
+		BoxCollider() = default;
+		~BoxCollider() = default;
 
 	public: // ------------------- 座標 ---------------------
 
@@ -40,19 +26,14 @@ namespace PokarinEngine
 		/// <param name="[in] translate"> 移動量 </param>
 		void AddPosition(const Vector3& translate) override
 		{
-			aabb.min += translate;
-			aabb.max += translate;
+			box.center += translate;
 		}
 
 		/// <summary>
-		/// <para> 座標変換したコライダーを取得する </para>
-		/// <para> 回転角度は90度単位で指定すること </para>
-		/// <para> それ以外の角度では正しい交差判定が行えない </para>
+		/// 座標変換したコライダーを取得する
 		/// </summary>
-		/// <param name="[in] transform"> 座標変換行列 </param>
 		/// <returns> 座標変換したコライダー </returns>
-		ColliderPtr GetTransformedCollider(
-			const Matrix4x4& transform) const override;
+		ColliderPtr GetTransformedCollider() const override;
 
 	public: // ---------------- 情報の取得 ------------------
 
@@ -62,16 +43,16 @@ namespace PokarinEngine
 		/// <returns> 図形の種類 </returns>
 		Type GetType() const override
 		{
-			return Type::AABB;
+			return Type::Box;
 		}
 
 		/// <summary>
 		/// 図形を取得する
 		/// </summary>
-		/// <returns> 軸平行境界ボックス </returns>
-		const Collision::AABB& GetShape() const
+		/// <returns> 有向境界ボックス </returns>
+		const Collision::Box& GetShape() const
 		{
-			return aabb;
+			return box;
 		}
 
 	public: // ------------------- Json ---------------------
@@ -80,18 +61,26 @@ namespace PokarinEngine
 		/// コンポーネントの情報をJson型に格納する
 		/// </summary>
 		/// <param name="[out] Json"> 情報を格納するJson型 </param>
-		void ToJson(Json& data) const override {}
+		void ToJson(Json& data) const override;
 
 		/// <summary>
 		/// コンポーネントの情報をJson型から取得する
 		/// </summary>
 		/// <param name="[out] data"> 情報を格納しているJson型 </param>
-		void FromJson(const Json& data) override {}
+		void FromJson(const Json& data) override;
 
 	public: // ------------------- 情報 ---------------------
 
-		// 図形(軸平行境界ボックス)
-		Collision::AABB aabb;
+		// 図形(有向境界ボックス)
+		Collision::Box box;
+
+	private: // --------------- 座標変換行列 ----------------
+
+		/// <summary>
+		/// 座標変換行列を取得する
+		/// </summary>
+		/// <returns> 座標変換行列 </returns>
+		Matrix4x4 GetTransformMatrix() const;
 
 	private: // ---------------- エディタ用 -----------------
 
@@ -100,7 +89,6 @@ namespace PokarinEngine
 		/// </summary>
 		void InfoEditor() override;
 	};
+}
 
-} // namespace PokarinEngine
-
-#endif // !AABBCOLLIDER_H_INCLUDED
+#endif // !BOXCOLLIDER_H_INCLUDED

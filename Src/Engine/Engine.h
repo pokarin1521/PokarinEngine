@@ -115,14 +115,6 @@ namespace PokarinEngine
 		/// <returns> 指定した大きさのテクスチャ </returns>
 		TexturePtr GetTexture(GLsizei width, GLsizei height);
 
-	public: // --------------------- スカイスフィアの描画 ---------------------
-
-		/// <summary>
-		/// スカイスフィアを描画する
-		/// </summary>
-		/// <param name="[in] skySphereMaterial"> スカイスフィア用マテリアル </param>
-		void DrawSkySphere(const MaterialPtr& skySphereMaterial = nullptr);
-
 	public: // ------------------------- ゲームの再生 -------------------------
 
 		/// <summary>
@@ -137,7 +129,7 @@ namespace PokarinEngine
 			return isPlayGame;
 		}
 
-	private: // ---------------------- エンジンの制御 -------------------------
+	private: // ------------------------ エンジンの制御 -----------------------
 
 		/// <summary>
 		/// ゲームエンジンを初期化する
@@ -158,7 +150,7 @@ namespace PokarinEngine
 		/// </summary>
 		void Render();
 
-	private: // -------------------- シーンの識別番号 -------------------
+	private: // ---------------------- シーンの識別番号 -----------------------
 
 		/// <summary>
 		/// シーンの識別番号を作成する
@@ -166,7 +158,7 @@ namespace PokarinEngine
 		/// <returns> 作成した識別番号 </returns>
 		int CreateSceneID();
 
-	private: // ---------------------- 描画用ビュー ---------------------
+	private: // ------------------------- 描画用ビュー ------------------------
 
 		/// <summary>
 		/// 描画用ビューにカメラからの描画情報を保持させる
@@ -175,12 +167,20 @@ namespace PokarinEngine
 		/// <param name="[in] renderView"> 描画情報を保持する描画用ビュー </param>
 		void DrawRenderView(const Transform& camera, const RenderView& renderView);
 
-	private: // ---------------------- 図形データ ------------------------
+
+	private: // -------------------- スカイスフィアの描画 ---------------------
+
+		/// <summary>
+		/// スカイスフィアを描画する
+		/// </summary>
+		void DrawSkySphere(const Transform& camera);
+
+	private: // ------------------------- 図形データ --------------------------
 
 		// 図形データ管理用バッファ
 		MeshBufferPtr meshBuffer;
 
-	private: // ---------------------- テクスチャ ----------------------
+	private: // ------------------------- テクスチャ --------------------------
 
 		// テクスチャ用キャッシュ
 		// <ファイル名, テクスチャのポインタ>
@@ -194,12 +194,12 @@ namespace PokarinEngine
 			TexHelper(GLsizei w, GLsizei h) : Texture(w, h) {}
 		};
 
-	private: // -------------------- スカイスフィア --------------------
+	private: // ----------------------- スカイスフィア ------------------------
 
 		// スカイスフィア用モデル
 		StaticMeshPtr skySphere;
 
-	private: // ------------------------ シーン ------------------------
+	private: // --------------------------- シーン ----------------------------
 
 		// 現在のシーン
 		ScenePtr currentScene;
@@ -213,12 +213,12 @@ namespace PokarinEngine
 		// シーンの最大数
 		const int sceneMax = 1000;
 
-	private: // -------------------- メインエディタ --------------------
+	private: // ------------------------ メインエディタ -----------------------
 
 		// メインエディタ
 		MainEditor mainEditor;
 
-	private: // ------------------- ゲーム再生確認用 -------------------
+	private: // ----------------------- ゲーム再生確認用 ----------------------
 
 		// 作成中のゲームが再生中ならtrue
 		bool isPlayGame = false;

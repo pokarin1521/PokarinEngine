@@ -8,8 +8,22 @@
 
 #include "../Math/Vector.h"
 
+#include <memory>
+
 namespace PokarinEngine
 {
+	// -------------------------
+	// 前方宣言
+	// -------------------------
+
+	class Rigidbody;
+
+	// --------------------------------
+	// 型の別名を定義
+	// --------------------------------
+
+	using RigidbodyPtr = std::shared_ptr<Rigidbody>;
+
 	/// <summary>
 	/// 剛体の物理的挙動を扱うコンポーネント
 	/// </summary>

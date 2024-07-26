@@ -5,7 +5,6 @@
 
 #include <stdio.h>
 #include <stdarg.h>
-#include <string>
 
 #pragma warning(push)
 #pragma warning(disable:4005)
@@ -57,7 +56,7 @@ namespace PokarinEngine
 			// vsnprintf関数は「出力したバイト数」を返す
 			// この値を出力先を指すポインタpに加算することで
 			// 出力結果が連続するようにする
-			p += vsnprintf(p, size, format, ap);
+			p += std::vsnprintf(p, size, format, ap);
 
 			// va_list型の変数を破棄
 			va_end(ap);

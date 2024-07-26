@@ -10,6 +10,7 @@
 #include "Debug.h"
 
 #include "Components/Light.h"
+#include "Components/Colliders/BoxCollider.h"
 
 #include "Configs/ShaderConfig.h"
 
@@ -34,11 +35,11 @@ namespace PokarinEngine
 		// メインカメラ作成
 		// オブジェクト生成時に見えるように少し後ろに配置する
 		mainCamera = CreateGameObject("MainCamera", Vector3(0, 0, -5));
-		mainCameraInfo = mainCamera->AddComponent<Camera>().first;
+		mainCameraInfo = mainCamera->AddComponent<Camera>();
 
 		// 平行光源を作成
 		auto directionalLight = CreateGameObject("Directional Light");
-		std::shared_ptr<Light> lightComponent = directionalLight->AddComponent<Light>().first;
+		std::shared_ptr<Light> lightComponent = directionalLight->AddComponent<Light>();
 		lightComponent->SetType(LightParameter::Type::directional);
 	}
 
@@ -87,11 +88,17 @@ namespace PokarinEngine
 			return;
 		}
 
-		// 複製元と同じパラメータのオブジェクトを作成
-		// 名前の重複確認が出来るように種類名を使う
-		GameObjectPtr copyObject = CreateGameObject(object->name,
-			object->transform->position, object->transform->rotation,
-			object->staticMesh->filename.c_str());
+		// 複製元の情報を格納するJson型
+		Json data;
+
+		// 複製元の情報を格納する
+		object->ToJson(data);
+
+		// ゲームオブジェクトを作成
+		GameObjectPtr copyObject = CreateGameObject("Copy Object");
+
+		// 複製元の情報を取得する
+		copyObject->FromJson(data);
 	}
 
 #pragma endregion
@@ -339,14 +346,14 @@ namespace PokarinEngine
 			{
 				// 共有マテリアルを使って
 				// スタティックメッシュを描画
-				Draw(gameObject->staticMesh, prog, gameObject->staticMesh->materials);
+				DrawMesh(gameObject->staticMesh, prog, gameObject->staticMesh->materials);
 			}
 			// 固有マテリアルがある
 			else
 			{
 				// 固有マテリアルを使って
 				// スタティックメッシュを描画
-				Draw(gameObject->staticMesh, prog, gameObject->materials);
+				DrawMesh(gameObject->staticMesh, prog, gameObject->materials);
 			}
 		}
 	}
@@ -408,7 +415,7 @@ namespace PokarinEngine
 		// ---------- 通常のオブジェクト		     -----------
 
 		// 描画
-		DrawGameObject(progStandard, drawObjectList.begin(), transparentBegin);
+		DrawGameObject(progUnlit, drawObjectList.begin(), transparentBegin);
 
 		// ------ transparentからoverlayまでのキューを描画 ------
 		// ------ 半透明なオブジェクト					   ------
@@ -435,11 +442,18 @@ namespace PokarinEngine
 		// 描画
 		// UIにライティングはいらないのでアンリットシェーダを使う
 		DrawGameObject(progUnlit, overlayBegin, drawObjectList.end());
+
+		// ゲームオブジェクトのコライダーを描画
+		// コライダーは深度値関係なく描画しないと不便なので、ここで描画する
+		for (const auto& drawObject : drawObjectList)
+		{
+			drawObject->DrawCollider();
+		}
 	}
 
 #pragma endregion
 
-#pragma region Save
+#pragma region Save,Load
 
 	/// <summary>
 	/// シーンの情報をファイルに保存する
@@ -456,17 +470,25 @@ namespace PokarinEngine
 		// シーンの名前
 		data["Scene"] = name;
 
-		// ゲームオブジェクト識別番号の管理用配列
-		data["ObjectIDList"] = objectIDList;
 
 		// ----------------------------------------------------
 		// ゲームオブジェクトの情報をJson型に格納する
 		// ----------------------------------------------------
 
+		// ゲームオブジェクト識別番号(文字列)の配列
+		// リストの順番を維持するためにvector型にする
+		std::vector<std::string> stringIDList;
+		stringIDList.reserve(gameObjectList.size());
+
+		// ゲームオブジェクトの情報を格納
 		for (const auto& gameObject : gameObjectList)
 		{
 			gameObject->ToJson(data[gameObject->GetID_String()]);
+			stringIDList.push_back(gameObject->GetID_String());
 		}
+
+		// ゲームオブジェクト識別番号の配列を格納
+		data["ObjectIDList"] = stringIDList;
 
 		// ----------------------------------------------
 		// Jsonファイルに情報を保存する
@@ -487,14 +509,24 @@ namespace PokarinEngine
 	/// </summary>
 	void Scene::LoadScene()
 	{
+		// ---------------------------------------------
 		// フォルダが存在しない場合は何もしない
+		// ---------------------------------------------
+
 		if (!std::filesystem::exists(folderName))
 		{
 			return;
 		}
 
+		// --------------------------------------------------------
 		// 現在生成されているゲームオブジェクトを削除する
+		// --------------------------------------------------------
+
 		ClearGameObject();
+
+		// ---------------------------------------
+		// ファイルから情報を読み込む
+		// ---------------------------------------
 
 		// 情報を格納するJson型
 		Json data;
@@ -502,10 +534,18 @@ namespace PokarinEngine
 		// シーンの情報を読み込む
 		JsonFile::Load(GetFileName(), data);
 
-		for (int objectID : data["ObjectIDList"])
+		// ---------------------------------------------
+		// ゲームオブジェクトの情報を読み込む
+		// ---------------------------------------------
+
+		// ゲームオブジェクトの識別番号(文字列)
+		for (const std::string& objectID_string : data["ObjectIDList"])
 		{
+			// ゲームオブジェクトを作成
 			GameObjectPtr gameObject = CreateGameObject("New Object");
-			gameObject->FromJson(data[std::to_string(objectID)]);
+
+			// 識別番号に対応した情報を読み込む
+			gameObject->FromJson(data[objectID_string]);
 		}
 	}
 

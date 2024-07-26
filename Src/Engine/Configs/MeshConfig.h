@@ -39,6 +39,16 @@ namespace PokarinEngine
 
 		inline constexpr const char* skySphere = "Res/MeshData/SkySphere/SkySphere.obj";
 
+		// ------------------------
+		// コライダー
+		// ------------------------
+
+		// Boxコライダー
+		inline constexpr const char* boxCollider = "Res/MeshData/Collider/Box/Box.obj";		
+		
+		// 球体コライダー
+		inline constexpr const char* sphereCollider = "Res/MeshData/Collider/Sphere/Sphere.obj";
+
 		// ------------------------ 
 		// お試しロボット 
 		// ------------------------
@@ -52,7 +62,7 @@ namespace PokarinEngine
 
 		// 全てのOBJファイル
 		inline constexpr const char* allObj[] = {
-			sphere, plane, ui, robot, skySphere };
+			cube, sphere, plane, ui, robot, skySphere };
 	}
 
 } // namespace PokarinEngine

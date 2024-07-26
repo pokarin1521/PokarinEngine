@@ -13,9 +13,6 @@
 
 #include "Math/Matrix.h"
 
-#include "Components/Colliders/AabbCollider.h"
-#include "Components/Colliders/SphereCollider.h"
-
 #include "Configs/ShaderConfig.h"
 
 #include "NodeScript/NodeScript.h"
@@ -288,17 +285,19 @@ namespace PokarinEngine
 
 		Time::Update();
 
+		// ------------------------
+		// エディタを更新
+		// ------------------------
+
+		// エディタでの操作がすぐに反映されるように
+		// 先に更新する
+		mainEditor.Update(isPlayGame);
+
 		// ------------------------------------------
 		// シーン内のゲームオブジェクトを更新
 		// ------------------------------------------
 
 		currentScene->UpdateGameObject();
-
-		// ------------------------
-		// エディタを更新
-		// ------------------------
-
-		mainEditor.Update(isPlayGame);
 	}
 
 	/// <summary>
@@ -414,7 +413,7 @@ namespace PokarinEngine
 		// スカイスフィアを描画
 		// -----------------------------------
 
-		DrawSkySphere();
+		DrawSkySphere(camera);
 
 		// -----------------------------------
 		// ゲームオブジェクトを描画
@@ -514,8 +513,7 @@ namespace PokarinEngine
 	/// <summary>
 	/// スカイスフィアを描画する
 	/// </summary>
-	/// <param name="[in] skySphereMaterial"> スカイスフィア用マテリアル </param>
-	void Engine::DrawSkySphere(const MaterialPtr& skySphereMaterial)
+	void Engine::DrawSkySphere(const Transform& camera)
 	{
 		// --------------------------------------------------------
 		// スカイスフィア用モデルがない場合は描画しない
@@ -567,11 +565,12 @@ namespace PokarinEngine
 		const float scale = far * 0.95f / skySphereRadius;
 
 		// 座標変換行列
+		// 移動も回転もしないので拡大率だけ
 		const Matrix4x4 transformMatrix = {
 			{ scale,     0,     0,     0 },
 			{     0, scale,     0,     0 },
 			{     0,     0, scale,     0 },
-			{     0,     0,     0, scale },
+			{     0,     0,     0,     1 },
 		};
 
 		// 座標変換行列をGPUにコピー
@@ -593,33 +592,18 @@ namespace PokarinEngine
 
 		// スカイスフィアは常にカメラを中心に描画したいので、
 		// カメラを一時的に原点に移動させる
-		static const Vector3 skySphereCameraPos = { 0, 0, 0 };
 		glProgramUniform3fv(progUnlit, UniformLocation::cameraPosition,
-			1, &skySphereCameraPos.x);
+			1, &Vector3::zero.x);
 
 		// -----------------------------------
 		// スカイスフィアを描画する
 		// -----------------------------------
 
-		// 描画できるように配列に格納
-		const MaterialList materials(1, skySphereMaterial);
+		// スカイスフィアを描画する
+		DrawMesh(skySphere, progUnlit, skySphere->materials);
 
-		// スカイスフィア用マテリアルが指定されているならそれを使う
-		if (skySphereMaterial)
-		{
-			// スカイスフィアを描画する
-			Draw(skySphere, progUnlit, materials);
-		}
-		// 指定されていないならスタティックメッシュにあるマテリアルを使う
-		else
-		{
-			// スカイスフィアを描画する
-			Draw(skySphere, progUnlit, skySphere->materials);
-		}
-
-		// カメラの座標を元に戻す
-		glProgramUniform3fv(progUnlit, UniformLocation::cameraPosition,
-			1, &currentScene->GetMainCamera().transform->position.x);
+		// カメラパラメータをGPUにコピーし直す
+		CopyCameraParameters(progUnlit, camera);
 
 		// 深度バッファへの書き込みを許可
 		glDepthMask(GL_TRUE);

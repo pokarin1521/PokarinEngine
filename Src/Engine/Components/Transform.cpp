@@ -20,74 +20,11 @@ namespace PokarinEngine
 	/// </summary>
 	void Transform::Update()
 	{
-		// -------------------------------
-		// 位置を制限
-		// -------------------------------
+		// 位置・回転角度・拡大率を制限する
+		ClampInfo();
 
-		// 位置の最大値
-		// Unityを参考に10万で設定する
-		static const float positionMax = 100000;
-
-		// 位置を±10万の範囲になるように制限する
-		ForVector3()
-		{
-			// プラス方向の制限
-			if (position[i] > positionMax)
-			{
-				position[i] = positionMax;
-			}
-
-			// マイナス方向の制限
-			if (position[i] < -positionMax)
-			{
-				position[i] = -positionMax;
-			}
-		}
-
-		// -------------------------------
-		// 回転角度を制限
-		// -------------------------------
-
-		// 回転角度の最大値
-		static const float rotationMax = Radians(360.0f);
-
-		// 回転角度を±360度の範囲になるように制限する
-		ForVector3()
-		{
-			if (std::abs(rotation[i]) > rotationMax)
-			{
-				// 周回数
-				int laps = static_cast<int>(rotation[i] / rotationMax);
-
-				// 周回数に応じて回転角度の最大値を減らすことで、
-				// 制限したうえでの適切な数値を求める
-				rotation[i] -= rotationMax * laps;
-			}
-		}
-
-		// -------------------------------
-		// 拡大率
-		// -------------------------------
-
-		// 拡大率の最大値
-		// 位置と同じにしておく
-		static const float scaleMax = 100000;
-
-		// 拡大率を±10万の範囲になるように制限する
-		ForVector3()
-		{
-			// プラス方向の制限
-			if (scale[i] > scaleMax)
-			{
-				scale[i] = scaleMax;
-			}
-
-			// マイナス方向の制限
-			if (scale[i] < -scaleMax)
-			{
-				scale[i] = -scaleMax;
-			}
-		}
+		// 変換行列を更新する
+		UpdateMatrix();
 	}
 
 	/// <summary>
@@ -168,6 +105,101 @@ namespace PokarinEngine
 	void Transform::SetParent(const TransformPtr& parent)
 	{
 		SetParent(parent.get());
+	}
+
+	/// <summary>
+	/// 位置・回転角度・拡大率の値を制限する
+	/// </summary>
+	void Transform::ClampInfo()
+	{
+		// -------------------------------
+		// 位置を制限
+		// -------------------------------
+
+		// 位置の最大値
+		// Unityを参考に10万で設定する
+		static const float positionMax = 100000;
+
+		// 位置を±10万の範囲になるように制限する
+		ForVector3()
+		{
+			position[i] = std::clamp(position[i], -positionMax, positionMax);
+		}
+
+		// -------------------------------
+		// 回転角度を制限
+		// -------------------------------
+
+		// 回転角度の最大値
+		static const float rotationMax = Radians(360.0f);
+
+		// 回転角度を±360度の範囲になるように制限する
+		ForVector3()
+		{
+			if (std::abs(rotation[i]) > rotationMax)
+			{
+				// 周回数
+				int laps = static_cast<int>(rotation[i] / rotationMax);
+
+				// 周回数に応じて回転角度の最大値を減らすことで、
+				// 制限したうえでの適切な数値を求める
+				rotation[i] -= rotationMax * laps;
+			}
+		}
+
+		// -------------------------------
+		// 拡大率
+		// -------------------------------
+
+		// 拡大率の最大値
+		// 位置と同じにしておく
+		static const float scaleMax = 100000;
+
+		// 拡大率を±10万の範囲になるように制限する
+		ForVector3()
+		{
+			scale[i] = std::clamp(scale[i], -scaleMax, scaleMax);
+		}
+	}
+
+	/// <summary>
+	/// 変換行列を更新する
+	/// </summary>
+	void Transform::UpdateMatrix()
+	{
+		// ----------------------------------
+		// 自身の座標変換行列を求める
+		// ----------------------------------
+
+		// オブジェクトの座標
+		// 左手座標系の値なので右手座標系にする
+		Vector3 rightPosition = position;
+		rightPosition.z *= -1;
+
+		// 自身の座標変換行列
+		transformMatrix = Matrix4x4::CreateTransformMatrix(
+			rightPosition, rotation, scale);
+
+		// 自身の法線変換行列
+		normalMatrix = Matrix3x3::CreateRotationMatrix(rotation);
+
+		// ------------------------------------
+		// 親の座標変換行列を反映する
+		// ------------------------------------
+
+		// 親をたどっていく
+		for (Transform* p = parent; p; p = p->GetParent())
+		{
+			// 親の座標変換行列
+			Matrix4x4 parentTransformMatrix = p->transformMatrix;
+
+			// 親の法線変換行列
+			Matrix3x3 parentNormalMatrix = p->normalMatrix;
+
+			// 親の変換行列を掛け合わせる
+			transformMatrix *= parentTransformMatrix;
+			normalMatrix *= parentNormalMatrix;
+		}
 	}
 
 	/// <summary>

@@ -4,9 +4,41 @@
 #include "Collider.h"
 
 #include "../../GameObject.h"
+#include "../../Scene.h"
+#include "../../Mesh.h"
+#include "../../Color.h"
+#include "../../Shader/Shader.h"
+
+#include "../../Configs/MeshConfig.h"
+#include "../../Configs/ShaderConfig.h"
 
 namespace PokarinEngine
 {
+	/// <summary>
+	/// ゲームオブジェクトに追加された時の初期化
+	/// </summary>
+	void Collider::Awake()
+	{
+		// コライダーの種類
+		const Type type = GetType();
+
+		// 種類に合わせたメッシュを取得する
+		switch (type)
+		{
+		case Type::Box:
+
+			staticMesh = GetOwnerObject().GetOwnerScene().GetStaticMesh(StaticMeshFile_OBJ::boxCollider);
+
+			break;
+
+		case Type::Sphere:
+
+			staticMesh = GetOwnerObject().GetOwnerScene().GetStaticMesh(StaticMeshFile_OBJ::sphereCollider);
+
+			break;
+		}
+	}
+
 	/// <summary>
 	/// 更新
 	/// </summary>
@@ -15,5 +47,34 @@ namespace PokarinEngine
 		// 持ち主であるゲームオブジェクトが
 		// 物理挙動用コンポーネントを持っていたら衝突時に動くようにする
 		isStatic = !GetOwnerObject().HasRigidbody();
+	}
+
+	/// <summary>
+	/// 描画
+	/// </summary>
+	void Collider::Draw()
+	{
+		// ライティング無しシェーダの管理番号
+		GLuint progUnlit = Shader::GetProgram(Shader::ProgType::Unlit);
+
+		// 描画に使うシェーダを指定
+		glUseProgram(progUnlit);
+
+		// 色をGPUにコピー
+		// 緑色で描画する
+		glProgramUniform4fv(progUnlit,
+			UniformLocation::color, 1, &Color::green.r);
+
+		// 座標変換行列
+		const Matrix4x4 transformMatrix = GetTransformMatrix();
+
+		// 座標変換行列をGPUにコピー
+		glProgramUniformMatrix4fv(
+			progUnlit, UniformLocation::transformMatrix,
+			1, GL_FALSE, &transformMatrix[0].x);
+
+		// 共有マテリアルを使って
+		// スタティックメッシュを描画
+		DrawMesh(staticMesh, progUnlit, staticMesh->materials);
 	}
 }

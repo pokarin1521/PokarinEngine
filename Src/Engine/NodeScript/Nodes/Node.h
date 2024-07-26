@@ -68,6 +68,15 @@ namespace PokarinEngine
 			return id;
 		}
 
+		/// <summary>
+		/// ノードの識別番号を文字列で取得する
+		/// </summary>
+		/// <returns> ノードの識別番号(文字列) </returns>
+		std::string GetID_String() const
+		{
+			return std::to_string(id);
+		}
+
 	protected: // ------------------------- ピン作成用 ---------------------------
 
 		/// <summary>

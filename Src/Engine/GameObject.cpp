@@ -62,6 +62,7 @@ namespace PokarinEngine
 			// コンポーネントの削除時の処理を実行
 			for (auto& destroyComponent : destroyList)
 			{
+				componentIDList.erase(destroyComponent->GetID());
 				destroyComponent->OnDestroy();
 			}
 		}
@@ -125,7 +126,7 @@ namespace PokarinEngine
 		// 位置などの制御用コンポーネントを追加
 		if (!transform)
 		{
-			transform = AddComponent<Transform>().first;
+			transform = AddComponent<Transform>();
 		}
 
 		// ノードエディタを作成
@@ -157,9 +158,6 @@ namespace PokarinEngine
 			// ノードエディタで設定したノードの実行
 			nodeEditor->Run();
 		}
-
-		// 座標変換行列の更新
-		UpdateMatrix();
 	}
 
 	/// <summary>
@@ -193,52 +191,6 @@ namespace PokarinEngine
 	}
 
 	/// <summary>
-	/// ゲームオブジェクトの座標変換行列を更新する
-	/// </summary>
-	void GameObject::UpdateMatrix()
-	{
-		// ----------------------------------
-		// 自身の座標変換行列を求める
-		// ----------------------------------
-
-		// オブジェクトの座標
-		// 左手座標系の値なので右手座標系にする
-		Vector3 position = transform->position;
-		position.z *= -1;
-
-		// 自身の座標変換行列
-		Matrix4x4 transformMatrix = Matrix4x4::CreateTransformMatrix(
-			position, transform->rotation, transform->scale);
-
-		// 自身の法線変換行列
-		Matrix3x3 normalMatrix = Matrix3x3::CreateRotationMatrix(transform->rotation);
-
-		// 座標変換行列を設定
-		transform->transformMatrix = transformMatrix;
-
-		// 法線変換行列を設定
-		transform->normalMatrix = normalMatrix;
-
-		// ------------------------------------
-		// 親の座標変換行列を反映する
-		// ------------------------------------
-
-		// 親をたどっていく
-		for (Transform* parent = transform->GetParent(); parent; parent = parent->GetParent())
-		{
-			// 親の座標変換行列
-			Matrix4x4 parentTransformMatrix = parent->transformMatrix;
-
-			// 親の法線変換行列
-			Matrix3x3 parentNormalMatrix = parent->normalMatrix;
-
-			// 親の変換行列を掛け合わせる
-			transformMatrix *= parentTransformMatrix;
-			normalMatrix *= parentNormalMatrix;
-		}
-	}
-
-	/// <summary>
 	/// 削除
 	/// </summary>
 	void GameObject::OnDestroy()
@@ -251,6 +203,17 @@ namespace PokarinEngine
 
 		// ノードエディタを閉じる
 		NodeScript::CloseNodeEditor(nodeEditor);
+	}
+
+	/// <summary>
+	/// コライダーを描画する
+	/// </summary>
+	void GameObject::DrawCollider()
+	{
+		for (auto& collider : colliderList)
+		{
+			collider->Draw();
+		}
 	}
 
 	/// <summary>
@@ -297,13 +260,15 @@ namespace PokarinEngine
 			data["StaticMeshFile"] = "null";
 		}
 
-		// コンポーネント識別番号の管理用配列
-		data["ComponentIDList"] = componentIDList;
-
 		// -------------------------------------------
 		// コンポーネントの情報をJson型に格納する
 		// -------------------------------------------
 
+		// コンポーネント識別番号(文字列)の配列
+		// 順番を維持するためにvector型にする
+		std::vector<std::string> stringIDList;
+
+		// コンポーネントの情報を格納
 		for (auto& component : componentList)
 		{
 			// コンポーネントの識別番号(文字列)
@@ -314,7 +279,13 @@ namespace PokarinEngine
 
 			// 各コンポーネントの情報
 			component->ToJson(data[id_string]);
+
+			// 識別番号
+			stringIDList.push_back(component->GetID_String());
 		}
+
+		// コンポーネント識別番号の管理用配列
+		data["ComponentIDList"] = stringIDList;
 	}
 
 	/// <summary>
@@ -331,18 +302,15 @@ namespace PokarinEngine
 		name = data["Name"];
 
 		// スタティックメッシュのファイル名
-		const std::string fileName = data["StaticMeshFile"];
+		const std::string& fileName = data["StaticMeshFile"];
 		staticMesh = ownerScene->GetStaticMesh(fileName);
-		
+
 		// --------------------------------------------------
 		// コンポーネントの情報をJson型から取得する
 		// --------------------------------------------------
 
-		for (int componentID : data["ComponentIDList"])
+		for (const std::string& id_string : data["ComponentIDList"])
 		{
-			// コンポーネントの識別番号(文字列)
-			const std::string id_string = std::to_string(componentID);
-
 			// コンポーネントの名前
 			const std::string componentName = data[id_string]["Name"];
 

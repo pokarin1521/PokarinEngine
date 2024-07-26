@@ -88,7 +88,7 @@ namespace PokarinEngine
 		/// コンポーネントの情報をJson型から取得する
 		/// </summary>
 		/// <param name="[out] data"> 情報を格納しているJson型 </param>
-		void FromJson(const Json& data) override {}
+		void FromJson(const Json& data) override;
 
 	private: // -------------------------- エディタ用 ----------------------------
 
