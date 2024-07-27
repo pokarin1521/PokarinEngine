@@ -90,7 +90,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)IMGUI_IMPL_OPENGL_LOADER_GLAD</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)packages;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Src/Packages;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -109,7 +109,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)IMGUI_IMPL_OPENGL_LOADER_GLAD</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)packages;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Src/Packages;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -128,7 +128,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)IMGUI_IMPL_OPENGL_LOADER_GLAD</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)packages;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Src/Packages;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -147,7 +147,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)IMGUI_IMPL_OPENGL_LOADER_GLAD</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)packages;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Src/Packages;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -160,16 +160,6 @@
     </Xdcmake>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="packages\glad\glad.c" />
-    <ClCompile Include="packages\ImGui\imgui.cpp" />
-    <ClCompile Include="packages\ImGui\ImGuizmo.cpp" />
-    <ClCompile Include="packages\ImGui\imgui_demo.cpp" />
-    <ClCompile Include="packages\ImGui\imgui_draw.cpp" />
-    <ClCompile Include="packages\ImGui\imgui_impl_glfw.cpp" />
-    <ClCompile Include="packages\ImGui\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="packages\ImGui\imgui_tables.cpp" />
-    <ClCompile Include="packages\ImGui\imgui_widgets.cpp" />
-    <ClCompile Include="packages\ImGui\imnodes.cpp" />
     <ClCompile Include="Src\Engine\Collision\Collision.cpp" />
     <ClCompile Include="Src\Engine\Collision\Intersect.cpp" />
     <ClCompile Include="Src\Engine\Components\Camera.cpp" />
@@ -211,6 +201,16 @@
     <ClCompile Include="Src\Engine\Time.cpp" />
     <ClCompile Include="Src\Engine\Window.cpp" />
     <ClCompile Include="Src\Main.cpp" />
+    <ClCompile Include="Src\Packages\glad\glad.c" />
+    <ClCompile Include="Src\Packages\ImGui\imgui.cpp" />
+    <ClCompile Include="Src\Packages\ImGui\ImGuizmo.cpp" />
+    <ClCompile Include="Src\Packages\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="Src\Packages\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="Src\Packages\ImGui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="Src\Packages\ImGui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="Src\Packages\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="Src\Packages\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="Src\Packages\ImGui\imnodes.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -220,23 +220,6 @@
     <None Include="Res\Shader\Unlit.vert" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="packages\glad\glad.h" />
-    <ClInclude Include="packages\glad\khrplatform.h" />
-    <ClInclude Include="packages\ImGui\imconfig.h" />
-    <ClInclude Include="packages\ImGui\imgui.h" />
-    <ClInclude Include="packages\ImGui\ImGuizmo.h" />
-    <ClInclude Include="packages\ImGui\imgui_impl_glfw.h" />
-    <ClInclude Include="packages\ImGui\imgui_impl_opengl3.h" />
-    <ClInclude Include="packages\ImGui\imgui_impl_opengl3_loader.h" />
-    <ClInclude Include="packages\ImGui\imgui_internal.h" />
-    <ClInclude Include="packages\ImGui\imnodes.h" />
-    <ClInclude Include="packages\ImGui\imnodes_internal.h" />
-    <ClInclude Include="packages\ImGui\imstb_rectpack.h" />
-    <ClInclude Include="packages\ImGui\imstb_textedit.h" />
-    <ClInclude Include="packages\ImGui\imstb_truetype.h" />
-    <ClInclude Include="packages\Json\Json.h" />
-    <ClInclude Include="packages\Json\nlohmann\json.hpp" />
-    <ClInclude Include="packages\Json\UsingNameJson.h" />
     <ClInclude Include="Src\Engine\BufferObject.h" />
     <ClInclude Include="Src\Engine\Collision\Collision.h" />
     <ClInclude Include="Src\Engine\Collision\CollisionType.h" />
@@ -295,6 +278,23 @@
     <ClInclude Include="Src\Engine\UsingNames\UsingNodeEditor.h" />
     <ClInclude Include="Src\Engine\VertexArrayObject.h" />
     <ClInclude Include="Src\Engine\Window.h" />
+    <ClInclude Include="Src\Packages\glad\glad.h" />
+    <ClInclude Include="Src\Packages\glad\khrplatform.h" />
+    <ClInclude Include="Src\Packages\ImGui\imconfig.h" />
+    <ClInclude Include="Src\Packages\ImGui\imgui.h" />
+    <ClInclude Include="Src\Packages\ImGui\ImGuizmo.h" />
+    <ClInclude Include="Src\Packages\ImGui\imgui_impl_glfw.h" />
+    <ClInclude Include="Src\Packages\ImGui\imgui_impl_opengl3.h" />
+    <ClInclude Include="Src\Packages\ImGui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="Src\Packages\ImGui\imgui_internal.h" />
+    <ClInclude Include="Src\Packages\ImGui\imnodes.h" />
+    <ClInclude Include="Src\Packages\ImGui\imnodes_internal.h" />
+    <ClInclude Include="Src\Packages\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="Src\Packages\ImGui\imstb_textedit.h" />
+    <ClInclude Include="Src\Packages\ImGui\imstb_truetype.h" />
+    <ClInclude Include="Src\Packages\Json\Json.h" />
+    <ClInclude Include="Src\Packages\Json\nlohmann\json.hpp" />
+    <ClInclude Include="Src\Packages\Json\UsingNameJson.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

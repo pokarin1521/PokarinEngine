@@ -8,6 +8,8 @@
 
 #include "../Math/Angle.h"
 
+#include "../FramebufferObject.h"
+
 #include <memory>
 
 namespace PokarinEngine
@@ -25,6 +27,10 @@ namespace PokarinEngine
 
 		Camera() = default;
 		~Camera() = default;
+
+	public: // ------------------------------ •`‰æ -------------------------------
+
+		void Draw();
 
 	public: // -------------------------- ‹–ìŠp‚Ìæ“¾ ---------------------------
 
@@ -109,7 +115,7 @@ namespace PokarinEngine
 		// (‹–ìŠp‚É‚æ‚éŠg‘å—¦‚Íí‚É‚±‚ÌŒ`‚Åg‚¤‚Ì‚ÅA‚ ‚ç‚©‚¶‚ß‹t”‚É‚µ‚Ä‚¨‚­)
 		float fovScale = 1 / tan(radFovY / 2);
 
-	private: // ---------------------------- •`‰æ”ÍˆÍ ----------------------------
+	private: // ----------------------------- •`‰æ—p -----------------------------
 
 		/// <summary>
 		/// •`‰æ”ÍˆÍ
@@ -125,6 +131,9 @@ namespace PokarinEngine
 
 		// •`‰æ”ÍˆÍ
 		DrawRange drawRange;
+
+		// •`‰æ—pFBO
+		FramebufferObjectPtr fbo;
 	};
 }
 
