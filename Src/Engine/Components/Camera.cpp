@@ -8,6 +8,14 @@
 namespace PokarinEngine
 {
 	/// <summary>
+	/// •`‰æ
+	/// </summary>
+	void Camera::Draw()
+	{
+
+	}
+
+	/// <summary>
 	/// î•ñ‚ğ•ÒW‚Å‚«‚é‚æ‚¤‚É•\¦‚·‚é
 	/// </summary>
 	void Camera::InfoEditor()

@@ -254,38 +254,38 @@
     <ClCompile Include="Src\Engine\Math\Vector.cpp">
       <Filter>Src\Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="packages\glad\glad.c">
-      <Filter>Src\Packages\glad</Filter>
-    </ClCompile>
-    <ClCompile Include="packages\ImGui\imgui.cpp">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="packages\ImGui\imgui_demo.cpp">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="packages\ImGui\imgui_draw.cpp">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="packages\ImGui\imgui_impl_glfw.cpp">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="packages\ImGui\imgui_impl_opengl3.cpp">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="packages\ImGui\imgui_tables.cpp">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="packages\ImGui\imgui_widgets.cpp">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="packages\ImGui\ImGuizmo.cpp">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="packages\ImGui\imnodes.cpp">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Engine\Components\Colliders\BoxCollider.cpp">
       <Filter>Src\Engine\Components\Colliders</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Packages\glad\glad.c">
+      <Filter>Src\Packages\glad</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Packages\ImGui\imgui.cpp">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Packages\ImGui\imgui_demo.cpp">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Packages\ImGui\imgui_draw.cpp">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Packages\ImGui\imgui_impl_glfw.cpp">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Packages\ImGui\imgui_impl_opengl3.cpp">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Packages\ImGui\imgui_tables.cpp">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Packages\ImGui\imgui_widgets.cpp">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Packages\ImGui\ImGuizmo.cpp">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Packages\ImGui\imnodes.cpp">
+      <Filter>Src\Packages\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -475,59 +475,59 @@
     <ClInclude Include="Src\Engine\Math\Vector.h">
       <Filter>Src\Engine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="packages\glad\glad.h">
-      <Filter>Src\Packages\glad</Filter>
-    </ClInclude>
-    <ClInclude Include="packages\glad\khrplatform.h">
-      <Filter>Src\Packages\glad</Filter>
-    </ClInclude>
-    <ClInclude Include="packages\ImGui\imconfig.h">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="packages\ImGui\imgui.h">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="packages\ImGui\imgui_impl_glfw.h">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="packages\ImGui\imgui_impl_opengl3.h">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="packages\ImGui\imgui_impl_opengl3_loader.h">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="packages\ImGui\imgui_internal.h">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="packages\ImGui\ImGuizmo.h">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="packages\ImGui\imnodes.h">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="packages\ImGui\imnodes_internal.h">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="packages\ImGui\imstb_rectpack.h">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="packages\ImGui\imstb_textedit.h">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="packages\ImGui\imstb_truetype.h">
-      <Filter>Src\Packages\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="packages\Json\Json.h">
-      <Filter>Src\Packages\Json</Filter>
-    </ClInclude>
-    <ClInclude Include="packages\Json\UsingNameJson.h">
-      <Filter>Src\Packages\Json</Filter>
-    </ClInclude>
-    <ClInclude Include="packages\Json\nlohmann\json.hpp">
-      <Filter>Src\Packages\Json\nlohmann</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Engine\Components\Colliders\BoxCollider.h">
       <Filter>Src\Engine\Components\Colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Packages\glad\glad.h">
+      <Filter>Src\Packages\glad</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Packages\glad\khrplatform.h">
+      <Filter>Src\Packages\glad</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Packages\ImGui\imconfig.h">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Packages\ImGui\imgui.h">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Packages\ImGui\imgui_impl_glfw.h">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Packages\ImGui\imgui_impl_opengl3.h">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Packages\ImGui\imgui_impl_opengl3_loader.h">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Packages\ImGui\imgui_internal.h">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Packages\ImGui\ImGuizmo.h">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Packages\ImGui\imnodes.h">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Packages\ImGui\imnodes_internal.h">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Packages\ImGui\imstb_rectpack.h">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Packages\ImGui\imstb_textedit.h">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Packages\ImGui\imstb_truetype.h">
+      <Filter>Src\Packages\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Packages\Json\nlohmann\json.hpp">
+      <Filter>Src\Packages\Json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Packages\Json\Json.h">
+      <Filter>Src\Packages\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Packages\Json\UsingNameJson.h">
+      <Filter>Src\Packages\Json</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
