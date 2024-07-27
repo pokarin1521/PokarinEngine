@@ -105,23 +105,8 @@
     <Filter Include="Src\Engine\Time">
       <UniqueIdentifier>{ebad3738-f9c0-4f35-975b-0b49c11b71a2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Packages">
-      <UniqueIdentifier>{97db61aa-2d1e-4021-b95a-5d370b9152d1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Packages\ImGui">
-      <UniqueIdentifier>{6c757eca-2b34-4227-8277-a0c9643ec1bf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Packages\glad">
-      <UniqueIdentifier>{4edc28de-5526-4db9-8cd0-ec7caf6dbe76}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Src\Engine\Configs">
       <UniqueIdentifier>{506e5ef1-5a42-4e1a-8c9f-e3e80f5b2167}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Packages\Json">
-      <UniqueIdentifier>{56ee8d9b-a570-4629-93b1-94ec959f075f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Packages\Json\nlohmann">
-      <UniqueIdentifier>{a0ea5351-ab58-4644-b38a-46edeeffc7b9}</UniqueIdentifier>
     </Filter>
     <Filter Include="Src\Engine\Color">
       <UniqueIdentifier>{356c702c-94a0-4877-b425-8acd29d21054}</UniqueIdentifier>
@@ -131,6 +116,24 @@
     </Filter>
     <Filter Include="Src\Engine\ImGuiSetter">
       <UniqueIdentifier>{5e4df9e4-c431-45f1-9bbe-81dcc5ddc8c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Library">
+      <UniqueIdentifier>{97db61aa-2d1e-4021-b95a-5d370b9152d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Library\ImGui">
+      <UniqueIdentifier>{6c757eca-2b34-4227-8277-a0c9643ec1bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Library\glad">
+      <UniqueIdentifier>{4edc28de-5526-4db9-8cd0-ec7caf6dbe76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Library\Json">
+      <UniqueIdentifier>{56ee8d9b-a570-4629-93b1-94ec959f075f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Library\Json\nlohmann">
+      <UniqueIdentifier>{a0ea5351-ab58-4644-b38a-46edeeffc7b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Library\IconFont">
+      <UniqueIdentifier>{e5006251-7847-4c0e-94d0-096b067efb74}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -257,35 +260,35 @@
     <ClCompile Include="Src\Engine\Components\Colliders\BoxCollider.cpp">
       <Filter>Src\Engine\Components\Colliders</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Packages\glad\glad.c">
-      <Filter>Src\Packages\glad</Filter>
+    <ClCompile Include="Src\Library\glad\glad.c">
+      <Filter>Src\Library\glad</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Packages\ImGui\imgui.cpp">
-      <Filter>Src\Packages\ImGui</Filter>
+    <ClCompile Include="Src\Library\ImGui\imgui.cpp">
+      <Filter>Src\Library\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Packages\ImGui\imgui_demo.cpp">
-      <Filter>Src\Packages\ImGui</Filter>
+    <ClCompile Include="Src\Library\ImGui\imgui_demo.cpp">
+      <Filter>Src\Library\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Packages\ImGui\imgui_draw.cpp">
-      <Filter>Src\Packages\ImGui</Filter>
+    <ClCompile Include="Src\Library\ImGui\imgui_draw.cpp">
+      <Filter>Src\Library\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Packages\ImGui\imgui_impl_glfw.cpp">
-      <Filter>Src\Packages\ImGui</Filter>
+    <ClCompile Include="Src\Library\ImGui\imgui_impl_glfw.cpp">
+      <Filter>Src\Library\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Packages\ImGui\imgui_impl_opengl3.cpp">
-      <Filter>Src\Packages\ImGui</Filter>
+    <ClCompile Include="Src\Library\ImGui\imgui_impl_opengl3.cpp">
+      <Filter>Src\Library\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Packages\ImGui\imgui_tables.cpp">
-      <Filter>Src\Packages\ImGui</Filter>
+    <ClCompile Include="Src\Library\ImGui\imgui_tables.cpp">
+      <Filter>Src\Library\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Packages\ImGui\imgui_widgets.cpp">
-      <Filter>Src\Packages\ImGui</Filter>
+    <ClCompile Include="Src\Library\ImGui\imgui_widgets.cpp">
+      <Filter>Src\Library\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Packages\ImGui\ImGuizmo.cpp">
-      <Filter>Src\Packages\ImGui</Filter>
+    <ClCompile Include="Src\Library\ImGui\ImGuizmo.cpp">
+      <Filter>Src\Library\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Packages\ImGui\imnodes.cpp">
-      <Filter>Src\Packages\ImGui</Filter>
+    <ClCompile Include="Src\Library\ImGui\imnodes.cpp">
+      <Filter>Src\Library\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -478,56 +481,59 @@
     <ClInclude Include="Src\Engine\Components\Colliders\BoxCollider.h">
       <Filter>Src\Engine\Components\Colliders</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Packages\glad\glad.h">
-      <Filter>Src\Packages\glad</Filter>
+    <ClInclude Include="Src\Library\glad\glad.h">
+      <Filter>Src\Library\glad</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Packages\glad\khrplatform.h">
-      <Filter>Src\Packages\glad</Filter>
+    <ClInclude Include="Src\Library\glad\khrplatform.h">
+      <Filter>Src\Library\glad</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Packages\ImGui\imconfig.h">
-      <Filter>Src\Packages\ImGui</Filter>
+    <ClInclude Include="Src\Library\ImGui\imconfig.h">
+      <Filter>Src\Library\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Packages\ImGui\imgui.h">
-      <Filter>Src\Packages\ImGui</Filter>
+    <ClInclude Include="Src\Library\ImGui\imgui.h">
+      <Filter>Src\Library\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Packages\ImGui\imgui_impl_glfw.h">
-      <Filter>Src\Packages\ImGui</Filter>
+    <ClInclude Include="Src\Library\ImGui\imgui_impl_glfw.h">
+      <Filter>Src\Library\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Packages\ImGui\imgui_impl_opengl3.h">
-      <Filter>Src\Packages\ImGui</Filter>
+    <ClInclude Include="Src\Library\ImGui\imgui_impl_opengl3.h">
+      <Filter>Src\Library\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Packages\ImGui\imgui_impl_opengl3_loader.h">
-      <Filter>Src\Packages\ImGui</Filter>
+    <ClInclude Include="Src\Library\ImGui\imgui_impl_opengl3_loader.h">
+      <Filter>Src\Library\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Packages\ImGui\imgui_internal.h">
-      <Filter>Src\Packages\ImGui</Filter>
+    <ClInclude Include="Src\Library\ImGui\imgui_internal.h">
+      <Filter>Src\Library\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Packages\ImGui\ImGuizmo.h">
-      <Filter>Src\Packages\ImGui</Filter>
+    <ClInclude Include="Src\Library\ImGui\ImGuizmo.h">
+      <Filter>Src\Library\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Packages\ImGui\imnodes.h">
-      <Filter>Src\Packages\ImGui</Filter>
+    <ClInclude Include="Src\Library\ImGui\imnodes.h">
+      <Filter>Src\Library\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Packages\ImGui\imnodes_internal.h">
-      <Filter>Src\Packages\ImGui</Filter>
+    <ClInclude Include="Src\Library\ImGui\imnodes_internal.h">
+      <Filter>Src\Library\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Packages\ImGui\imstb_rectpack.h">
-      <Filter>Src\Packages\ImGui</Filter>
+    <ClInclude Include="Src\Library\ImGui\imstb_rectpack.h">
+      <Filter>Src\Library\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Packages\ImGui\imstb_textedit.h">
-      <Filter>Src\Packages\ImGui</Filter>
+    <ClInclude Include="Src\Library\ImGui\imstb_textedit.h">
+      <Filter>Src\Library\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Packages\ImGui\imstb_truetype.h">
-      <Filter>Src\Packages\ImGui</Filter>
+    <ClInclude Include="Src\Library\ImGui\imstb_truetype.h">
+      <Filter>Src\Library\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Packages\Json\nlohmann\json.hpp">
-      <Filter>Src\Packages\Json\nlohmann</Filter>
+    <ClInclude Include="Src\Library\Json\Json.h">
+      <Filter>Src\Library\Json</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Packages\Json\Json.h">
-      <Filter>Src\Packages\Json</Filter>
+    <ClInclude Include="Src\Library\Json\UsingNameJson.h">
+      <Filter>Src\Library\Json</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Packages\Json\UsingNameJson.h">
-      <Filter>Src\Packages\Json</Filter>
+    <ClInclude Include="Src\Library\Json\nlohmann\json.hpp">
+      <Filter>Src\Library\Json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Library\IconFont\IconFont.h">
+      <Filter>Src\Library\IconFont</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
