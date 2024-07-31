@@ -1,13 +1,12 @@
 /**
 * @file Collider.h
 */
-#ifndef COLLIDER_H_INCLUDED
-#define COLLIDER_H_INCLUDED
+#ifndef POKARINENGINE_COLLIDER_H_INCLUDED
+#define POKARINENGINE_COLLIDER_H_INCLUDED
 
 #include "../Component.h"
 
 #include "../../UsingNames/UsingCollider.h"
-#include "../../UsingNames/UsingMesh.h"
 
 #include "../../Collision/CollisionType.h"
 
@@ -114,4 +113,4 @@ namespace PokarinEngine
 
 } // namespace PokarinEngine
 
-#endif // !COLLIDER_H_INCLUDED
+#endif // !POKARINENGINE_COLLIDER_H_INCLUDED

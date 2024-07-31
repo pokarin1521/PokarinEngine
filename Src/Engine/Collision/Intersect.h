@@ -1,8 +1,8 @@
 /**
 * @file Intersect.h
 */
-#ifndef INTERSECT_H_INCLUDED
-#define INTERSECT_H_INCLUDED
+#ifndef POKARINENGINE_INTERSECT_H_INCLUDED
+#define POKARINENGINE_INTERSECT_H_INCLUDED
 
 #include "CollisionType.h"
 
@@ -39,4 +39,4 @@ namespace PokarinEngine
 	}
 }
 
-#endif // !INTERSECT_H_INCLUDED
+#endif // !POKARINENGINE_INTERSECT_H_INCLUDED

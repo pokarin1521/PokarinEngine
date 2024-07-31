@@ -1,8 +1,8 @@
 /**
 * @file Toolbar.h
 */
-#ifndef TOOLBAR_H_INCLUDED
-#define TOOLBAR_H_INCLUDED
+#ifndef POKARINENGINE_TOOLBAR_H_INCLUDED
+#define POKARINENGINE_TOOLBAR_H_INCLUDED
 
 namespace PokarinEngine
 {
@@ -31,4 +31,4 @@ namespace PokarinEngine
 	}
 }
 
-#endif // !TOOLBAR_H_INCLUDED
+#endif // !POKARINENGINE_TOOLBAR_H_INCLUDED

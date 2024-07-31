@@ -186,7 +186,7 @@
     <ClCompile Include="Src\Engine\MainEditor\Toolbar.cpp" />
     <ClCompile Include="Src\Engine\Math\Matrix.cpp" />
     <ClCompile Include="Src\Engine\Math\Vector.cpp" />
-    <ClCompile Include="Src\Engine\Mesh.cpp" />
+    <ClCompile Include="Src\Engine\Mesh\Mesh.cpp" />
     <ClCompile Include="Src\Engine\NodeScript\NodeCreator.cpp" />
     <ClCompile Include="Src\Engine\NodeScript\NodeEditor.cpp" />
     <ClCompile Include="Src\Engine\NodeScript\NodeScript.cpp" />
@@ -198,6 +198,7 @@
     <ClCompile Include="Src\Engine\Scene.cpp" />
     <ClCompile Include="Src\Engine\Shader\Shader.cpp" />
     <ClCompile Include="Src\Engine\Texture.cpp" />
+    <ClCompile Include="Src\Engine\TextureGetter.cpp" />
     <ClCompile Include="Src\Engine\Time.cpp" />
     <ClCompile Include="Src\Engine\Window.cpp" />
     <ClCompile Include="Src\Library\glad\glad.c" />
@@ -254,7 +255,11 @@
     <ClInclude Include="Src\Engine\Math\Angle.h" />
     <ClInclude Include="Src\Engine\Math\Matrix.h" />
     <ClInclude Include="Src\Engine\Math\Vector.h" />
-    <ClInclude Include="Src\Engine\Mesh.h" />
+    <ClInclude Include="Src\Engine\Mesh\DrawParameter.h" />
+    <ClInclude Include="Src\Engine\Mesh\Material.h" />
+    <ClInclude Include="Src\Engine\Mesh\Mesh.h" />
+    <ClInclude Include="Src\Engine\Mesh\StaticMesh.h" />
+    <ClInclude Include="Src\Engine\Mesh\Vertex.h" />
     <ClInclude Include="Src\Engine\NodeScript\NodeEditor.h" />
     <ClInclude Include="Src\Engine\NodeScript\NodeScript.h" />
     <ClInclude Include="Src\Engine\NodeScript\Nodes\Event\EventNode.h" />
@@ -270,11 +275,11 @@
     <ClInclude Include="Src\Engine\Scene.h" />
     <ClInclude Include="Src\Engine\Shader\Shader.h" />
     <ClInclude Include="Src\Engine\Texture.h" />
+    <ClInclude Include="Src\Engine\TextureGetter.h" />
     <ClInclude Include="Src\Engine\Time.h" />
     <ClInclude Include="Src\Engine\UsingNames\UsingCollider.h" />
     <ClInclude Include="Src\Engine\UsingNames\UsingComponent.h" />
     <ClInclude Include="Src\Engine\UsingNames\UsingGameObject.h" />
-    <ClInclude Include="Src\Engine\UsingNames\UsingMesh.h" />
     <ClInclude Include="Src\Engine\UsingNames\UsingNodeEditor.h" />
     <ClInclude Include="Src\Engine\VertexArrayObject.h" />
     <ClInclude Include="Src\Engine\Window.h" />

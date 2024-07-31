@@ -1,14 +1,14 @@
 /**
 * @file SceneView.h
 */
-#ifndef RENDERVIEW_H_INCLUDED
-#define RENDERVIEW_H_INCLUDED
+#ifndef POKARINENGINE_RENDERVIEW_H_INCLUDED
+#define POKARINENGINE_RENDERVIEW_H_INCLUDED
 
 #include "glad/glad.h"
 
 #include "ImGui/imgui.h"
 
-#include "../FramebufferObject.h"
+#include "../Components/Camera.h"
 
 #include <memory>
 
@@ -42,42 +42,14 @@ namespace PokarinEngine
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		/// <param name="[in] engine"> エンジンクラスの参照 </param> 
-		void Initialize(Engine& engine);
+		void Initialize();
 
 		/// <summary>
 		/// 更新
 		/// </summary>
 		virtual void Update() {}
-
-	public: // -------------------- バインド ----------------------
-
-		/// <summary>
-		/// FBOをバインドする
-		/// </summary>
-		void BindFBO() const
-		{
-			fbo->Bind();
-		}
-
-		/// <summary>
-		/// FBOのバインドを解除する
-		/// </summary>
-		void UnBindFBO() const
-		{
-
-			fbo->UnBind();
-		}
-
-	protected: // --------------------- 描画用 -------------------------
-
-		// FBO
-		FramebufferObjectPtr fbo;
-
-		// 描画用テクスチャ
-		ImTextureID texture = 0;
 	};
 
 } // namespace PokarinEngine
 
-#endif // !SCENEVIEW_H_INCLUDED
+#endif // !POKARINENGINE_RENDERVIEW_H_INCLUDED

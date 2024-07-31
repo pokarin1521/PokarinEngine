@@ -1,8 +1,8 @@
 /**
 * @file Shader.h
 */
-#ifndef SHADER_H_INCLUDED
-#define SHADER_H_INCLUDED
+#ifndef POKARINENGINE_SHADER_H_INCLUDED
+#define POKARINENGINE_SHADER_H_INCLUDED
 
 #include "glad/glad.h"
 
@@ -72,4 +72,4 @@ namespace PokarinEngine
 
 } // namespace PokarinEngine
 
-#endif // !SHADER_H_INCLUDED
+#endif // !POKARINENGINE_SHADER_H_INCLUDED

@@ -1,8 +1,8 @@
 /**
 * @file PinType.h
 */
-#ifndef PINTYPE_H_INCLUDED
-#define PINTYPE_H_INCLUDED
+#ifndef POKARINENGINE_PINTYPE_H_INCLUDED
+#define POKARINENGINE_PINTYPE_H_INCLUDED
 
 namespace PokarinEngine
 {
@@ -16,4 +16,4 @@ namespace PokarinEngine
 	};
 }
 
-#endif // !PINTYPE_H_INCLUDED
+#endif // !POKARINENGINE_PINTYPE_H_INCLUDED

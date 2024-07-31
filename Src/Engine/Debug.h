@@ -1,8 +1,8 @@
 /**
 * @file Debug.h
 */
-#ifndef DEBUG_H_INCLUDED
-#define DEBUG_H_INCLUDED
+#ifndef POKARINENGINE_DEBUG_H_INCLUDED
+#define POKARINENGINE_DEBUG_H_INCLUDED
 
 #include "glad/glad.h"
 
@@ -85,4 +85,4 @@ namespace PokarinEngine
 
 } // namespace PokarinEngine
 
-#endif // !DEBUG_H_INCLUDED
+#endif // !POKARINENGINE_DEBUG_H_INCLUDED

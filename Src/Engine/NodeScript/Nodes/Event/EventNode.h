@@ -1,8 +1,8 @@
 /**
 * @file EventNode.h
 */
-#ifndef EVENTNODE_H_INCLUDED
-#define EVENTNODE_H_INCLUDED
+#ifndef POKARINENGINE_EVENTNODE_H_INCLUDED
+#define POKARINENGINE_EVENTNODE_H_INCLUDED
 
 #include "../Node.h"
 
@@ -72,4 +72,4 @@ namespace PokarinEngine
 	};
 }
 
-#endif // !EVENTNODE_H_INCLUDED
+#endif // !POKARINENGINE_EVENTNODE_H_INCLUDED

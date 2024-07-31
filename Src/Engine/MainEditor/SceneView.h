@@ -1,14 +1,14 @@
 /**
 * @file SceneView.h
 */
-#ifndef SCENEVIEW_H_INCLUDED
-#define SCENEVIEW_H_INCLUDED
+#ifndef POKARINENGINE_SCENEVIEW_H_INCLUDED
+#define POKARINENGINE_SCENEVIEW_H_INCLUDED
 
 #include "RenderView.h"
 
 #include "../Color.h"
 #include "../Math/Vector.h"
-#include "../Components/Transform.h"
+#include "../Components/Camera.h"
 
 namespace PokarinEngine
 {
@@ -22,7 +22,7 @@ namespace PokarinEngine
 		SceneView()
 		{
 			// カメラの初期位置を設定
-			sceneCamera.position = cameraStartPos;
+			camera.SetPosition(cameraStartPos);
 		}
 
 		~SceneView() = default;
@@ -34,16 +34,7 @@ namespace PokarinEngine
 		/// </summary>
 		void Update() override;
 
-	public: // --------------------------- カメラ取得 -----------------------------
-
-		/// <summary>
-		/// シーンビュー用カメラを取得する
-		/// </summary>
-		/// <returns> シーンビュー用カメラ </returns>
-		const Transform& GetCamera() const
-		{
-			return sceneCamera;
-		}
+		
 
 	private: // -------------------------- カメラ操作 -----------------------------
 
@@ -59,8 +50,8 @@ namespace PokarinEngine
 
 	private: // ------------------------------ 情報 -------------------------------
 
-		// シーンビュー用カメラ
-		Transform sceneCamera;
+		// カメラ
+		Camera camera;
 
 		// カメラの初期位置
 		const Vector3 cameraStartPos = { 0.0f, 1.0f, -5.0f };
@@ -86,4 +77,4 @@ namespace PokarinEngine
 
 } // namespace PokarinEngine
 
-#endif // !SCENEVIEW_H_INCLUDED
+#endif // !POKARINENGINE_SCENEVIEW_H_INCLUDED

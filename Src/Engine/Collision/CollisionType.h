@@ -1,8 +1,8 @@
 /**
 * @file CollisionType.h
 */
-#ifndef COLLISIONTYPE_H_INCLUDED
-#define COLLISIONTYPE_H_INCLUDED
+#ifndef POKARINENGINE_COLLISIONTYPE_H_INCLUDED
+#define POKARINENGINE_COLLISIONTYPE_H_INCLUDED
 
 #include "../Math/Vector.h"
 
@@ -46,4 +46,4 @@ namespace PokarinEngine
 
 } // namespace PokarinEngine
 
-#endif // !COLLISIONTYPE_H_INCLUDED
+#endif // !POKARINENGINE_COLLISIONTYPE_H_INCLUDED

@@ -129,12 +129,6 @@ namespace PokarinEngine
 	void SceneView::Update()
 	{
 		// -------------------------------
-		// FBOからテクスチャを取得する
-		// -------------------------------
-
-		texture = ImTextureID(*fbo->GetTexture());
-
-		// -------------------------------
 		// ウィンドウを作成
 		// -------------------------------
 
@@ -171,6 +165,9 @@ namespace PokarinEngine
 				// 右ボタンを離したら操作を解除する
 				isControlCamera = !ImGui::IsKeyReleased(ImGuiKey_MouseRight);
 			}
+
+			// FBOのテクスチャ識別番号
+			ImTextureID texture = ImTextureID(*camera.GetTextureFBO());
 
 			// シーンビュー用ウィンドウの大きさ
 			// 描画時に設定する

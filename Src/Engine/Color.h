@@ -1,8 +1,8 @@
 /**
 * @file Color.h
 */
-#ifndef COLOR_H_INCLUDED
-#define COLOR_H_INCLUDED
+#ifndef POKARINENGINE_COLOR_H_INCLUDED
+#define POKARINENGINE_COLOR_H_INCLUDED
 
 #include "ImGui/imgui.h"
 
@@ -122,4 +122,4 @@ namespace PokarinEngine
 
 } // namespace PokarinEngine
 
-#endif // !COLOR_H_INCLUDED
+#endif // !POKARINENGINE_COLOR_H_INCLUDED

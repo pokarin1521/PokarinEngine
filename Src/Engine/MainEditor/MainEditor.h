@@ -1,8 +1,8 @@
 /**
 * @file MainEditor.h
 */
-#ifndef EDITOR_H_INCLUDED
-#define EDITOR_H_INCLUDED
+#ifndef POKARINENGINE_EDITOR_H_INCLUDED
+#define POKARINENGINE_EDITOR_H_INCLUDED
 
 #include "SceneView.h"
 #include "GameView.h"
@@ -55,26 +55,6 @@ namespace PokarinEngine
 		/// 終了
 		/// </summary>
 		void Finalize();
-
-	public: // ------------------------ ビューの取得 -----------------------
-
-		/// <summary>
-		/// シーンビューを取得する
-		/// </summary>
-		/// <returns> シーンビュー </returns>
-		const SceneView& GetSceneView()
-		{
-			return sceneView;
-		}
-
-		/// <summary>
-		/// ゲームビューを取得する
-		/// </summary>
-		/// <returns> ゲームビュー </returns>
-		const GameView& GetGameView()
-		{
-			return gameView;
-		}
 
 	private: // ------------------------ エディタ用 ------------------------
 
@@ -132,4 +112,4 @@ namespace PokarinEngine
 
 } // namespace PokarinEngine
 
-#endif // !EDITOR_H_INCLUDED
+#endif // !POKARINENGINE_EDITOR_H_INCLUDED

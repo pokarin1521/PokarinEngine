@@ -1,8 +1,8 @@
 /**
 * @file NodeScript.h
 */
-#ifndef NODESCRIPT_H_INCLUDED
-#define NODESCRIPT_H_INCLUDED
+#ifndef POKARINENGINE_NODESCRIPT_H_INCLUDED
+#define POKARINENGINE_NODESCRIPT_H_INCLUDED
 
 #include "../UsingNames/UsingNodeEditor.h"
 
@@ -50,4 +50,4 @@ namespace PokarinEngine
 
 } // namespace PokarinEngine
 
-#endif // !NODESCRIPT_H_INCLUDED
+#endif // !POKARINENGINE_NODESCRIPT_H_INCLUDED

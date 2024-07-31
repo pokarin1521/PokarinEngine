@@ -152,9 +152,6 @@
     <ClCompile Include="Src\Engine\Debug.cpp">
       <Filter>Src\Engine\Debug</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Engine\Mesh.cpp">
-      <Filter>Src\Engine\Mesh</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Engine\Random.cpp">
       <Filter>Src\Engine\Random</Filter>
     </ClCompile>
@@ -290,6 +287,12 @@
     <ClCompile Include="Src\Library\ImGui\imnodes.cpp">
       <Filter>Src\Library\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Engine\TextureGetter.cpp">
+      <Filter>Src\Engine\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\Mesh\Mesh.cpp">
+      <Filter>Src\Engine\Mesh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Res\Shader\Standard.frag">
@@ -318,9 +321,6 @@
     </ClInclude>
     <ClInclude Include="Src\Engine\Debug.h">
       <Filter>Src\Engine\Debug</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Engine\Mesh.h">
-      <Filter>Src\Engine\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="Src\Engine\VertexArrayObject.h">
       <Filter>Src\Engine\Buffer</Filter>
@@ -374,9 +374,6 @@
       <Filter>Src\Engine\Editor\NodeEditor</Filter>
     </ClInclude>
     <ClInclude Include="Src\Engine\UsingNames\UsingGameObject.h">
-      <Filter>Src\Engine\UsingNames</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Engine\UsingNames\UsingMesh.h">
       <Filter>Src\Engine\UsingNames</Filter>
     </ClInclude>
     <ClInclude Include="Src\Engine\MainEditor\GameView.h">
@@ -534,6 +531,24 @@
     </ClInclude>
     <ClInclude Include="Src\Library\IconFont\IconFont.h">
       <Filter>Src\Library\IconFont</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\TextureGetter.h">
+      <Filter>Src\Engine\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\Mesh\Mesh.h">
+      <Filter>Src\Engine\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\Mesh\StaticMesh.h">
+      <Filter>Src\Engine\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\Mesh\DrawParameter.h">
+      <Filter>Src\Engine\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\Mesh\Vertex.h">
+      <Filter>Src\Engine\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\Mesh\Material.h">
+      <Filter>Src\Engine\Mesh</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

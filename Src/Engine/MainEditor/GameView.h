@@ -1,8 +1,8 @@
 /**
 * @file GameView.h
 */
-#ifndef GAMEVIEW_H_INCLUDED
-#define GAMEVIEW_H_INCLUDED
+#ifndef POKARINENGINE_GAMEVIEW_H_INCLUDED
+#define POKARINENGINE_GAMEVIEW_H_INCLUDED
 
 #include "RenderView.h"
 
@@ -13,7 +13,7 @@ namespace PokarinEngine
 	/// <summary>
 	/// ゲームビュー(ゲーム画面を表示するビュー)
 	/// </summary>
-	class GameView : public RenderView
+	class GameView
 	{
 	public: // --------------- コンストラクタ・デストラクタ ----------------
 
@@ -25,7 +25,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// 更新
 		/// </summary>
-		void Update() override;
+		void Update();
 
 	private:
 
@@ -35,4 +35,4 @@ namespace PokarinEngine
 
 } // namespace PokarinEngine
 
-#endif // !GAMEVIEW_H_INCLUDED
+#endif // !POKARINENGINE_GAMEVIEW_H_INCLUDED

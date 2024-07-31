@@ -130,10 +130,10 @@ namespace PokarinEngine
 		// ----------------------------
 
 		// シーンビュー
-		sceneView.Initialize(*engine);
+		sceneView.Initialize();
 
 		// ゲームビュー
-		gameView.Initialize(*engine);
+		gameView.Initialize();
 
 		// ----------------------------------------
 		// ヒエラルキーウィンドウの初期化

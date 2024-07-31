@@ -1,14 +1,13 @@
 /**
 * @file Scene.h
 */
-#ifndef SCENE_H_INCLUDED
-#define SCENE_H_INCLUDED
+#ifndef POKARINENGINE_SCENE_H_INCLUDED
+#define POKARINENGINE_SCENE_H_INCLUDED
 
 #include "Shader/Shader.h"
 #include "Configs/MeshConfig.h"
 
 #include "UsingNames/UsingGameObject.h"
-#include "UsingNames/UsingMesh.h"
 
 #include "GameObject.h"
 
@@ -149,15 +148,6 @@ namespace PokarinEngine
 			return name.c_str();
 		}
 
-	public: // --------------------- スタティックメッシュ --------------------
-
-		/// <summary>
-		/// スタティックメッシュを取得する
-		/// </summary>
-		/// <param name="[in] fileName"> ファイル名 </param>
-		/// <returns> ファイル名が一致するスタティックメッシュ </returns>
-		StaticMeshPtr GetStaticMesh(const std::string& fileName);
-
 	public: // ---------------------------- 保存 -----------------------------
 
 		/// <summary>
@@ -238,4 +228,4 @@ namespace PokarinEngine
 
 } // namespace PokarinEngine
 
-#endif // !SCENE_H_INCLUDED
+#endif // !POKARINENGINE_SCENE_H_INCLUDED

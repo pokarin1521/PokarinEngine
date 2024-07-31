@@ -1,8 +1,8 @@
 /**
 * @file UsingNameJson.h
 */
-#ifndef USINGNAMEJSON_H_INCLUDED
-#define USINGNAMEJSON_H_INCLUDED
+#ifndef POKARINENGINE_USINGNAMEJSON_H_INCLUDED
+#define POKARINENGINE_USINGNAMEJSON_H_INCLUDED
 
 #include <string>
 #include <vector>
@@ -46,4 +46,4 @@ namespace nlohmann
 
 using Json = nlohmann::ordered_json;
 
-#endif // !USINGNAMEJSON_H_INCLUDED
+#endif // !POKARINENGINE_USINGNAMEJSON_H_INCLUDED

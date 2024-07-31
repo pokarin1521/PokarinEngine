@@ -2,8 +2,8 @@
 /**
 * @file Engine.h
 */
-#ifndef ENGINE_H_INCLUDED
-#define ENGINE_H_INCLUDED
+#ifndef POKARINENGINE_ENGINE_H_INCLUDED
+#define POKARINENGINE_ENGINE_H_INCLUDED
 
 #include "glad/glad.h"
 
@@ -11,7 +11,6 @@
 
 #include "Scene.h"
 #include "GameObject.h"
-#include "Mesh.h"
 
 #include "Math/Vector.h"
 
@@ -85,36 +84,6 @@ namespace PokarinEngine
 		/// </returns>
 		int Run();
 
-	public: // ---------------------- スタティックメッシュ ----------------------
-
-		/// <summary>
-		/// スタティックメッシュを取得する
-		/// </summary>
-		/// <param name="[in] fileName"> ファイル名 </param>
-		/// <returns> ファイル名前が一致するスタティックメッシュ </returns>
-		StaticMeshPtr GetStaticMesh(const std::string& fileName)
-		{
-			return meshBuffer->GetStaticMesh(fileName);
-		}
-
-	public: // -------------------------- テクスチャ -----------------------------
-
-		/// <summary>
-		/// <para> テクスチャを取得する </para>
-		/// <para> 作成する場合、サイズを指定する </para>
-		/// </summary>
-		/// <param name="[in] name"> テクスチャファイル名 </param>
-		/// <returns> 名前がnameと一致するテクスチャ </returns>
-		TexturePtr GetTexture(const char* name);
-
-		/// <summary>
-		/// テクスチャを取得する
-		/// </summary>
-		/// <param name="[in] width"> 幅 </param>
-		/// <param name="[in] height"> 高さ </param>
-		/// <returns> 指定した大きさのテクスチャ </returns>
-		TexturePtr GetTexture(GLsizei width, GLsizei height);
-
 	public: // ------------------------- ゲームの再生 -------------------------
 
 		/// <summary>
@@ -180,20 +149,6 @@ namespace PokarinEngine
 		// 図形データ管理用バッファ
 		MeshBufferPtr meshBuffer;
 
-	private: // ------------------------- テクスチャ --------------------------
-
-		// テクスチャ用キャッシュ
-		// <ファイル名, テクスチャのポインタ>
-		std::unordered_map<std::string, TexturePtr> textureCache;
-
-		// コンストラクタ、デストラクタを
-		// 呼べるようにするための補助クラス
-		struct TexHelper : public Texture
-		{
-			TexHelper(const char* p) : Texture(p) {}
-			TexHelper(GLsizei w, GLsizei h) : Texture(w, h) {}
-		};
-
 	private: // ----------------------- スカイスフィア ------------------------
 
 		// スカイスフィア用モデル
@@ -226,4 +181,4 @@ namespace PokarinEngine
 
 } // namespace PokarinEngine
 
-#endif // !ENGINE_H_INCLUDED
+#endif // !POKARINENGINE_ENGINE_H_INCLUDED

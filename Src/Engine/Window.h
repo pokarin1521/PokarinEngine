@@ -1,8 +1,8 @@
 /**
 * @file Window.h
 */
-#ifndef WINDOW_H_INCLUDED
-#define WINDOW_H_INCLUDED
+#ifndef POKARINENGINE_WINDOW_H_INCLUDED
+#define POKARINENGINE_WINDOW_H_INCLUDED
 
 #include "glad/glad.h"
 #include "Math/Vector.h"
@@ -117,4 +117,4 @@ namespace PokarinEngine
 
 } // namespace PokarinEngine
 
-#endif // !WINDOW_H_INCLUDED
+#endif // !POKARINENGINE_WINDOW_H_INCLUDED

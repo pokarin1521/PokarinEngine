@@ -1,8 +1,8 @@
 /**
 * @file ImGuiFontSetter.h
 */
-#ifndef IMGUIFONTSETTER_H_INCLUDED
-#define IMGUIFONTSETTER_H_INCLUDED
+#ifndef POKARINENGINE_IMGUIFONTSETTER_H_INCLUDED
+#define POKARINENGINE_IMGUIFONTSETTER_H_INCLUDED
 
 #include "ImGui/imgui.h"
 #include "IconFont/IconFont.h"
@@ -53,4 +53,4 @@ namespace PokarinEngine
 	}
 }
 
-#endif // !IMGUIFONTSETTER_H_INCLUDED
+#endif // !POKARINENGINE_IMGUIFONTSETTER_H_INCLUDED

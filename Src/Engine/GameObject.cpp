@@ -15,7 +15,6 @@
 #include "NodeScript/NodeEditor.h"
 
 #include "Scene.h"
-#include "Mesh.h"
 #include "Random.h"
 
 #include <algorithm>

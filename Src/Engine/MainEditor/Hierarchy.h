@@ -1,8 +1,8 @@
 /**
 * @file Hierarchy.h
 */
-#ifndef HIERARCHY_H_INCLUDED
-#define HIERARCHY_H_INCLUDED
+#ifndef POKARINENGINE_HIERARCHY_H_INCLUDED
+#define POKARINENGINE_HIERARCHY_H_INCLUDED
 
 #include "../UsingNames/UsingGameObject.h"
 
@@ -99,4 +99,4 @@ namespace PokarinEngine
 
 } // namespace PokarinEngine
 
-#endif // !HIERARCHY_H_INCLUDED
+#endif // !POKARINENGINE_HIERARCHY_H_INCLUDED

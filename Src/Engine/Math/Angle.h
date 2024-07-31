@@ -1,8 +1,8 @@
 /**
 * @file Angle.h
 */
-#ifndef ANGLE_H_INCLUDED
-#define ANGLE_H_INCLUDED
+#ifndef POKARINENGINE_ANGLE_H_INCLUDED
+#define POKARINENGINE_ANGLE_H_INCLUDED
 
 #include "Vector.h"
 
@@ -52,4 +52,4 @@ namespace PokarinEngine
 	}
 }
 
-#endif // !ANGLE_H_INCLUDED
+#endif // !POKARINENGINE_ANGLE_H_INCLUDED

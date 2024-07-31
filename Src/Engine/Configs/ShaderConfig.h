@@ -1,8 +1,8 @@
 /**
 * @file ShaderConfig.h
 */
-#ifndef SHADERCONFIG_H_INCLUDED
-#define SHADERCONFIG_H_INCLUDED
+#ifndef POKARINENGINE_SHADERCONFIG_H_INCLUDED
+#define POKARINENGINE_SHADERCONFIG_H_INCLUDED
 
 #include "glad/glad.h"
 
@@ -100,4 +100,4 @@ namespace PokarinEngine
 
 } // namespace PokarinEngine
 
-#endif // !SHADERCONFIG_H_INCLUDED
+#endif // !POKARINENGINE_SHADERCONFIG_H_INCLUDED

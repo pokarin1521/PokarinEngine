@@ -1,8 +1,8 @@
 /**
 * @file BoxCollider.h
 */
-#ifndef BOXCOLLIDER_H_INCLUDED
-#define BOXCOLLIDER_H_INCLUDED
+#ifndef POKARINENGINE_BOXCOLLIDER_H_INCLUDED
+#define POKARINENGINE_BOXCOLLIDER_H_INCLUDED
 
 #include "Collider.h"
 
@@ -91,4 +91,4 @@ namespace PokarinEngine
 	};
 }
 
-#endif // !BOXCOLLIDER_H_INCLUDED
+#endif // !POKARINENGINE_BOXCOLLIDER_H_INCLUDED

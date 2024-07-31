@@ -1,8 +1,8 @@
 /**
 * @GameObject.h
 */
-#ifndef GAMEOBJECT_H_INCLUDED
-#define GAMEOBJECT_H_INCLUDED
+#ifndef POKARINENGINE_GAMEOBJECT_H_INCLUDED
+#define POKARINENGINE_GAMEOBJECT_H_INCLUDED
 
 #include "Json/UsingNameJson.h"
 
@@ -15,7 +15,6 @@
 #include "Math/Vector.h"
 #include "Color.h"
 
-#include "UsingNames/UsingMesh.h"
 #include "UsingNames/UsingNodeEditor.h"
 #include "UsingNames/UsingCollider.h"
 
@@ -381,4 +380,4 @@ namespace PokarinEngine
 
 } // namespace PokarinEngine
 
-#endif // !GAMEOBJECT_H_INCLUDED
+#endif // !POKARINENGINE_GAMEOBJECT_H_INCLUDED

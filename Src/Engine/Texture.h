@@ -1,8 +1,8 @@
 /**
 * @file Texture.h
 */
-#ifndef TEXTURE_H_INCLUDED
-#define TEXTURE_H_INCLUDED
+#ifndef POKARINENGINE_TEXTURE_H_INCLUDED
+#define POKARINENGINE_TEXTURE_H_INCLUDED
 
 #include "glad/glad.h"
 #include "ImGui/imgui.h"
@@ -30,8 +30,8 @@ namespace PokarinEngine
 	/// </summary>
 	class Texture
 	{
-		// Engineクラスに情報を公開
-		friend class Engine;
+		// テクスチャ取得用クラスに情報を公開
+		friend class TextureGetter;
 
 	public: // ----------------- 禁止事項 -------------------
 
@@ -66,7 +66,7 @@ namespace PokarinEngine
 		{
 			return height;
 		}
-
+		
 		/// <summary>
 		/// 画像のアスペクト比を取得
 		/// </summary>
@@ -109,14 +109,21 @@ namespace PokarinEngine
 		/// </summary>
 		~Texture();
 
-	private: // -------------- テクスチャの情報 ---------------
+	private: // -------------------- 情報 ---------------------
 
-		std::string name;	// テクスチャ名(主にデバッグ用)
-		GLuint id = 0;		// テクスチャオブジェクト管理番号
-		int width = 0;		// テクスチャの幅
-		int height = 0;		// テクスチャの高さ
+		// テクスチャ名
+		std::string name;
+
+		// テクスチャオブジェクトの管理番号
+		GLuint id = 0;		
+		
+		// テクスチャの幅
+		int width = 0;	
+		
+		// テクスチャの高さ
+		int height = 0;	
 	};
 
 } // namespace PokarinEngine
 
-#endif // !TEXTURE_H_INCLUDED
+#endif // !POKARINENGINE_TEXTURE_H_INCLUDED

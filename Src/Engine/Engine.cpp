@@ -4,9 +4,8 @@
 #include "Engine.h"
 
 #include "Window.h"
-#include "InputManager.h"
-
 #include "Debug.h"
+#include "InputManager.h"
 #include "Time.h"
 #include "Random.h"
 #include "LightParameter.h"
@@ -25,42 +24,6 @@
 
 namespace PokarinEngine
 {
-#pragma region CopyParameter
-
-	/// <summary>
-	/// カメラのパラメータをGPUにコピー
-	/// </summary>
-	/// <param name="[in] prog"> 使用するシェーダプログラムの管理番号 </param>
-	/// <param name="[in] camera"> GPUにコピーするカメラ </param>
-	void CopyCameraParameters(
-		GLuint prog, const Transform& camera)
-	{
-		// ----------------------------
-		// カメラの座標
-		// ----------------------------
-
-		// 今は左手座標系の値になっていて、
-		// OpenGLは右手座標系なので、右手座標系にする
-		Vector3 position = camera.position;
-		position.z *= -1;
-
-		// カメラの座標をGPUにコピー
-		glProgramUniform3fv(prog, UniformLocation::cameraPosition, 1, &position.x);
-
-		// --------------------------------
-		// カメラの回転角度
-		// --------------------------------
-
-		// カメラの回転
-		// オブジェクトはカメラの回転方向とは逆に動くことになるので、符号を逆にする
-		Vector3 rotation = -camera.rotation;
-
-		// カメラの回転角度をGPUにコピー
-		glProgramUniform3fv(prog, UniformLocation::cameraRotation, 1, &rotation.x);
-	}
-
-#pragma endregion
-
 #pragma region Scene
 
 	/// <summary>
@@ -236,9 +199,9 @@ namespace PokarinEngine
 		// 不足した場合はこの値を大きくする
 		meshBuffer = MeshBuffer::Create(32'000'000);
 
-		// テクスチャ作成コールバックを設定
-		meshBuffer->SetTextureCallback(
-			[this](const char* filename) { return GetTexture(filename); });
+		//// テクスチャ作成コールバックを設定
+		//meshBuffer->SetTextureCallback(
+		//	[this](const char* filename) { return GetTexture(filename); });
 
 		// -----------------------------------
 		// OBJファイルを読み込む
@@ -439,72 +402,72 @@ namespace PokarinEngine
 
 #pragma region Texture
 
-	/// <summary>
-	/// <para> テクスチャを取得する </para>
-	/// </summary>
-	/// <param name="[in] name"> テクスチャファイル名 </param>
-	/// <returns> 名前がnameと一致するテクスチャ </returns>
-	TexturePtr Engine::GetTexture(const char* name)
-	{
-		// ----------------------------------------
-		// キャッシュにあれば
-		// キャッシュされたテクスチャを返す
-		// ----------------------------------------
+	///// <summary>
+	///// <para> テクスチャを取得する </para>
+	///// </summary>
+	///// <param name="[in] name"> テクスチャファイル名 </param>
+	///// <returns> 名前がnameと一致するテクスチャ </returns>
+	//TexturePtr Engine::GetTexture(const char* name)
+	//{
+	//	// ----------------------------------------
+	//	// キャッシュにあれば
+	//	// キャッシュされたテクスチャを返す
+	//	// ----------------------------------------
 
-		// テクスチャを検索
-		// なければendが入る
-		auto itr = textureCache.find(name);
+	//	// テクスチャを検索
+	//	// なければendが入る
+	//	auto itr = textureCache.find(name);
 
-		// テクスチャが見つかった場合
-		if (itr != textureCache.end())
-		{
-			// キャッシュされたテクスチャを返す
-			return itr->second;
-		}
+	//	// テクスチャが見つかった場合
+	//	if (itr != textureCache.end())
+	//	{
+	//		// キャッシュされたテクスチャを返す
+	//		return itr->second;
+	//	}
 
-		// --------------------------------------------
-		// キャッシュになければ
-		// テクスチャを読み込んでキャッシュに登録
-		// --------------------------------------------
+	//	// --------------------------------------------
+	//	// キャッシュになければ
+	//	// テクスチャを読み込んでキャッシュに登録
+	//	// --------------------------------------------
 
-		/* make_shared関数はEngineクラスのメンバ関数ではない
-		なので、補助クラスを作成して
-		間接的にコンストラクタ、デストラクタを呼び出す */
+	//	/* make_shared関数はEngineクラスのメンバ関数ではない
+	//	なので、補助クラスを作成して
+	//	間接的にコンストラクタ、デストラクタを呼び出す */
 
-		// テクスチャ
-		std::shared_ptr<TexHelper> tex;
+	//	// テクスチャ
+	//	std::shared_ptr<TexHelper> tex;
 
-		// ファイルからテクスチャを読み込む
-		tex = std::make_shared<TexHelper>(name);
+	//	// ファイルからテクスチャを読み込む
+	//	tex = std::make_shared<TexHelper>(name);
 
-		// テクスチャをキャッシュに登録
-		textureCache.emplace(name, tex);
+	//	// テクスチャをキャッシュに登録
+	//	textureCache.emplace(name, tex);
 
-		// テクスチャを返す
-		return tex;
-	}
+	//	// テクスチャを返す
+	//	return tex;
+	//}
 
-	/// <summary>
-	/// テクスチャを取得する
-	/// </summary>
-	/// <param name="[in] width"> 幅 </param>
-	/// <param name="[in] height"> 高さ </param>
-	/// <returns> 指定した大きさのテクスチャ </returns>
-	TexturePtr Engine::GetTexture(GLsizei width, GLsizei height)
-	{
-		/* make_shared関数はEngineクラスのメンバ関数ではない
-		なので、補助クラスを作成して
-		間接的にコンストラクタ、デストラクタを呼び出す */
+	///// <summary>
+	///// テクスチャを取得する
+	///// </summary>
+	///// <param name="[in] width"> 幅 </param>
+	///// <param name="[in] height"> 高さ </param>
+	///// <returns> 指定した大きさのテクスチャ </returns>
+	//TexturePtr Engine::GetTexture(GLsizei width, GLsizei height)
+	//{
+	//	/* make_shared関数はEngineクラスのメンバ関数ではない
+	//	なので、補助クラスを作成して
+	//	間接的にコンストラクタ、デストラクタを呼び出す */
 
-		// テクスチャ
-		std::shared_ptr<TexHelper> tex;
+	//	// テクスチャ
+	//	std::shared_ptr<TexHelper> tex;
 
-		// テクスチャを作成
-		tex = std::make_shared<TexHelper>(width, height);
+	//	// テクスチャを作成
+	//	tex = std::make_shared<TexHelper>(width, height);
 
-		// 作成したテクスチャを返す
-		return tex;
-	}
+	//	// 作成したテクスチャを返す
+	//	return tex;
+	//}
 
 #pragma endregion
 

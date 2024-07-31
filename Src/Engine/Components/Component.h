@@ -1,8 +1,8 @@
 /**
 * @file Component.h
 */
-#ifndef COMPONENT_H_INCLUDED
-#define COMPONENT_H_INCLUDED
+#ifndef POKARINENGINE_COMPONENT_H_INCLUDED
+#define POKARINENGINE_COMPONENT_H_INCLUDED
 
 #include "Json/UsingNameJson.h"
 
@@ -203,4 +203,4 @@ namespace PokarinEngine
 
 } // namespace PokarinEngine
 
-#endif // !COMPONENT_H_INCLUDED
+#endif // !POKARINENGINE_COMPONENT_H_INCLUDED

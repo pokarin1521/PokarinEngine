@@ -1,8 +1,8 @@
 /**
 * @file VertexArrayObject.h
 */
-#ifndef VERTEXARRAYOBJECT_H_INCLUDED
-#define VERTEXARRAYOBJECT_H_INCLUDED
+#ifndef POKARINENGINE_VERTEXARRAYOBJECT_H_INCLUDED
+#define POKARINENGINE_VERTEXARRAYOBJECT_H_INCLUDED
 
 #include "glad/glad.h"
 
@@ -99,4 +99,4 @@ namespace PokarinEngine
 
 } // namespace PokarinEngine
 
-#endif // !VERTEXARRAYOBJECT_H_INCLUDED
+#endif // !POKARINENGINE_VERTEXARRAYOBJECT_H_INCLUDED

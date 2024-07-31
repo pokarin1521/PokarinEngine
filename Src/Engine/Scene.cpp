@@ -133,20 +133,6 @@ namespace PokarinEngine
 
 #pragma endregion
 
-#pragma region StaticMesh
-
-	/// <summary>
-	/// スタティックメッシュを取得する
-	/// </summary>
-	/// <param name="[in] fileName"> ファイル名 </param>
-	/// <returns> ファイル名が一致するスタティックメッシュ </returns>
-	StaticMeshPtr Scene::GetStaticMesh(const std::string& fileName)
-	{
-		return engine->GetStaticMesh(fileName);
-	}
-
-#pragma endregion
-
 #pragma region Update
 
 	/// <summary>

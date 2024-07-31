@@ -1,8 +1,8 @@
 /**
 * @file NodeEditor.h
 */
-#ifndef NODEEDITOR_H_INCLUDED
-#define NODEEDITOR_H_INCLUDED
+#ifndef POKARINENGINE_NODEEDITOR_H_INCLUDED
+#define POKARINENGINE_NODEEDITOR_H_INCLUDED
 
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_internal.h"
@@ -291,5 +291,5 @@ namespace PokarinEngine
 
 } // namespace PokarinEngine
 
-#endif // !NODEEDITOR_H_INCLUDED
+#endif // !POKARINENGINE_NODEEDITOR_H_INCLUDED
 

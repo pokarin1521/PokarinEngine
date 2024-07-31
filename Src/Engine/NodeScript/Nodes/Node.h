@@ -1,8 +1,8 @@
 /**
 * @file Node.h
 */
-#ifndef NODE_H_INCLUDED
-#define NODE_H_INCLUDED
+#ifndef POKARINENGINE_NODE_H_INCLUDED
+#define POKARINENGINE_NODE_H_INCLUDED
 
 #include "../../UsingNames/UsingNodeEditor.h"
 #include "../../UsingNames/UsingGameObject.h"
@@ -207,4 +207,4 @@ namespace PokarinEngine
 
 } // namespace PokarinEngine
 
-#endif // !NODE_H_INCLUDED
+#endif // !POKARINENGINE_NODE_H_INCLUDED

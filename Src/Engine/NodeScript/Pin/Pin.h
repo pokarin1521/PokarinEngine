@@ -1,8 +1,8 @@
 /**
 * @file Pin.h
 */
-#ifndef PIN_H_INCLUDED
-#define PIN_H_INCLUDED
+#ifndef POKARINENGINE_PIN_H_INCLUDED
+#define POKARINENGINE_PIN_H_INCLUDED
 
 #include "PinType.h"
 
@@ -53,4 +53,4 @@ namespace PokarinEngine
 	};
 }
 
-#endif // !PIN_H_INCLUDED
+#endif // !POKARINENGINE_PIN_H_INCLUDED

@@ -1,12 +1,13 @@
 /**
 * @file Camera.h
 */
-#ifndef CAMERA_H_INCLUDED
-#define CAMERA_H_INCLUDED
+#ifndef POKARINENGINE_CAMERA_H_INCLUDED
+#define POKARINENGINE_CAMERA_H_INCLUDED
 
 #include "Component.h"
 
 #include "../Math/Angle.h"
+#include "../Math/Vector.h"
 
 #include "../FramebufferObject.h"
 
@@ -25,12 +26,35 @@ namespace PokarinEngine
 	{
 	public: // ------------------ コンストラクタ・デストラクタ -------------------
 
-		Camera() = default;
+		// ゲームオブジェクト以外でも使うのでコンストラクタでFBOを作成する
+		// FBOの作成だけならコンストラクタでも問題ない
+		Camera() { fbo = FramebufferObject::Create(); }
 		~Camera() = default;
 
-	public: // ------------------------------ 描画 -------------------------------
+	public: // ------------------------------ 制御 -------------------------------
 
-		void Draw();
+		/// <summary>
+		/// 更新
+		/// </summary>
+		void Update();
+
+		/// <summary>
+		/// GPUに情報をコピーする
+		/// </summary>
+		void CopyToGPU();
+
+		/// <summary>
+		/// スカイスフィアを描画する
+		/// </summary>
+		void DrawSkySphere();
+
+	public: // --------------------------- 位置の設定 ----------------------------
+
+		/// <summary>
+		/// 位置を設定する
+		/// </summary>
+		/// <param name="position"> 位置 </param>
+		void SetPosition(const Vector3& position);
 
 	public: // -------------------------- 視野角の取得 ---------------------------
 
@@ -44,7 +68,7 @@ namespace PokarinEngine
 		/// 視野角による拡大率を取得
 		/// </summary>
 		/// <returns> 視野角による拡大率の逆数 </returns>
-		float GetFovScale() const { return fovScale; }
+		float GetFovScale() const { return inverseFovScale; }
 
 		/// <summary>
 		/// 垂直視野角を設定する
@@ -59,7 +83,7 @@ namespace PokarinEngine
 			radFovY = Radians(fovY);
 
 			// 視野角による拡大率の逆数
-			fovScale = 1 / tan(radFovY / 2);
+			inverseFovScale = 1 / tan(radFovY / 2);
 		}
 
 	public: // ------------------------- 描画範囲の取得 --------------------------
@@ -80,6 +104,17 @@ namespace PokarinEngine
 		float GetDrawFar() const
 		{
 			return drawRange.far;
+		}
+
+	public: // ------------------------- FBOのテクスチャ -------------------------
+
+		/// <summary>
+		/// FBOのテクスチャを取得する
+		/// </summary>
+		/// <returns> FBOのテクスチャ </returns>
+		TexturePtr GetTextureFBO()
+		{
+			return fbo->GetTexture();
 		}
 
 	public: // ------------------------------ Json -------------------------------
@@ -112,8 +147,8 @@ namespace PokarinEngine
 		float radFovY = Radians(degFovY);
 
 		// 視野角による拡大率の逆数
-		// (視野角による拡大率は常にこの形で使うので、あらかじめ逆数にしておく)
-		float fovScale = 1 / tan(radFovY / 2);
+		// 視野角による拡大率は常にこの形で使うので、あらかじめ逆数にしておく
+		float inverseFovScale = 1 / tan(radFovY / 2);
 
 	private: // ----------------------------- 描画用 -----------------------------
 
@@ -134,7 +169,15 @@ namespace PokarinEngine
 
 		// 描画用FBO
 		FramebufferObjectPtr fbo;
+
+	private: // ------------------------- 位置・回転角度 -------------------------
+
+		// 位置
+		Vector3 position;
+
+		// 回転角度
+		Vector3 rotation;
 	};
 }
 
-#endif // !CAMERA_H_INCLUDED
+#endif // !POKARINENGINE_CAMERA_H_INCLUDED

@@ -1,8 +1,8 @@
 /**
 * @file Light.h
 */
-#ifndef LIGTH_H_INCLUDED
-#define LIGTH_H_INCLUDED
+#ifndef POKARINENGINE_LIGTH_H_INCLUDED
+#define POKARINENGINE_LIGTH_H_INCLUDED
 
 #include "Component.h"
 
@@ -85,4 +85,4 @@ namespace PokarinEngine
 
 } // namespace PokarinEngine
 
-#endif // !LIGTH_H_INCLUDED
+#endif // !POKARINENGINE_LIGTH_H_INCLUDED

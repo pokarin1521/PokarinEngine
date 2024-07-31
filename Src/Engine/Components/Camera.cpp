@@ -5,14 +5,178 @@
 
 #include "ImGui/imgui.h"
 
+#include "../GameObject.h"
+#include "../Window.h"
+#include "../TextureGetter.h"
+#include "../Shader/Shader.h"
+#include "../Configs/ShaderConfig.h"
+
 namespace PokarinEngine
 {
 	/// <summary>
-	/// 描画
+	/// 更新
 	/// </summary>
-	void Camera::Draw()
+	void Camera::Update()
 	{
+		// 持ち主であるゲームオブジェクトの位置と回転角度を設定する
+		const TransformPtr gameObject = GetOwnerObject().transform;
+		position = gameObject->position;
+		rotation = gameObject->rotation;
+	}
 
+	/// <summary>
+	/// GPUに情報をコピーする
+	/// </summary>
+	void Camera::CopyToGPU()
+	{
+		// ----------------------------
+		// 情報を取得する
+		// ----------------------------
+
+		// 持ち主であるゲームオブジェクトの位置・回転角度・拡大率
+		const TransformPtr gameObject = GetOwnerObject().transform;
+
+		// カメラの位置
+		Vector3 position = gameObject->position;
+
+		// 今は左手座標系の値になっていて、
+		// OpenGLは右手座標系なので、右手座標系にする
+		position.z *= -1;
+
+		// カメラの回転角度
+		// オブジェクトはカメラの回転方向とは逆に動くことになるので、符号を逆にする
+		Vector3 rotation = -gameObject->rotation;
+
+		// ----------------------------
+		// GPUにコピーする
+		// ----------------------------
+
+		// 全てのシェーダプログラム
+		const auto& allProg = Shader::GetAllProgram();
+
+		// アスペクト比
+		const float aspectRatio = Window::GetAspectRatio(WindowID::Main);
+
+		// 全てのシェーダプログラムにコピーする
+		for (const auto& [type, prog] : allProg)
+		{
+			// アスペクト比と視野角による拡大率を設定
+			// GPU側での除算を避けるため、逆数にして渡す
+			glProgramUniform2f(prog, UniformLocation::aspectRatioAndScaleFov,
+				1 / aspectRatio, inverseFovScale);
+
+			// カメラの位置をGPUにコピー
+			glProgramUniform3fv(prog, UniformLocation::cameraPosition, 1, &position.x);
+
+			// カメラの回転角度をGPUにコピー
+			glProgramUniform3fv(prog, UniformLocation::cameraRotation, 1, &rotation.x);
+		}
+	}
+
+	void Camera::DrawSkySphere()
+	{
+		// --------------------------------------------------------
+		// スカイスフィア用モデルがない場合は描画しない
+		// --------------------------------------------------------
+
+		if (!skySphere)
+		{
+			return;
+		}
+
+		// -------------------------------------
+		// 使用するシェーダを指定する
+		// -------------------------------------
+
+		// ライティング無しのシェーダ
+		static const GLuint progUnlit = Shader::GetProgram(Shader::ProgType::Unlit);
+
+		// 空にライティングすると不自然なので
+		// アンリットシェーダで描画
+		glUseProgram(progUnlit);
+
+		// VAOにバインド
+		glBindVertexArray(*meshBuffer->GetVAO());
+
+		// 深度バッファへの書き込みを禁止
+		glDepthMask(GL_FALSE);
+
+		// ----------------------------------------
+		// 座標変換行列をGPUにコピーする
+		// ----------------------------------------
+
+		/* スカイスフィアは移動と回転はしないので拡大率だけを設定する
+
+		スカイスフィアは最も遠くに描画される物体なので、
+		カメラが描画できる範囲のうち、できるだけ遠い位置に描画したい
+
+		現在の最大描画範囲を使いたいが
+		スカイスフィアもポリゴンモデルなので微妙な凹凸がある
+		凹凸が範囲からはみ出さないように*/
+
+		// スカイスフィアの半径
+		static const float skySphereRadius = 0.5f;
+
+		// 拡大率
+		// 最大描画範囲の95%の位置に描画できるように設定
+		const float scale = drawRange.far * 0.95f / skySphereRadius;
+
+		// 座標変換行列
+		// 移動も回転もしないので拡大率だけ
+		const Matrix4x4 transformMatrix = {
+			{ scale,     0,     0,     0 },
+			{     0, scale,     0,     0 },
+			{     0,     0, scale,     0 },
+			{     0,     0,     0,     1 },
+		};
+
+		// 座標変換行列をGPUにコピー
+		glProgramUniformMatrix4fv(progUnlit, UniformLocation::transformMatrix,
+			1, GL_FALSE, &transformMatrix[0].x);
+
+		// -----------------------------------
+		// 色をGPUメモリにコピー
+		// -----------------------------------
+
+		// 色はマテリアルカラーで調整するので白を設定
+		// (実際に描画される色は「オブジェクトカラー」と「マテリアルカラー」の乗算)
+		static const Color color = { 1, 1, 1, 1 };
+		glProgramUniform4fv(progUnlit, UniformLocation::color, 1, &color.r);
+
+		// -----------------------------------
+		// カメラの座標をGPUにコピー
+		// -----------------------------------
+
+		// スカイスフィアは常にカメラを中心に描画したいので、
+		// カメラを一時的に原点に移動させる
+		glProgramUniform3fv(progUnlit, UniformLocation::cameraPosition,
+			1, &Vector3::zero.x);
+
+		// -----------------------------------
+		// スカイスフィアを描画する
+		// -----------------------------------
+
+		// スカイスフィアを描画する
+		DrawMesh(skySphere, progUnlit, skySphere->materials);
+
+		// カメラパラメータをGPUにコピーし直す
+		CopyToGPU(progUnlit, camera);
+
+		// 深度バッファへの書き込みを許可
+		glDepthMask(GL_TRUE);
+
+		// 標準シェーダに戻す
+		glUseProgram(Shader::GetProgram(Shader::ProgType::Standard));
+	}
+
+	/// <summary>
+	/// 位置を設定する
+	/// </summary>
+	/// <param name="position"> 位置 </param>
+	void Camera::SetPosition(const Vector3& position)
+	{
+		// 持ち主であるゲームオブジェクトの位置を設定する
+		GetOwnerObject().transform->position = position;
 	}
 
 	/// <summary>

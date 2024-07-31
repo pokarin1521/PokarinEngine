@@ -1,8 +1,8 @@
 /**
 * @file BufferObject.h
 */
-#ifndef BUFFEROBJECT_H_INCLUDED
-#define BUFFEROBJECT_H_INCLUDED
+#ifndef POKARINENGINE_BUFFEROBJECT_H_INCLUDED
+#define POKARINENGINE_BUFFEROBJECT_H_INCLUDED
 
 #include "glad/glad.h"
 
@@ -100,4 +100,4 @@ namespace PokarinEngine
 
 } // namespace PokarinEngine
 
-#endif // !BUFFEROBJECT_H_INCLUDED
+#endif // !POKARINENGINE_BUFFEROBJECT_H_INCLUDED

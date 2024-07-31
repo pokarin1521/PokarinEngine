@@ -1,8 +1,8 @@
 /**
 * @file Inspector.h
 */
-#ifndef INSPECTOR_H_INCLUDED
-#define INSPECTOR_H_INCLUDED
+#ifndef POKARINENGINE_INSPECTOR_H_INCLUDED
+#define POKARINENGINE_INSPECTOR_H_INCLUDED
 
 #include "ImGui/imgui.h"
 
@@ -53,5 +53,5 @@ namespace PokarinEngine
 
 } // namespace PokarinEngine
 
-#endif // !INSPECTOR_H_INCLUDED
+#endif // !POKARINENGINE_INSPECTOR_H_INCLUDED
 

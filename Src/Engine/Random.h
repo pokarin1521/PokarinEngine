@@ -1,8 +1,8 @@
 /**
 * @file Random.h
 */
-#ifndef RANDOM_H_INCLUDED
-#define RANDOM_H_INCLUDED
+#ifndef POKARINENGINE_RANDOM_H_INCLUDED
+#define POKARINENGINE_RANDOM_H_INCLUDED
 
 namespace PokarinEngine
 {
@@ -43,4 +43,4 @@ namespace PokarinEngine
 
 } // namespace PokarinEngine
 
-#endif // !RANDOM_H_INCLUDED
+#endif // !POKARINENGINE_RANDOM_H_INCLUDED

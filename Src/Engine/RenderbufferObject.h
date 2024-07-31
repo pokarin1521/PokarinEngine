@@ -1,8 +1,8 @@
 /**
 * @file RenderbufferObject.h
 */
-#ifndef RENDERBUFFEROBJECT_H_INCLUDED
-#define RENDERBUFFEROBJECT_H_INCLUDED
+#ifndef POKARINENGINE_RENDERBUFFEROBJECT_H_INCLUDED
+#define POKARINENGINE_RENDERBUFFEROBJECT_H_INCLUDED
 
 #include "glad/glad.h"
 
@@ -80,4 +80,4 @@ namespace PokarinEngine
 
 } // namespace PokarinEngine
 
-#endif // !RENDERBUFFEROBJECT_H_INCLUDED
+#endif // !POKARINENGINE_RENDERBUFFEROBJECT_H_INCLUDED

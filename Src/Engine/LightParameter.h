@@ -1,8 +1,8 @@
 /**
 * @file LightData.h
 */
-#ifndef LIGHTDATA_H_INCLUDED
-#define LIGHTDATA_H_INCLUDED
+#ifndef POKARINENGINE_LIGHTDATA_H_INCLUDED
+#define POKARINENGINE_LIGHTDATA_H_INCLUDED
 
 #include "Math/Vector.h"
 #include "Math/Angle.h"
@@ -94,4 +94,4 @@ namespace PokarinEngine
 
 } // namespace PokarinEngine
 
-#endif // !LIGHTDATA_H_INCLUDED
+#endif // !POKARINENGINE_LIGHTDATA_H_INCLUDED

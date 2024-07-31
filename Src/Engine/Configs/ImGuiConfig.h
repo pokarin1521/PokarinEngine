@@ -1,8 +1,8 @@
 /**
 * @file ImGuiConfig.h
 */
-#ifndef IMGUICONFIG_H_INCLUDED
-#define IMGUICONFIG_H_INCLUDED
+#ifndef POKARINENGINE_IMGUICONFIG_H_INCLUDED
+#define POKARINENGINE_IMGUICONFIG_H_INCLUDED
 
 #include "ImGui/imgui.h"
 
@@ -33,4 +33,4 @@ namespace PokarinEngine
 	}
 }
 
-#endif // !IMGUICONFIG_H_INCLUDED
+#endif // !POKARINENGINE_IMGUICONFIG_H_INCLUDED

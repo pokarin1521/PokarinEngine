@@ -1,8 +1,8 @@
 /**
 * @file FunctionalNode.h
 */
-#ifndef FUNCTIONALNODE_H_INCLUDED
-#define FUNCTIONALNODE_H_INCLUDED
+#ifndef POKARINENGINE_FUNCTIONALNODE_H_INCLUDED
+#define POKARINENGINE_FUNCTIONALNODE_H_INCLUDED
 
 #include "../Node.h"
 
@@ -94,4 +94,4 @@ namespace PokarinEngine
 	};
 }
 
-#endif // !FUNCTIONALNODE_H_INCLUDED
+#endif // !POKARINENGINE_FUNCTIONALNODE_H_INCLUDED

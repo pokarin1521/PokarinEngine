@@ -4,8 +4,6 @@
 #include "FramebufferObject.h"
 
 #include "Engine.h"
-#include "Window.h"
-#include "Texture.h"
 #include "RenderbufferObject.h"
 
 namespace PokarinEngine
@@ -13,31 +11,13 @@ namespace PokarinEngine
 	/// <summary>
 	/// FBOを作成するコンストラクタ
 	/// </summary>
-	/// <param name="[in] engine"> エンジンクラスの参照 </param>
-	/// <param name="[in] _windowID"> ウィンドウ番号 </param>
-	/// <param name="[in] fboWidth"> FBOの幅 </param>
-	/// <param name="[in] fboHeight"> FBOの高さ </param>
-	FramebufferObject::FramebufferObject(
-		Engine& engine, WindowID _windowID, GLsizei fboWidth, GLsizei fboHeight)
+	FramebufferObject::FramebufferObject()
 	{
-		// -------------------------------
-		// ウィンドウ番号を設定
-		// -------------------------------
-
-		windowID = _windowID;
-
-		// -------------------------------
-		// FBOの大きさを設定
-		// -------------------------------
-
-		width = fboWidth;
-		height = fboHeight;
-
 		// -------------------------------------------
 		// カラーバッファ用テクスチャを作成
 		// -------------------------------------------
 
-		texture = engine.GetTexture(width, height);
+		texture = TextureGetter::Get(width, height);
 
 		// -------------------------------
 		// 深度バッファ用RBOを作成
@@ -107,11 +87,11 @@ namespace PokarinEngine
 		// FBOのバインド解除
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-		// OpenGLウィンドウの大きさを取得
+		// OpenGLメインウィンドウの大きさを取得
 		GLsizei windowWidth = 0, windowHeight = 0;
-		Window::GetWindowSize(windowID, windowWidth, windowHeight);
+		Window::GetWindowSize(WindowID::Main, windowWidth, windowHeight);
 
-		// ビューポートをOpenGLウィンドウの大きさに戻す
+		// ビューポートをOpenGLメインウィンドウの大きさに戻す
 		glViewport(0, 0, windowWidth, windowHeight);
 	}
 

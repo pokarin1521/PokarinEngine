@@ -1,8 +1,8 @@
 /**
 * @file UsingNodeEditor.h
 */
-#ifndef USINGNODEEDITOR_H_INCLUDED
-#define USINGNODEEDITOR_H_INCLUDED
+#ifndef POKARINENGINE_USINGNODEEDITOR_H_INCLUDED
+#define POKARINENGINE_USINGNODEEDITOR_H_INCLUDED
 
 #include <memory>
 
@@ -21,4 +21,4 @@ namespace PokarinEngine
 	using NodeEditorPtr = std::shared_ptr<NodeEditor>;
 }
 
-#endif // !USINGNODEEDITOR_H_INCLUDED
+#endif // !POKARINENGINE_USINGNODEEDITOR_H_INCLUDED
