@@ -4,7 +4,7 @@
 #ifndef POKARINENGINE_MESH_H_INCLUDED
 #define POKARINENGINE_MESH_H_INCLUDED
 
-#include "../Texture.h"
+#include "StaticMesh.h"
 
 #include "../Math/Vector.h"
 #include "../Color.h"
@@ -17,32 +17,59 @@
 
 namespace PokarinEngine
 {
-	/// <summary>
-	/// 共有マテリアル配列をコピー
-	/// </summary>
-	/// <param name="[in] original"> コピー元マテリアル配列の持ち主 </param>
-	/// <returns> 共有マテリアル配列のコピー </returns>
-	MaterialList CloneMaterialList(const StaticMeshPtr& original);
+	// -----------------------
+	// 前方宣言
+	// -----------------------
+
+	class MeshBuffer;
 
 	/// <summary>
-	/// メッシュ管理用
+	/// メッシュ管理用クラス
 	/// </summary>
-	namespace Mesh
+	class Mesh
 	{	
+	public: // ------------------------- 禁止事項 -------------------------
+
+		Mesh(const Mesh&) = delete;
+		Mesh& operator=(const Mesh&) = delete;
+
+	public: // -------------------------- 初期化 --------------------------
+
+		/// <summary>
+		/// 初期化
+		/// </summary>
+		static void Initialize();
+
+	public: // ---------------- スタティックメッシュの取得 ----------------
+
 		/// <summary>
 		/// スタティックメッシュを取得する
 		/// </summary>
-		/// <param name="fileName"> スタティックメッシュのファイル名 </param>
+		/// <param name="[in] fileName"> スタティックメッシュのファイル名 </param>
 		/// <returns> スタティックメッシュ </returns>
-		StaticMeshPtr GetStaticMesh(const std::string& fileName);
+		static StaticMeshPtr GetStaticMesh(const std::string& fileName);
+
+	public: // --------------------------- 描画 ---------------------------
 
 		/// <summary>
-		/// メッシュを描画する
+		/// スタティックメッシュを描画する
 		/// </summary>
 		/// <param name="[in] mesh"> 描画するスタティックメッシュ </param>
-		/// <param name="[in] program"> 使用するシェーダプログラムの管理番号 </param>
-		/// <param name="[in] materialss"> 使用するマテリアル配列 </param>
-		void Draw(const StaticMeshPtr& mesh, GLuint program, const MaterialList& materials);
+		/// <param name="[in] program"> 使用するシェーダプログラムの識別番号 </param>
+		/// <param name="[in] materialList"> 使用するマテリアル配列 </param>
+		static void Draw(const StaticMeshPtr& mesh, GLuint program, const MaterialList& materialList);
+
+	private: // -------------- コンストラクタ・デストラクタ ---------------
+
+		/* static関数でアクセスしてほしいので、作成できないようにする */
+
+		Mesh() = default;
+		~Mesh() = default;
+
+	private: // --------------------- メッシュバッファ --------------------
+
+		// メッシュバッファ
+		inline static std::shared_ptr<MeshBuffer> meshBuffer = nullptr;
 	};
 
 } // namespace PokarinEngine

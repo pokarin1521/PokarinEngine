@@ -82,14 +82,6 @@ namespace PokarinEngine
 		// スタティックメッシュ
 		StaticMeshPtr staticMesh;
 
-	//protected: // ------------ 座標変換行列 ---------------
-
-	//	// 座標変換行列
-	//	Matrix4x4 transformMatrix = Matrix4x4();
-
-	//	// 座標変換したコライダー
-	//	ColliderPtr transformedCollider;
-
 	protected: // ------------- エディタ用 ----------------
 
 		// ドラッグ操作用スライダーの幅

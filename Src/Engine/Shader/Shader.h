@@ -26,8 +26,8 @@ namespace PokarinEngine
 		// 型の別名を定義
 		// --------------------------
 		
-		// シェーダプログラムの管理番号配列
-		// <シェーダプログラムの種類, シェーダプログラムの管理番号>
+		// シェーダプログラムの識別番号配列
+		// <シェーダプログラムの種類, シェーダプログラムの識別番号>
 		using ProgList = std::unordered_map<ProgType, GLuint>;
 
 		// -------------------------------
@@ -53,18 +53,18 @@ namespace PokarinEngine
 		void Initialize();
 
 		/// <summary>
-		/// シェーダプログラムの管理番号を取得する
+		/// シェーダプログラムの識別番号を取得する
 		/// </summary>
 		/// <param name="[in] progType"> シェーダプログラムの種類 </param>
-		/// <returns> 指定した種類のシェーダプログラムの管理番号 </returns>
+		/// <returns> 指定した種類のシェーダプログラムの識別番号 </returns>
 		GLuint GetProgram(ProgType progType);
 
 		/// <summary>
-		/// 全てのシェーダプログラムの管理番号を取得する
+		/// 全てのシェーダプログラムの識別番号を取得する
 		/// </summary>
 		/// <returns> 
-		/// <para> 全てのシェーダプログラムの管理番号 </para>
-		/// <para> [シェーダプログラムの種類, シェーダプログラムの管理番号] </para>
+		/// <para> 全てのシェーダプログラムの識別番号 </para>
+		/// <para> [シェーダプログラムの種類, シェーダプログラムの識別番号] </para>
 		/// </returns>
 		const ProgList& GetAllProgram();
 

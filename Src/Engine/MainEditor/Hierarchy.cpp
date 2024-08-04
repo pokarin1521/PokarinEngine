@@ -5,11 +5,10 @@
 
 #include "ImGui/imgui.h"
 
-#include "../Engine.h"
 #include "../Scene.h"
 #include "../GameObject.h"
 
-#include "../InputManager.h"
+#include "../Input.h"
 
 #include "../Configs/MeshConfig.h"
 
@@ -18,24 +17,13 @@ namespace PokarinEngine
 #pragma region Hierarchy
 
 	/// <summary>
-	/// 初期化
-	/// </summary>
-	/// <param name="[in] engine"> エンジンクラスの参照 </param>
-	void Hierarchy::Initialize(Engine& e)
-	{
-		engine = &e;
-	}
-
-	/// <summary>
 	/// 更新
 	/// </summary>
-	void Hierarchy::Update()
+	/// <param name="currentScene"> 現在のシーン </param>
+	void Hierarchy::Update(const ScenePtr& currentScene)
 	{
-		// 現在のシーン
-		Scene& currentScene = engine->GetCurrentScene();
-
 		// シーン内のゲームオブジェクト
-		GameObjectList gameObjectList = currentScene.GetGameObjectAll();
+		GameObjectList gameObjectList = currentScene->GetGameObjectAll();
 
 		// 選択中のオブジェクトに対する操作を可能にする
 		ScelectObjectControl();
@@ -105,17 +93,14 @@ namespace PokarinEngine
 	/// </summary>
 	void Hierarchy::ObjectTree()
 	{
-		// 現在のシーン
-		Scene& currentScene = engine->GetCurrentScene();
-
 		// シーン内のゲームオブジェクト
-		GameObjectList gameObjectList = currentScene.GetGameObjectAll();
+		GameObjectList gameObjectList = currentScene->GetGameObjectAll();
 
 		// ツリーノードの機能
 		ImGuiTreeNodeFlags treeFlags = ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_DefaultOpen;
 
 		// シーン内のオブジェクトを表示するためのツリーノード
-		if (ImGui::TreeNodeEx(currentScene.GetName(), treeFlags))
+		if (ImGui::TreeNodeEx(currentScene->GetName(), treeFlags))
 		{
 			// シーン内のオブジェクトを表示
 			for (int i = 0; i < gameObjectList.size(); ++i)
@@ -168,9 +153,6 @@ namespace PokarinEngine
 			return;
 		}
 
-		// 現在のシーン
-		Scene& currentScene = engine->GetCurrentScene();
-
 		// ------------------------------------------------------
 		// 「Ctrl + D」で選択中のオブジェクトを複製する
 		// ------------------------------------------------------
@@ -179,7 +161,7 @@ namespace PokarinEngine
 			Input::GetKeyDown(KeyCode::D))
 		{
 			// 選択中のオブジェクトを複製する
-			currentScene.CopyGameObject(selectObject);
+			currentScene->CopyGameObject(selectObject);
 		}
 
 		// -------------------------------------------------------
@@ -189,7 +171,7 @@ namespace PokarinEngine
 		if (Input::GetKey(KeyCode::Delete))
 		{
 			// 選択中のオブジェクトを削除
-			currentScene.DestroyObject(selectObject);
+			currentScene->DestroyObject(selectObject);
 
 			// 非選択状態にする
 			selectObjectIndex = unselected;
@@ -266,7 +248,7 @@ namespace PokarinEngine
 		{
 			// ボタンが押されたので
 			// 現在のシーンにオブジェクトを作成
-			GameObjectPtr object = engine->GetCurrentScene().CreateGameObject(
+			GameObjectPtr object = currentScene->CreateGameObject(
 				typeName, Vector3(0), Vector3(0), staticMeshFile);
 		}
 	}

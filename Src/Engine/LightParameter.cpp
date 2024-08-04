@@ -39,7 +39,7 @@ namespace PokarinEngine
 		// 方向を持たないので色だけ
 		const Color ambientLight = { 0.05f, 0.15f, 0.25f, 1.0f };
 
-		// 標準シェーダの管理番号
+		// 標準シェーダの識別番号
 		GLuint progStandard = 0;
 
 		// -----------------------------
@@ -52,7 +52,7 @@ namespace PokarinEngine
 		/// </summary>
 		void CopyDirectionalLight()
 		{
-			// 標準シェーダの管理番号
+			// 標準シェーダの識別番号
 			static const GLuint progStandard = Shader::GetProgram(Shader::ProgType::Standard);
 
 			// 平行光源がない場合は
@@ -93,7 +93,7 @@ namespace PokarinEngine
 			// 環境光のデータをGPUにコピー 
 			// -----------------------------------
 
-			// 標準シェーダの管理番号
+			// 標準シェーダの識別番号
 			static const GLuint progStandard = Shader::GetProgram(Shader::ProgType::Standard);
 
 			glProgramUniform3fv(progStandard,

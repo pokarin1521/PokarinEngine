@@ -9,6 +9,8 @@
 #include "Random.h"
 #include "Debug.h"
 
+#include "Mesh/Mesh.h"
+
 #include "Components/Light.h"
 #include "Components/Colliders/BoxCollider.h"
 
@@ -29,13 +31,16 @@ namespace PokarinEngine
 	/// <param name="[in] e"> エンジンクラスの参照 </param>
 	/// <param name="[in] sceneID"> シーン識別番号 </param>
 	/// <param name="[in] sceneName"> シーン名 </param>
-	Scene::Scene(Engine& e, int sceneID, const char* sceneName)
-		:engine(&e), id(sceneID), name(sceneName)
+	Scene::Scene(int sceneID, const char* sceneName)
+		:id(sceneID), name(sceneName)
 	{
-		// メインカメラ作成
+		// カメラの初期位置
 		// オブジェクト生成時に見えるように少し後ろに配置する
-		mainCamera = CreateGameObject("MainCamera", Vector3(0, 0, -5));
-		mainCameraInfo = mainCamera->AddComponent<Camera>();
+		static const Vector3 cameraStartPosition = { 0, 0, -5 };
+
+		// メインカメラ作成
+		auto cameraObject = CreateGameObject("MainCamera", cameraStartPosition);
+		mainCamera = cameraObject->AddComponent<Camera>();
 
 		// 平行光源を作成
 		auto directionalLight = CreateGameObject("Directional Light");
@@ -77,27 +82,21 @@ namespace PokarinEngine
 	}
 
 	/// <summary>
-	/// ゲームオブジェクトを複製する
+	/// ゲームオブジェクトをコピーする
 	/// </summary>
-	/// <param name="[in] object"> 複製元のゲームオブジェクト </param>
+	/// <param name="[in] object"> コピー元のゲームオブジェクト </param>
 	void Scene::CopyGameObject(const GameObjectPtr& object)
 	{
-		// メインカメラは複製しない
-		if (object == mainCamera)
-		{
-			return;
-		}
-
-		// 複製元の情報を格納するJson型
+		// コピー元の情報を格納するJson型
 		Json data;
 
-		// 複製元の情報を格納する
+		// コピー元の情報を格納する
 		object->ToJson(data);
 
 		// ゲームオブジェクトを作成
 		GameObjectPtr copyObject = CreateGameObject("Copy Object");
 
-		// 複製元の情報を取得する
+		// コピー元の情報を取得する
 		copyObject->FromJson(data);
 	}
 
@@ -138,18 +137,23 @@ namespace PokarinEngine
 	/// <summary>
 	/// ゲームオブジェクトの状態を更新する
 	/// </summary>
-	void Scene::UpdateGameObject()
+	/// <param name="[in] isPlayGame"> ゲーム再生中ならtrue </param>
+	void Scene::UpdateGameObject(bool isPlayGame)
 	{
 		// ゲームオブジェクトを更新
 		for (const auto& gameObject : gameObjectList)
 		{
-			if (!gameObject->IsDestroyed())
+			// 削除済みなら更新しない
+			if (gameObject->IsDestroyed())
 			{
-				gameObject->Update(engine->IsPlayGame());
+				continue;
 			}
+
+			// 更新
+			gameObject->Update(isPlayGame);
 		}
 
-		if (engine->IsPlayGame())
+		if (isPlayGame)
 		{
 			Collision::GameObjectCollision(gameObjectList);
 		}
@@ -184,12 +188,6 @@ namespace PokarinEngine
 	/// <param name="[in] object"> 削除するゲームオブジェクト </param>
 	void Scene::DestroyObject(GameObjectPtr& object)
 	{
-		// メインカメラは削除しない
-		if (object == mainCamera)
-		{
-			return;
-		}
-
 		// -----------------------------------
 		// ゲームオブジェクトを削除
 		// -----------------------------------
@@ -252,7 +250,7 @@ namespace PokarinEngine
 	/// <summary>
 	/// ゲームオブジェクトのパラメータをGPUにコピーする
 	/// </summary>
-	/// <param name="[in] prog"> シェーダプログラムの管理番号 </param>
+	/// <param name="[in] prog"> シェーダプログラムの識別番号 </param>
 	/// <param name="[in] gameObject"> パラメータをコピーするゲームオブジェクト </param>
 	void CopyGameObjectParameters(GLuint prog, const GameObjectPtr& gameObject)
 	{
@@ -288,7 +286,7 @@ namespace PokarinEngine
 	/// <summary>
 	/// ゲームオブジェクトを描画する
 	/// </summary>
-	/// <param name="[in] prog"> シェーダプログラムの管理番号 </param>
+	/// <param name="[in] prog"> シェーダプログラムの識別番号 </param>
 	/// <param name="[in] begin"> 描画するゲームオブジェクト配列の先頭イテレータ </param>
 	/// <param name="[in] end"> 描画するゲームオブジェクト配列の末尾イテレータ </param>
 	void DrawGameObject(GLuint prog,
@@ -328,18 +326,18 @@ namespace PokarinEngine
 			// ------------- 図形を描画 --------------
 
 			// 固有マテリアルがない
-			if (gameObject->materials.empty())
+			if (gameObject->materialList.empty())
 			{
 				// 共有マテリアルを使って
 				// スタティックメッシュを描画
-				DrawMesh(gameObject->staticMesh, prog, gameObject->staticMesh->materials);
+				Mesh::Draw(gameObject->staticMesh, prog, gameObject->staticMesh->GetMaterialList());
 			}
 			// 固有マテリアルがある
 			else
 			{
 				// 固有マテリアルを使って
 				// スタティックメッシュを描画
-				DrawMesh(gameObject->staticMesh, prog, gameObject->materials);
+				Mesh::Draw(gameObject->staticMesh, prog, gameObject->materialList);
 			}
 		}
 	}
@@ -391,10 +389,10 @@ namespace PokarinEngine
 		// 優先度順に描画
 		// ---------------------------------
 
-		// 標準シェーダプログラムの管理番号
+		// 標準シェーダプログラムの識別番号
 		GLuint progStandard = Shader::GetProgram(Shader::ProgType::Standard);
 
-		// ライティング無しシェーダプログラムの管理番号
+		// ライティング無しシェーダプログラムの識別番号
 		GLuint progUnlit = Shader::GetProgram(Shader::ProgType::Unlit);
 
 		// ---------- transparent以前のキューを描画  -----------

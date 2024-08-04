@@ -1,7 +1,7 @@
 /**
-* @file InputManager.cpp
+* @file Input.cpp
 */
-#include "InputManager.h"
+#include "Input.h"
 
 namespace PokarinEngine
 {

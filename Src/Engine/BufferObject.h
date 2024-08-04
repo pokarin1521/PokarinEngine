@@ -83,7 +83,7 @@ namespace PokarinEngine
 
 	public: // ---------------- 情報の取得 ------------------
 
-		// 管理番号を取得(GLuint型にキャスト)
+		// 識別番号を取得(GLuint型にキャスト)
 		operator GLuint() const { return id; }
 
 		/// <summary>
@@ -94,8 +94,11 @@ namespace PokarinEngine
 
 	private: // -------- バッファオブジェクトの情報 ---------
 
-		GLuint id = 0; // オブジェクト管理番号
-		GLsizeiptr bufferSize = 0; // バッファサイズ(バイト数)
+		// オブジェクト識別番号
+		GLuint id = 0; 
+		
+		// バッファサイズ(バイト数)
+		GLsizeiptr bufferSize = 0;
 	};
 
 } // namespace PokarinEngine

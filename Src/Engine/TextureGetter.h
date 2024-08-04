@@ -15,6 +15,14 @@ namespace PokarinEngine
 	/// </summary>
 	class TextureGetter
 	{
+	public: // ----------------------- 禁止事項 -----------------------
+
+		// コピーコンストラクタの禁止
+		TextureGetter(const TextureGetter&) = delete;
+
+		// 代入の禁止
+		TextureGetter& operator=(const TextureGetter&) = delete;
+
 	public: // ------------------- テクスチャの取得 -------------------
 
 		/// <summary>
@@ -38,14 +46,6 @@ namespace PokarinEngine
 
 		TextureGetter() = default;
 		~TextureGetter() = default;
-
-	private: // ---------------------- 禁止事項 -----------------------
-
-		// コピーコンストラクタの禁止
-		TextureGetter(const TextureGetter&) = delete;
-
-		// 代入の禁止
-		TextureGetter& operator=(const TextureGetter&) = delete;
 
 	private: // ------------------ テクスチャ作成用 -------------------
 

@@ -32,7 +32,7 @@ layout(binding = 1) uniform sampler2D texEmission;
 layout(location = 100) uniform vec4 color;		
 
 // 物体の発光色と
-// エミッションテクスチャの管理番号
+// エミッションテクスチャの識別番号
 layout(location = 101) uniform vec4 emission;
 
 // ------------------------
@@ -64,7 +64,7 @@ void main()
 
 	// ------------- 発光色を反映 --------------
 	
-	// w要素に管理番号が入っているため、
+	// w要素に識別番号が入っているため、
 	// w要素が0より大きい場合、
 	//「エミッションテクスチャあり」とみなす
 	if(emission.w > 0)

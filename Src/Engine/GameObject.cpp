@@ -6,7 +6,6 @@
 #include "Json/Json.h"
 
 #include "Components/Colliders/Collider.h"
-
 #include "Components/ComponentAdder.h"
 
 #include "Math/Matrix.h"
@@ -16,6 +15,8 @@
 
 #include "Scene.h"
 #include "Random.h"
+
+#include "Mesh/Mesh.h"
 
 #include <algorithm>
 #include <filesystem>
@@ -108,14 +109,14 @@ namespace PokarinEngine
 		name = objectName;
 
 		// スタティックメッシュを設定
-		staticMesh = scene.GetStaticMesh(meshFile);
+		staticMesh = Mesh::GetStaticMesh(meshFile);
 
 		// スタティックメッシュがあるなら固有マテリアルを設定
 		if (staticMesh)
 		{
 			// 共有マテリアルのコピーを
 			// 固有マテリアルとして設定する
-			materials = CloneMaterialList(staticMesh);
+			materialList = staticMesh->CopyMaterialList();
 		}
 
 		// ------------------------------------
@@ -252,7 +253,7 @@ namespace PokarinEngine
 		// なければ「null」にする
 		if (staticMesh)
 		{
-			data["StaticMeshFile"] = staticMesh->filename;
+			data["StaticMeshFile"] = staticMesh->GetFileName();
 		}
 		else
 		{
@@ -302,7 +303,7 @@ namespace PokarinEngine
 
 		// スタティックメッシュのファイル名
 		const std::string& fileName = data["StaticMeshFile"];
-		staticMesh = ownerScene->GetStaticMesh(fileName);
+		staticMesh = Mesh::GetStaticMesh(fileName);
 
 		// --------------------------------------------------
 		// コンポーネントの情報をJson型から取得する

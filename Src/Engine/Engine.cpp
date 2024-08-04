@@ -5,9 +5,10 @@
 
 #include "Window.h"
 #include "Debug.h"
-#include "InputManager.h"
+#include "Input.h"
 #include "Time.h"
 #include "Random.h"
+#include "Scene.h"
 #include "LightParameter.h"
 
 #include "Math/Matrix.h"
@@ -15,6 +16,8 @@
 #include "Configs/ShaderConfig.h"
 
 #include "NodeScript/NodeScript.h"
+
+#include "Mesh/Mesh.h"
 
 #include <fstream>
 #include <filesystem>
@@ -43,7 +46,7 @@ namespace PokarinEngine
 		int sceneID = CreateSceneID();
 
 		// シーン作成
-		auto scene = std::make_shared<Scene>(*this, sceneID, name);
+		auto scene = std::make_shared<Scene>(sceneID, name);
 
 		// エンジンに登録
 		sceneList.push_back(scene);
@@ -182,7 +185,7 @@ namespace PokarinEngine
 		// -----------------------------
 
 		// メインエディタ
-		mainEditor.Initialize(*this);
+		mainEditor.Initialize();
 
 		// -----------------------
 		// シェーダの初期化
@@ -190,34 +193,17 @@ namespace PokarinEngine
 
 		Shader::Initialize();
 
-		// ---------------------------------------
-		// メッシュバッファを作成
-		// テクスチャ作成コールバックを設定
-		// ---------------------------------------
+		// ------------------------------------------
+		// メッシュ管理用クラスの初期化
+		// ------------------------------------------
 
-		// メッシュバッファのサイズは32メガバイトとする
-		// 不足した場合はこの値を大きくする
-		meshBuffer = MeshBuffer::Create(32'000'000);
-
-		//// テクスチャ作成コールバックを設定
-		//meshBuffer->SetTextureCallback(
-		//	[this](const char* filename) { return GetTexture(filename); });
-
-		// -----------------------------------
-		// OBJファイルを読み込む
-		// -----------------------------------
-
-		// 全てのOBJファイルを読み込む
-		for (const char* obj : StaticMeshFile_OBJ::allObj)
-		{
-			meshBuffer->LoadOBJ(obj);
-		}
+		Mesh::Initialize();
 
 		// ----------------------------------
 		// スカイスフィアを取得する
 		// ----------------------------------
 
-		skySphere = meshBuffer->GetStaticMesh(StaticMeshFile_OBJ::skySphere);
+		skySphere = Mesh::GetStaticMesh(StaticMeshFile_OBJ::skySphere);
 
 		// -----------------------------------
 		// シーンがなければ作成
@@ -254,13 +240,13 @@ namespace PokarinEngine
 
 		// エディタでの操作がすぐに反映されるように
 		// 先に更新する
-		mainEditor.Update(isPlayGame);
+		mainEditor.Update(currentScene, isPlayGame);
 
 		// ------------------------------------------
 		// シーン内のゲームオブジェクトを更新
 		// ------------------------------------------
 
-		currentScene->UpdateGameObject();
+		currentScene->UpdateGameObject(isPlayGame);
 	}
 
 	/// <summary>
@@ -331,10 +317,10 @@ namespace PokarinEngine
 		// アスペクト比と視野角を設定
 		const float aspectRatio = Window::GetAspectRatio(WindowID::Main);
 
-		// 全てのシェーダプログラムの管理番号
+		// 全てのシェーダプログラムの識別番号
 		Shader::ProgList allProg = Shader::GetAllProgram();
 
-		// [シェーダプログラムの種類, シェーダプログラムの管理番号]
+		// [シェーダプログラムの種類, シェーダプログラムの識別番号]
 		for (auto& [type, prog] : allProg)
 		{
 			// アスペクト比と視野角による拡大率を設定
@@ -382,14 +368,8 @@ namespace PokarinEngine
 		// ゲームオブジェクトを描画
 		// -----------------------------------
 
-		// VAOをOpenGLコンテキストにバインド
-		glBindVertexArray(*meshBuffer->GetVAO());
-
 		// シーン内のゲームオブジェクトを描画する
 		currentScene->DrawGameObjectAll();
-
-		// 誤操作のないようにバインドを解除
-		glBindVertexArray(0);
 
 		// ----------------------------------
 		// 描画用ビューのバインド解除
@@ -498,9 +478,6 @@ namespace PokarinEngine
 		// アンリットシェーダで描画
 		glUseProgram(progUnlit);
 
-		// VAOにバインド
-		glBindVertexArray(*meshBuffer->GetVAO());
-
 		// 深度バッファへの書き込みを禁止
 		glDepthMask(GL_FALSE);
 
@@ -563,7 +540,7 @@ namespace PokarinEngine
 		// -----------------------------------
 
 		// スカイスフィアを描画する
-		DrawMesh(skySphere, progUnlit, skySphere->materials);
+		Mesh::Draw(skySphere, progUnlit, skySphere->GetMaterialList());
 
 		// カメラパラメータをGPUにコピーし直す
 		CopyCameraParameters(progUnlit, camera);

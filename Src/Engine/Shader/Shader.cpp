@@ -19,7 +19,7 @@ namespace PokarinEngine
 		// 変数
 		// ------------------------------
 
-		// シェーダプログラムの管理番号配列
+		// シェーダプログラムの識別番号配列
 		ProgList progList;
 
 		// ------------------------------
@@ -32,7 +32,7 @@ namespace PokarinEngine
 		/// </summary>
 		/// <param name="[in] type"> シェーダの種類 </param>
 		/// <param name="[in] fileName"> シェーダファイル名 </param>
-		/// <returns> シェーダの管理番号 </returns>
+		/// <returns> シェーダの識別番号 </returns>
 		GLuint Compile(GLenum type, const char* fileName)
 		{
 			// バイナリモードを指定
@@ -58,7 +58,7 @@ namespace PokarinEngine
 			const char* source[] = { buffer.data() };
 			const GLint length[] = { int(buffer.size()) };
 
-			// 作成したシェーダオブジェクトの管理番号
+			// 作成したシェーダオブジェクトの識別番号
 			const GLuint object = glCreateShader(type);
 
 			// ソースコードを設定しコンパイル
@@ -72,9 +72,9 @@ namespace PokarinEngine
 		/// <summary>
 		/// 頂点シェーダとフラグメントシェーダをリンク
 		/// </summary>
-		/// <param name="[in] prog"> プログラムオブジェクトの管理番号 </param>
-		/// <param name="[in] vertex"> 頂点シェーダの管理番号 </param>
-		/// <param name="[in] fragment"> フラグメントシェーダの管理番号 </param>
+		/// <param name="[in] prog"> プログラムオブジェクトの識別番号 </param>
+		/// <param name="[in] vertex"> 頂点シェーダの識別番号 </param>
+		/// <param name="[in] fragment"> フラグメントシェーダの識別番号 </param>
 		void Link(GLuint prog, GLuint vertex, GLuint fragment)
 		{
 			// 頂点シェーダを指定
@@ -122,7 +122,7 @@ namespace PokarinEngine
 
 			// ----------- スタンダードシェーダ ------------
 
-			// 作成したシェーダプログラムの管理番号を設定
+			// 作成したシェーダプログラムの識別番号を設定
 			GLuint progStandard = glCreateProgram();
 
 			// 頂点シェーダとフラグメントシェーダをリンク
@@ -133,7 +133,7 @@ namespace PokarinEngine
 
 			// ------------ アンリットシェーダ -------------
 
-			// 作成したシェーダプログラムの管理番号を設定
+			// 作成したシェーダプログラムの識別番号を設定
 			GLuint progUnlit = glCreateProgram();
 
 			// 頂点シェーダとフラグメントシェーダをリンク
@@ -144,21 +144,21 @@ namespace PokarinEngine
 		}
 
 		/// <summary>
-		/// シェーダプログラムの管理番号を取得する
+		/// シェーダプログラムの識別番号を取得する
 		/// </summary>
 		/// <param name="[in] progType"> シェーダプログラムの種類 </param>
-		/// <returns> 指定した種類のシェーダプログラムの管理番号 </returns>
+		/// <returns> 指定した種類のシェーダプログラムの識別番号 </returns>
 		GLuint GetProgram(ProgType progType)
 		{
 			return progList[progType];
 		}
 
 		/// <summary>
-		/// 全てのシェーダプログラムの管理番号を取得する
+		/// 全てのシェーダプログラムの識別番号を取得する
 		/// </summary>
 		/// <returns> 
-		/// <para> 全てのシェーダプログラムの管理番号 </para>
-		/// <para> [シェーダプログラムの種類, シェーダプログラムの管理番号] </para>
+		/// <para> 全てのシェーダプログラムの識別番号 </para>
+		/// <para> [シェーダプログラムの種類, シェーダプログラムの識別番号] </para>
 		/// </returns>
 		const ProgList& GetAllProgram()
 		{

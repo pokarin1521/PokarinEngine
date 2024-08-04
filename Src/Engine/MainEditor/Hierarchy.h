@@ -4,6 +4,7 @@
 #ifndef POKARINENGINE_HIERARCHY_H_INCLUDED
 #define POKARINENGINE_HIERARCHY_H_INCLUDED
 
+#include "../UsingNames/UsingScene.h"
 #include "../UsingNames/UsingGameObject.h"
 
 #include <memory>
@@ -15,7 +16,7 @@ namespace PokarinEngine
 	// 前方宣言
 	// ---------------------
 
-	class Engine;
+	class Scene;
 
 	/// <summary>
 	/// ヒエラルキー(シーン内のオブジェクト管理用ウィンドウ)
@@ -25,15 +26,10 @@ namespace PokarinEngine
 	public: // --------------------------- 制御 ----------------------------
 
 		/// <summary>
-		/// 初期化
-		/// </summary>
-		/// <param name="[in] engine"> エンジンクラスの参照 </param>
-		void Initialize(Engine& e);
-
-		/// <summary>
 		/// 更新
 		/// </summary>
-		void Update();
+		/// <param name="[in] currentScene"> 現在のシーン </param>
+		void Update(const ScenePtr& currentScene);
 
 	public: // -------------------- オブジェクトの取得 ---------------------
 
@@ -90,8 +86,8 @@ namespace PokarinEngine
 		// 選択中のオブジェクト
 		GameObjectPtr selectObject;
 
-		// エンジンクラスのポインタ
-		Engine* engine = nullptr;
+		// 現在のシーン
+		ScenePtr currentScene;
 
 		// オブジェクト作成用ポップアップの名前
 		const char* createObjectPopupName = "CreateObject";

@@ -20,8 +20,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		/// <param name="[in] engine"> エンジンクラス </param>
-		void Initialize(Engine& engine);
+		void Initialize();
 
 		/// <summary>
 		/// 更新

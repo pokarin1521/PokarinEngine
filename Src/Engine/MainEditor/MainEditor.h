@@ -37,14 +37,14 @@ namespace PokarinEngine
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		/// <param name="[in] e"> エンジンクラスの参照 </param>
-		void Initialize(Engine& e);
+		void Initialize();
 
 		/// <summary>
 		/// 更新
 		/// </summary>
+		/// <param name="[in] currentScene"> 現在のシーン </param>
 		/// <param name="[out] isPlayGame"> ゲーム再生中ならtrue </param>
-		void Update(bool& isPlayGame);
+		void Update(const ScenePtr& currentScene, bool& isPlayGame);
 
 		/// <summary>
 		/// 描画
@@ -61,7 +61,8 @@ namespace PokarinEngine
 		/// <summary>
 		/// メインメニュー
 		/// </summary>
-		void MainMenu();
+		/// <param name="[in] currentScene"> 現在のシーン </param>
+		void MainMenu(const ScenePtr& currentScene);
 
 	private: // ------------------------- 色設定用 -------------------------
 
@@ -103,11 +104,6 @@ namespace PokarinEngine
 
 		// ImGuiの色設定の数
 		int pushColorCount = 0;
-
-	private: // ------------------------- エンジン用 -----------------------
-
-		// エンジン
-		Engine* engine = nullptr;
 	};
 
 } // namespace PokarinEngine

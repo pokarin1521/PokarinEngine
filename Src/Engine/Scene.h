@@ -7,6 +7,7 @@
 #include "Shader/Shader.h"
 #include "Configs/MeshConfig.h"
 
+#include "UsingNames/UsingScene.h"
 #include "UsingNames/UsingGameObject.h"
 
 #include "GameObject.h"
@@ -26,15 +27,14 @@ namespace PokarinEngine
 	// 前方宣言
 	// -------------------
 
-	class Scene;
 	class Engine;
+	class Camera;
 
 	// ------------------------------------
 	// 型の別名を定義
 	// ------------------------------------
 
-	using ScenePtr = std::shared_ptr<Scene>;
-	using SceneList = std::vector<ScenePtr>;
+	using CameraPtr = std::shared_ptr<Camera>;
 
 	/// <summary>
 	/// シーン管理クラス
@@ -46,10 +46,9 @@ namespace PokarinEngine
 		/// <summary>
 		/// シーン作成用コンストラクタ
 		/// </summary>
-		/// <param name="[in] e"> エンジンクラスの参照 </param>
 		/// <param name="[in] sceneID"> シーン識別番号 </param>
 		/// <param name="[in] sceneName"> シーン名 </param>
-		Scene(Engine& e, int sceneID, const char* sceneName);
+		Scene(int sceneID, const char* sceneName);
 
 		~Scene() = default;
 
@@ -77,9 +76,9 @@ namespace PokarinEngine
 			const char* staticMeshFile = "");
 
 		/// <summary>
-		/// ゲームオブジェクトを複製する
+		/// ゲームオブジェクトをコピーする
 		/// </summary>
-		/// <param name="[in] copyObject"> 複製元のゲームオブジェクト </param>
+		/// <param name="[in] copyObject"> コピー元のゲームオブジェクト </param>
 		void CopyGameObject(const GameObjectPtr& object);
 
 	public: // ------------------- ゲームオブジェクト制御 -------------------
@@ -98,7 +97,8 @@ namespace PokarinEngine
 		/// <summary>
 		/// ゲームオブジェクトの状態を更新する
 		/// </summary>
-		void UpdateGameObject();
+		/// <param name="[in] isPlayGame"> ゲーム再生中ならtrue </param>
+		void UpdateGameObject(bool isPlayGame);
 
 		/// <summary>
 		/// シーン内の全てのゲームオブジェクトを描画する
@@ -125,18 +125,9 @@ namespace PokarinEngine
 		/// メインカメラを取得する
 		/// </summary>
 		/// <returns> メインカメラ </returns>
-		const GameObject& GetMainCamera() const
+		const Camera& GetMainCamera() const
 		{
 			return *mainCamera;
-		}
-
-		/// <summary>
-		/// メインカメラの情報を取得する
-		/// </summary>
-		/// <returns> メインカメラの情報 </returns>
-		const Camera& GetMainCameraInfo() const
-		{
-			return *mainCameraInfo;
 		}
 
 		/// <summary>
@@ -146,6 +137,18 @@ namespace PokarinEngine
 		const char* GetName() const
 		{
 			return name.c_str();
+		}
+
+	public: // ------------------------ カメラの追加 -------------------------
+
+		/// <summary>
+		/// カメラを追加する
+		/// </summary>
+		/// <param name="camera"> 追加するカメラ </param>
+		void AddCamera(const CameraPtr& camera)
+		{
+			// 今はメインカメラを変更する形で
+			mainCamera = camera;
 		}
 
 	public: // ---------------------------- 保存 -----------------------------
@@ -202,10 +205,7 @@ namespace PokarinEngine
 	private: // ------------------------- メインカメラ ------------------------
 
 		// メインカメラ
-		GameObjectPtr mainCamera;
-
-		// メインカメラの情報
-		CameraPtr mainCameraInfo;
+		CameraPtr mainCamera;
 
 	private: // ----------------------------- 情報 ----------------------------
 
@@ -214,11 +214,6 @@ namespace PokarinEngine
 
 		// 識別番号
 		int id = 0;
-
-	private: // --------------------------- エンジン --------------------------
-
-		// エンジンクラスのポインタ
-		Engine* engine = nullptr;
 
 	private: // ---------------------------- 保存用 ---------------------------
 

@@ -10,7 +10,7 @@
 
 #include "Toolbar.h"
 
-#include "../Engine.h"
+#include "../Scene.h"
 #include "../GameObject.h"
 #include "../Debug.h"
 
@@ -20,7 +20,7 @@
 #include "../ImGuiFontSetter.h"
 
 #include "../Window.h"
-#include "../InputManager.h"
+#include "../Input.h"
 #include "../Color.h"
 
 #include <fstream>
@@ -32,7 +32,8 @@ namespace PokarinEngine
 	/// <summary>
 	/// メインメニュー
 	/// </summary>
-	void MainEditor::MainMenu()
+	/// <param name="[in] currentScene"> 現在のシーン </param>
+	void MainEditor::MainMenu(const ScenePtr& currentScene)
 	{
 		// メインメニュー作成
 		ImGui::BeginMainMenuBar();
@@ -42,7 +43,7 @@ namespace PokarinEngine
 			{
 				if (ImGui::Button("Save"))
 				{
-					engine->GetCurrentScene().SaveScene();
+					currentScene->SaveScene();
 				}
 
 				ImGui::EndMenu();
@@ -53,7 +54,7 @@ namespace PokarinEngine
 			{
 				if (ImGui::Button("Load"))
 				{
-					engine->GetCurrentScene().LoadScene();
+					currentScene->LoadScene();
 				}
 
 				ImGui::EndMenu();
@@ -68,15 +69,8 @@ namespace PokarinEngine
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	/// <param name="[in] e"> エンジンクラスの参照 </param>
-	void MainEditor::Initialize(Engine& e)
+	void MainEditor::Initialize()
 	{
-		// ----------------------------
-		// エンジンを登録
-		// ----------------------------
-
-		engine = &e;
-
 		// ---------------------------
 		// コンテキスト作成
 		// ---------------------------
@@ -136,23 +130,18 @@ namespace PokarinEngine
 		gameView.Initialize();
 
 		// ----------------------------------------
-		// ヒエラルキーウィンドウの初期化
-		// ----------------------------------------
-
-		hierarchy.Initialize(*engine);
-
-		// ----------------------------------------
 		// ツールバーの初期化
 		// ----------------------------------------
 
-		Toolbar::Initialize(*engine);
+		Toolbar::Initialize();
 	}
 
 	/// <summary>
 	/// 更新
 	/// </summary>
+	/// <param name="[in] currentScene"> 現在のシーン </param>
 	/// <param name="[out] isPlayGame"> ゲーム再生中ならtrue </param>
-	void MainEditor::Update(bool& isPlayGame)
+	void MainEditor::Update(const ScenePtr& currentScene, bool& isPlayGame)
 	{
 		// -------------------------
 		// ImGuiフレームの更新
@@ -190,7 +179,7 @@ namespace PokarinEngine
 		// メインメニュー
 		// ------------------------------
 
-		MainMenu();
+		MainMenu(currentScene);
 
 		// -------------------------------------------
 		// エディタ内ウィンドウ・ビューの更新
@@ -200,10 +189,10 @@ namespace PokarinEngine
 		sceneView.Update();
 
 		// ゲームビュー
-		gameView.Update();
+		gameView.Update(currentScene);
 
 		// ヒエラルキーウィンドウ
-		hierarchy.Update();
+		hierarchy.Update(currentScene);
 
 		// インスペクターウィンドウ
 		inspector.Update(hierarchy.GetSelectObject());

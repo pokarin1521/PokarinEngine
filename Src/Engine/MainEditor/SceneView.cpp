@@ -3,11 +3,11 @@
 */
 #include "SceneView.h"
 
-#include "ImGui/ImGuizmo.h"
-
 #include "../Window.h"
-#include "../InputManager.h"
+#include "../Input.h"
 #include "../Time.h"
+
+#include "../Components/Transform.h"
 
 namespace PokarinEngine
 {
@@ -20,7 +20,7 @@ namespace PokarinEngine
 		float moveSpeed = cameraMoveSpeed * Time::DeltaTime();
 
 		// カメラの回転角度
-		Vector3 cameraRotation = sceneCamera.rotation;
+		Vector3 cameraRotation = camera.transform.rotation;
 
 		// カメラの回転角度のSin
 		// Z軸は回転させないので、XY軸のみ
@@ -35,11 +35,11 @@ namespace PokarinEngine
 		// ------------------------------------
 
 		// 正面ベクトル
-		Vector3 front = sceneCamera.Front();
+		Vector3 front = camera.transform.Front();
 
 		if (Input::GetKey(KeyCode::W))
 		{
-			sceneCamera.position += moveSpeed * front;
+			camera.transform.position += moveSpeed * front;
 		}
 
 		// ------------------------------------
@@ -48,7 +48,7 @@ namespace PokarinEngine
 
 		if (Input::GetKey(KeyCode::S))
 		{
-			sceneCamera.position -= moveSpeed * front;
+			camera.transform.position -= moveSpeed * front;
 		}
 
 		// ------------------------------------
@@ -57,8 +57,8 @@ namespace PokarinEngine
 
 		if (Input::GetKey(KeyCode::D))
 		{
-			sceneCamera.position.x += moveSpeed * cameraCos.y;
-			sceneCamera.position.z += moveSpeed * cameraSin.y;
+			camera.transform.position.x += moveSpeed * cameraCos.y;
+			camera.transform.position.z += moveSpeed * cameraSin.y;
 		}
 
 		// ------------------------------------
@@ -67,8 +67,8 @@ namespace PokarinEngine
 
 		if (Input::GetKey(KeyCode::A))
 		{
-			sceneCamera.position.x -= moveSpeed * cameraCos.y;
-			sceneCamera.position.z -= moveSpeed * cameraSin.y;
+			camera.transform.position.x -= moveSpeed * cameraCos.y;
+			camera.transform.position.z -= moveSpeed * cameraSin.y;
 		}
 
 		// ------------------------------------
@@ -77,7 +77,7 @@ namespace PokarinEngine
 
 		if (Input::GetKey(KeyCode::E))
 		{
-			sceneCamera.position.y += moveSpeed;
+			camera.transform.position.y += moveSpeed;
 		}
 
 		// ------------------------------------
@@ -86,7 +86,7 @@ namespace PokarinEngine
 
 		if (Input::GetKey(KeyCode::Q))
 		{
-			sceneCamera.position.y -= moveSpeed;
+			camera.transform.position.y -= moveSpeed;
 		}
 	}
 
@@ -119,8 +119,8 @@ namespace PokarinEngine
 		mousePos = currentMousePos;
 
 		// マウスでカメラを操作する
-		sceneCamera.rotation.x -= mouseMove.y * rotateSpeed;
-		sceneCamera.rotation.y -= mouseMove.x * rotateSpeed;
+		camera.transform.rotation.x -= mouseMove.y * rotateSpeed;
+		camera.transform.rotation.y -= mouseMove.x * rotateSpeed;
 	}
 
 	/// <summary>
@@ -167,7 +167,7 @@ namespace PokarinEngine
 			}
 
 			// FBOのテクスチャ識別番号
-			ImTextureID texture = ImTextureID(*camera.GetTextureFBO());
+			ImTextureID texture = ImTextureID(camera.GetTextureID());
 
 			// シーンビュー用ウィンドウの大きさ
 			// 描画時に設定する
@@ -190,12 +190,6 @@ namespace PokarinEngine
 		// ----------------------------------
 
 		fbo->ClearColor(backGround);
-
-		// ----------------------------------
-		// ギズモを無効にする
-		// ----------------------------------
-
-		ImGuizmo::Enable(false);
 	}
 
 } // namespace PokarinEngine

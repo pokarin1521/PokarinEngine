@@ -69,12 +69,12 @@ namespace PokarinEngine
 
 	public: // ---------------------- •ÏŠ· -----------------------
 
-		// GLuintŒ^‚É•ÏŠ·(ŠÇ—”Ô†‚ğ•Ô‚·)
+		// GLuintŒ^‚É•ÏŠ·(¯•Ê”Ô†‚ğ•Ô‚·)
 		operator GLuint() const { return id; }
 
 	private: // --------------------- î•ñ -----------------------
 
-		// RBO‚ÌŠÇ—”Ô†
+		// RBO‚Ì¯•Ê”Ô†
 		GLuint id = 0;
 	};
 

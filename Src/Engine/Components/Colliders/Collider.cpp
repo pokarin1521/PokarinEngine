@@ -4,10 +4,10 @@
 #include "Collider.h"
 
 #include "../../GameObject.h"
-#include "../../Scene.h"
-#include "../../Mesh.h"
 #include "../../Color.h"
 #include "../../Shader/Shader.h"
+
+#include "../../Mesh/Mesh.h"
 
 #include "../../Configs/MeshConfig.h"
 #include "../../Configs/ShaderConfig.h"
@@ -27,13 +27,13 @@ namespace PokarinEngine
 		{
 		case Type::Box:
 
-			staticMesh = GetOwnerObject().GetOwnerScene().GetStaticMesh(StaticMeshFile_OBJ::boxCollider);
+			staticMesh = Mesh::GetStaticMesh(StaticMeshFile_OBJ::boxCollider);
 
 			break;
 
 		case Type::Sphere:
 
-			staticMesh = GetOwnerObject().GetOwnerScene().GetStaticMesh(StaticMeshFile_OBJ::sphereCollider);
+			staticMesh = Mesh::GetStaticMesh(StaticMeshFile_OBJ::sphereCollider);
 
 			break;
 		}
@@ -54,7 +54,7 @@ namespace PokarinEngine
 	/// </summary>
 	void Collider::Draw()
 	{
-		// ライティング無しシェーダの管理番号
+		// ライティング無しシェーダの識別番号
 		GLuint progUnlit = Shader::GetProgram(Shader::ProgType::Unlit);
 
 		// 描画に使うシェーダを指定
@@ -75,6 +75,6 @@ namespace PokarinEngine
 
 		// 共有マテリアルを使って
 		// スタティックメッシュを描画
-		DrawMesh(staticMesh, progUnlit, staticMesh->materials);
+		Mesh::Draw(staticMesh, progUnlit, staticMesh->GetMaterialList());
 	}
 }

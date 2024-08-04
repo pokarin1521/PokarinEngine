@@ -10,7 +10,7 @@
 #include "Components/Transform.h"
 #include "Components/ComponentAdder.h"
 
-#include "Texture.h"
+#include "Mesh/StaticMesh.h"
 
 #include "Math/Vector.h"
 #include "Color.h"
@@ -33,7 +33,7 @@ namespace PokarinEngine
 	// ----------------
 
 	class Scene;
-	class Rigidbody;
+	class Camera;
 
 	/// int型としても使うので、普通の列挙型
 	/// <summary>
@@ -135,6 +135,12 @@ namespace PokarinEngine
 			if constexpr (std::is_base_of_v<Rigidbody, T>)
 			{
 				rigidbody = component;
+			}
+
+			// カメラコンポーネントならシーンに追加する
+			if constexpr (std::is_base_of_v<Camera, T>)
+			{
+				ownerScene->AddCamera(component);
 			}
 
 			return component;
@@ -327,7 +333,7 @@ namespace PokarinEngine
 		StaticMeshPtr staticMesh;
 
 		// ゲームオブジェクト固有のマテリアル配列
-		MaterialList materials;
+		MaterialList materialList;
 
 		// 描画の優先度
 		int renderQueue = renderQueue_geometry;

@@ -82,7 +82,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// カラーバッファ用テクスチャをクリア
 		/// </summary>
-		/// <param name="Color"> クリア色 </param>
+		/// <param name="[in] Color"> クリア色 </param>
 		void ClearColor(const Color& color);
 
 	public: // ----------------- サイズ --------------------
@@ -98,22 +98,22 @@ namespace PokarinEngine
 			height = fboHeight;
 		}
 
-	public: // -------------- 管理番号の取得 ---------------
+	public: // -------------- 識別番号の取得 ---------------
 
-		// 管理番号の取得(GLuint型に変換)
+		// 識別番号の取得(GLuint型に変換)
 		operator GLuint() const { return id; }
 
 	public: // ------------- テクスチャの取得 --------------
 
 		/// <summary>
-		/// 描画後のテクスチャを取得する
+		/// 描画後のテクスチャの識別番号を取得する
 		/// </summary>
-		/// <returns> カラーバッファ用テクスチャ </returns>
-		TexturePtr GetTexture() { return texture; }
+		/// <returns> カラーバッファ用テクスチャの識別番号 </returns>
+		GLuint GetTextureID() const { return *texture; }
 
 	private: // ------------------- 情報 --------------------
 
-		// FBOの管理番号
+		// FBOの識別番号
 		GLuint id = 0;
 
 		// カラーバッファ用テクスチャ

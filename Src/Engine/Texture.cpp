@@ -315,7 +315,7 @@ namespace PokarinEngine
 		// テクスチャを作成
 		// -----------------------
 
-		//	テクスチャの管理番号
+		//	テクスチャの識別番号
 		GLuint object = 0;
 
 		// 画像データを管理するテクスチャオブジェクトを作成
@@ -323,7 +323,7 @@ namespace PokarinEngine
 
 		/* 画像データのコピー先であるGPUメモリ領域を確保
 
-		void glTextureStorage2D(管理番号, 作成するレベル数,
+		void glTextureStorage2D(識別番号, 作成するレベル数,
 		ピクセル形式, 幅, 高さ)
 
 		------- レベル数 -------
@@ -338,7 +338,7 @@ namespace PokarinEngine
 
 		/* 画像データをGPUメモリにコピー
 
-		void glTextureSubImage2D(テクスチャの管理番号, コピー先レイヤー番号,
+		void glTextureSubImage2D(テクスチャの識別番号, コピー先レイヤー番号,
 		コピー先のX座標, コピー先のY座標,
 		コピーする画像の幅, コピーする画像の高さ,
 		ピクセルに含まれる要素と順序, 要素の型, 画像データのアドレス)
@@ -387,7 +387,7 @@ namespace PokarinEngine
 		スウィズルを設定するには、glTextureParameteri関数を使う
 
 		void glTextureParameteri(
-		テクスチャの管理番号, 設定するパラメータ名, 設定する値) */
+		テクスチャの識別番号, 設定するパラメータ名, 設定する値) */
 
 		// グレートスケールテクスチャの場合、
 		// 赤成分を緑と青にコピーするに設定する

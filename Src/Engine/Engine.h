@@ -9,14 +9,9 @@
 
 #include "MainEditor/MainEditor.h"
 
-#include "Scene.h"
-#include "GameObject.h"
-
 #include "Math/Vector.h"
 
-#include "Shader/Shader.h"
-
-#include "Configs/MeshConfig.h"
+#include "UsingNames/UsingScene.h"
 
 #include <GLFW/glfw3.h>
 #include <string>
@@ -28,12 +23,6 @@
 
 namespace PokarinEngine
 {
-	// -------------------------
-	// 前方宣言
-	// -------------------------
-
-	class RenderView;
-
 	/// <summary>
 	/// ゲームエンジン
 	/// </summary>
@@ -53,27 +42,18 @@ namespace PokarinEngine
 		/// <returns> 作成したシーンのポインタ </returns>
 		ScenePtr CreateScene(const char* name);
 
-	public: // ------------------------ シーン取得 ------------------------
+	public: // ----------------------- シーンの取得 -----------------------
 
 		/// <summary>
 		/// 現在のシーンを取得する
 		/// </summary>
-		/// <returns> 現在のシーンの参照 </returns>
-		Scene& GetCurrentScene()
+		/// <returns> 現在のシーン </returns>
+		ScenePtr GetCurrentScene()
 		{
-			return *currentScene;
+			return currentScene;
 		}
 
-		/// <summary>
-		/// 現在のシーンを取得する(読み取り専用)
-		/// </summary>
-		/// <returns> 現在のシーンの参照(読み取り専用) </returns>
-		const Scene& GetCurrentScene() const
-		{
-			return *currentScene;
-		}
-
-	public: // -------------- エンジン、ゲームオブジェクトの管理 ----------------
+	public: // ------------ エンジン、ゲームオブジェクトの管理 ------------
 
 		/// <summary>
 		/// ゲームエンジンを実行する
@@ -84,7 +64,7 @@ namespace PokarinEngine
 		/// </returns>
 		int Run();
 
-	public: // ------------------------- ゲームの再生 -------------------------
+	public: // ----------------------- ゲームの再生 -----------------------
 
 		/// <summary>
 		/// 作成中のゲームが再生中か取得する
@@ -98,7 +78,7 @@ namespace PokarinEngine
 			return isPlayGame;
 		}
 
-	private: // ------------------------ エンジンの制御 -----------------------
+	private: // ---------------------- エンジンの制御 ---------------------
 
 		/// <summary>
 		/// ゲームエンジンを初期化する
@@ -119,7 +99,7 @@ namespace PokarinEngine
 		/// </summary>
 		void Render();
 
-	private: // ---------------------- シーンの識別番号 -----------------------
+	private: // -------------------- シーンの識別番号 --------------------
 
 		/// <summary>
 		/// シーンの識別番号を作成する
@@ -127,7 +107,7 @@ namespace PokarinEngine
 		/// <returns> 作成した識別番号 </returns>
 		int CreateSceneID();
 
-	private: // ------------------------- 描画用ビュー ------------------------
+	private: // ----------------------- 描画用ビュー ----------------------
 
 		/// <summary>
 		/// 描画用ビューにカメラからの描画情報を保持させる
@@ -136,31 +116,20 @@ namespace PokarinEngine
 		/// <param name="[in] renderView"> 描画情報を保持する描画用ビュー </param>
 		void DrawRenderView(const Transform& camera, const RenderView& renderView);
 
-
-	private: // -------------------- スカイスフィアの描画 ---------------------
+	private: // ------------------ スカイスフィアの描画 -------------------
 
 		/// <summary>
 		/// スカイスフィアを描画する
 		/// </summary>
 		void DrawSkySphere(const Transform& camera);
 
-	private: // ------------------------- 図形データ --------------------------
-
-		// 図形データ管理用バッファ
-		MeshBufferPtr meshBuffer;
-
-	private: // ----------------------- スカイスフィア ------------------------
-
-		// スカイスフィア用モデル
-		StaticMeshPtr skySphere;
-
-	private: // --------------------------- シーン ----------------------------
+	private: // ------------------------- シーン --------------------------
 
 		// 現在のシーン
 		ScenePtr currentScene;
 
 		// シーン管理用配列
-		SceneList sceneList;
+		std::vector<ScenePtr> sceneList;
 
 		// シーン識別番号の管理用配列
 		std::unordered_set<int> sceneIDList;

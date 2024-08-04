@@ -43,10 +43,10 @@ namespace PokarinEngine
 
 	public: // ------------------- 変換 ---------------------
 
-		// GLuint型に変換(管理番号を返す)
+		// GLuint型に変換(識別番号を返す)
 		operator GLuint() const { return id; }		
 		
-		// ImTextureID型に変換(管理番号を返す)
+		// ImTextureID型に変換(識別番号を返す)
 		operator ImTextureID() const { return (void*)(std::intptr_t)id; }
 
 	public: // ---------- テクスチャの情報を取得 ------------
@@ -114,7 +114,7 @@ namespace PokarinEngine
 		// テクスチャ名
 		std::string name;
 
-		// テクスチャオブジェクトの管理番号
+		// テクスチャオブジェクトの識別番号
 		GLuint id = 0;		
 		
 		// テクスチャの幅

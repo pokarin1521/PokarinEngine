@@ -11,6 +11,8 @@
 #include "../Shader/Shader.h"
 #include "../Configs/ShaderConfig.h"
 
+#include "../Mesh/Mesh.h"
+
 namespace PokarinEngine
 {
 	/// <summary>
@@ -18,10 +20,12 @@ namespace PokarinEngine
 	/// </summary>
 	void Camera::Update()
 	{
-		// 持ち主であるゲームオブジェクトの位置と回転角度を設定する
-		const TransformPtr gameObject = GetOwnerObject().transform;
-		position = gameObject->position;
-		rotation = gameObject->rotation;
+		// 持ち主であるゲームオブジェクトの位置・回転角度
+		TransformPtr owner = GetOwnerObject().transform;
+
+		// 位置・回転角度を更新する
+		owner->position = transform.position;
+		owner->rotation = transform.rotation;
 	}
 
 	/// <summary>
@@ -32,12 +36,9 @@ namespace PokarinEngine
 		// ----------------------------
 		// 情報を取得する
 		// ----------------------------
-
-		// 持ち主であるゲームオブジェクトの位置・回転角度・拡大率
-		const TransformPtr gameObject = GetOwnerObject().transform;
-
+		
 		// カメラの位置
-		Vector3 position = gameObject->position;
+		Vector3 position = transform.position;
 
 		// 今は左手座標系の値になっていて、
 		// OpenGLは右手座標系なので、右手座標系にする
@@ -45,7 +46,7 @@ namespace PokarinEngine
 
 		// カメラの回転角度
 		// オブジェクトはカメラの回転方向とは逆に動くことになるので、符号を逆にする
-		Vector3 rotation = -gameObject->rotation;
+		Vector3 rotation = -transform.rotation;
 
 		// ----------------------------
 		// GPUにコピーする
@@ -73,6 +74,9 @@ namespace PokarinEngine
 		}
 	}
 
+	/// <summary>
+	/// スカイスフィアを描画する
+	/// </summary>
 	void Camera::DrawSkySphere()
 	{
 		// --------------------------------------------------------
@@ -94,9 +98,6 @@ namespace PokarinEngine
 		// 空にライティングすると不自然なので
 		// アンリットシェーダで描画
 		glUseProgram(progUnlit);
-
-		// VAOにバインド
-		glBindVertexArray(*meshBuffer->GetVAO());
 
 		// 深度バッファへの書き込みを禁止
 		glDepthMask(GL_FALSE);
@@ -157,26 +158,16 @@ namespace PokarinEngine
 		// -----------------------------------
 
 		// スカイスフィアを描画する
-		DrawMesh(skySphere, progUnlit, skySphere->materials);
+		Mesh::Draw(skySphere, progUnlit, skySphere->GetMaterialList());
 
 		// カメラパラメータをGPUにコピーし直す
-		CopyToGPU(progUnlit, camera);
+		CopyToGPU();
 
 		// 深度バッファへの書き込みを許可
 		glDepthMask(GL_TRUE);
 
 		// 標準シェーダに戻す
 		glUseProgram(Shader::GetProgram(Shader::ProgType::Standard));
-	}
-
-	/// <summary>
-	/// 位置を設定する
-	/// </summary>
-	/// <param name="position"> 位置 </param>
-	void Camera::SetPosition(const Vector3& position)
-	{
-		// 持ち主であるゲームオブジェクトの位置を設定する
-		GetOwnerObject().transform->position = position;
 	}
 
 	/// <summary>

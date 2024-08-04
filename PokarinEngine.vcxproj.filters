@@ -96,9 +96,6 @@
     <Filter Include="Src\Engine\Editor\MainEditor">
       <UniqueIdentifier>{d84850c5-c533-41c1-9686-bacc869b5a17}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Engine\Editor\MainEditor\RenderView">
-      <UniqueIdentifier>{7549c72a-60c9-4726-96e3-5dc84e078c1b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Src\Engine\Editor\NodeEditor\Pin">
       <UniqueIdentifier>{3bd75335-8b3c-4b8d-806b-51d2de309991}</UniqueIdentifier>
     </Filter>
@@ -179,11 +176,8 @@
     <ClCompile Include="Src\Engine\Window.cpp">
       <Filter>Src\Engine\Window</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Engine\InputManager.cpp">
+    <ClCompile Include="Src\Engine\Input.cpp">
       <Filter>Src\Engine\InputManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Engine\MainEditor\RenderView.cpp">
-      <Filter>Src\Engine\Editor\MainEditor\RenderView</Filter>
     </ClCompile>
     <ClCompile Include="Src\Engine\NodeScript\NodeEditor.cpp">
       <Filter>Src\Engine\Editor\NodeEditor</Filter>
@@ -293,6 +287,9 @@
     <ClCompile Include="Src\Engine\Mesh\Mesh.cpp">
       <Filter>Src\Engine\Mesh</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Engine\Mesh\MeshBuffer.cpp">
+      <Filter>Src\Engine\Mesh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Res\Shader\Standard.frag">
@@ -361,11 +358,8 @@
     <ClInclude Include="Src\Engine\Window.h">
       <Filter>Src\Engine\Window</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Engine\InputManager.h">
+    <ClInclude Include="Src\Engine\Input.h">
       <Filter>Src\Engine\InputManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Engine\MainEditor\RenderView.h">
-      <Filter>Src\Engine\Editor\MainEditor\RenderView</Filter>
     </ClInclude>
     <ClInclude Include="Src\Engine\NodeScript\NodeEditor.h">
       <Filter>Src\Engine\Editor\NodeEditor</Filter>
@@ -549,6 +543,12 @@
     </ClInclude>
     <ClInclude Include="Src\Engine\Mesh\Material.h">
       <Filter>Src\Engine\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\Mesh\MeshBuffer.h">
+      <Filter>Src\Engine\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\UsingNames\UsingScene.h">
+      <Filter>Src\Engine\UsingNames</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,8 +1,8 @@
 /**
 * @file InputManager.h
 */
-#ifndef POKARINENGINE_INPUTMANAGER_H_INCLUDED
-#define POKARINENGINE_INPUTMANAGER_H_INCLUDED
+#ifndef POKARINENGINE_INPUT_H_INCLUDED
+#define POKARINENGINE_INPUT_H_INCLUDED
 
 #include "glad/glad.h"
 #include "ImGui/imgui.h"
@@ -132,4 +132,4 @@ namespace PokarinEngine
 
 } // namespace PokarinEngine
 
-#endif // !POKARINENGINE_INPUTMANAGER_H_INCLUDED
+#endif // !POKARINENGINE_INPUT_H_INCLUDED

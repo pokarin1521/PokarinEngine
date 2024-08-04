@@ -40,10 +40,8 @@ namespace PokarinEngine
 		間接的にコンストラクタ、デストラクタを呼び出す */
 
 		// テクスチャ
-		std::shared_ptr<TexHelper> tex;
-
 		// ファイルからテクスチャを読み込む
-		tex = std::make_shared<TexHelper>(fileName);
+		TexturePtr tex = std::make_shared<TexHelper>(fileName);
 
 		// テクスチャをキャッシュに登録
 		textureCache.emplace(fileName, tex);

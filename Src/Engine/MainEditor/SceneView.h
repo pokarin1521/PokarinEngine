@@ -4,8 +4,6 @@
 #ifndef POKARINENGINE_SCENEVIEW_H_INCLUDED
 #define POKARINENGINE_SCENEVIEW_H_INCLUDED
 
-#include "RenderView.h"
-
 #include "../Color.h"
 #include "../Math/Vector.h"
 #include "../Components/Camera.h"
@@ -15,14 +13,14 @@ namespace PokarinEngine
 	/// <summary>
 	/// シーンビュー(シーン内の情報を描画するビュー)
 	/// </summary>
-	class SceneView : public RenderView
+	class SceneView
 	{
 	public: // ----------------- コンストラクタ・デストラクタ ---------------------
 
 		SceneView()
 		{
 			// カメラの初期位置を設定
-			camera.SetPosition(cameraStartPos);
+			camera.transform.position = cameraStartPos;
 		}
 
 		~SceneView() = default;
@@ -32,9 +30,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// 更新
 		/// </summary>
-		void Update() override;
-
-		
+		void Update();
 
 	private: // -------------------------- カメラ操作 -----------------------------
 

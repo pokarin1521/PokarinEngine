@@ -4,12 +4,18 @@
 #ifndef POKARINENGINE_GAMEVIEW_H_INCLUDED
 #define POKARINENGINE_GAMEVIEW_H_INCLUDED
 
-#include "RenderView.h"
-
 #include "../Color.h"
+
+#include "../UsingNames/UsingScene.h"
 
 namespace PokarinEngine
 {
+	// -------------------
+	// 前方宣言
+	// -------------------
+
+	class Scene;
+
 	/// <summary>
 	/// ゲームビュー(ゲーム画面を表示するビュー)
 	/// </summary>
@@ -25,7 +31,8 @@ namespace PokarinEngine
 		/// <summary>
 		/// 更新
 		/// </summary>
-		void Update();
+		/// <param name="currentScene"> 現在のシーン </param>
+		void Update(const ScenePtr& currentScene);
 
 	private:
 

@@ -3,15 +3,22 @@
 */
 #include "GameView.h"
 
+#include "../Scene.h"
+
 namespace PokarinEngine
 {
 	/// <summary>
 	/// 更新
 	/// </summary>
-	void GameView::Update()
+	/// <param name="currentScene"> 現在のシーン </param>
+	void GameView::Update(const ScenePtr& currentScene)
 	{
+		// ---------------------------
+		// ウィンドウを作成
+		// ---------------------------
+
 		// FBOからテクスチャを取得
-		texture = ImTextureID(*fbo->GetTexture());
+		ImTextureID texture = ImTextureID(currentScene->GetMainCamera().GetTextureID());
 
 		// ウィンドウの丸みを無くす
 		ImGui::PushStyleVar(ImGuiStyleVar_::ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
@@ -37,7 +44,10 @@ namespace PokarinEngine
 			ImGui::End();
 		}
 
+		// -------------------------------
 		// カラーバッファをクリア
+		// -------------------------------
+
 		fbo->ClearColor(backGround);
 	}
 

@@ -51,7 +51,7 @@ namespace PokarinEngine
 			// FBOíœ
 			glDeleteFramebuffers(1, &id);
 
-			// ŠÇ—”Ô†‚ğ‰Šú‰»
+			// ¯•Ê”Ô†‚ğ‰Šú‰»
 			id = 0;
 		}
 	}

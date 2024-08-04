@@ -6,7 +6,7 @@
 #include "ImGui/imgui.h"
 
 #include "../Engine.h"
-#include "../Texture.h"
+#include "../TextureGetter.h"
 
 #include <unordered_map>
 
@@ -30,26 +30,25 @@ namespace PokarinEngine
 		}
 
 		/// <summary>
-		/// ツールバーで使用する画像の管理番号
+		/// ツールバーで使用する画像の識別番号
 		/// </summary>
 		namespace ImageID
 		{
 			// 再生・停止ボタン
-			// [ゲームが再生中ならtrue, 画像の管理番号]
+			// [ゲームが再生中ならtrue, テクスチャ識別番号]
 			std::unordered_map<bool, ImTextureID> playButton;
 		}
 
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		/// <param name="engine"> エンジンクラス </param>
-		void Initialize(Engine& engine)
+		void Initialize()
 		{
-			// 再生ボタンの管理番号を追加
-			ImageID::playButton.emplace(false, ImTextureID(*engine.GetTexture(ImageName::playButton)));
+			// 再生ボタンのテクスチャ識別番号を追加
+			ImageID::playButton.emplace(false, ImTextureID(*TextureGetter::Get(ImageName::playButton)));
 
-			// 停止ボタンの管理番号を追加
-			ImageID::playButton.emplace(true, ImTextureID(*engine.GetTexture(ImageName::stopButton)));
+			// 停止ボタンのテクスチャ識別番号を追加
+			ImageID::playButton.emplace(true, ImTextureID(*TextureGetter::Get(ImageName::stopButton)));
 		}
 
 		/// <summary>

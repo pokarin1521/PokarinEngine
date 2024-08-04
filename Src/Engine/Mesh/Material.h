@@ -8,6 +8,8 @@
 #include "../Texture.h"
 
 #include <string>
+#include <vector>
+#include <memory>
 
 namespace PokarinEngine
 {

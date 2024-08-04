@@ -23,20 +23,6 @@ namespace PokarinEngine
 		Component() = default;
 		virtual ~Component() = default;
 
-	public: // ---------------------------- 持ち主の取得 ------------------------------
-
-		/// <summary>
-		/// 持ち主であるゲームオブジェクトを取得する
-		/// </summary>
-		/// <returns> 持ち主であるゲームオブジェクト </returns>
-		const GameObject& GetOwnerObject() const { return *ownerObject; }
-
-		/// <summary>
-		/// 持ち主であるゲームオブジェクトを取得する
-		/// </summary>
-		/// <returns> 持ち主であるゲームオブジェクト </returns>
-		GameObject& GetOwnerObject() { return *ownerObject; }
-
 	public: // --------------------------------- 制御 --------------------------------
 
 		/// <summary>
@@ -153,6 +139,20 @@ namespace PokarinEngine
 		{
 			return std::to_string(id);
 		}
+
+	protected: // -------------------------- 持ち主の取得 ----------------------------
+
+		/// <summary>
+		/// 持ち主であるゲームオブジェクトを取得する
+		/// </summary>
+		/// <returns> 持ち主であるゲームオブジェクト </returns>
+		const GameObject& GetOwnerObject() const { return *ownerObject; }
+
+		/// <summary>
+		/// 持ち主であるゲームオブジェクトを取得する
+		/// </summary>
+		/// <returns> 持ち主であるゲームオブジェクト </returns>
+		GameObject& GetOwnerObject() { return *ownerObject; }
 
 	private: // ------------------------------- 初期化 -------------------------------
 

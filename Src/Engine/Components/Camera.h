@@ -4,21 +4,19 @@
 #ifndef POKARINENGINE_CAMERA_H_INCLUDED
 #define POKARINENGINE_CAMERA_H_INCLUDED
 
-#include "Component.h"
+#include "Transform.h"
 
 #include "../Math/Angle.h"
 #include "../Math/Vector.h"
 
 #include "../FramebufferObject.h"
 
+#include "../Mesh/StaticMesh.h"
+
 #include <memory>
 
 namespace PokarinEngine
 {
-	class Camera;
-
-	using CameraPtr = std::shared_ptr<Camera>;
-
 	/// <summary>
 	/// カメラ用コンポーネント
 	/// </summary>
@@ -47,14 +45,6 @@ namespace PokarinEngine
 		/// スカイスフィアを描画する
 		/// </summary>
 		void DrawSkySphere();
-
-	public: // --------------------------- 位置の設定 ----------------------------
-
-		/// <summary>
-		/// 位置を設定する
-		/// </summary>
-		/// <param name="position"> 位置 </param>
-		void SetPosition(const Vector3& position);
 
 	public: // -------------------------- 視野角の取得 ---------------------------
 
@@ -109,12 +99,12 @@ namespace PokarinEngine
 	public: // ------------------------- FBOのテクスチャ -------------------------
 
 		/// <summary>
-		/// FBOのテクスチャを取得する
+		/// FBOが持っているテクスチャの識別番号を取得する
 		/// </summary>
-		/// <returns> FBOのテクスチャ </returns>
-		TexturePtr GetTextureFBO()
+		/// <returns> FBOが持っているテクスチャの識別番号 </returns>
+		GLuint GetTextureID() const
 		{
-			return fbo->GetTexture();
+			return fbo->GetTextureID();
 		}
 
 	public: // ------------------------------ Json -------------------------------
@@ -130,6 +120,12 @@ namespace PokarinEngine
 		/// </summary>
 		/// <param name="[out] data"> 情報を格納しているJson型 </param>
 		void FromJson(const Json& data) override;
+
+	public: // ------------------------- 位置・回転角度 --------------------------
+
+		// 位置・回転角度
+		// 拡大率は使わない
+		Transform transform;
 
 	private: // -------------------------- エディタ用 ----------------------------
 
@@ -170,13 +166,8 @@ namespace PokarinEngine
 		// 描画用FBO
 		FramebufferObjectPtr fbo;
 
-	private: // ------------------------- 位置・回転角度 -------------------------
-
-		// 位置
-		Vector3 position;
-
-		// 回転角度
-		Vector3 rotation;
+		// スカイスフィア用モデル
+		StaticMeshPtr skySphere;
 	};
 }
 
