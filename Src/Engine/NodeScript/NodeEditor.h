@@ -45,6 +45,16 @@ namespace PokarinEngine
 			ImNodes::EditorContextFree(nodeEditorContext);
 		}
 
+	public: // ----------------------- 禁止事項 ------------------------
+
+		/* 持ち主が同じノードエディタが複数あると困るので、禁止する */
+
+		// コピーコンストラクタの禁止
+		NodeEditor(const NodeEditor&) = delete;
+
+		// 代入の禁止
+		NodeEditor& operator=(const NodeEditor&) = delete;
+
 	public: // ------------------------- 制御 --------------------------
 
 		/// <summary>

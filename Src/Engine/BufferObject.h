@@ -75,6 +75,8 @@ namespace PokarinEngine
 
 	public: // ----------------- 禁止事項 -------------------
 
+		/* 削除用デストラクタを複数回呼ばれないように禁止する */
+
 		// コピーコンストラクの禁止
 		BufferObject(const BufferObject&) = delete;
 

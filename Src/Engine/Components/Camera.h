@@ -9,8 +9,6 @@
 #include "../Math/Angle.h"
 #include "../Math/Vector.h"
 
-#include "../FramebufferObject.h"
-
 #include "../Mesh/StaticMesh.h"
 
 #include <memory>
@@ -24,88 +22,27 @@ namespace PokarinEngine
 	{
 	public: // ------------------ コンストラクタ・デストラクタ -------------------
 
-		// ゲームオブジェクト以外でも使うのでコンストラクタでFBOを作成する
-		// FBOの作成だけならコンストラクタでも問題ない
-		Camera() { fbo = FramebufferObject::Create(); }
+		Camera() = default;
 		~Camera() = default;
 
-	public: // ------------------------------ 制御 -------------------------------
-
+	public: // ------------------------------ 更新 -------------------------------
+		
 		/// <summary>
 		/// 更新
 		/// </summary>
-		void Update();
+		void Update() override;
 
 		/// <summary>
 		/// GPUに情報をコピーする
 		/// </summary>
-		void CopyToGPU();
+		void CopyToGPU() const;
+
+	public: // -------------------------- スカイスフィア -------------------------
 
 		/// <summary>
 		/// スカイスフィアを描画する
 		/// </summary>
-		void DrawSkySphere();
-
-	public: // -------------------------- 視野角の取得 ---------------------------
-
-		/// <summary>
-		/// 垂直視野角を取得
-		/// </summary>
-		/// <returns> 垂直視野角(度数法) </returns>
-		float GetFovY() const { return degFovY; }
-
-		/// <summary>
-		/// 視野角による拡大率を取得
-		/// </summary>
-		/// <returns> 視野角による拡大率の逆数 </returns>
-		float GetFovScale() const { return inverseFovScale; }
-
-		/// <summary>
-		/// 垂直視野角を設定する
-		/// </summary>
-		/// <param name="[in] fovY"> 設定する垂直視野角(度数法) </param>
-		void SetFovY(float fovY)
-		{
-			// 垂直視野角(度数法)を設定
-			degFovY = fovY;
-
-			// 弧度法に変換
-			radFovY = Radians(fovY);
-
-			// 視野角による拡大率の逆数
-			inverseFovScale = 1 / tan(radFovY / 2);
-		}
-
-	public: // ------------------------- 描画範囲の取得 --------------------------
-
-		/// <summary>
-		/// 最小描画範囲を取得する
-		/// </summary>
-		/// <returns> 描画範囲の最小値 </returns>
-		float GetDrawNear() const
-		{
-			return drawRange.near;
-		}
-
-		/// <summary>
-		/// 最大描画範囲を取得する
-		/// </summary>
-		/// <returns> 描画範囲の最大値 </returns>
-		float GetDrawFar() const
-		{
-			return drawRange.far;
-		}
-
-	public: // ------------------------- FBOのテクスチャ -------------------------
-
-		/// <summary>
-		/// FBOが持っているテクスチャの識別番号を取得する
-		/// </summary>
-		/// <returns> FBOが持っているテクスチャの識別番号 </returns>
-		GLuint GetTextureID() const
-		{
-			return fbo->GetTextureID();
-		}
+		void DrawSkySphere() const;
 
 	public: // ------------------------------ Json -------------------------------
 
@@ -126,6 +63,13 @@ namespace PokarinEngine
 		// 位置・回転角度
 		// 拡大率は使わない
 		Transform transform;
+
+	private: // ---------------------------- 初期化 ------------------------------
+
+		/// <summary>
+		/// 最初の更新の直前での初期化
+		/// </summary>
+		void Start() override;
 
 	private: // -------------------------- エディタ用 ----------------------------
 
@@ -163,11 +107,11 @@ namespace PokarinEngine
 		// 描画範囲
 		DrawRange drawRange;
 
-		// 描画用FBO
-		FramebufferObjectPtr fbo;
-
 		// スカイスフィア用モデル
 		StaticMeshPtr skySphere;
+
+		// 描画先のディスプレイ番号
+		GLuint targetDisplayID = 0;
 	};
 }
 

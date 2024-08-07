@@ -6,6 +6,8 @@
 
 #include "glad/glad.h"
 
+#include "UsingNames/UsingFramebufferObject.h"
+
 #include "Window.h"
 #include "Debug.h"
 #include "TextureGetter.h"
@@ -20,16 +22,8 @@ namespace PokarinEngine
 	// 前方宣言
 	// -------------------
 
-	class FramebufferObject;
 	class RenderbufferObject;
-
-	// --------------------------
-	// 型の別名を定義
-	// --------------------------
-
-	using FramebufferObjectPtr = std::shared_ptr<FramebufferObject>;
-	using RenderbufferObjectPtr = std::shared_ptr<RenderbufferObject>;
-
+	
 	/// <summary>
 	/// FBO(カラーバッファ・深度バッファなどを統括するバッファオブジェクト)
 	/// </summary>
@@ -59,6 +53,8 @@ namespace PokarinEngine
 
 	public: // ----------------- 禁止事項 -------------------
 
+		/* 削除用デストラクタを複数回呼ばれないように禁止する */
+
 		// コピーコンストラクタの禁止
 		FramebufferObject(const FramebufferObject&) = delete;
 
@@ -80,23 +76,10 @@ namespace PokarinEngine
 	public: // -------------- カラーバッファ ---------------
 
 		/// <summary>
-		/// カラーバッファ用テクスチャをクリア
+		/// バックバッファをクリアする
 		/// </summary>
 		/// <param name="[in] Color"> クリア色 </param>
 		void ClearColor(const Color& color);
-
-	public: // ----------------- サイズ --------------------
-
-		/// <summary>
-		/// FBOの大きさを設定する
-		/// </summary>
-		/// <param name="[in] fboWidth"> 幅 </param>
-		/// <param name="[in] fboHeight"> 高さ </param>
-		void SetSize(GLsizei fboWidth, GLsizei fboHeight)
-		{
-			width = fboWidth;
-			height = fboHeight;
-		}
 
 	public: // -------------- 識別番号の取得 ---------------
 
@@ -111,7 +94,7 @@ namespace PokarinEngine
 		/// <returns> カラーバッファ用テクスチャの識別番号 </returns>
 		GLuint GetTextureID() const { return *texture; }
 
-	private: // ------------------- 情報 --------------------
+	private: // ------------------ 情報 --------------------
 
 		// FBOの識別番号
 		GLuint id = 0;
@@ -120,7 +103,7 @@ namespace PokarinEngine
 		TexturePtr texture;
 
 		// 深度バッファ用RBO
-		RenderbufferObjectPtr rbo;
+		std::shared_ptr<RenderbufferObject> rbo;
 
 		// FBOの大きさ
 		// 16 : 9 で設定

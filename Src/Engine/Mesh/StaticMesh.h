@@ -28,16 +28,13 @@ namespace PokarinEngine
 	/// </summary>
 	class StaticMesh
 	{
-		// メッシュバッファに情報を公開する
-		friend class MeshBuffer;
+	public: // ----------- コンストラクタ・デストラクタ ------------
+		
+		StaticMesh(const std::string& _fileName,
+			const DrawParameterList& _drawParameterList, const MaterialList& _materialList)
+			:fileName(_fileName), drawParameterList(_drawParameterList), materialList(_materialList) {}
 
-	public: // --------------------- 禁止事項 ----------------------
-
-		// コピーコンストラクタを禁止
-		StaticMesh(const StaticMesh&) = delete;
-
-		// 代入を禁止
-		StaticMesh& operator=(const StaticMesh&) = delete;
+		~StaticMesh() = default;
 
 	public: // -------------------- ファイル名 ---------------------
 
@@ -47,7 +44,7 @@ namespace PokarinEngine
 		/// <returns> ファイル名 </returns>
 		const std::string& GetFileName()
 		{
-			return filename;
+			return fileName;
 		}
 
 	public: // ---------------- 描画パラメータ配列 -----------------
@@ -90,17 +87,10 @@ namespace PokarinEngine
 			return copy;
 		}
 
-	private: // ----------- コンストラクタ・デストラクタ -----------
-
-		/* メッシュバッファで作成してほしいので、privateにする */
-
-		StaticMesh() = default;
-		~StaticMesh() = default;
-
 	private: // ----------------------- 情報 -----------------------
 
 		// ファイル名
-		std::string filename;
+		std::string fileName;
 
 		// 描画パラメータ配列
 		DrawParameterList drawParameterList;

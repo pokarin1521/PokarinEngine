@@ -23,6 +23,21 @@ namespace PokarinEngine
 	/// </summary>
 	class Hierarchy
 	{
+	public: // ---------------- コンストラクタ・デストラクタ ---------------
+
+		Hierarchy() = default;
+		~Hierarchy() = default;
+
+	public: // ------------------------- 禁止事項 --------------------------
+
+		/* エディタ管理がおかしくなるので禁止する */
+
+		// コピーコンストラクタの禁止
+		Hierarchy(const Hierarchy&) = delete;
+
+		// 代入の禁止
+		Hierarchy& operator=(const Hierarchy&) = delete;
+
 	public: // --------------------------- 制御 ----------------------------
 
 		/// <summary>

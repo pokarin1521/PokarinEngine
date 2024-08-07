@@ -24,6 +24,16 @@ namespace PokarinEngine
 		Node() = default;
 		virtual ~Node() = default;
 
+	public: // ----------------------------- 禁止事項 -----------------------------
+
+		/* 識別できなくなるので、禁止する */
+		
+		// コピーコンストラクタの禁止
+		Node(const Node&) = delete;
+
+		// 代入の禁止
+		Node& operator=(const Node&) = delete;
+
 	public: // ------------------------------- 作成 -------------------------------
 
 		/// <summary>

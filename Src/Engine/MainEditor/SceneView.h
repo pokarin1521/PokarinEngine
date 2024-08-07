@@ -6,7 +6,10 @@
 
 #include "../Color.h"
 #include "../Math/Vector.h"
+
 #include "../Components/Camera.h"
+
+#include "../UsingNames/UsingFramebufferObject.h"
 
 namespace PokarinEngine
 {
@@ -15,7 +18,7 @@ namespace PokarinEngine
 	/// </summary>
 	class SceneView
 	{
-	public: // ----------------- コンストラクタ・デストラクタ ---------------------
+	public: // ------------------ コンストラクタ・デストラクタ --------------------
 
 		SceneView()
 		{
@@ -25,12 +28,27 @@ namespace PokarinEngine
 
 		~SceneView() = default;
 
+	public: // ---------------------------- 禁止事項 ------------------------------
+
+		/* エディタ管理がおかしくなるので禁止する */
+
+		// コピーコンストラクタの禁止
+		SceneView(const SceneView&) = delete;
+
+		// 代入の禁止
+		SceneView& operator=(const SceneView&) = delete;
+
 	public: // ------------------------------ 制御 --------------------------------
 
 		/// <summary>
 		/// 更新
 		/// </summary>
 		void Update();
+
+		/// <summary>
+		/// 描画
+		/// </summary>
+		void Render();
 
 	private: // -------------------------- カメラ操作 -----------------------------
 
@@ -44,22 +62,14 @@ namespace PokarinEngine
 		/// </summary>
 		void CameraRotateControl();
 
-	private: // ------------------------------ 情報 -------------------------------
+	private: // ----------------------------- カメラ ------------------------------
 
 		// カメラ
 		Camera camera;
 
 		// カメラの初期位置
+		// 生成したオブジェクトが見える位置にする
 		const Vector3 cameraStartPos = { 0.0f, 1.0f, -5.0f };
-
-		// 背景色
-		Color backGround = { 0.3f, 0.3f, 0.3f, 1.0f };
-
-		// マウスカーソルの位置
-		Vector2 mousePos = Vector2(0, 0);
-
-		// マウスカーソルの初期位置
-		Vector2 startMousePos = Vector2(0, 0);
 
 		// カメラの回転速度
 		float cameraRotateSpeed = 0.5f;
@@ -69,6 +79,19 @@ namespace PokarinEngine
 
 		// カメラ操作状態ならtrue
 		bool isControlCamera = false;
+		
+	private: // ------------------------- マウスカーソル --------------------------
+
+		// マウスカーソルの位置
+		Vector2 mousePos = Vector2(0, 0);
+
+		// マウスカーソルの初期位置
+		Vector2 startMousePos = Vector2(0, 0);
+
+	private: // ----------------------------- 描画用 ------------------------------
+
+		// 描画用FBO
+		FramebufferObjectPtr fbo;
 	};
 
 } // namespace PokarinEngine

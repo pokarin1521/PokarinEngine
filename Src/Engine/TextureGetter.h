@@ -17,6 +17,8 @@ namespace PokarinEngine
 	{
 	public: // ----------------------- 禁止事項 -----------------------
 
+		/* static関数でアクセスしてほしいので、禁止する */
+
 		// コピーコンストラクタの禁止
 		TextureGetter(const TextureGetter&) = delete;
 
@@ -42,20 +44,19 @@ namespace PokarinEngine
 
 	private: // ------------ コンストラクタ・デストラクタ -------------
 
-		/* static関数のみ使用できるように、インスタンス化できないようにする */
+		/* static関数でアクセスしてほしいので、インスタンス化できないようにする */
 
 		TextureGetter() = default;
 		~TextureGetter() = default;
 
-	private: // ------------------ テクスチャ作成用 -------------------
+	private: // ----------------- テクスチャ読み込み ------------------
 
-		// コンストラクタ、デストラクタを
-		// 呼べるようにするための補助クラス
-		struct TexHelper : public Texture
-		{
-			TexHelper(const char* fileName) : Texture(fileName) {}
-			TexHelper(GLsizei w, GLsizei h) : Texture(w, h) {}
-		};
+		/// <summary>
+		/// テクスチャを読み込む
+		/// </summary>
+		/// <param name="[in] fileName"> テクスチャのファイル名 </param>
+		/// <returns> 読み込んだテクスチャ </returns>
+		static TexturePtr LoadTexture(const std::string& fileName);
 
 	private: // --------------------- キャッシュ ----------------------
 

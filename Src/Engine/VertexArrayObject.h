@@ -54,6 +54,8 @@ namespace PokarinEngine
 
 	public: // ----------------- 禁止事項 -------------------
 
+		/* 削除用デストラクタを複数回呼ばれないように禁止する */
+
 		// コピーコンストラクタの禁止
 		VertexArrayObject(const VertexArrayObject&) = delete;
 

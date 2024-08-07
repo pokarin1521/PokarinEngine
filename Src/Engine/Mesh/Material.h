@@ -24,7 +24,6 @@ namespace PokarinEngine
 	// ------------------------------
 
 	using MaterialPtr = std::shared_ptr<Material>;
-
 	using MaterialList = std::vector<MaterialPtr>;
 
 	/// <summary>

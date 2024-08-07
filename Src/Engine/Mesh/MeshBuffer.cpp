@@ -131,6 +131,196 @@ namespace PokarinEngine
 		} // for i
 	}
 
+	/// ここでしか使わないので、cppのみに書く
+	/// <summary>
+	/// MTLファイルを読み込む
+	/// </summary>
+	/// <param name="[in] folderName"> OBJファイルのあるフォルダ名 </param>
+	/// <param name="[in] fileName"> MTLファイル名 </param>
+	/// <returns> MTLファイルに含まれるマテリアル配列 </returns>
+	MaterialList LoadMTL(
+		const std::string& folderName, const char* fileName)
+	{
+		// ---------------------
+		// MTLファイルを開く
+		// ---------------------
+
+		// MTLファイルのパス
+		// OBJファイルにおいて、MTLファイル名は相対パスで指定される
+		// そのため、OBJファイルのフォルダ名を補足する必要がある
+		const std::string fullpath = folderName + fileName;
+		std::ifstream file(fullpath);
+
+		// ファイルが開けない
+		if (!file)
+		{
+			// エラー表示
+			LOG_ERROR("%sを開けません", fullpath.c_str());
+
+			// 読み込み中断
+			return MaterialList();
+		}
+
+		// -----------------------
+		// MTLファイルを解析する
+		// -----------------------
+
+		// マテリアル配列
+		MaterialList materialList;
+
+		// マテリアル
+		MaterialPtr material;
+
+		// ファイルの終端まで
+		while (!file.eof())
+		{
+			// 1行ずつ読み込む
+			std::string line;
+			std::getline(file, line);
+
+			// -------- マテリアル定義の読み取りを試みる ----------
+
+			// マテリアル名格納用
+			char name[1000] = { 0 };
+
+			// %sで文字列を読み取るとき、%13sのようにsの手前に数字を書くと、
+			// 読み取る文字数を制限することができる(%13s = 最大13文字)
+			// 末尾に\0が追加されることを考慮して、「配列サイズ - 1」の値を指定する
+			// 今回はname配列のサイズに合わせて最大999文字としている
+
+			// マテリアル名を読み取る
+			if (sscanf(line.data(), " newmtl %999s", name) == 1)
+			{
+				// 読み取ったマテリアルを追加
+				material = std::make_shared<Material>();
+				material->name = name;
+				materialList.push_back(material);
+
+				// 次の行へ
+				continue;
+			}
+
+			// マテリアルが定義されていない場合は行を無視する
+			if (!material)
+			{
+				// 次の行へ
+				continue;
+			}
+
+			// ---------- 基本色の読み取りを試みる ------------
+
+			// 基本色を読み取る
+			if (sscanf(line.data(), " Kd %f %f %f",
+				&material->baseColor.r,
+				&material->baseColor.g,
+				&material->baseColor.b) == 3)
+			{
+				// 次の行へ
+				continue;
+			}
+
+			// ---------- 透明度の読み取りを試みる ------------
+
+			// 透明度を読み取る
+			if (sscanf(line.data(), " d %f", &material->baseColor.a) == 1)
+			{
+				// 次の行へ
+				continue;
+			}
+
+			// ---------- 基本色テクスチャ名の読み取りを試みる ---------
+
+			// テクスチャ名格納用
+			char textureName[1000] = { 0 };
+
+			// 基本色テクスチャ名を読み取る
+			// 配列サイズを超えないように、読み込む文字数を制限
+			if (sscanf(line.data(), " map_Kd %999s", &textureName) == 1)
+			{
+				// テクスチャファイルのパス
+				// MTLファイル名と同様に、map_Kd構文のテクスチャ名は相対パスで指定される
+				// そのため、OBJファイルのフォルダ名を補足する
+				const std::string fullpath = folderName + textureName;
+
+				// 指定したファイルまたはフォルダが存在する
+				if (std::filesystem::exists(fullpath))
+				{
+					// テクスチャを取得する
+					material->texBaseColor = TextureGetter::Get(fullpath.c_str());
+				}
+				// 存在しない
+				else
+				{
+					// 警告を表示
+					LOG_WARNING("%sを開けません", fullpath.c_str());
+				}
+
+				// 次の行へ
+				continue;
+			}
+
+			// --------------- 発光色の読み取りを試みる ----------------
+
+			if (sscanf(line.data(), " Ke %f %f %f",
+				&material->emission.r, &material->emission.g,
+				&material->emission.b) == 3)
+			{
+				// 次の行へ
+				continue;
+			}
+
+			// --------- 発光色テクスチャ名の読み取りを試みる ----------
+
+			if (sscanf(line.data(), " map_Ke %999s", &textureName) == 1)
+			{
+				// テクスチャファイル
+				const std::string filename = folderName + textureName;
+
+				// ファイルが存在する
+				if (std::filesystem::exists(filename))
+				{
+					// エミッションテクスチャを読み込む
+					material->texEmission = TextureGetter::Get(filename.c_str());
+				}
+				// ファイルが存在しない
+				else
+				{
+					// 警告
+					LOG_WARNING("%sを開けません", filename.c_str());
+				}
+
+				// 次の行へ
+				continue;
+
+			} // if map_Ke
+		}
+
+		// 基本色テクスチャがない場合は、
+		// 他のオブジェクトのテクスチャが適用されるのを防ぐために
+		// 白色のテクスチャで代用する
+		if (!materialList[0]->texBaseColor)
+		{
+			// テクスチャのファイル名
+			const char* path = "Res/Textures/White.tga";
+
+			// 指定したファイルまたはフォルダが存在する
+			if (std::filesystem::exists(path))
+			{
+				// テクスチャを読み込む
+				materialList[0]->texBaseColor = TextureGetter::Get(path);
+			}
+			// 存在しない
+			else
+			{
+				// 警告を表示
+				LOG_WARNING("%sを開けません", fullpath);
+			}
+		}
+
+		// 読み込んだマテリアルの配列を返す
+		return materialList;
+	}
+
 	/// <summary>
 	/// メッシュバッファを作成するコンストラクタ
 	/// </summary>
@@ -202,8 +392,7 @@ namespace PokarinEngine
 			}
 		}
 
-		// 見つからない場合
-		// 初期化時に読み込めていない可能性があるので再読み込み
+		// 見つからない場合は、読み込む
 		StaticMeshPtr obj = LoadOBJ(fileName);
 
 		// 読み込んだスタティックメッシュを返す
@@ -658,19 +847,11 @@ namespace PokarinEngine
 			indexOffset, baseVertex);
 
 		// ----------------------------------------------------------
-		// 補助クラスを用いて、スタティックメッシュを作成する
+		// マテリアルに対応した描画パラメータを作成する
 		// ----------------------------------------------------------
 
-		// スタティックメッシュ作成用補助クラス
-		struct StaticMeshHelper : public StaticMesh
-		{
-			StaticMeshHelper() : StaticMesh() {}
-		};
-
-		// スタティックメッシュ
-		auto mesh = std::make_shared<StaticMeshHelper>();
-
-		// ------- マテリアルに対応した描画パラメータを作成 -------
+		// 描画パラメータ配列
+		DrawParameterList drawParameterList;
 
 		// 使用中マテリアル配列の要素番号
 		size_t i = 0;
@@ -681,8 +862,11 @@ namespace PokarinEngine
 			i = 1;
 		}
 
-		// 次の要素を調べるので、size() - 1まで
-		for (; i < useMaterialList.size() - 1; ++i)
+		// 使用マテリアル配列の最後の要素番号
+		size_t end = useMaterialList.size() - 1;
+
+		// 次の要素を調べるので、最後の要素番号は含まない
+		for (; i < end; ++i)
 		{
 			// 使用中のマテリアル
 			const UseMaterial& current = useMaterialList[i];
@@ -728,7 +912,7 @@ namespace PokarinEngine
 			}
 
 			// 作成した描画パラメータを追加
-			mesh->drawParameterList.push_back(drawParameter);
+			drawParameterList.push_back(drawParameter);
 
 			// インデックスオフセットを変更
 			// 描画した分ずらす
@@ -736,224 +920,29 @@ namespace PokarinEngine
 				reinterpret_cast<size_t>(indexOffset) + sizeof(uint16_t) * drawParameter.count);
 		}
 
-		// マテリアル配列が空の場合
+		// ---------------------------------------
+		// スタティックメッシュを作成する
+		// ---------------------------------------
+
+		// マテリアル配列が空の場合は
+		// デフォルトマテリアルを追加する
 		if (materialList.empty())
 		{
-			// デフォルトマテリアルを追加
-			mesh->materialList.push_back(std::make_shared<Material>());
-		}
-		// マテリアルがある場合
-		else
-		{
-			// マテリアルをコピー
-			mesh->materialList.assign(materialList.begin(), materialList.end());
+			materialList.push_back(std::make_shared<Material>());
 		}
 
-		// ------------------------
-		// 作成したメッシュを追加
-		// ------------------------
+		// スタティックメッシュを作成する
+		StaticMeshPtr staticMesh = std::make_shared<StaticMesh>(fileName, drawParameterList, materialList);
 
-		// OBJファイル名を登録
-		mesh->filename = fileName;
+		// 作成したメッシュを管理用配列に追加する
+		staticMeshList.emplace(fileName, staticMesh);
 
-		// 作成したメッシュを管理用配列に追加
-		staticMeshList.emplace(mesh->filename, mesh);
-
-		// 読み込みを通知
+		// 読み込み通知
 		LOG("%sを読み込みました(頂点数 = %d, インデックス数 = %d)",
 			fileName.c_str(), vertices.size(), indices.size());
 
-		// 作成したメッシュを返す
-		return mesh;
-	}
-
-	/// <summary>
-	/// MTLファイルを読み込む
-	/// </summary>
-	/// <param name="[in] folderName"> OBJファイルのあるフォルダ名 </param>
-	/// <param name="[in] fileName"> MTLファイル名 </param>
-	/// <returns> MTLファイルに含まれるマテリアル配列 </returns>
-	MaterialList LoadMTL(
-		const std::string& folderName, const char* fileName)
-	{
-		// ---------------------
-		// MTLファイルを開く
-		// ---------------------
-
-		// MTLファイルのパス
-		// OBJファイルにおいて、MTLファイル名は相対パスで指定される
-		// そのため、OBJファイルのフォルダ名を補足する必要がある
-		const std::string fullpath = folderName + fileName;
-		std::ifstream file(fullpath);
-
-		// ファイルが開けない
-		if (!file)
-		{
-			// エラー表示
-			LOG_ERROR("%sを開けません", fullpath.c_str());
-
-			// 読み込み中断
-			return MaterialList();
-		}
-
-		// -----------------------
-		// MTLファイルを解析する
-		// -----------------------
-
-		// マテリアル配列
-		MaterialList materialList;
-
-		// マテリアル
-		MaterialPtr material;
-
-		// ファイルの終端まで
-		while (!file.eof())
-		{
-			// 1行ずつ読み込む
-			std::string line;
-			std::getline(file, line);
-
-			// -------- マテリアル定義の読み取りを試みる ----------
-
-			// マテリアル名格納用
-			char name[1000] = { 0 };
-
-			// %sで文字列を読み取るとき、%13sのようにsの手前に数字を書くと、
-			// 読み取る文字数を制限することができる(%13s = 最大13文字)
-			// 末尾に\0が追加されることを考慮して、「配列サイズ - 1」の値を指定する
-			// 今回はname配列のサイズに合わせて最大999文字としている
-
-			// マテリアル名を読み取る
-			if (sscanf(line.data(), " newmtl %999s", name) == 1)
-			{
-				// 読み取ったマテリアルを追加
-				material = std::make_shared<Material>();
-				material->name = name;
-				materialList.push_back(material);
-
-				// 次の行へ
-				continue;
-			}
-
-			// マテリアルが定義されていない場合は行を無視する
-			if (!material)
-			{
-				// 次の行へ
-				continue;
-			}
-
-			// ---------- 基本色の読み取りを試みる ------------
-
-			// 基本色を読み取る
-			if (sscanf(line.data(), " Kd %f %f %f",
-				&material->baseColor.r,
-				&material->baseColor.g,
-				&material->baseColor.b) == 3)
-			{
-				// 次の行へ
-				continue;
-			}
-
-			// ---------- 透明度の読み取りを試みる ------------
-
-			// 透明度を読み取る
-			if (sscanf(line.data(), " d %f", &material->baseColor.a) == 1)
-			{
-				// 次の行へ
-				continue;
-			}
-
-			// ---------- 基本色テクスチャ名の読み取りを試みる ---------
-
-			// テクスチャ名格納用
-			char textureName[1000] = { 0 };
-
-			// 基本色テクスチャ名を読み取る
-			// 配列サイズを超えないように、読み込む文字数を制限
-			if (sscanf(line.data(), " map_Kd %999s", &textureName) == 1)
-			{
-				// テクスチャファイルのパス
-				// MTLファイル名と同様に、map_Kd構文のテクスチャ名は相対パスで指定される
-				// そのため、OBJファイルのフォルダ名を補足する
-				const std::string fullpath = folderName + textureName;
-
-				// 指定したファイルまたはフォルダが存在する
-				if (std::filesystem::exists(fullpath))
-				{
-					// テクスチャを取得する
-					material->texBaseColor = TextureGetter::Get(fullpath.c_str());
-				}
-				// 存在しない
-				else
-				{
-					// 警告を表示
-					LOG_WARNING("%sを開けません", fullpath.c_str());
-				}
-
-				// 次の行へ
-				continue;
-			}
-
-			// --------------- 発光色の読み取りを試みる ----------------
-
-			if (sscanf(line.data(), " Ke %f %f %f",
-				&material->emission.r, &material->emission.g,
-				&material->emission.b) == 3)
-			{
-				// 次の行へ
-				continue;
-			}
-
-			// --------- 発光色テクスチャ名の読み取りを試みる ----------
-
-			if (sscanf(line.data(), " map_Ke %999s", &textureName) == 1)
-			{
-				// テクスチャファイル
-				const std::string filename = folderName + textureName;
-
-				// ファイルが存在する
-				if (std::filesystem::exists(filename))
-				{
-					// エミッションテクスチャを読み込む
-					material->texEmission = TextureGetter::Get(filename.c_str());
-				}
-				// ファイルが存在しない
-				else
-				{
-					// 警告
-					LOG_WARNING("%sを開けません", filename.c_str());
-				}
-
-				// 次の行へ
-				continue;
-
-			} // if map_Ke
-		}
-
-		// 基本色テクスチャがない場合は、
-		// 他のオブジェクトのテクスチャが適用されるのを防ぐために
-		// 白色のテクスチャで代用する
-		if (!materialList[0]->texBaseColor)
-		{
-			// テクスチャのファイル名
-			const char* path = "Res/Textures/White.tga";
-
-			// 指定したファイルまたはフォルダが存在する
-			if (std::filesystem::exists(path))
-			{
-				// テクスチャを読み込む
-				materialList[0]->texBaseColor = TextureGetter::Get(path);
-			}
-			// 存在しない
-			else
-			{
-				// 警告を表示
-				LOG_WARNING("%sを開けません", fullpath);
-			}
-		}
-
-		// 読み込んだマテリアルの配列を返す
-		return materialList;
+		// 作成したスタティックメッシュを返す
+		return staticMesh;
 	}
 
 	/// <summary>

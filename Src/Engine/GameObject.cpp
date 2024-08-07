@@ -24,7 +24,7 @@
 namespace PokarinEngine
 {
 	/// <summary>
-	/// ゲームオブジェクトから削除予定のコンポーネントを削除する 
+	/// 削除予定(削除処理が未実行)のコンポーネントを完全に削除する
 	/// </summary>
 	void GameObject::RemoveDestroyedComponent()
 	{
@@ -87,12 +87,10 @@ namespace PokarinEngine
 	/// </summary>
 	/// <param name="[in] scene"> 持ち主であるシーン </param>
 	/// <param name="[in] objectID"> 識別番号 </param>
-	/// <param name="[in] meshFile"> スタティックメッシュのファイル名 </param>
 	/// <param name="[in] objectName"> 名前 </param>
 	/// <param name="[in] position"> 位置 </param>
 	/// <param name="[in] rotation"> 回転角度 </param>
-	void GameObject::Initialize(Scene& scene, int objectID,
-		const std::string& meshFile, const std::string& objectName,
+	void GameObject::Initialize(Scene& scene, int objectID, const std::string& objectName,
 		const Vector3& position, const Vector3& rotation)
 	{
 		// ----------------------------------
@@ -107,9 +105,6 @@ namespace PokarinEngine
 
 		// 名前を設定
 		name = objectName;
-
-		// スタティックメッシュを設定
-		staticMesh = Mesh::GetStaticMesh(meshFile);
 
 		// スタティックメッシュがあるなら固有マテリアルを設定
 		if (staticMesh)
@@ -208,8 +203,9 @@ namespace PokarinEngine
 	/// <summary>
 	/// コライダーを描画する
 	/// </summary>
-	void GameObject::DrawCollider()
+	void GameObject::DrawCollider() const
 	{
+		// コライダーを描画する
 		for (auto& collider : colliderList)
 		{
 			collider->Draw();

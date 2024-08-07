@@ -10,18 +10,6 @@
 
 namespace PokarinEngine
 {
-	// ----------------------
-	// 前方宣言
-	// ----------------------
-
-	class RenderbufferObject;
-
-	// ------------------------------
-	// 型の別名を定義
-	// ------------------------------
-
-	using RenderbufferObjectPtr = std::shared_ptr<RenderbufferObject>;
-
 	/// <summary>
 	/// RBO(レンダリングされた結果を保持するバッファオブジェクト)
 	/// </summary>
@@ -36,7 +24,7 @@ namespace PokarinEngine
 		/// <param name="[in] height"> 高さ </param>
 		/// <param name="[in] internalformat"> 保持する情報のバッファ </param>
 		/// <returns> 作成したRBO </returns>
-		static RenderbufferObjectPtr Create(
+		static std::shared_ptr<RenderbufferObject> Create(
 			GLsizei width, GLsizei height, GLenum internalformat)
 		{
 			return std::make_shared<RenderbufferObject>(
@@ -60,6 +48,8 @@ namespace PokarinEngine
 		~RenderbufferObject();
 
 	public: // -------------------- 禁止事項 ---------------------
+
+		/* 削除用デストラクタを複数回呼ばれないように禁止する */
 
 		// コピーコンストラクタの禁止
 		RenderbufferObject(const RenderbufferObject&) = delete;

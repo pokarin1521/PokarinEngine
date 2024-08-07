@@ -30,98 +30,37 @@ namespace PokarinEngine
 	/// </summary>
 	class Texture
 	{
-		// テクスチャ取得用クラスに情報を公開
-		friend class TextureGetter;
+	public: // --------- コンストラクタ・デストラクタ ----------
 
-	public: // ----------------- 禁止事項 -------------------
+		/// <summary>
+		/// テクスチャ作成用コンストラクタ
+		/// </summary>
+		Texture() { glCreateTextures(GL_TEXTURE_2D, 1, &id); }
 
-		// コピーコンストラクタの禁止
+		/// <summary>
+		/// テクスチャ削除用コンストラクタ
+		/// </summary>
+		~Texture() { glDeleteTextures(1, &id); }
+
+	public: // ------------------- 禁止事項 --------------------
+
+		/* 削除用デストラクタを複数回呼ばれないように禁止する */
+
 		Texture(const Texture&) = delete;
-
-		// コピー代入の禁止
 		Texture& operator=(const Texture&) = delete;
 
-	public: // ------------------- 変換 ---------------------
+	public: // --------------------- 変換 ----------------------
 
 		// GLuint型に変換(識別番号を返す)
-		operator GLuint() const { return id; }		
-		
+		operator GLuint() const { return id; }
+
 		// ImTextureID型に変換(識別番号を返す)
 		operator ImTextureID() const { return (void*)(std::intptr_t)id; }
 
-	public: // ---------- テクスチャの情報を取得 ------------
+	private: // -------------------- 情報 ----------------------
 
-		/// <summary>
-		/// テクスチャの幅を取得
-		/// </summary>
-		int GetWidth() const
-		{
-			return width;
-		}
-
-		/// <summary>
-		/// テクスチャの高さを取得
-		/// </summary>
-		int GetHeight() const
-		{
-			return height;
-		}
-		
-		/// <summary>
-		/// 画像のアスペクト比を取得
-		/// </summary>
-		float GetAspectRatio() const
-		{
-			return static_cast<float>(width) / static_cast<float>(height);
-		}
-
-		/// <summary>
-		/// テクスチャの名前を取得
-		/// </summary>
-		const std::string& GetName() const
-		{
-			return name;
-		}
-
-	private: // ---------- コンストラクタ・デストラクタ -----------
-
-		/* キャッシュを有効にするために
-		コンストラクタとデストラクタをプライベートメンバにして
-		勝手に生成や削除ができないようにする */
-
-		/// <summary>
-		/// テクスチャを読み込むコンストラクタ
-		/// (暗黙的キャストを禁止)
-		/// </summary>
-		/// <param name="[in] fileName"> 読み込むテクスチャファイルの名前 </param>
-		explicit Texture(const char* fileName);
-
-		/// <summary>
-		/// テクスチャを作成するコンストラクタ
-		/// (暗黙的キャストを禁止)
-		/// </summary>
-		/// <param name="[in] width"> 幅 </param>
-		/// <param name="[in] height"> 高さ </param>
-		explicit Texture(GLsizei w, GLsizei h);
-
-		/// <summary>
-		/// テクスチャを削除するデストラクタ
-		/// </summary>
-		~Texture();
-
-	private: // -------------------- 情報 ---------------------
-
-		// テクスチャ名
-		std::string name;
-
-		// テクスチャオブジェクトの識別番号
-		GLuint id = 0;		
-		
-		// テクスチャの幅
-		int width = 0;	
-		
-		// テクスチャの高さ
-		int height = 0;	
+		// 識別番号
+		GLuint id = 0;
 	};
 
 } // namespace PokarinEngine

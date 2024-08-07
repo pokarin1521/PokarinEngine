@@ -30,6 +30,8 @@ namespace PokarinEngine
 	{	
 	public: // ------------------------- 禁止事項 -------------------------
 
+		/* static関数でアクセスしてほしいので、禁止する */
+
 		Mesh(const Mesh&) = delete;
 		Mesh& operator=(const Mesh&) = delete;
 

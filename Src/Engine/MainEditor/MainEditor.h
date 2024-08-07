@@ -14,16 +14,8 @@
 
 namespace PokarinEngine
 {
-	// -------------------
-	// 前方宣言
-	// -------------------
-
-	class Engine;
-	class SceneView;
-	class GameView;
-
 	/// <summary>
-	/// メインエディタ管理用
+	/// メインエディタ管理用クラス
 	/// </summary>
 	class MainEditor
 	{
@@ -31,6 +23,16 @@ namespace PokarinEngine
 
 		MainEditor() = default;
 		~MainEditor() = default;
+
+	public: // -------------------------- 禁止事項 -------------------------
+
+		/* ImGuiコンテキストの管理がおかしくなるので、禁止する */
+
+		// コピーコンストラクタの禁止
+		MainEditor(const MainEditor&) = delete;
+
+		// 代入の禁止
+		MainEditor& operator=(const MainEditor&) = delete;
 
 	public: // ---------------------------- 制御 ---------------------------
 
@@ -78,18 +80,11 @@ namespace PokarinEngine
 		/// </summary>
 		void PopColor();
 
-	private: // ------------------------ ウィンドウ ------------------------
+	private: // ------------------------- ウィンドウ -----------------------
 
-		// シーンビュー
 		SceneView sceneView;
-
-		// ゲームビュー
 		GameView gameView;
-
-		// ヒエラルキー
 		Hierarchy hierarchy;
-
-		// インスペクター
 		Inspector inspector;
 
 	private: // ------------------------- バージョン -----------------------

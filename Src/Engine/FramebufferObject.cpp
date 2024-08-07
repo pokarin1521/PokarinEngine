@@ -96,7 +96,7 @@ namespace PokarinEngine
 	}
 
 	/// <summary>
-	/// カラーバッファ用テクスチャをクリア
+	/// バックバッファをクリアする
 	/// </summary>
 	/// <param name="[in] color"> クリア色 </param>
 	void FramebufferObject::ClearColor(const Color& color)
@@ -104,7 +104,7 @@ namespace PokarinEngine
 		// バインド
 		glBindFramebuffer(GL_FRAMEBUFFER, id);
 
-		// バックバッファをクリアするときの色を指定
+		// クリア色を設定する
 		glClearColor(color.r, color.g, color.b, color.a);
 
 		// バックバッファをクリア

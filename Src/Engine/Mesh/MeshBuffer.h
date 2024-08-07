@@ -20,18 +20,7 @@ namespace PokarinEngine
 	/// </summary>
 	class MeshBuffer
 	{
-		// メッシュ管理用クラスに情報を公開する
-		friend class Mesh;
-
-	public: // ------------------------------ 禁止事項 ------------------------------
-
-		// コピーコンストラクタの禁止
-		MeshBuffer(const MeshBuffer&) = delete;
-
-		// 代入の禁止
-		MeshBuffer& operator=(const MeshBuffer&) = delete;
-
-	private: // ------------------- コンストラクタ・デストラクタ --------------------
+	public: // -------------------- コンストラクタ・デストラクタ --------------------
 
 		/// <summary>
 		/// メッシュバッファを作成するコンストラクタ
@@ -42,7 +31,17 @@ namespace PokarinEngine
 		// デフォルトデストラクタ
 		~MeshBuffer() = default;
 
-	private: // ----------------------------- 情報の取得 ----------------------------
+	public: // ------------------------------ 禁止事項 ------------------------------
+
+		/* コピーの必要がないので禁止 */
+
+		// コピーコンストラクタの禁止
+		MeshBuffer(const MeshBuffer&) = delete;
+
+		// 代入の禁止
+		MeshBuffer& operator=(const MeshBuffer&) = delete;
+
+	public: // ----------------------------- 情報の取得 -----------------------------
 
 		/// <summary>
 		/// スタティックメッシュを取得する
@@ -57,7 +56,7 @@ namespace PokarinEngine
 		/// <returns> VAO </returns>
 		VertexArrayObjectPtr GetVAO() const { return vao; }
 
-	private: // -------------------------- ファイル読み込み -------------------------
+	public: // -------------------------- ファイル読み込み --------------------------
 
 		/// <summary>
 		/// OBJファイルを読み込む
@@ -65,15 +64,6 @@ namespace PokarinEngine
 		/// <param name="[in] fileName"> OBJファイル名 </param>
 		/// <returns> filenameから作成したメッシュ </returns>
 		StaticMeshPtr LoadOBJ(const std::string& fileName);
-
-		/// <summary>
-		/// MTLファイルを読み込む
-		/// </summary>
-		/// <param name="[in] folderName"> OBJファイルのあるフォルダ名 </param>
-		/// <param name="[in] fileName"> MTLファイル名 </param>
-		/// <returns> MTLファイルに含まれるマテリアル配列 </returns>
-		MaterialList LoadMTL(
-			const std::string& folderName, const char* fileName);
 
 	private: // -------------------------- 頂点データの管理 -------------------------
 

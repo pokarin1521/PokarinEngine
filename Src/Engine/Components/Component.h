@@ -23,6 +23,16 @@ namespace PokarinEngine
 		Component() = default;
 		virtual ~Component() = default;
 
+	public: // ------------------------------- 禁止事項 ------------------------------
+
+		/* 同じコンポーネントが複数あると識別できなくなるので、禁止する */
+
+		// コピーコンストラクタの禁止
+		Component(const Component&) = delete;
+
+		// 代入の禁止
+		Component& operator=(const Component&) = delete;
+
 	public: // --------------------------------- 制御 --------------------------------
 
 		/// <summary>

@@ -59,7 +59,9 @@ namespace PokarinEngine
 
 	public: // -------------------------- 禁止事項 --------------------------
 
-		// コピーの禁止
+		/* 識別できなくなるので、禁止する */
+
+		// コピーコンストラクタの禁止
 		GameObject(GameObject&) = delete;
 
 		// 代入の禁止
@@ -194,7 +196,7 @@ namespace PokarinEngine
 	public: // -------------------- コンポーネントの管理 --------------------
 
 		/// <summary>
-		/// ゲームオブジェクトからコンポーネントを削除する
+		/// 削除予定(削除処理が未実行)のコンポーネントを完全に削除する
 		/// </summary>
 		void RemoveDestroyedComponent();
 
@@ -205,12 +207,10 @@ namespace PokarinEngine
 		/// </summary>
 		/// <param name="[in] scene"> 持ち主であるシーン </param>
 		/// <param name="[in] objectID"> 識別番号 </param>
-		/// <param name="[in] meshFile"> スタティックメッシュのファイル名 </param>
 		/// <param name="[in] objectName"> 名前 </param>
 		/// <param name="[in] position"> 位置 </param>
 		/// <param name="[in] rotation"> 回転角度 </param>
-		void Initialize(Scene& scene, int objectID,
-			const std::string& meshFile, const std::string& objectName,
+		void Initialize(Scene& scene, int objectID, const std::string& objectName,
 			const Vector3& position, const Vector3& rotation);
 
 		/// <summary>
@@ -227,7 +227,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// コライダーを描画する
 		/// </summary>
-		void DrawCollider();
+		void DrawCollider() const;
 
 	public: // ---------------------------- エディタ ----------------------------
 

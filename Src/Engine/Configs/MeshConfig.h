@@ -9,9 +9,9 @@
 namespace PokarinEngine
 {
 	/// <summary>
-	/// スタティックメッシュのファイル名(OBJ)
+	/// スタティックメッシュのファイル名
 	/// </summary>
-	namespace StaticMeshFile_OBJ
+	namespace StaticMeshFile
 	{
 		// ------------------------
 		// 基本形
@@ -55,14 +55,6 @@ namespace PokarinEngine
 
 		// お試しロボット
 		inline constexpr const char* robot = "Res/MeshData/Robot/Robot.obj";
-
-		// ------------------------
-		// 全てのOBJファイル
-		// ------------------------
-
-		// 全てのOBJファイル
-		inline constexpr const char* allObj[] = {
-			cube, sphere, plane, ui, robot, skySphere };
 	}
 
 } // namespace PokarinEngine

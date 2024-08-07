@@ -107,22 +107,6 @@ namespace PokarinEngine
 		/// <returns> 作成した識別番号 </returns>
 		int CreateSceneID();
 
-	private: // ----------------------- 描画用ビュー ----------------------
-
-		/// <summary>
-		/// 描画用ビューにカメラからの描画情報を保持させる
-		/// </summary>
-		/// <param name="[in] camera"> 使用するカメラ </param>
-		/// <param name="[in] renderView"> 描画情報を保持する描画用ビュー </param>
-		void DrawRenderView(const Transform& camera, const RenderView& renderView);
-
-	private: // ------------------ スカイスフィアの描画 -------------------
-
-		/// <summary>
-		/// スカイスフィアを描画する
-		/// </summary>
-		void DrawSkySphere(const Transform& camera);
-
 	private: // ------------------------- シーン --------------------------
 
 		// 現在のシーン

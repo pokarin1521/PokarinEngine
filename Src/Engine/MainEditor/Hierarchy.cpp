@@ -10,6 +10,8 @@
 
 #include "../Input.h"
 
+#include "../Mesh/Mesh.h"
+
 #include "../Configs/MeshConfig.h"
 
 namespace PokarinEngine
@@ -215,16 +217,16 @@ namespace PokarinEngine
 		if (ImGui::BeginMenu("3D Object"))
 		{
 			// 直方体生成用ボタン
-			CreateObjectButton("Cube", StaticMeshFile_OBJ::cube);
+			CreateObjectButton("Cube", StaticMeshFile::cube);
 
 			// 球体生成用ボタン
-			CreateObjectButton("Sphere", StaticMeshFile_OBJ::sphere);
+			CreateObjectButton("Sphere", StaticMeshFile::sphere);
 
 			// 板生成用ボタン
-			CreateObjectButton("Plane", StaticMeshFile_OBJ::plane);
+			CreateObjectButton("Plane", StaticMeshFile::plane);
 
 			// ロボット生成用ボタン
-			CreateObjectButton("Robot", StaticMeshFile_OBJ::robot);
+			CreateObjectButton("Robot", StaticMeshFile::robot);
 
 			ImGui::EndMenu();
 		}
@@ -249,7 +251,10 @@ namespace PokarinEngine
 			// ボタンが押されたので
 			// 現在のシーンにオブジェクトを作成
 			GameObjectPtr object = currentScene->CreateGameObject(
-				typeName, Vector3(0), Vector3(0), staticMeshFile);
+				typeName, Vector3(0), Vector3(0));
+
+			// スタティックメッシュを設定
+			object->staticMesh = Mesh::GetStaticMesh(staticMeshFile);
 		}
 	}
 

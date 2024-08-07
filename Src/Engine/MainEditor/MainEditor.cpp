@@ -14,7 +14,6 @@
 #include "../GameObject.h"
 #include "../Debug.h"
 
-#include "../Configs/ImGuiConfig.h"
 #include "../Configs/MeshConfig.h"
 
 #include "../ImGuiFontSetter.h"
@@ -94,8 +93,11 @@ namespace PokarinEngine
 		// ImGuiの設定用
 		ImGuiIO& io = ImGui::GetIO();
 
+		// 保存先のファイル名
+		static const char* settingFile = "Settings/imgui.ini";
+
 		// 保存先を設定
-		io.IniFilename = ImGuiConfig::File::setting;
+		io.IniFilename = settingFile;
 
 		// ---------------------------------------
 		// ドッキングウィンドウの有効化
@@ -224,7 +226,7 @@ namespace PokarinEngine
 	/// </summary>
 	void MainEditor::Render()
 	{
-		// エディタ画面を描画
+		// ImGuiの描画
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	}

@@ -5,6 +5,9 @@
 
 #include "../Scene.h"
 
+#include "../Color.h"
+#include "../FramebufferObject.h"
+
 namespace PokarinEngine
 {
 	/// <summary>
@@ -18,7 +21,7 @@ namespace PokarinEngine
 		// ---------------------------
 
 		// FBOからテクスチャを取得
-		ImTextureID texture = ImTextureID(currentScene->GetMainCamera().GetTextureID());
+		ImTextureID texture = ImTextureID(currentScene->GetTextureID());
 
 		// ウィンドウの丸みを無くす
 		ImGui::PushStyleVar(ImGuiStyleVar_::ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
@@ -48,7 +51,7 @@ namespace PokarinEngine
 		// カラーバッファをクリア
 		// -------------------------------
 
-		fbo->ClearColor(backGround);
+		//fbo->ClearColor(Color::black);
 	}
 
 } // namespace PokarinEngine

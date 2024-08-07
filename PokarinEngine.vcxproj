@@ -197,7 +197,7 @@
     <ClCompile Include="Src\Engine\RenderbufferObject.cpp" />
     <ClCompile Include="Src\Engine\Scene.cpp" />
     <ClCompile Include="Src\Engine\Shader\Shader.cpp" />
-    <ClCompile Include="Src\Engine\Texture.cpp" />
+    <ClCompile Include="Src\Engine\SkySphere.cpp" />
     <ClCompile Include="Src\Engine\TextureGetter.cpp" />
     <ClCompile Include="Src\Engine\Time.cpp" />
     <ClCompile Include="Src\Engine\Window.cpp" />
@@ -235,7 +235,6 @@
     <ClInclude Include="Src\Engine\Components\Light.h" />
     <ClInclude Include="Src\Engine\Components\Rigidbody.h" />
     <ClInclude Include="Src\Engine\Components\Transform.h" />
-    <ClInclude Include="Src\Engine\Configs\ImGuiConfig.h" />
     <ClInclude Include="Src\Engine\Configs\MeshConfig.h" />
     <ClInclude Include="Src\Engine\Configs\ShaderConfig.h" />
     <ClInclude Include="Src\Engine\Debug.h" />
@@ -274,11 +273,13 @@
     <ClInclude Include="Src\Engine\RenderbufferObject.h" />
     <ClInclude Include="Src\Engine\Scene.h" />
     <ClInclude Include="Src\Engine\Shader\Shader.h" />
+    <ClInclude Include="Src\Engine\SkySphere.h" />
     <ClInclude Include="Src\Engine\Texture.h" />
     <ClInclude Include="Src\Engine\TextureGetter.h" />
     <ClInclude Include="Src\Engine\Time.h" />
     <ClInclude Include="Src\Engine\UsingNames\UsingCollider.h" />
     <ClInclude Include="Src\Engine\UsingNames\UsingComponent.h" />
+    <ClInclude Include="Src\Engine\UsingNames\UsingFramebufferObject.h" />
     <ClInclude Include="Src\Engine\UsingNames\UsingGameObject.h" />
     <ClInclude Include="Src\Engine\UsingNames\UsingNodeEditor.h" />
     <ClInclude Include="Src\Engine\UsingNames\UsingScene.h" />

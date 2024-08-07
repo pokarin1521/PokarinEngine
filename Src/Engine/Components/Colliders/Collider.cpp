@@ -27,13 +27,13 @@ namespace PokarinEngine
 		{
 		case Type::Box:
 
-			staticMesh = Mesh::GetStaticMesh(StaticMeshFile_OBJ::boxCollider);
+			staticMesh = Mesh::GetStaticMesh(StaticMeshFile::boxCollider);
 
 			break;
 
 		case Type::Sphere:
 
-			staticMesh = Mesh::GetStaticMesh(StaticMeshFile_OBJ::sphereCollider);
+			staticMesh = Mesh::GetStaticMesh(StaticMeshFile::sphereCollider);
 
 			break;
 		}

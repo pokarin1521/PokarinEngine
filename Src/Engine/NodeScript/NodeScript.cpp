@@ -13,11 +13,10 @@
 
 #include "NodeEditor.h"
 
-#include "../Configs/ImGuiConfig.h"
 #include "../ImGuiFontSetter.h"
 
 #include "../Window.h"
-#include "../InputManager.h"
+#include "../Input.h"
 #include "../Color.h"
 
 #include <GLFW/glfw3.h>
@@ -289,19 +288,12 @@ namespace PokarinEngine
 			// コンテキストを使用する
 			ContextManager::UsingContext();
 
-			// ----------------------------------------
-			// ImGuiの保存先ファイルを設定
-			// ----------------------------------------
-
-			// ImGuiの設定用
-			ImGuiIO& io = ImGui::GetIO();
-
-			// 保存先を設定
-			io.IniFilename = ImGuiConfig::File::setting;
-
 			// ---------------------------------------
 			// ドッキングウィンドウの有効化
 			// ---------------------------------------
+
+			// ImGuiの設定用
+			ImGuiIO& io = ImGui::GetIO();
 
 			io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
@@ -309,7 +301,8 @@ namespace PokarinEngine
 			// ImGuiウィンドウの情報を保存しないように設定
 			// -------------------------------------------------------
 
-			// 更新時に設定しているので、保存しておく必要がない
+			// 自動保存されると余計な保存データが増えていくので、
+			// 自動保存されないように保存先ファイルを無効にする
 			io.IniFilename = nullptr;
 
 			// ------------------------

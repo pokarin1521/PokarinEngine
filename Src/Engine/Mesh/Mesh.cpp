@@ -8,16 +8,12 @@
 
 #include "../Debug.h" 
 #include "../TextureGetter.h"
-#include "../BufferObject.h"
-#include "../VertexArrayObject.h"
 
 #include "../Configs/ShaderConfig.h"
 #include "../Configs/MeshConfig.h"
 
 namespace PokarinEngine
 {
-#pragma region Mesh
-
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -40,16 +36,6 @@ namespace PokarinEngine
 		// 補助クラスを用いて
 		// メッシュバッファを作成する
 		meshBuffer = std::make_shared<MeshBufferHelper>(meshBufferSize);
-
-		// -----------------------------------
-		// OBJファイルを読み込む
-		// -----------------------------------
-
-		// 全てのOBJファイルを読み込む
-		for (const char* obj : StaticMeshFile_OBJ::allObj)
-		{
-			meshBuffer->LoadOBJ(obj);
-		}
 	}
 
 	/// <summary>
@@ -168,7 +154,5 @@ namespace PokarinEngine
 		// VAOのバインド解除
 		glBindVertexArray(0);
 	}
-
-#pragma endregion
 
 } // namespace PokarinEngine

@@ -132,6 +132,9 @@
     <Filter Include="Src\Library\IconFont">
       <UniqueIdentifier>{e5006251-7847-4c0e-94d0-096b067efb74}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Engine\SkySphere">
+      <UniqueIdentifier>{fea43f2a-4e77-410a-9d45-40a4c73b492b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Main.cpp">
@@ -139,9 +142,6 @@
     </ClCompile>
     <ClCompile Include="Src\Engine\GameObject.cpp">
       <Filter>Src\Engine\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Engine\Texture.cpp">
-      <Filter>Src\Engine\Texture</Filter>
     </ClCompile>
     <ClCompile Include="Src\Engine\Engine.cpp">
       <Filter>Src\Engine\Engine</Filter>
@@ -289,6 +289,9 @@
     </ClCompile>
     <ClCompile Include="Src\Engine\Mesh\MeshBuffer.cpp">
       <Filter>Src\Engine\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\SkySphere.cpp">
+      <Filter>Src\Engine\SkySphere</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -439,9 +442,6 @@
     <ClInclude Include="Src\Engine\Configs\ShaderConfig.h">
       <Filter>Src\Engine\Configs</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Engine\Configs\ImGuiConfig.h">
-      <Filter>Src\Engine\Configs</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Engine\Color.h">
       <Filter>Src\Engine\Color</Filter>
     </ClInclude>
@@ -549,6 +549,12 @@
     </ClInclude>
     <ClInclude Include="Src\Engine\UsingNames\UsingScene.h">
       <Filter>Src\Engine\UsingNames</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\UsingNames\UsingFramebufferObject.h">
+      <Filter>Src\Engine\UsingNames</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\SkySphere.h">
+      <Filter>Src\Engine\SkySphere</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

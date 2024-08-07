@@ -6,7 +6,6 @@
 
 #include "Math/Vector.h"
 #include "Math/Angle.h"
-#include "GameObject.h"
 
 #include <GLFW/glfw3.h>
 #include <vector>
@@ -75,8 +74,8 @@ namespace PokarinEngine
 		/// <summary>
 		/// ライト情報をGPUにコピーする
 		/// </summary>
-		/// <param name="[in] mainCamera"> メインカメラ </param>
-		void CopyGPU(const GameObject& mainCamera);
+		/// <param name="[in] camera"> カメラ </param>
+		void CopyGPU(const Camera& camera);
 
 		/// <summary>
 		/// ライトデータを追加する

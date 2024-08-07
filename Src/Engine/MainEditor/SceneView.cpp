@@ -7,7 +7,7 @@
 #include "../Input.h"
 #include "../Time.h"
 
-#include "../Components/Transform.h"
+#include "../FramebufferObject.h"
 
 namespace PokarinEngine
 {
@@ -167,7 +167,7 @@ namespace PokarinEngine
 			}
 
 			// FBOのテクスチャ識別番号
-			ImTextureID texture = ImTextureID(camera.GetTextureID());
+			ImTextureID texture = ImTextureID(fbo->GetTextureID());
 
 			// シーンビュー用ウィンドウの大きさ
 			// 描画時に設定する
@@ -189,7 +189,15 @@ namespace PokarinEngine
 		// カラーバッファをクリア
 		// ----------------------------------
 
-		fbo->ClearColor(backGround);
+		//fbo->ClearColor(backGround);
+	}
+
+	/// <summary>
+	/// 描画
+	/// </summary>
+	void SceneView::Render()
+	{
+		
 	}
 
 } // namespace PokarinEngine

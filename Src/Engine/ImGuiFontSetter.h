@@ -23,19 +23,26 @@ namespace PokarinEngine
 		inline void SetFont(ImGuiIO& io)
 		{
 			// ----------------------------------------------
-			// デフォルトのフォントを削除
+			// デフォルトのフォントを削除する
 			// ----------------------------------------------
 
 			io.Fonts->Clear();
 
 			// ------------------------------------------
+			// テキスト用フォントを追加する
+			// ------------------------------------------
+
+			// フォントサイズ
+			static const float fontSize = 20.0f;
+
+			// テキスト用フォントのファイル名
+			static const char* textFontFile = "Res/Fonts/arial.ttf";
+
 			// テキスト用フォントを追加
-			// ------------------------------------------
-
-			io.Fonts->AddFontFromFileTTF(ImGuiConfig::File::textFont, ImGuiConfig::fontSize);
+			io.Fonts->AddFontFromFileTTF(textFontFile, fontSize);
 
 			// ------------------------------------------
-			// アイコン用フォントを追加
+			// アイコン用フォントを追加する
 			// ------------------------------------------
 
 			// 追加する範囲
@@ -46,9 +53,11 @@ namespace PokarinEngine
 			ImFontConfig fontConfig;
 			fontConfig.MergeMode = true;
 
+			// アイコン用フォントのファイル名
+			static const char* iconFontFile = "Res/Fonts/fa-solid-900.ttf";
+
 			// アイコン用フォントを追加
-			io.Fonts->AddFontFromFileTTF(ImGuiConfig::File::iconFont,
-				ImGuiConfig::fontSize, &fontConfig, icons_ranges);
+			io.Fonts->AddFontFromFileTTF(iconFontFile, fontSize, &fontConfig, icons_ranges);
 		}
 	}
 }

@@ -10,7 +10,7 @@
 
 #include "../GameObject.h"
 #include "../Random.h"
-#include "../InputManager.h"
+#include "../Input.h"
 
 namespace PokarinEngine
 {

@@ -5,9 +5,10 @@
 
 #include "Json/Json.h"
 
-#include "Engine.h"
+#include "GameObject.h"
 #include "Random.h"
 #include "Debug.h"
+#include "FramebufferObject.h"
 
 #include "Mesh/Mesh.h"
 
@@ -15,6 +16,7 @@
 #include "Components/Colliders/BoxCollider.h"
 
 #include "Configs/ShaderConfig.h"
+#include "Configs/MeshConfig.h"
 
 #include "Collision/Collision.h"
 
@@ -40,7 +42,7 @@ namespace PokarinEngine
 
 		// メインカメラ作成
 		auto cameraObject = CreateGameObject("MainCamera", cameraStartPosition);
-		mainCamera = cameraObject->AddComponent<Camera>();
+		cameraObject->AddComponent<Camera>();
 
 		// 平行光源を作成
 		auto directionalLight = CreateGameObject("Directional Light");
@@ -55,10 +57,9 @@ namespace PokarinEngine
 	/// <param name="[in] name"> オブジェクトの名前 </param>
 	/// <param name="[in] position"> オブジェクトを配置する位置 </param>
 	/// <param name="[in] rotation"> オブジェクトの回転角度 </param>
-	/// <param name="[in] staticMeshFile"> スタティックメッシュのファイル名 </param>
 	/// <returns> 追加したゲームオブジェクトのポインタ </returns>
 	GameObjectPtr Scene::CreateGameObject(const std::string& name,
-		const Vector3& position, const Vector3& rotation, const char* staticMeshFile)
+		const Vector3& position, const Vector3& rotation)
 	{
 		// シーン内のゲームオブジェクト数が最大値に達したら作成しない
 		if (gameObjectList.size() >= gameObjectMax)
@@ -72,8 +73,7 @@ namespace PokarinEngine
 
 		// ゲームオブジェクトの初期化
 		object->Initialize(*this, GetSingleObjectID(),
-			staticMeshFile, name,
-			position, rotation);
+			name, position, rotation);
 
 		// ゲームオブジェクト管理用配列に追加
 		gameObjectList.push_back(object);
@@ -130,6 +130,15 @@ namespace PokarinEngine
 		return objectID;
 	}
 
+	/// <summary>
+	/// FBOのテクスチャ識別番号を取得する
+	/// </summary>
+	/// <returns> FBOのテクスチャ識別番号 </returns>
+	GLuint Scene::GetTextureID() const
+	{
+		return fbo->GetTextureID();
+	}
+
 #pragma endregion
 
 #pragma region Update
@@ -138,7 +147,7 @@ namespace PokarinEngine
 	/// ゲームオブジェクトの状態を更新する
 	/// </summary>
 	/// <param name="[in] isPlayGame"> ゲーム再生中ならtrue </param>
-	void Scene::UpdateGameObject(bool isPlayGame)
+	void Scene::Update(bool isPlayGame)
 	{
 		// ゲームオブジェクトを更新
 		for (const auto& gameObject : gameObjectList)
@@ -158,14 +167,17 @@ namespace PokarinEngine
 			Collision::GameObjectCollision(gameObjectList);
 		}
 
-	} // UpdateGameObject
+		// ゲームオブジェクトの削除状態を確定する
+		RemoveDestroyedGameObject();
+
+	} // Update
 
 #pragma endregion
 
 #pragma region Destroy
 
 	/// <summary>
-	/// シーンから全てのゲームオブジェクトを破棄する
+	/// シーンから全てのゲームオブジェクトを削除する
 	/// </summary>
 	void Scene::ClearGameObject()
 	{
@@ -185,7 +197,7 @@ namespace PokarinEngine
 	/// <summary>
 	/// ゲームオブジェクトを削除する
 	/// </summary>
-	/// <param name="[in] object"> 削除するゲームオブジェクト </param>
+	/// <param name="[in,out] object"> 削除するゲームオブジェクト </param>
 	void Scene::DestroyObject(GameObjectPtr& object)
 	{
 		// -----------------------------------
@@ -202,7 +214,7 @@ namespace PokarinEngine
 	}
 
 	/// <summary>
-	/// 削除するゲームオブジェクトを完全に削除する
+	/// 削除予定(削除処理が未実行)のゲームオブジェクトを完全に削除する
 	/// </summary>
 	void Scene::RemoveDestroyedGameObject()
 	{
@@ -296,7 +308,7 @@ namespace PokarinEngine
 		// オブジェクトの描画
 		// ------------------------
 
-		// ゲームオブジェクトを描画
+		// ゲームオブジェクトを描画する
 		for (auto& itr = begin; itr != end; ++itr)
 		{
 			// ゲームオブジェクト
@@ -398,6 +410,10 @@ namespace PokarinEngine
 		// ---------- transparent以前のキューを描画  -----------
 		// ---------- 通常のオブジェクト		     -----------
 
+		// 深度テストを有効化
+		// 深度テストは有効と無効を切り替えることがあるので、念のため有効にしておく
+		glEnable(GL_DEPTH_TEST);
+
 		// 描画
 		DrawGameObject(progUnlit, drawObjectList.begin(), transparentBegin);
 
@@ -426,13 +442,6 @@ namespace PokarinEngine
 		// 描画
 		// UIにライティングはいらないのでアンリットシェーダを使う
 		DrawGameObject(progUnlit, overlayBegin, drawObjectList.end());
-
-		// ゲームオブジェクトのコライダーを描画
-		// コライダーは深度値関係なく描画しないと不便なので、ここで描画する
-		for (const auto& drawObject : drawObjectList)
-		{
-			drawObject->DrawCollider();
-		}
 	}
 
 #pragma endregion

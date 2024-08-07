@@ -3,6 +3,8 @@
 */
 #include "LightParameter.h"
 
+#include "Components/Camera.h"
+
 #include "Configs/ShaderConfig.h"
 #include "Shader/Shader.h"
 
@@ -42,6 +44,9 @@ namespace PokarinEngine
 		// 標準シェーダの識別番号
 		GLuint progStandard = 0;
 
+		// 計算で使用するライトの最大数
+		const size_t lightMax = 16;
+
 		// -----------------------------
 		// 関数
 		// -----------------------------
@@ -80,8 +85,8 @@ namespace PokarinEngine
 		/// <summary>
 		/// ライト情報をGPUにコピーする
 		/// </summary>
-		/// <param name="[in] mainCamera"> カメラ </param>
-		void CopyGPU(const GameObject& mainCamera)
+		/// <param name="[in] camera"> カメラ </param>
+		void CopyGPU(const Camera& camera)
 		{
 			// -----------------------------------------------
 			// 平行光源のライトデータをGPUにコピー
@@ -118,7 +123,7 @@ namespace PokarinEngine
 			// -------------- 下準備 ----------------
 
 			// カメラの正面ベクトル
-			const Vector3 front = mainCamera.transform->Front();
+			const Vector3 front = camera.transform.Front();
 
 			// カメラからライトまでの距離を管理する構造体
 			struct Distance
@@ -150,7 +155,7 @@ namespace PokarinEngine
 				}
 
 				// カメラからライトまでのベクトル
-				const Vector3 v = light->position - mainCamera.transform->position;
+				const Vector3 v = light->position - camera.transform.position;
 
 				// カメラの後ろで、ライトの範囲外だった場合
 				if (Vector3::Dot(front, v) <= -light->range)

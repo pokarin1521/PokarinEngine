@@ -3,18 +3,30 @@
 */
 #include "Camera.h"
 
+#include "glad/glad.h"
+
 #include "ImGui/imgui.h"
 
 #include "../GameObject.h"
 #include "../Window.h"
 #include "../TextureGetter.h"
 #include "../Shader/Shader.h"
-#include "../Configs/ShaderConfig.h"
 
 #include "../Mesh/Mesh.h"
 
+#include "../Configs/ShaderConfig.h"
+#include "../Configs/MeshConfig.h"
+
 namespace PokarinEngine
 {
+	/// <summary>
+	/// 最初の更新の直前での初期化
+	/// </summary>
+	void Camera::Start()
+	{
+		skySphere = Mesh::GetStaticMesh(StaticMeshFile::skySphere);
+	}
+
 	/// <summary>
 	/// 更新
 	/// </summary>
@@ -31,7 +43,7 @@ namespace PokarinEngine
 	/// <summary>
 	/// GPUに情報をコピーする
 	/// </summary>
-	void Camera::CopyToGPU()
+	void Camera::CopyToGPU() const
 	{
 		// ----------------------------
 		// 情報を取得する
@@ -77,7 +89,7 @@ namespace PokarinEngine
 	/// <summary>
 	/// スカイスフィアを描画する
 	/// </summary>
-	void Camera::DrawSkySphere()
+	void Camera::DrawSkySphere() const
 	{
 		// --------------------------------------------------------
 		// スカイスフィア用モデルがない場合は描画しない
@@ -141,7 +153,7 @@ namespace PokarinEngine
 
 		// 色はマテリアルカラーで調整するので白を設定
 		// (実際に描画される色は「オブジェクトカラー」と「マテリアルカラー」の乗算)
-		static const Color color = { 1, 1, 1, 1 };
+		static const Color color = Color::white;
 		glProgramUniform4fv(progUnlit, UniformLocation::color, 1, &color.r);
 
 		// -----------------------------------
