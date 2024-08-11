@@ -8,9 +8,7 @@
 
 #include "../Debug.h" 
 #include "../TextureGetter.h"
-
-#include "../Configs/ShaderConfig.h"
-#include "../Configs/MeshConfig.h"
+#include "../ShaderConfig.h"
 
 namespace PokarinEngine
 {
@@ -27,15 +25,9 @@ namespace PokarinEngine
 		// 32メガバイトとし、足りない場合は大きくするかメッシュバッファを増やす
 		static const size_t meshBufferSize = 32'000'000;
 
-		// メッシュバッファ作成用補助クラス
-		struct MeshBufferHelper : public MeshBuffer
-		{
-			MeshBufferHelper(size_t bufferSize) : MeshBuffer(bufferSize) {}
-		};
-
 		// 補助クラスを用いて
 		// メッシュバッファを作成する
-		meshBuffer = std::make_shared<MeshBufferHelper>(meshBufferSize);
+		meshBuffer = std::make_shared<MeshBuffer>(meshBufferSize);
 	}
 
 	/// <summary>
@@ -104,11 +96,11 @@ namespace PokarinEngine
 
 					// マテリアルを反映したオブジェクトの色を
 					// GPUにコピー
-					glProgramUniform4fv(program, UniformLocation::color, 1, &color.r);
+					glProgramUniform4fv(program, ShaderConfig::Uniform::color, 1, &color.r);
 
 					// 発光色と
 					// エミッションテクスチャの識別番号をGPUにコピー
-					glProgramUniform4f(program, UniformLocation::emissionColor,
+					glProgramUniform4f(program, ShaderConfig::Uniform::emissionColor,
 						material.emission.r,
 						material.emission.g,
 						material.emission.b,
@@ -122,13 +114,13 @@ namespace PokarinEngine
 					const GLuint tex = *material.texBaseColor;
 
 					// 通常の色用テクスチャをバインド
-					glBindTextures(TextureBinding::color, 1, &tex);
+					glBindTextures(ShaderConfig::Texture::color, 1, &tex);
 
 				}
 				else
 				{
-					// 通常の色用テクスチャをバインド
-					glBindTextures(TextureBinding::color, 1, 0);
+					// テクスチャがないのでバインド解除
+					glBindTextures(ShaderConfig::Texture::color, 1, 0);
 				}
 
 				// エミッションテクスチャがある
@@ -136,13 +128,13 @@ namespace PokarinEngine
 				{
 					// エミッションテクスチャをバインド
 					const GLuint tex = *material.texEmission;
-					glBindTextures(TextureBinding::emission, 1, &tex);
+					glBindTextures(ShaderConfig::Texture::emission, 1, &tex);
 				}
-				// エミッションテクスチャがない
 				else
 				{
-					// テクスチャ1を未設定にする
-					glBindTextures(TextureBinding::emission, 1, nullptr);
+					// エミッションテクスチャがないので
+					// バインド解除
+					glBindTextures(ShaderConfig::Texture::emission, 1, 0);
 				}
 			}
 

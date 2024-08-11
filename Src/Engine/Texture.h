@@ -35,7 +35,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// テクスチャ作成用コンストラクタ
 		/// </summary>
-		Texture() { glCreateTextures(GL_TEXTURE_2D, 1, &id); }
+		Texture(GLuint _id) :id(_id) {}
 
 		/// <summary>
 		/// テクスチャ削除用コンストラクタ

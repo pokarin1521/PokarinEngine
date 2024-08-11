@@ -7,22 +7,12 @@
 #include "DrawParameter.h"
 #include "Material.h"
 
+#include "../UsingNames/UsingStaticMesh.h"
+
 #include <string>
 
 namespace PokarinEngine
 {
-	// ---------------------
-	// 前方宣言
-	// ---------------------
-
-	class StaticMesh;
-
-	// ------------------------------
-	// 型の別名を定義
-	// ------------------------------
-
-	using  StaticMeshPtr = std::shared_ptr<StaticMesh>;
-
 	/// <summary>
 	/// スタティックメッシュ
 	/// </summary>

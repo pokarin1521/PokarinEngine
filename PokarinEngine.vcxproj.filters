@@ -60,9 +60,6 @@
     <Filter Include="Src\Engine\Window">
       <UniqueIdentifier>{ea021b10-cc9b-4616-895c-4ce71710338c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Engine\InputManager">
-      <UniqueIdentifier>{9f5224e2-0b46-4eb6-8a94-727e9bc3e64e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Src\Engine\UsingNames">
       <UniqueIdentifier>{ac4c34a3-edba-4f73-88d8-ddc39ece82f8}</UniqueIdentifier>
     </Filter>
@@ -77,9 +74,6 @@
     </Filter>
     <Filter Include="Src\Engine\Engine">
       <UniqueIdentifier>{52b2c7ab-c8cc-444b-93c7-90459840bbc9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Engine\LightParameter">
-      <UniqueIdentifier>{719d773c-9e98-4380-b5cf-a346a915f007}</UniqueIdentifier>
     </Filter>
     <Filter Include="Src\Engine\Math">
       <UniqueIdentifier>{926ce579-cc08-49dc-9858-952380a41782}</UniqueIdentifier>
@@ -102,17 +96,8 @@
     <Filter Include="Src\Engine\Time">
       <UniqueIdentifier>{ebad3738-f9c0-4f35-975b-0b49c11b71a2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Engine\Configs">
-      <UniqueIdentifier>{506e5ef1-5a42-4e1a-8c9f-e3e80f5b2167}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Engine\Color">
-      <UniqueIdentifier>{356c702c-94a0-4877-b425-8acd29d21054}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Src\Engine\Random">
       <UniqueIdentifier>{ff0aad65-a468-4205-910f-763d3888fa53}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Engine\ImGuiSetter">
-      <UniqueIdentifier>{5e4df9e4-c431-45f1-9bbe-81dcc5ddc8c9}</UniqueIdentifier>
     </Filter>
     <Filter Include="Src\Library">
       <UniqueIdentifier>{97db61aa-2d1e-4021-b95a-5d370b9152d1}</UniqueIdentifier>
@@ -134,6 +119,15 @@
     </Filter>
     <Filter Include="Src\Engine\SkySphere">
       <UniqueIdentifier>{fea43f2a-4e77-410a-9d45-40a4c73b492b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Engine\Input">
+      <UniqueIdentifier>{9f5224e2-0b46-4eb6-8a94-727e9bc3e64e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Engine\CameraManager">
+      <UniqueIdentifier>{4149f6cd-f4ca-4171-afdf-026f05b0cdca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Engine\LightManager">
+      <UniqueIdentifier>{719d773c-9e98-4380-b5cf-a346a915f007}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -177,7 +171,7 @@
       <Filter>Src\Engine\Window</Filter>
     </ClCompile>
     <ClCompile Include="Src\Engine\Input.cpp">
-      <Filter>Src\Engine\InputManager</Filter>
+      <Filter>Src\Engine\Input</Filter>
     </ClCompile>
     <ClCompile Include="Src\Engine\NodeScript\NodeEditor.cpp">
       <Filter>Src\Engine\Editor\NodeEditor</Filter>
@@ -203,8 +197,8 @@
     <ClCompile Include="Src\Engine\NodeScript\NodeScript.cpp">
       <Filter>Src\Engine\Editor\NodeEditor</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Engine\LightParameter.cpp">
-      <Filter>Src\Engine\LightParameter</Filter>
+    <ClCompile Include="Src\Engine\LightManager.cpp">
+      <Filter>Src\Engine\LightManager</Filter>
     </ClCompile>
     <ClCompile Include="Src\Engine\Components\Colliders\SphereCollider.cpp">
       <Filter>Src\Engine\Components\Colliders</Filter>
@@ -293,6 +287,9 @@
     <ClCompile Include="Src\Engine\SkySphere.cpp">
       <Filter>Src\Engine\SkySphere</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Engine\CameraManager.cpp">
+      <Filter>Src\Engine\CameraManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Res\Shader\Standard.frag">
@@ -362,7 +359,7 @@
       <Filter>Src\Engine\Window</Filter>
     </ClInclude>
     <ClInclude Include="Src\Engine\Input.h">
-      <Filter>Src\Engine\InputManager</Filter>
+      <Filter>Src\Engine\Input</Filter>
     </ClInclude>
     <ClInclude Include="Src\Engine\NodeScript\NodeEditor.h">
       <Filter>Src\Engine\Editor\NodeEditor</Filter>
@@ -391,8 +388,8 @@
     <ClInclude Include="Src\Engine\Components\Camera.h">
       <Filter>Src\Engine\Components\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Engine\LightParameter.h">
-      <Filter>Src\Engine\LightParameter</Filter>
+    <ClInclude Include="Src\Engine\LightManager.h">
+      <Filter>Src\Engine\LightManager</Filter>
     </ClInclude>
     <ClInclude Include="Src\Engine\Math\Matrix.h">
       <Filter>Src\Engine\Math</Filter>
@@ -435,18 +432,6 @@
     </ClInclude>
     <ClInclude Include="Src\Engine\MainEditor\Toolbar.h">
       <Filter>Src\Engine\Editor\MainEditor</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Engine\Configs\MeshConfig.h">
-      <Filter>Src\Engine\Configs</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Engine\Configs\ShaderConfig.h">
-      <Filter>Src\Engine\Configs</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Engine\Color.h">
-      <Filter>Src\Engine\Color</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Engine\ImGuiFontSetter.h">
-      <Filter>Src\Engine\ImGuiSetter</Filter>
     </ClInclude>
     <ClInclude Include="Src\Engine\Collision\CollisionType.h">
       <Filter>Src\Engine\Collision</Filter>
@@ -555,6 +540,21 @@
     </ClInclude>
     <ClInclude Include="Src\Engine\SkySphere.h">
       <Filter>Src\Engine\SkySphere</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\Color.h">
+      <Filter>Src\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\ImGuiFontSetter.h">
+      <Filter>Src\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\ShaderConfig.h">
+      <Filter>Src\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\CameraManager.h">
+      <Filter>Src\Engine\CameraManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\UsingNames\UsingStaticMesh.h">
+      <Filter>Src\Engine\UsingNames</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

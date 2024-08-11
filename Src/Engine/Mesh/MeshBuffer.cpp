@@ -5,6 +5,8 @@
 
 #include "MeshBuffer.h"
 
+#include "StaticMesh.h"
+
 #include <unordered_map>
 #include <numeric>
 #include <algorithm>
@@ -835,7 +837,7 @@ namespace PokarinEngine
 			indices.data(), indices.size());
 
 		// データの位置
-		const void* indexOffset = nullptr;
+		void* indexOffset = nullptr;
 
 		// インデックス0となる頂点配列の要素番号
 		GLint baseVertex = 0;
@@ -957,7 +959,7 @@ namespace PokarinEngine
 	/// <param name="[out] baseVertex"> インデックス0となる頂点配列の要素番号 </param>
 	void MeshBuffer::AddVertexData(const Vertex* vertices, size_t vertexBytes,
 		const uint16_t* indices, size_t indexBytes,
-		const void* indexOffset, GLint& baseVertex)
+		void*& indexOffset, GLint& baseVertex)
 	{
 		// -------------------------------------------------------------------
 		// 空き容量が足りていることを確認

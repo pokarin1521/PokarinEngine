@@ -7,8 +7,6 @@
 #include "ImGui/imgui.h"
 #include "IconFont/IconFont.h"
 
-#include "Configs/ImGuiConfig.h"
-
 namespace PokarinEngine
 {
 	/// <summary>

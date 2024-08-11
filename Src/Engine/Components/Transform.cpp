@@ -6,7 +6,7 @@
 #include "ImGui/imgui.h"
 #include "Json/Json.h"
 
-#include "../Engine.h"
+#include "../Math/Angle.h"
 
 #include <fstream>
 
@@ -269,7 +269,7 @@ namespace PokarinEngine
 	/// <summary>
 	/// ƒRƒ“ƒ|[ƒlƒ“ƒg‚Ìî•ñ‚ğJsonŒ^‚©‚çæ“¾‚·‚é
 	/// </summary>
-	/// <param name="[out] data"> î•ñ‚ğŠi”[‚µ‚Ä‚¢‚éJsonŒ^ </param>
+	/// <param name="[in] data"> î•ñ‚ğŠi”[‚µ‚Ä‚¢‚éJsonŒ^ </param>
 	void Transform::FromJson(const Json& data)
 	{
 		position.FromJson(data["Position"]);

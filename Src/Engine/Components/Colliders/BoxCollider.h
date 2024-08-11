@@ -66,7 +66,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// ƒRƒ“ƒ|[ƒlƒ“ƒg‚Ìî•ñ‚ğJsonŒ^‚©‚çæ“¾‚·‚é
 		/// </summary>
-		/// <param name="[out] data"> î•ñ‚ğŠi”[‚µ‚Ä‚¢‚éJsonŒ^ </param>
+		/// <param name="[in] data"> î•ñ‚ğŠi”[‚µ‚Ä‚¢‚éJsonŒ^ </param>
 		void FromJson(const Json& data) override;
 
 	public: // ------------------- î•ñ ---------------------

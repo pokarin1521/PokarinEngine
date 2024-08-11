@@ -6,7 +6,7 @@
 
 #include "Component.h"
 
-#include "../LightParameter.h"
+#include "../LightManager.h"
 #include "../Math/Vector.h"
 
 namespace PokarinEngine
@@ -18,10 +18,13 @@ namespace PokarinEngine
 	{
 	public: // -------- コンストラクタ・デストラクタ ---------
 
-		Light() = default;
+		/// <summary>
+		/// ライトデータを追加するコンストラクタ
+		/// </summary>
+		Light();
 
 		/// <summary>
-		/// ライトを解放するデストラクタ
+		/// ライトデータを解放するデストラクタ
 		/// </summary>
 		~Light();
 
@@ -43,7 +46,7 @@ namespace PokarinEngine
 		/// ライトの種類を設定する
 		/// </summary>
 		/// <param name="[in] type"> ライトの種類 </param>
-		void SetType(LightParameter::Type type)
+		void SetType(LightManager::LightType type)
 		{
 			lightData.type = type;
 		}
@@ -59,7 +62,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// コンポーネントの情報をJson型から取得する
 		/// </summary>
-		/// <param name="[out] data"> 情報を格納しているJson型 </param>
+		/// <param name="[in] data"> 情報を格納しているJson型 </param>
 		void FromJson(const Json& data) override;
 
 	private: // ---------------- エディタ用 ----------------
@@ -72,7 +75,7 @@ namespace PokarinEngine
 	private: // ------------------- 情報 -------------------
 
 		// ライトデータ
-		LightParameter::LightData lightData;
+		LightManager::LightData lightData;
 
 	private: // ------------------ 管理用 ------------------
 

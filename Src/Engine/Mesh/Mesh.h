@@ -68,7 +68,7 @@ namespace PokarinEngine
 		Mesh() = default;
 		~Mesh() = default;
 
-	private: // --------------------- メッシュバッファ --------------------
+	public: // --------------------- メッシュバッファ --------------------
 
 		// メッシュバッファ
 		inline static std::shared_ptr<MeshBuffer> meshBuffer = nullptr;

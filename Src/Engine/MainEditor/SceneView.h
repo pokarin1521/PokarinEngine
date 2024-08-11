@@ -7,25 +7,22 @@
 #include "../Color.h"
 #include "../Math/Vector.h"
 
-#include "../Components/Camera.h"
-
+#include "../UsingNames/UsingScene.h"
+#include "../UsingNames/UsingGameObject.h"
 #include "../UsingNames/UsingFramebufferObject.h"
+
+#include "../Components/Camera.h"
 
 namespace PokarinEngine
 {
 	/// <summary>
-	/// シーンビュー(シーン内の情報を描画するビュー)
+	/// シーンビュー(シーン内の情報を描画するウィンドウ)
 	/// </summary>
 	class SceneView
 	{
 	public: // ------------------ コンストラクタ・デストラクタ --------------------
 
-		SceneView()
-		{
-			// カメラの初期位置を設定
-			camera.transform.position = cameraStartPos;
-		}
-
+		SceneView() = default;
 		~SceneView() = default;
 
 	public: // ---------------------------- 禁止事項 ------------------------------
@@ -41,6 +38,11 @@ namespace PokarinEngine
 	public: // ------------------------------ 制御 --------------------------------
 
 		/// <summary>
+		/// 初期化
+		/// </summary>
+		void Initialize();
+
+		/// <summary>
 		/// 更新
 		/// </summary>
 		void Update();
@@ -48,7 +50,9 @@ namespace PokarinEngine
 		/// <summary>
 		/// 描画
 		/// </summary>
-		void Render();
+		/// <param name ="[in] currentScene"> 現在のシーン </param>
+		/// <param name ="[in] selectObject"> ヒエラルキーで選択中のゲームオブジェクト </param>
+		void Render(const ScenePtr& currentScene, const GameObjectPtr& selectObject);
 
 	private: // -------------------------- カメラ操作 -----------------------------
 
@@ -79,14 +83,14 @@ namespace PokarinEngine
 
 		// カメラ操作状態ならtrue
 		bool isControlCamera = false;
-		
+
 	private: // ------------------------- マウスカーソル --------------------------
 
 		// マウスカーソルの位置
-		Vector2 mousePos = Vector2(0, 0);
+		Vector2 mousePos = Vector2::zero;
 
 		// マウスカーソルの初期位置
-		Vector2 startMousePos = Vector2(0, 0);
+		Vector2 startMousePos = Vector2::zero;
 
 	private: // ----------------------------- 描画用 ------------------------------
 

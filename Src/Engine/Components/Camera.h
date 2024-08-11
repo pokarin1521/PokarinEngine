@@ -9,7 +9,7 @@
 #include "../Math/Angle.h"
 #include "../Math/Vector.h"
 
-#include "../Mesh/StaticMesh.h"
+#include "../UsingNames/UsingStaticMesh.h"
 
 #include <memory>
 
@@ -22,27 +22,45 @@ namespace PokarinEngine
 	{
 	public: // ------------------ コンストラクタ・デストラクタ -------------------
 
-		Camera() = default;
-		~Camera() = default;
-
-	public: // ------------------------------ 更新 -------------------------------
-		
 		/// <summary>
-		/// 更新
+		/// カメラを追加するコンストラクタ
 		/// </summary>
-		void Update() override;
+		Camera();
+
+		/// <summary>
+		/// カメラを削除するデストラクタ
+		/// </summary>
+		~Camera();
+
+	public: // ----------------------------- コピー ------------------------------
 
 		/// <summary>
 		/// GPUに情報をコピーする
 		/// </summary>
 		void CopyToGPU() const;
 
-	public: // -------------------------- スカイスフィア -------------------------
+	public: // ---------------------------- 描画範囲 -----------------------------
 
 		/// <summary>
-		/// スカイスフィアを描画する
+		/// 描画範囲
 		/// </summary>
-		void DrawSkySphere() const;
+		struct DrawRange
+		{
+			// 最小描画範囲
+			float near = 0.35f;
+
+			// 最大描画範囲
+			float far = 1000.0f;
+		};
+
+		/// <summary>
+		/// 描画範囲を取得する
+		/// </summary>
+		/// <returns> 描画範囲 </returns>
+		const DrawRange& GetDrawRange() const
+		{
+			return drawRange;
+		}
 
 	public: // ------------------------------ Json -------------------------------
 
@@ -55,21 +73,21 @@ namespace PokarinEngine
 		/// <summary>
 		/// コンポーネントの情報をJson型から取得する
 		/// </summary>
-		/// <param name="[out] data"> 情報を格納しているJson型 </param>
+		/// <param name="[in] data"> 情報を格納しているJson型 </param>
 		void FromJson(const Json& data) override;
 
 	public: // ------------------------- 位置・回転角度 --------------------------
 
 		// 位置・回転角度
 		// 拡大率は使わない
-		Transform transform;
+		TransformPtr transform;
 
 	private: // ---------------------------- 初期化 ------------------------------
 
 		/// <summary>
-		/// 最初の更新の直前での初期化
+		/// ゲームオブジェクトに追加された時の初期化
 		/// </summary>
-		void Start() override;
+		void Awake() override;
 
 	private: // -------------------------- エディタ用 ----------------------------
 
@@ -92,26 +110,11 @@ namespace PokarinEngine
 
 	private: // ----------------------------- 描画用 -----------------------------
 
-		/// <summary>
-		/// 描画範囲
-		/// </summary>
-		struct DrawRange
-		{
-			// 最小描画範囲
-			float near = 0.35f;
-
-			// 最大描画範囲
-			float far = 1000.0f;
-		};
-
 		// 描画範囲
 		DrawRange drawRange;
 
 		// スカイスフィア用モデル
 		StaticMeshPtr skySphere;
-
-		// 描画先のディスプレイ番号
-		GLuint targetDisplayID = 0;
 	};
 }
 

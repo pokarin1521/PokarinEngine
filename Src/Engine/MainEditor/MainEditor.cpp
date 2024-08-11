@@ -14,8 +14,6 @@
 #include "../GameObject.h"
 #include "../Debug.h"
 
-#include "../Configs/MeshConfig.h"
-
 #include "../ImGuiFontSetter.h"
 
 #include "../Window.h"
@@ -31,8 +29,7 @@ namespace PokarinEngine
 	/// <summary>
 	/// メインメニュー
 	/// </summary>
-	/// <param name="[in] currentScene"> 現在のシーン </param>
-	void MainEditor::MainMenu(const ScenePtr& currentScene)
+	void MainEditor::MainMenu()
 	{
 		// メインメニュー作成
 		ImGui::BeginMainMenuBar();
@@ -121,14 +118,14 @@ namespace PokarinEngine
 
 		ImGuiFontSetter::SetFont(io);
 
-		// ----------------------------
-		// 描画用ビューの初期化
-		// ----------------------------
+		// ----------------------------------
+		// ビューの初期化
+		// ----------------------------------
 
-		// シーンビュー
+		// シーンビューの初期化
 		sceneView.Initialize();
 
-		// ゲームビュー
+		// ゲームビューの初期化
 		gameView.Initialize();
 
 		// ----------------------------------------
@@ -141,10 +138,20 @@ namespace PokarinEngine
 	/// <summary>
 	/// 更新
 	/// </summary>
-	/// <param name="[in] currentScene"> 現在のシーン </param>
+	/// <param name="[in] _currentScene"> 現在のシーン </param>
 	/// <param name="[out] isPlayGame"> ゲーム再生中ならtrue </param>
-	void MainEditor::Update(const ScenePtr& currentScene, bool& isPlayGame)
+	void MainEditor::Update(const ScenePtr& _currentScene, bool& isPlayGame)
 	{
+		// ------------------------------------
+		// メインエディタの情報を更新する
+		// ------------------------------------
+
+		// 現在のシーンを設定する
+		currentScene = _currentScene;
+
+		// ヒエラルキーで選択中のゲームオブジェクトを設定する
+		selectObject = hierarchy.GetSelectObject();
+
 		// -------------------------
 		// ImGuiフレームの更新
 		// -------------------------
@@ -181,7 +188,7 @@ namespace PokarinEngine
 		// メインメニュー
 		// ------------------------------
 
-		MainMenu(currentScene);
+		MainMenu();
 
 		// -------------------------------------------
 		// エディタ内ウィンドウ・ビューの更新
@@ -191,13 +198,13 @@ namespace PokarinEngine
 		sceneView.Update();
 
 		// ゲームビュー
-		gameView.Update(currentScene);
+		gameView.Update();
 
 		// ヒエラルキーウィンドウ
 		hierarchy.Update(currentScene);
 
 		// インスペクターウィンドウ
-		inspector.Update(hierarchy.GetSelectObject());
+		inspector.Update(selectObject);
 
 		// ツールバー
 		Toolbar::Update(isPlayGame);
@@ -226,6 +233,12 @@ namespace PokarinEngine
 	/// </summary>
 	void MainEditor::Render()
 	{
+		// シーンビューの描画
+		sceneView.Render(currentScene, selectObject);
+
+		// ゲームビューの描画
+		gameView.Render(currentScene);
+
 		// ImGuiの描画
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

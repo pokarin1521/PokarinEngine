@@ -160,6 +160,7 @@
     </Xdcmake>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Engine\CameraManager.cpp" />
     <ClCompile Include="Src\Engine\Collision\Collision.cpp" />
     <ClCompile Include="Src\Engine\Collision\Intersect.cpp" />
     <ClCompile Include="Src\Engine\Components\Camera.cpp" />
@@ -176,7 +177,7 @@
     <ClCompile Include="Src\Engine\FramebufferObject.cpp" />
     <ClCompile Include="Src\Engine\GameObject.cpp" />
     <ClCompile Include="Src\Engine\Input.cpp" />
-    <ClCompile Include="Src\Engine\LightParameter.cpp" />
+    <ClCompile Include="Src\Engine\LightManager.cpp" />
     <ClCompile Include="Src\Engine\MainEditor\GameView.cpp" />
     <ClCompile Include="Src\Engine\MainEditor\Hierarchy.cpp" />
     <ClCompile Include="Src\Engine\MainEditor\Inspector.cpp" />
@@ -222,6 +223,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Engine\BufferObject.h" />
+    <ClInclude Include="Src\Engine\CameraManager.h" />
     <ClInclude Include="Src\Engine\Collision\Collision.h" />
     <ClInclude Include="Src\Engine\Collision\CollisionType.h" />
     <ClInclude Include="Src\Engine\Collision\Intersect.h" />
@@ -235,15 +237,13 @@
     <ClInclude Include="Src\Engine\Components\Light.h" />
     <ClInclude Include="Src\Engine\Components\Rigidbody.h" />
     <ClInclude Include="Src\Engine\Components\Transform.h" />
-    <ClInclude Include="Src\Engine\Configs\MeshConfig.h" />
-    <ClInclude Include="Src\Engine\Configs\ShaderConfig.h" />
     <ClInclude Include="Src\Engine\Debug.h" />
     <ClInclude Include="Src\Engine\Engine.h" />
     <ClInclude Include="Src\Engine\FramebufferObject.h" />
     <ClInclude Include="Src\Engine\GameObject.h" />
     <ClInclude Include="Src\Engine\ImGuiFontSetter.h" />
     <ClInclude Include="Src\Engine\Input.h" />
-    <ClInclude Include="Src\Engine\LightParameter.h" />
+    <ClInclude Include="Src\Engine\LightManager.h" />
     <ClInclude Include="Src\Engine\MainEditor\GameView.h" />
     <ClInclude Include="Src\Engine\MainEditor\Hierarchy.h" />
     <ClInclude Include="Src\Engine\MainEditor\Inspector.h" />
@@ -272,6 +272,7 @@
     <ClInclude Include="Src\Engine\Random.h" />
     <ClInclude Include="Src\Engine\RenderbufferObject.h" />
     <ClInclude Include="Src\Engine\Scene.h" />
+    <ClInclude Include="Src\Engine\ShaderConfig.h" />
     <ClInclude Include="Src\Engine\Shader\Shader.h" />
     <ClInclude Include="Src\Engine\SkySphere.h" />
     <ClInclude Include="Src\Engine\Texture.h" />
@@ -283,6 +284,7 @@
     <ClInclude Include="Src\Engine\UsingNames\UsingGameObject.h" />
     <ClInclude Include="Src\Engine\UsingNames\UsingNodeEditor.h" />
     <ClInclude Include="Src\Engine\UsingNames\UsingScene.h" />
+    <ClInclude Include="Src\Engine\UsingNames\UsingStaticMesh.h" />
     <ClInclude Include="Src\Engine\VertexArrayObject.h" />
     <ClInclude Include="Src\Engine\Window.h" />
     <ClInclude Include="Src\Library\glad\glad.h" />

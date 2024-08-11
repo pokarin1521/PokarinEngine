@@ -44,9 +44,9 @@ namespace PokarinEngine
 		/// <summary>
 		/// 更新
 		/// </summary>
-		/// <param name="[in] currentScene"> 現在のシーン </param>
+		/// <param name="[in] _currentScene"> 現在のシーン </param>
 		/// <param name="[out] isPlayGame"> ゲーム再生中ならtrue </param>
-		void Update(const ScenePtr& currentScene, bool& isPlayGame);
+		void Update(const ScenePtr& _currentScene, bool& isPlayGame);
 
 		/// <summary>
 		/// 描画
@@ -63,8 +63,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// メインメニュー
 		/// </summary>
-		/// <param name="[in] currentScene"> 現在のシーン </param>
-		void MainMenu(const ScenePtr& currentScene);
+		void MainMenu();
 
 	private: // ------------------------- 色設定用 -------------------------
 
@@ -82,9 +81,16 @@ namespace PokarinEngine
 
 	private: // ------------------------- ウィンドウ -----------------------
 
+		// シーン内の情報を描画するウィンドウ
 		SceneView sceneView;
+
+		// ゲーム画面を描画するウィンドウ
 		GameView gameView;
+
+		// シーン内のオブジェクト管理用ウィンドウ
 		Hierarchy hierarchy;
+
+		// シーン内のオブジェクト制御用ウィンドウ
 		Inspector inspector;
 
 	private: // ------------------------- バージョン -----------------------
@@ -99,6 +105,14 @@ namespace PokarinEngine
 
 		// ImGuiの色設定の数
 		int pushColorCount = 0;
+
+	private: // --------------------------- 情報 ---------------------------
+
+		// 現在のシーン
+		ScenePtr currentScene;
+
+		// ヒエラルキーで選択中のゲームオブジェクト
+		GameObjectPtr selectObject;
 	};
 
 } // namespace PokarinEngine

@@ -1,28 +1,29 @@
 /**
-* @file LightData.cpp
+* @file LightManager.cpp
 */
-#include "LightParameter.h"
+#include "LightManager.h"
 
 #include "Components/Camera.h"
 
-#include "Configs/ShaderConfig.h"
+#include "ShaderConfig.h"
 #include "Shader/Shader.h"
 
 #include <algorithm>
 #include <set>
+#include <unordered_set>
 
 namespace PokarinEngine
 {
 	/// <summary>
-	/// ライトパラメータ管理用
+	/// ライト管理用
 	/// </summary>
-	namespace LightParameter
+	namespace LightManager
 	{
 		// ---------------------------
 		// 型の別名を定義
 		// ---------------------------
 
-		using LightDataList = std::set<LightData*>;
+		using LightDataList = std::unordered_set<const LightData*>;
 
 		// 昇順になるようにset型を使う
 		using LightIndexList = std::set<int>;
@@ -35,7 +36,7 @@ namespace PokarinEngine
 		LightDataList lightList;
 
 		// 平行光源
-		LightData* directionalLight = nullptr;
+		const LightData* directionalLight = nullptr;
 
 		// 環境光(青空をイメージ)
 		// 方向を持たないので色だけ
@@ -65,7 +66,7 @@ namespace PokarinEngine
 			if (!directionalLight)
 			{
 				glProgramUniform3fv(progStandard,
-					UniformLocation::directionalLightColor, 1, &Color::black.r);
+					ShaderConfig::Uniform::directionalLightColor, 1, &Color::black.r);
 
 				return;
 			}
@@ -75,17 +76,17 @@ namespace PokarinEngine
 
 			// 色をコピー
 			glProgramUniform3fv(progStandard,
-				UniformLocation::directionalLightColor, 1, &color.r);
+				ShaderConfig::Uniform::directionalLightColor, 1, &color.r);
 
 			// 向きをコピー
 			glProgramUniform3fv(progStandard,
-				UniformLocation::directionalLightDirection, 1, &directionalLight->direction.x);
+				ShaderConfig::Uniform::directionalLightDirection, 1, &directionalLight->direction.x);
 		}
 
 		/// <summary>
 		/// ライト情報をGPUにコピーする
 		/// </summary>
-		/// <param name="[in] camera"> カメラ </param>
+		/// <param name="[in] camera"> 使用するカメラ </param>
 		void CopyGPU(const Camera& camera)
 		{
 			// -----------------------------------------------
@@ -102,7 +103,7 @@ namespace PokarinEngine
 			static const GLuint progStandard = Shader::GetProgram(Shader::ProgType::Standard);
 
 			glProgramUniform3fv(progStandard,
-				UniformLocation::ambientLight, 1, &ambientLight.r);
+				ShaderConfig::Uniform::ambientLight, 1, &ambientLight.r);
 
 			// -------------------------
 			// 使用中ライトを確認
@@ -111,7 +112,7 @@ namespace PokarinEngine
 			// 使用中のライトがなければコピーするライト数を0に設定
 			if (lightList.empty())
 			{
-				glProgramUniform1i(progStandard, UniformLocation::lightCount, 0);
+				glProgramUniform1i(progStandard, ShaderConfig::Uniform::lightCount, 0);
 
 				return;
 			}
@@ -123,7 +124,7 @@ namespace PokarinEngine
 			// -------------- 下準備 ----------------
 
 			// カメラの正面ベクトル
-			const Vector3 front = camera.transform.Front();
+			const Vector3 front = camera.transform->Front();
 
 			// カメラからライトまでの距離を管理する構造体
 			struct Distance
@@ -148,14 +149,14 @@ namespace PokarinEngine
 			{
 				// 平行光源は距離関係なく使うので
 				// 別で処理ができるように変数に保持して次のライトへ
-				if (light->type == Type::directional)
+				if (light->type == LightType::directional)
 				{
 					directionalLight = light;
 					continue;
 				}
 
 				// カメラからライトまでのベクトル
-				const Vector3 v = light->position - camera.transform.position;
+				const Vector3 v = light->position - camera.transform->position;
 
 				// カメラの後ろで、ライトの範囲外だった場合
 				if (Vector3::Dot(front, v) <= -light->range)
@@ -179,7 +180,7 @@ namespace PokarinEngine
 			// 画面内にライトがない
 			if (distanceList.empty())
 			{
-				glProgramUniform1i(progStandard, UniformLocation::lightCount, 0);
+				glProgramUniform1i(progStandard, ShaderConfig::Uniform::lightCount, 0);
 				return;
 			}
 
@@ -199,7 +200,7 @@ namespace PokarinEngine
 
 			// 使用するライトの数
 			const int lightCount = static_cast<int>(
-				std::min(distanceList.size(), MaxShaderCount::light));
+				std::min(distanceList.size(), ShaderConfig::lightMax));
 
 			// ライトの色と減衰開始角度
 			std::vector<Vector4> colorAndFalloffAngle(lightCount);
@@ -236,26 +237,26 @@ namespace PokarinEngine
 			// ----------- GPUにライトデータをコピー ------------
 
 			// 色と減衰開始角度
-			glProgramUniform4fv(progStandard, UniformLocation::lightColorAndFalloffAngle,
+			glProgramUniform4fv(progStandard, ShaderConfig::Uniform::lightColorAndFalloffAngle,
 				lightCount, &colorAndFalloffAngle[0].x);
 
 			// 座標と範囲(半径)
-			glProgramUniform4fv(progStandard, UniformLocation::lightPositionAndRange,
+			glProgramUniform4fv(progStandard, ShaderConfig::Uniform::lightPositionAndRange,
 				lightCount, &positionAndRange[0].x);
 
 			// 方向と最大照射角度
-			glProgramUniform4fv(progStandard, UniformLocation::lightDirectionAndSpotAngle,
+			glProgramUniform4fv(progStandard, ShaderConfig::Uniform::lightDirectionAndSpotAngle,
 				lightCount, &directionAndSpotAngle[0].x);
 
 			// 使用するライトの数
-			glProgramUniform1i(progStandard, UniformLocation::lightCount, lightCount);
+			glProgramUniform1i(progStandard, ShaderConfig::Uniform::lightCount, lightCount);
 		}
 
 		/// <summary>
 		/// ライトデータを追加する
 		/// </summary>
 		/// <param name="[in] lightData"> 追加するライトデータ </param>
-		void AddLightData(LightData& lightData)
+		void AddLightData(const LightData& lightData)
 		{
 			lightList.emplace(&lightData);
 		}
@@ -264,7 +265,7 @@ namespace PokarinEngine
 		/// ライトデータを削除する
 		/// </summary>
 		/// <param name="[in] lightData"> 削除するライトデータ </param>
-		void EraseLightData(LightData& lightData)
+		void EraseLightData(const LightData& lightData)
 		{
 			// 平行光源のライトデータなら
 			// 使用中の平行光源を削除する

@@ -6,14 +6,9 @@
 #include "Window.h"
 #include "Debug.h"
 #include "Input.h"
-#include "Time.h"
 #include "Random.h"
+#include "Time.h"
 #include "Scene.h"
-#include "LightParameter.h"
-
-#include "Math/Matrix.h"
-
-#include "Configs/ShaderConfig.h"
 
 #include "NodeScript/NodeScript.h"
 
@@ -177,6 +172,12 @@ namespace PokarinEngine
 
 		glDebugMessageCallback(Debug::Callback, nullptr);
 
+		// ------------------------------------------
+		// メッシュ管理用クラスの初期化
+		// ------------------------------------------
+
+		Mesh::Initialize();
+
 		// -----------------------------
 		// エディタを初期化
 		// -----------------------------
@@ -189,12 +190,6 @@ namespace PokarinEngine
 		// -----------------------
 
 		Shader::Initialize();
-
-		// ------------------------------------------
-		// メッシュ管理用クラスの初期化
-		// ------------------------------------------
-
-		Mesh::Initialize();
 
 		// -----------------------------------
 		// シーンがなければ作成

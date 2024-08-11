@@ -22,7 +22,7 @@ namespace PokarinEngine
 		// キャッシュにあれば
 		// キャッシュされたテクスチャを返す
 		// ----------------------------------------
-		
+
 		// テクスチャを検索
 		// なければendが入る
 		auto itr = textureCache.find(fileName);
@@ -62,11 +62,10 @@ namespace PokarinEngine
 		// テクスチャ作成
 		// -------------------------
 
-		// テクスチャを作成
-		TexturePtr texture = std::make_shared<Texture>();
-
 		// テクスチャの識別番号
-		GLuint id = *texture;
+		GLuint id = 0;
+
+		glCreateTextures(GL_TEXTURE_2D, 1, &id);
 
 		// ---------------------------------
 		// テクスチャイメージを設定
@@ -120,7 +119,7 @@ namespace PokarinEngine
 		// 作成したテクスチャを返す
 		// ---------------------------------
 
-		return texture;
+		return std::make_shared<Texture>(id);
 	}
 
 	/// <summary>
@@ -142,7 +141,7 @@ namespace PokarinEngine
 		if (!file)
 		{
 			LOG_ERROR("%sを開けません", fileName);
-			return;
+			return nullptr;
 		}
 
 		// --------------------------

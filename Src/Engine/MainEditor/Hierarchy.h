@@ -43,8 +43,8 @@ namespace PokarinEngine
 		/// <summary>
 		/// 更新
 		/// </summary>
-		/// <param name="[in] currentScene"> 現在のシーン </param>
-		void Update(const ScenePtr& currentScene);
+		/// <param name="[in] _currentScene"> 現在のシーン </param>
+		void Update(const ScenePtr& _currentScene);
 
 	public: // -------------------- オブジェクトの取得 ---------------------
 

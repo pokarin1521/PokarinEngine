@@ -1,5 +1,4 @@
 /**
-/**
 * @file Engine.h
 */
 #ifndef POKARINENGINE_ENGINE_H_INCLUDED
@@ -9,8 +8,6 @@
 
 #include "MainEditor/MainEditor.h"
 
-#include "Math/Vector.h"
-
 #include "UsingNames/UsingScene.h"
 
 #include <GLFW/glfw3.h>
@@ -19,7 +16,7 @@
 #include <memory>
 #include <utility>
 #include <functional>
-#include <unordered_map>
+#include <unordered_set>
 
 namespace PokarinEngine
 {

@@ -10,7 +10,7 @@
 #include "UsingNames/UsingGameObject.h"
 #include "UsingNames/UsingFramebufferObject.h"
 
-#include "Components/Camera.h"
+#include "Math/Vector.h"
 
 #include <string>
 #include <memory>
@@ -21,18 +21,6 @@
 
 namespace PokarinEngine
 {
-	// -------------------
-	// 前方宣言
-	// -------------------
-
-	class Camera;
-
-	// ------------------------------------
-	// 型の別名を定義
-	// ------------------------------------
-
-	using CameraPtr = std::shared_ptr<Camera>;
-
 	/// <summary>
 	/// シーン管理クラス
 	/// </summary>
@@ -86,11 +74,6 @@ namespace PokarinEngine
 		/// <param name="[in] isPlayGame"> ゲーム再生中ならtrue </param>
 		void Update(bool isPlayGame);
 
-		/// <summary>
-		/// シーン内の状態を描画する
-		/// </summary>
-		void Render();
-
 	public: // -------------------- ゲームオブジェクト制御 -------------------
 
 		/// <summary>
@@ -122,49 +105,6 @@ namespace PokarinEngine
 		const char* GetName() const
 		{
 			return name.c_str();
-		}
-
-		/// <summary>
-		/// FBOのテクスチャ識別番号を取得する
-		/// </summary>
-		/// <returns> FBOのテクスチャ識別番号 </returns>
-		GLuint GetTextureID() const;
-
-	public: // ------------------------ カメラ管理用 -------------------------
-
-		/// <summary>
-		/// カメラを追加する
-		/// </summary>
-		/// <param name="camera"> 追加するカメラ </param>
-		void AddCamera(const CameraPtr& camera)
-		{
-			// カメラ管理用配列に追加する
-			cameraList.emplace(camera);
-		}
-
-		/// <summary>
-		/// カメラを削除する
-		/// </summary>
-		/// <param name="camera"> 削除するカメラ </param>
-		void DestroyCamera(const CameraPtr& camera)
-		{
-			// 管理用配列から削除する
-			cameraList.erase(camera);
-
-			// カメラが無くなったらメインカメラを削除して終了
-			if (cameraList.empty())
-			{
-				mainCamera = nullptr;
-
-				return;
-			}
-
-			// 削除するカメラがメインカメラなら
-			// 配列の先頭をメインカメラに設定する
-			if (mainCamera == camera)
-			{
-				mainCamera = *cameraList.begin();
-			}
 		}
 
 	public: // ---------------------------- 保存 -----------------------------
@@ -229,16 +169,6 @@ namespace PokarinEngine
 
 		// ゲームオブジェクトの最大数
 		const size_t gameObjectMax = 1000000;
-
-	private: // --------------------------- 描画用 ---------------------------
-
-		// 描画用FBO
-		FramebufferObjectPtr fbo;
-
-	private: // --------------------------- カメラ ---------------------------
-
-		// カメラ管理用配列
-		std::unordered_map<GLuint, CameraPtr> cameraList;
 
 	private: // ---------------------------- 情報 ----------------------------
 

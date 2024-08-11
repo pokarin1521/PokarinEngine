@@ -7,6 +7,7 @@
 #include "../Component.h"
 
 #include "../../UsingNames/UsingCollider.h"
+#include "../../UsingNames/UsingStaticMesh.h"
 
 #include "../../Collision/CollisionType.h"
 

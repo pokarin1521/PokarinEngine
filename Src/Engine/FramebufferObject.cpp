@@ -3,8 +3,9 @@
 */
 #include "FramebufferObject.h"
 
-#include "Engine.h"
 #include "RenderbufferObject.h"
+
+#include "TextureGetter.h"
 
 namespace PokarinEngine
 {

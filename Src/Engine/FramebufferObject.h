@@ -10,7 +10,7 @@
 
 #include "Window.h"
 #include "Debug.h"
-#include "TextureGetter.h"
+#include "Texture.h"
 
 #include "Color.h"
 
@@ -89,10 +89,10 @@ namespace PokarinEngine
 	public: // ------------- テクスチャの取得 --------------
 
 		/// <summary>
-		/// 描画後のテクスチャの識別番号を取得する
+		/// カラーバッファ用テクスチャを取得する
 		/// </summary>
-		/// <returns> カラーバッファ用テクスチャの識別番号 </returns>
-		GLuint GetTextureID() const { return *texture; }
+		/// <returns> カラーバッファ用テクスチャ </returns>
+		TexturePtr GetTexture() const { return texture; }
 
 	private: // ------------------ 情報 --------------------
 

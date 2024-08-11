@@ -13,10 +13,10 @@
 #include "Mesh/Mesh.h"
 
 #include "Components/Light.h"
+#include "Components/Camera.h"
 #include "Components/Colliders/BoxCollider.h"
 
-#include "Configs/ShaderConfig.h"
-#include "Configs/MeshConfig.h"
+#include "ShaderConfig.h"
 
 #include "Collision/Collision.h"
 
@@ -47,7 +47,7 @@ namespace PokarinEngine
 		// 平行光源を作成
 		auto directionalLight = CreateGameObject("Directional Light");
 		std::shared_ptr<Light> lightComponent = directionalLight->AddComponent<Light>();
-		lightComponent->SetType(LightParameter::Type::directional);
+		lightComponent->SetType(LightManager::LightType::directional);
 	}
 
 	/// <summary>
@@ -128,15 +128,6 @@ namespace PokarinEngine
 		}
 
 		return objectID;
-	}
-
-	/// <summary>
-	/// FBOのテクスチャ識別番号を取得する
-	/// </summary>
-	/// <returns> FBOのテクスチャ識別番号 </returns>
-	GLuint Scene::GetTextureID() const
-	{
-		return fbo->GetTextureID();
 	}
 
 #pragma endregion
@@ -278,18 +269,18 @@ namespace PokarinEngine
 
 		// オブジェクトの色
 		glProgramUniform4fv(prog,
-			UniformLocation::color, 1, &gameObject->color.r);
+			ShaderConfig::Uniform::color, 1, &gameObject->color.r);
 
 		// 座標変換行列
 		glProgramUniformMatrix4fv(
-			prog, UniformLocation::transformMatrix,
+			prog, ShaderConfig::Uniform::transformMatrix,
 			1, GL_FALSE, &transformMatrix[0].x);
 
 		// 法線変換行列
 		if (prog == Shader::GetProgram(Shader::ProgType::Standard))
 		{
 			glProgramUniformMatrix3fv(
-				prog, UniformLocation::normalMatrix,
+				prog, ShaderConfig::Uniform::normalMatrix,
 				1, GL_FALSE, &normalMatrix[0].x);
 		}
 	}
@@ -415,7 +406,7 @@ namespace PokarinEngine
 		glEnable(GL_DEPTH_TEST);
 
 		// 描画
-		DrawGameObject(progUnlit, drawObjectList.begin(), transparentBegin);
+		DrawGameObject(progStandard, drawObjectList.begin(), transparentBegin);
 
 		// ------ transparentからoverlayまでのキューを描画 ------
 		// ------ 半透明なオブジェクト					   ------

@@ -90,7 +90,7 @@ namespace PokarinEngine
 		void Destroy() { isDestroyed = true; }
 
 		/// <summary>
-		/// コンポーネントが削除されているか確認
+		/// コンポーネントが削除されているか取得する
 		/// </summary>
 		/// <returns>
 		/// <para> true : 削除されている </para>
@@ -116,7 +116,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// コンポーネントの情報をJson型から取得する
 		/// </summary>
-		/// <param name="[out] data"> 情報を格納しているJson型 </param>
+		/// <param name="[in] data"> 情報を格納しているJson型 </param>
 		virtual void FromJson(const Json& data) = 0;
 
 	public: // --------------------------------- 名前 --------------------------------
@@ -150,7 +150,7 @@ namespace PokarinEngine
 			return std::to_string(id);
 		}
 
-	protected: // -------------------------- 持ち主の取得 ----------------------------
+	public: // ----------------------------- 持ち主の取得 ----------------------------
 
 		/// <summary>
 		/// 持ち主であるゲームオブジェクトを取得する

@@ -10,7 +10,7 @@
 #include "../Pin/Pin.h"
 
 #include "../../Window.h"
-#include "../../InputManager.h"
+#include "../../Input.h"
 
 #include "../../Color.h"
 

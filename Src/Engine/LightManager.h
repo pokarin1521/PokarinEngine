@@ -1,21 +1,28 @@
 /**
-* @file LightData.h
+* @file LightManager.h
 */
-#ifndef POKARINENGINE_LIGHTDATA_H_INCLUDED
-#define POKARINENGINE_LIGHTDATA_H_INCLUDED
+#ifndef POKARINENGINE_LIGHTMANAGER_H_INCLUDED
+#define POKARINENGINE_LIGHTMANAGER_H_INCLUDED
 
 #include "Math/Vector.h"
 #include "Math/Angle.h"
 
-#include <GLFW/glfw3.h>
+#include "Color.h"
+
 #include <vector>
 
 namespace PokarinEngine
 {
+	// --------------------
+	// 前方宣言
+	// --------------------
+
+	class Camera;
+
 	/// <summary>
-	/// ライトパラメータ管理用
+	/// ライト管理用
 	/// </summary>
-	namespace LightParameter
+	namespace LightManager
 	{
 		// -------------------------
 		// ライト
@@ -24,7 +31,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// ライトの種類
 		/// </summary>
-		enum class Type
+		enum class LightType
 		{
 			pointLight,	 // 点光源
 			spotLight,	 // スポット光源
@@ -41,23 +48,30 @@ namespace PokarinEngine
 			// ------------------
 
 			// ライトの種類
-			Type type = Type::pointLight;
+			LightType type = LightType::pointLight;
 
 			// ----------------- 
 			// ライト全般 
 			// -----------------
 
-			Color color = { 1,1,1,1 };	    // 色
-			float intensity = 5;		    // 明るさ
-			Vector3 position = { 0,0,0 };	// 位置
-			float range = 10;			    // ライトが届く最大範囲(半径)
+			// 色
+			Color color = Color::white;	    
+			
+			// 明るさ
+			float intensity = 5;		 
+			
+			// 位置
+			Vector3 position = Vector3::zero;
+			
+			// ライトが届く最大範囲(半径)
+			float range = 10;			    
 
 			// ---------------------
 			// スポットライト 
 			// ---------------------
 
 			// ライトの向き
-			Vector3 direction = { 0,0,0 };
+			Vector3 direction = Vector3::zero;
 
 			// スポットライトの最大照射角度
 			// 0以下なら点光源として扱う
@@ -74,23 +88,23 @@ namespace PokarinEngine
 		/// <summary>
 		/// ライト情報をGPUにコピーする
 		/// </summary>
-		/// <param name="[in] camera"> カメラ </param>
+		/// <param name="[in] camera"> 使用するカメラ </param>
 		void CopyGPU(const Camera& camera);
 
 		/// <summary>
 		/// ライトデータを追加する
 		/// </summary>
 		/// <param name="[in] lightData"> 追加するライトデータ </param>
-		void AddLightData(LightData& lightData);
+		void AddLightData(const LightData& lightData);
 
 		/// <summary>
 		/// ライトデータを削除する
 		/// </summary>
 		/// <param name="[in] lightData"> 削除するライトデータ </param>
-		void EraseLightData(LightData& lightData);
+		void EraseLightData(const LightData& lightData);
 
 	} // namespace LightData
 
 } // namespace PokarinEngine
 
-#endif // !POKARINENGINE_LIGHTDATA_H_INCLUDED
+#endif // !POKARINENGINE_LIGHTMANAGER_H_INCLUDED

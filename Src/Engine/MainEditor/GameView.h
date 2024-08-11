@@ -9,14 +9,8 @@
 
 namespace PokarinEngine
 {
-	// -------------------
-	// 前方宣言
-	// -------------------
-
-	class Scene;
-
 	/// <summary>
-	/// ゲームビュー(ゲーム画面を表示するビュー)
+	/// ゲームビュー(ゲーム画面を描画するウィンドウ)
 	/// </summary>
 	class GameView
 	{
@@ -35,13 +29,28 @@ namespace PokarinEngine
 		// 代入の禁止
 		GameView& operator=(const GameView&) = delete;
 
-	public: // ---------------------------- 更新 ---------------------------
+	public: // ---------------------------- 制御 ---------------------------
+
+		/// <summary>
+		/// 初期化
+		/// </summary>
+		void Initialize();
 
 		/// <summary>
 		/// 更新
 		/// </summary>
-		/// <param name="currentScene"> 現在のシーン </param>
-		void Update(const ScenePtr& currentScene);
+		void Update();
+
+		/// <summary>
+		/// 描画
+		/// </summary>
+		/// <param name="[in] currentScene"> 現在のシーン </param>
+		void Render(const ScenePtr& currentScene);
+
+	private: // -------------------------- 描画用 --------------------------
+
+		// 描画用FBO
+		FramebufferObjectPtr fbo;
 	};
 
 } // namespace PokarinEngine

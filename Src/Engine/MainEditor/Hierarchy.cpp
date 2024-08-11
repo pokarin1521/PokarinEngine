@@ -12,8 +12,6 @@
 
 #include "../Mesh/Mesh.h"
 
-#include "../Configs/MeshConfig.h"
-
 namespace PokarinEngine
 {
 #pragma region Hierarchy
@@ -21,9 +19,12 @@ namespace PokarinEngine
 	/// <summary>
 	/// 更新
 	/// </summary>
-	/// <param name="currentScene"> 現在のシーン </param>
-	void Hierarchy::Update(const ScenePtr& currentScene)
+	/// <param name="_currentScene"> 現在のシーン </param>
+	void Hierarchy::Update(const ScenePtr& _currentScene)
 	{
+		// 現在のシーンを設定する
+		currentScene = _currentScene;
+
 		// シーン内のゲームオブジェクト
 		GameObjectList gameObjectList = currentScene->GetGameObjectAll();
 
@@ -193,7 +194,7 @@ namespace PokarinEngine
 #pragma endregion
 
 #pragma region CreateObject
-
+	
 	/// <summary>
 	/// ゲームオブジェクト作成用ポップアップの処理
 	/// </summary>
@@ -217,16 +218,16 @@ namespace PokarinEngine
 		if (ImGui::BeginMenu("3D Object"))
 		{
 			// 直方体生成用ボタン
-			CreateObjectButton("Cube", StaticMeshFile::cube);
+			CreateObjectButton("Cube", "Res/MeshData/Basic/Cube/Cube.obj");
 
 			// 球体生成用ボタン
-			CreateObjectButton("Sphere", StaticMeshFile::sphere);
+			CreateObjectButton("Sphere", "Res/MeshData/Basic/Sphere/Sphere.obj");
 
 			// 板生成用ボタン
-			CreateObjectButton("Plane", StaticMeshFile::plane);
+			CreateObjectButton("Plane", "Res/MeshData/Basic/Plane/Plane.obj");
 
 			// ロボット生成用ボタン
-			CreateObjectButton("Robot", StaticMeshFile::robot);
+			CreateObjectButton("Robot", "Res/MeshData/Robot/Robot.obj");
 
 			ImGui::EndMenu();
 		}

@@ -6,11 +6,8 @@
 #include "../../GameObject.h"
 #include "../../Color.h"
 #include "../../Shader/Shader.h"
-
 #include "../../Mesh/Mesh.h"
-
-#include "../../Configs/MeshConfig.h"
-#include "../../Configs/ShaderConfig.h"
+#include "../../ShaderConfig.h"
 
 namespace PokarinEngine
 {
@@ -27,13 +24,13 @@ namespace PokarinEngine
 		{
 		case Type::Box:
 
-			staticMesh = Mesh::GetStaticMesh(StaticMeshFile::boxCollider);
+			staticMesh = Mesh::GetStaticMesh("Res/MeshData/Collider/Box/Box.obj");
 
 			break;
 
 		case Type::Sphere:
 
-			staticMesh = Mesh::GetStaticMesh(StaticMeshFile::sphereCollider);
+			staticMesh = Mesh::GetStaticMesh("Res/MeshData/Collider/Sphere/Sphere.obj");
 
 			break;
 		}
@@ -63,14 +60,14 @@ namespace PokarinEngine
 		// 色をGPUにコピー
 		// 緑色で描画する
 		glProgramUniform4fv(progUnlit,
-			UniformLocation::color, 1, &Color::green.r);
+			ShaderConfig::Uniform::color, 1, &Color::green.r);
 
 		// 座標変換行列
 		const Matrix4x4 transformMatrix = GetTransformMatrix();
 
 		// 座標変換行列をGPUにコピー
 		glProgramUniformMatrix4fv(
-			progUnlit, UniformLocation::transformMatrix,
+			progUnlit, ShaderConfig::Uniform::transformMatrix,
 			1, GL_FALSE, &transformMatrix[0].x);
 
 		// 共有マテリアルを使って

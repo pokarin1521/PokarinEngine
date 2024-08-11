@@ -4,7 +4,6 @@
 #ifndef POKARINENGINE_MESHBUFFER_H_INCLUDED
 #define POKARINENGINE_MESHBUFFER_H_INCLUDED
 
-#include "StaticMesh.h"
 #include "Vertex.h"
 
 #include "../Debug.h"
@@ -12,6 +11,8 @@
 
 #include "../BufferObject.h"
 #include "../VertexArrayObject.h"
+
+#include "../UsingNames/UsingStaticMesh.h"
 
 namespace PokarinEngine
 {
@@ -51,7 +52,7 @@ namespace PokarinEngine
 		StaticMeshPtr GetStaticMesh(const std::string& fileName);
 
 		/// <summary>
-		/// VAOの取得
+		/// VAOを取得する
 		/// </summary>
 		/// <returns> VAO </returns>
 		VertexArrayObjectPtr GetVAO() const { return vao; }
@@ -79,7 +80,7 @@ namespace PokarinEngine
 		/// <param name="[out] baseVertex"> インデックス0となる頂点配列の要素番号 </param>
 		void AddVertexData(const Vertex* vertices, size_t vertexBytes,
 			const uint16_t* indices, size_t indexBytes,
-			const void* indexOffset, GLint& baseVertex);
+			void*& indexOffset, GLint& baseVertex);
 
 	private: // ---------------------- メッシュバッファの情報 -----------------------
 

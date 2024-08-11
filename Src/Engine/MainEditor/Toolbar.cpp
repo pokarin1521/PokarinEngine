@@ -5,7 +5,6 @@
 
 #include "ImGui/imgui.h"
 
-#include "../Engine.h"
 #include "../TextureGetter.h"
 
 #include <unordered_map>
