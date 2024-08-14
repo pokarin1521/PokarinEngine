@@ -3,7 +3,6 @@
 */
 #include "Inspector.h"
 
-#include "../Engine.h"
 #include "../GameObject.h"
 #include "../Color.h"
 

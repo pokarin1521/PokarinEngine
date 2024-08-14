@@ -1,8 +1,8 @@
 /**
 * @file Matrix.h
 */
-#ifndef MATRIX_H_INCLUDED
-#define MATRIX_H_INCLUDED
+#ifndef POKARINENGINE_MATRIX_H_INCLUDED
+#define POKARINENGINE_MATRIX_H_INCLUDED
 
 #include "Vector.h"
 
@@ -238,4 +238,4 @@ namespace PokarinEngine
 
 }
 
-#endif // !MATRIX_H_INCLUDED
+#endif // !POKARINENGINE_MATRIX_H_INCLUDED

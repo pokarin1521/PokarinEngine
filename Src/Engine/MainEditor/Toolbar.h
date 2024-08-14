@@ -1,8 +1,8 @@
 /**
 * @file Toolbar.h
 */
-#ifndef TOOLBAR_H_INCLUDED
-#define TOOLBAR_H_INCLUDED
+#ifndef POKARINENGINE_TOOLBAR_H_INCLUDED
+#define POKARINENGINE_TOOLBAR_H_INCLUDED
 
 namespace PokarinEngine
 {
@@ -20,8 +20,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		/// <param name="[in] engine"> エンジンクラス </param>
-		void Initialize(Engine& engine);
+		void Initialize();
 
 		/// <summary>
 		/// 更新
@@ -31,4 +30,4 @@ namespace PokarinEngine
 	}
 }
 
-#endif // !TOOLBAR_H_INCLUDED
+#endif // !POKARINENGINE_TOOLBAR_H_INCLUDED

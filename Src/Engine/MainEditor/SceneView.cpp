@@ -3,14 +3,133 @@
 */
 #include "SceneView.h"
 
-#include "ImGui/ImGuizmo.h"
+#include "ImGui/imgui.h"
 
 #include "../Window.h"
-#include "../InputManager.h"
+#include "../Input.h"
 #include "../Time.h"
+#include "../Scene.h"
+#include "../GameObject.h"
+#include "../SkySphere.h"
+#include "../LightManager.h"
+#include "../FramebufferObject.h"
+
+#include "../CameraManager.h"
 
 namespace PokarinEngine
 {
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	void SceneView::Initialize()
+	{
+		// FBOを作成する
+		fbo = FramebufferObject::Create();
+
+		camera.transform = std::make_shared<Transform>();
+
+		// カメラの初期位置を設定する
+		camera.transform->position = cameraStartPos;
+	}
+
+	/// <summary>
+	/// 更新
+	/// </summary>
+	void SceneView::Update()
+	{
+		// -------------------------------
+		// ウィンドウを作成
+		// -------------------------------
+
+		// ウィンドウの丸みを無くす
+		ImGui::PushStyleVar(ImGuiStyleVar_::ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+
+		// シーンビュー用ウィンドウ
+		ImGui::Begin("Scene", nullptr,
+			ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar |
+			ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollWithMouse);
+		{
+			// ウィンドウ内で右クリックしたら
+			// カメラ操作を開始する
+			if (ImGui::IsWindowHovered() &&
+				ImGui::IsKeyPressed(ImGuiKey_MouseRight, false))
+			{
+				isControlCamera = true;
+				startMousePos = Input::Mouse::GetScreenPos(WindowID::Main);
+				mousePos = startMousePos;
+			}
+
+			// カメラ操作状態なら操作処理を行う
+			if (isControlCamera)
+			{
+				// マウスカーソルを非表示にする
+				ImGui::SetMouseCursor(ImGuiMouseCursor_::ImGuiMouseCursor_None);
+
+				// カメラの位置を操作
+				CameraMoveControl();
+
+				// カメラの回転を操作
+				CameraRotateControl();
+
+				// 右ボタンを離したら操作を解除する
+				isControlCamera = !ImGui::IsKeyReleased(ImGuiKey_MouseRight);
+			}
+
+			// FBOが作成されているか確認
+			if (fbo)
+			{
+				// FBOのテクスチャを描画する
+				// 描画サイズはウィンドウの大きさで設定する
+				ImGui::Image(*fbo->GetTexture(), ImGui::GetWindowSize());
+			}
+
+			// ウィンドウの丸み設定を終了
+			ImGui::PopStyleVar();
+
+			// ウィンドウを終了
+			ImGui::End();
+		}
+
+		// ----------------------------------
+		// カラーバッファをクリア
+		// ----------------------------------
+
+		//fbo->ClearColor(Color::black);
+	}
+
+	/// <summary>
+	/// 描画
+	/// </summary>
+	/// <param name ="[in] currentScene"> 現在のシーン </param>
+	/// <param name ="[in] selectObject"> ヒエラルキーで選択中のゲームオブジェクト </param>
+	void SceneView::Render(const ScenePtr& currentScene, const GameObjectPtr& selectObject)
+	{
+		// FBOをバインドする
+		fbo->Bind();
+
+		// カメラ情報をGPUにコピーする
+		camera.SetToShader();
+
+		// ライト情報をGPUにコピーする
+		LightManager::SetToShader(camera);
+
+		// スカイスフィアを描画する
+		SkySphere::Draw(camera);
+
+		// 現在のシーンのゲームオブジェクトを描画する
+		currentScene->DrawGameObjectAll();
+
+		// ヒエラルキーでゲームオブジェクトを選択中であれば
+		// そのオブジェクトのコライダーを描画する
+		if (selectObject)
+		{
+			selectObject->DrawCollider();
+		}
+
+		// FBOのバインドを解除する
+		fbo->UnBind();
+	}
+
 	/// <summary>
 	/// カメラの移動操作
 	/// </summary>
@@ -20,7 +139,7 @@ namespace PokarinEngine
 		float moveSpeed = cameraMoveSpeed * Time::DeltaTime();
 
 		// カメラの回転角度
-		Vector3 cameraRotation = sceneCamera.rotation;
+		Vector3 cameraRotation = camera.transform->rotation;
 
 		// カメラの回転角度のSin
 		// Z軸は回転させないので、XY軸のみ
@@ -35,11 +154,11 @@ namespace PokarinEngine
 		// ------------------------------------
 
 		// 正面ベクトル
-		Vector3 front = sceneCamera.Front();
+		Vector3 front = camera.transform->Front();
 
 		if (Input::GetKey(KeyCode::W))
 		{
-			sceneCamera.position += moveSpeed * front;
+			camera.transform->position += moveSpeed * front;
 		}
 
 		// ------------------------------------
@@ -48,7 +167,7 @@ namespace PokarinEngine
 
 		if (Input::GetKey(KeyCode::S))
 		{
-			sceneCamera.position -= moveSpeed * front;
+			camera.transform->position -= moveSpeed * front;
 		}
 
 		// ------------------------------------
@@ -57,8 +176,8 @@ namespace PokarinEngine
 
 		if (Input::GetKey(KeyCode::D))
 		{
-			sceneCamera.position.x += moveSpeed * cameraCos.y;
-			sceneCamera.position.z += moveSpeed * cameraSin.y;
+			camera.transform->position.x += moveSpeed * cameraCos.y;
+			camera.transform->position.z += moveSpeed * cameraSin.y;
 		}
 
 		// ------------------------------------
@@ -67,8 +186,8 @@ namespace PokarinEngine
 
 		if (Input::GetKey(KeyCode::A))
 		{
-			sceneCamera.position.x -= moveSpeed * cameraCos.y;
-			sceneCamera.position.z -= moveSpeed * cameraSin.y;
+			camera.transform->position.x -= moveSpeed * cameraCos.y;
+			camera.transform->position.z -= moveSpeed * cameraSin.y;
 		}
 
 		// ------------------------------------
@@ -77,7 +196,7 @@ namespace PokarinEngine
 
 		if (Input::GetKey(KeyCode::E))
 		{
-			sceneCamera.position.y += moveSpeed;
+			camera.transform->position.y += moveSpeed;
 		}
 
 		// ------------------------------------
@@ -86,7 +205,7 @@ namespace PokarinEngine
 
 		if (Input::GetKey(KeyCode::Q))
 		{
-			sceneCamera.position.y -= moveSpeed;
+			camera.transform->position.y -= moveSpeed;
 		}
 	}
 
@@ -119,86 +238,8 @@ namespace PokarinEngine
 		mousePos = currentMousePos;
 
 		// マウスでカメラを操作する
-		sceneCamera.rotation.x -= mouseMove.y * rotateSpeed;
-		sceneCamera.rotation.y -= mouseMove.x * rotateSpeed;
-	}
-
-	/// <summary>
-	/// 更新
-	/// </summary>
-	void SceneView::Update()
-	{
-		// -------------------------------
-		// FBOからテクスチャを取得する
-		// -------------------------------
-
-		texture = ImTextureID(*fbo->GetTexture());
-
-		// -------------------------------
-		// ウィンドウを作成
-		// -------------------------------
-
-		// ウィンドウの丸みを無くす
-		ImGui::PushStyleVar(ImGuiStyleVar_::ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
-
-		// シーンビュー用ウィンドウ
-		ImGui::Begin("Scene", nullptr,
-			ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar |
-			ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollWithMouse);
-		{
-			// ウィンドウ内で右クリックしたら
-			// カメラ操作を開始する
-			if (ImGui::IsWindowHovered() &&
-				ImGui::IsKeyPressed(ImGuiKey_MouseRight, false))
-			{
-				isControlCamera = true;
-				startMousePos = Input::Mouse::GetScreenPos(WindowID::Main);
-				mousePos = startMousePos;
-			}
-
-			// カメラ操作状態
-			if (isControlCamera)
-			{
-				// マウスカーソルを非表示にする
-				ImGui::SetMouseCursor(ImGuiMouseCursor_::ImGuiMouseCursor_None);
-
-				// カメラの位置を操作
-				CameraMoveControl();
-
-				// カメラの回転を操作
-				CameraRotateControl();
-
-				// 右ボタンを離したら操作を解除する
-				isControlCamera = !ImGui::IsKeyReleased(ImGuiKey_MouseRight);
-			}
-
-			// シーンビュー用ウィンドウの大きさ
-			// 描画時に設定する
-			ImVec2 size = ImGui::GetWindowSize();
-
-			// シーンビュー用ウィンドウの大きさで描画
-			// そのままだと画像が反転してしまうので、
-			// 左下から右上に描画するように設定
-			ImGui::Image(texture, size, ImVec2(0, 1), ImVec2(1, 0));
-
-			// ウィンドウの丸み設定を終了
-			ImGui::PopStyleVar();
-
-			// ウィンドウを終了
-			ImGui::End();
-		}
-
-		// ----------------------------------
-		// カラーバッファをクリア
-		// ----------------------------------
-
-		fbo->ClearColor(backGround);
-
-		// ----------------------------------
-		// ギズモを無効にする
-		// ----------------------------------
-
-		ImGuizmo::Enable(false);
+		camera.transform->rotation.x -= mouseMove.y * rotateSpeed;
+		camera.transform->rotation.y -= mouseMove.x * rotateSpeed;
 	}
 
 } // namespace PokarinEngine

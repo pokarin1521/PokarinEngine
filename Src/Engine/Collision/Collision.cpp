@@ -29,23 +29,27 @@ namespace PokarinEngine
 		/// </summary>
 		struct WorldCollider
 		{
-			/// <summary>
-			/// ワールドコライダーの座標を変更する
-			/// </summary>
-			/// <param name="[in] v"> 移動量 </param>
-			void AddPosition(const Vector3& v)
-			{
-				// コライダーの持ち主の座標を変更
-				origin->GetOwnerObject().transform->position += v;
+		public: // --------------- 座標の変更 -----------------
 
-				// コライダーの座標を変更
-				world->AddPosition(v);
+			/// <summary>
+			/// ワールドコライダーを移動させる
+			/// </summary>
+			/// <param name="[in] translate"> 移動量 </param>
+			void AddPosition(const Vector3& translate)
+			{
+				// 持ち主であるゲームオブジェクトを移動させる
+				origin->GetOwnerObject().transform->position += translate;
+
+				// コライダーを移動させる
+				world->AddPosition(translate);
 			}
+
+		public: // --------------- コライダー -----------------
 
 			// オリジナルのコライダー
 			ColliderPtr origin;
 
-			// コライダー
+			// ワールド座標系のコライダー
 			ColliderPtr world;
 		};
 
@@ -129,7 +133,7 @@ namespace PokarinEngine
 		/// <param name="[in] penetration"> 貫通ベクトル </param>
 		/// <param name="[out] worldColliderList"> ワールド座標系のコライダー配列 </param>
 		/// <param name="[out] gameObject"> ゲームオブジェクト </param>
-		void ApplyPenetration(const Vector3& penetration, 
+		void ApplyPenetration(const Vector3& penetration,
 			WorldColliderList& worldColliderList, GameObject& gameObject)
 		{
 			// ---------------------------------------------------------
@@ -286,7 +290,7 @@ namespace PokarinEngine
 
 								// 貫通距離の半分だけ
 								// 逆方向に移動
-								ApplyPenetration(-halfPenetration, 
+								ApplyPenetration(-halfPenetration,
 									colliderListA, gameObjectA);
 							}
 						}

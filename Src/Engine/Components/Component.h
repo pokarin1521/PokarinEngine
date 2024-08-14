@@ -1,8 +1,8 @@
 /**
 * @file Component.h
 */
-#ifndef COMPONENT_H_INCLUDED
-#define COMPONENT_H_INCLUDED
+#ifndef POKARINENGINE_COMPONENT_H_INCLUDED
+#define POKARINENGINE_COMPONENT_H_INCLUDED
 
 #include "Json/UsingNameJson.h"
 
@@ -23,19 +23,15 @@ namespace PokarinEngine
 		Component() = default;
 		virtual ~Component() = default;
 
-	public: // ---------------------------- 持ち主の取得 ------------------------------
+	public: // ------------------------------- 禁止事項 ------------------------------
 
-		/// <summary>
-		/// 持ち主であるゲームオブジェクトを取得する
-		/// </summary>
-		/// <returns> 持ち主であるゲームオブジェクト </returns>
-		const GameObject& GetOwnerObject() const { return *ownerObject; }
+		/* 同じコンポーネントが複数あると識別できなくなるので、禁止する */
 
-		/// <summary>
-		/// 持ち主であるゲームオブジェクトを取得する
-		/// </summary>
-		/// <returns> 持ち主であるゲームオブジェクト </returns>
-		GameObject& GetOwnerObject() { return *ownerObject; }
+		// コピーコンストラクタの禁止
+		Component(const Component&) = delete;
+
+		// 代入の禁止
+		Component& operator=(const Component&) = delete;
 
 	public: // --------------------------------- 制御 --------------------------------
 
@@ -94,7 +90,7 @@ namespace PokarinEngine
 		void Destroy() { isDestroyed = true; }
 
 		/// <summary>
-		/// コンポーネントが削除されているか確認
+		/// コンポーネントが削除されているか取得する
 		/// </summary>
 		/// <returns>
 		/// <para> true : 削除されている </para>
@@ -120,7 +116,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// コンポーネントの情報をJson型から取得する
 		/// </summary>
-		/// <param name="[out] data"> 情報を格納しているJson型 </param>
+		/// <param name="[in] data"> 情報を格納しているJson型 </param>
 		virtual void FromJson(const Json& data) = 0;
 
 	public: // --------------------------------- 名前 --------------------------------
@@ -153,6 +149,20 @@ namespace PokarinEngine
 		{
 			return std::to_string(id);
 		}
+
+	public: // ----------------------------- 持ち主の取得 ----------------------------
+
+		/// <summary>
+		/// 持ち主であるゲームオブジェクトを取得する
+		/// </summary>
+		/// <returns> 持ち主であるゲームオブジェクト </returns>
+		const GameObject& GetOwnerObject() const { return *ownerObject; }
+
+		/// <summary>
+		/// 持ち主であるゲームオブジェクトを取得する
+		/// </summary>
+		/// <returns> 持ち主であるゲームオブジェクト </returns>
+		GameObject& GetOwnerObject() { return *ownerObject; }
 
 	private: // ------------------------------- 初期化 -------------------------------
 
@@ -203,4 +213,4 @@ namespace PokarinEngine
 
 } // namespace PokarinEngine
 
-#endif // !COMPONENT_H_INCLUDED
+#endif // !POKARINENGINE_COMPONENT_H_INCLUDED

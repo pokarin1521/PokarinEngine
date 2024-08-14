@@ -6,17 +6,17 @@
 #include "Json/Json.h"
 
 #include "Components/Colliders/Collider.h"
-
 #include "Components/ComponentAdder.h"
 
 #include "Math/Matrix.h"
 
-#include "NodeScript/NodeScript.h"
-#include "NodeScript/NodeEditor.h"
+#include "NodeEditor/NodeEditor.h"
+#include "NodeEditor/NodeEditorManager.h"
 
 #include "Scene.h"
-#include "Mesh.h"
 #include "Random.h"
+
+#include "Mesh/Mesh.h"
 
 #include <algorithm>
 #include <filesystem>
@@ -24,7 +24,7 @@
 namespace PokarinEngine
 {
 	/// <summary>
-	/// ゲームオブジェクトから削除予定のコンポーネントを削除する 
+	/// 削除予定(削除処理が未実行)のコンポーネントを完全に削除する
 	/// </summary>
 	void GameObject::RemoveDestroyedComponent()
 	{
@@ -87,12 +87,10 @@ namespace PokarinEngine
 	/// </summary>
 	/// <param name="[in] scene"> 持ち主であるシーン </param>
 	/// <param name="[in] objectID"> 識別番号 </param>
-	/// <param name="[in] meshFile"> スタティックメッシュのファイル名 </param>
 	/// <param name="[in] objectName"> 名前 </param>
 	/// <param name="[in] position"> 位置 </param>
 	/// <param name="[in] rotation"> 回転角度 </param>
-	void GameObject::Initialize(Scene& scene, int objectID,
-		const std::string& meshFile, const std::string& objectName,
+	void GameObject::Initialize(Scene& scene, int objectID, const std::string& objectName,
 		const Vector3& position, const Vector3& rotation)
 	{
 		// ----------------------------------
@@ -108,15 +106,12 @@ namespace PokarinEngine
 		// 名前を設定
 		name = objectName;
 
-		// スタティックメッシュを設定
-		staticMesh = scene.GetStaticMesh(meshFile);
-
 		// スタティックメッシュがあるなら固有マテリアルを設定
 		if (staticMesh)
 		{
 			// 共有マテリアルのコピーを
 			// 固有マテリアルとして設定する
-			materials = CloneMaterialList(staticMesh);
+			materialList = staticMesh->CopyMaterialList();
 		}
 
 		// ------------------------------------
@@ -202,14 +197,15 @@ namespace PokarinEngine
 		}
 
 		// ノードエディタを閉じる
-		NodeScript::CloseNodeEditor(nodeEditor);
+		NodeEditorManager::CloseNodeEditor(nodeEditor);
 	}
 
 	/// <summary>
 	/// コライダーを描画する
 	/// </summary>
-	void GameObject::DrawCollider()
+	void GameObject::DrawCollider() const
 	{
+		// コライダーを描画する
 		for (auto& collider : colliderList)
 		{
 			collider->Draw();
@@ -233,7 +229,7 @@ namespace PokarinEngine
 	/// </summary>
 	void GameObject::OpenNodeEditor() const
 	{
-		NodeScript::OpenNodeEditor(nodeEditor);
+		NodeEditorManager::OpenNodeEditor(nodeEditor);
 	}
 
 	/// <summary>
@@ -253,7 +249,7 @@ namespace PokarinEngine
 		// なければ「null」にする
 		if (staticMesh)
 		{
-			data["StaticMeshFile"] = staticMesh->filename;
+			data["StaticMeshFile"] = staticMesh->GetFileName();
 		}
 		else
 		{
@@ -303,7 +299,7 @@ namespace PokarinEngine
 
 		// スタティックメッシュのファイル名
 		const std::string& fileName = data["StaticMeshFile"];
-		staticMesh = ownerScene->GetStaticMesh(fileName);
+		staticMesh = Mesh::GetStaticMesh(fileName);
 
 		// --------------------------------------------------
 		// コンポーネントの情報をJson型から取得する

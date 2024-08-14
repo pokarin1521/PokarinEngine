@@ -1,8 +1,8 @@
 /**
 * @file UsingCollider.h
 */
-#ifndef USINGCOLLIDER_H_INCLUDED
-#define USINGCOLLIDER_H_INCLUDED
+#ifndef POKARINENGINE_USINGCOLLIDER_H_INCLUDED
+#define POKARINENGINE_USINGCOLLIDER_H_INCLUDED
 
 #include <memory>
 
@@ -21,4 +21,4 @@ namespace PokarinEngine
 	using ColliderPtr = std::shared_ptr<Collider>;
 }
 
-#endif // !USINGCOLLIDER_H_INCLUDED
+#endif // !POKARINENGINE_USINGCOLLIDER_H_INCLUDED

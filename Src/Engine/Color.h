@@ -1,10 +1,12 @@
 /**
 * @file Color.h
 */
-#ifndef COLOR_H_INCLUDED
-#define COLOR_H_INCLUDED
+#ifndef POKARINENGINE_COLOR_H_INCLUDED
+#define POKARINENGINE_COLOR_H_INCLUDED
 
 #include "ImGui/imgui.h"
+
+#include "Math/Vector.h"
 
 namespace PokarinEngine
 {
@@ -24,6 +26,12 @@ namespace PokarinEngine
 		explicit constexpr Color(float n) : r(n), g(n), b(n), a(n) {}
 
 		/// <summary>
+		/// Vector4型で初期化するコンストラクタ
+		/// </summary>
+		constexpr Color(const Vector4& v)
+			: r(v.x), g(v.y), b(v.z), a(v.w) {}
+
+		/// <summary>
 		/// float型で初期化するコンストラクタ
 		/// </summary>
 		constexpr Color(float _r, float _g, float _b, float _a)
@@ -33,6 +41,12 @@ namespace PokarinEngine
 
 		// ImVec4型に変換
 		operator ImVec4() const { return ImVec4(r, g, b, a); }
+
+		// Vector4型に変換
+		operator Vector4() const { return Vector4(r, g, b, a); }
+
+		// Vector3型に変換
+		operator Vector3() const { return Vector3(r, g, b); }
 
 	public: // ---------------------- 添字演算子 ----------------------
 
@@ -122,4 +136,4 @@ namespace PokarinEngine
 
 } // namespace PokarinEngine
 
-#endif // !COLOR_H_INCLUDED
+#endif // !POKARINENGINE_COLOR_H_INCLUDED

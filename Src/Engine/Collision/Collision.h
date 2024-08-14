@@ -1,8 +1,8 @@
 /**
 * @file Collision.h
 */
-#ifndef COLLISION_H_INCLUDED
-#define COLLISION_H_INCLUDED
+#ifndef POKARINENGINE_COLLISION_H_INCLUDED
+#define POKARINENGINE_COLLISION_H_INCLUDED
 
 #include "../UsingNames/UsingGameObject.h"
 
@@ -21,4 +21,4 @@ namespace PokarinEngine
 	}
 }
 
-#endif // !COLLISION_H_INCLUDED
+#endif // !POKARINENGINE_COLLISION_H_INCLUDED

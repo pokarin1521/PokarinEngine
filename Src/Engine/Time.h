@@ -1,8 +1,8 @@
 /**
 * @file Time.h
 */
-#ifndef TIME_H_INCLUDED
-#define TIME_H_INCLUDED
+#ifndef POKARINENGINE_TIME_H_INCLUDED
+#define POKARINENGINE_TIME_H_INCLUDED
 
 namespace PokarinEngine
 {
@@ -21,4 +21,4 @@ namespace PokarinEngine
 	}
 }
 
-#endif // !TIME_H_INCLUDED
+#endif // !POKARINENGINE_TIME_H_INCLUDED

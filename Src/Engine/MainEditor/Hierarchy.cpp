@@ -5,37 +5,28 @@
 
 #include "ImGui/imgui.h"
 
-#include "../Engine.h"
 #include "../Scene.h"
 #include "../GameObject.h"
 
-#include "../InputManager.h"
+#include "../Input.h"
 
-#include "../Configs/MeshConfig.h"
+#include "../Mesh/Mesh.h"
 
 namespace PokarinEngine
 {
 #pragma region Hierarchy
 
 	/// <summary>
-	/// 初期化
-	/// </summary>
-	/// <param name="[in] engine"> エンジンクラスの参照 </param>
-	void Hierarchy::Initialize(Engine& e)
-	{
-		engine = &e;
-	}
-
-	/// <summary>
 	/// 更新
 	/// </summary>
-	void Hierarchy::Update()
+	/// <param name="_currentScene"> 現在のシーン </param>
+	void Hierarchy::Update(const ScenePtr& _currentScene)
 	{
-		// 現在のシーン
-		Scene& currentScene = engine->GetCurrentScene();
+		// 現在のシーンを設定する
+		currentScene = _currentScene;
 
 		// シーン内のゲームオブジェクト
-		GameObjectList gameObjectList = currentScene.GetGameObjectAll();
+		GameObjectList gameObjectList = currentScene->GetGameObjectAll();
 
 		// 選択中のオブジェクトに対する操作を可能にする
 		ScelectObjectControl();
@@ -105,17 +96,14 @@ namespace PokarinEngine
 	/// </summary>
 	void Hierarchy::ObjectTree()
 	{
-		// 現在のシーン
-		Scene& currentScene = engine->GetCurrentScene();
-
 		// シーン内のゲームオブジェクト
-		GameObjectList gameObjectList = currentScene.GetGameObjectAll();
+		GameObjectList gameObjectList = currentScene->GetGameObjectAll();
 
 		// ツリーノードの機能
 		ImGuiTreeNodeFlags treeFlags = ImGuiTreeNodeFlags_::ImGuiTreeNodeFlags_DefaultOpen;
 
 		// シーン内のオブジェクトを表示するためのツリーノード
-		if (ImGui::TreeNodeEx(currentScene.GetName(), treeFlags))
+		if (ImGui::TreeNodeEx(currentScene->GetName(), treeFlags))
 		{
 			// シーン内のオブジェクトを表示
 			for (int i = 0; i < gameObjectList.size(); ++i)
@@ -148,7 +136,7 @@ namespace PokarinEngine
 				{
 					// テスト用に
 					// ダブルクリックしたオブジェクトの名前をタイトルにする
-					Window::OpenWindow(WindowID::NodeScript, "NodeScript");
+					Window::OpenWindow(WindowID::NodeEditor, "NodeEditorManager");
 					gameObject.OpenNodeEditor();
 				}
 			}
@@ -168,9 +156,6 @@ namespace PokarinEngine
 			return;
 		}
 
-		// 現在のシーン
-		Scene& currentScene = engine->GetCurrentScene();
-
 		// ------------------------------------------------------
 		// 「Ctrl + D」で選択中のオブジェクトを複製する
 		// ------------------------------------------------------
@@ -179,7 +164,7 @@ namespace PokarinEngine
 			Input::GetKeyDown(KeyCode::D))
 		{
 			// 選択中のオブジェクトを複製する
-			currentScene.CopyGameObject(selectObject);
+			currentScene->CopyGameObject(selectObject);
 		}
 
 		// -------------------------------------------------------
@@ -189,7 +174,7 @@ namespace PokarinEngine
 		if (Input::GetKey(KeyCode::Delete))
 		{
 			// 選択中のオブジェクトを削除
-			currentScene.DestroyObject(selectObject);
+			currentScene->DestroyObject(selectObject);
 
 			// 非選択状態にする
 			selectObjectIndex = unselected;
@@ -209,7 +194,7 @@ namespace PokarinEngine
 #pragma endregion
 
 #pragma region CreateObject
-
+	
 	/// <summary>
 	/// ゲームオブジェクト作成用ポップアップの処理
 	/// </summary>
@@ -233,16 +218,16 @@ namespace PokarinEngine
 		if (ImGui::BeginMenu("3D Object"))
 		{
 			// 直方体生成用ボタン
-			CreateObjectButton("Cube", StaticMeshFile_OBJ::cube);
+			CreateObjectButton("Cube", "Res/MeshData/Basic/Cube/Cube.obj");
 
 			// 球体生成用ボタン
-			CreateObjectButton("Sphere", StaticMeshFile_OBJ::sphere);
+			CreateObjectButton("Sphere", "Res/MeshData/Basic/Sphere/Sphere.obj");
 
 			// 板生成用ボタン
-			CreateObjectButton("Plane", StaticMeshFile_OBJ::plane);
+			CreateObjectButton("Plane", "Res/MeshData/Basic/Plane/Plane.obj");
 
 			// ロボット生成用ボタン
-			CreateObjectButton("Robot", StaticMeshFile_OBJ::robot);
+			CreateObjectButton("Robot", "Res/MeshData/Robot/Robot.obj");
 
 			ImGui::EndMenu();
 		}
@@ -266,8 +251,11 @@ namespace PokarinEngine
 		{
 			// ボタンが押されたので
 			// 現在のシーンにオブジェクトを作成
-			GameObjectPtr object = engine->GetCurrentScene().CreateGameObject(
-				typeName, Vector3(0), Vector3(0), staticMeshFile);
+			GameObjectPtr object = currentScene->CreateGameObject(
+				typeName, Vector3(0), Vector3(0));
+
+			// スタティックメッシュを設定
+			object->staticMesh = Mesh::GetStaticMesh(staticMeshFile);
 		}
 	}
 

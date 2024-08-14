@@ -1,8 +1,8 @@
 /**
 * @file Transform.h
 */
-#ifndef TRANSFORM_H_INCLUDED
-#define TRANSFORM_H_INCLUDED
+#ifndef POKARINENGINE_TRANSFORM_H_INCLUDED
+#define POKARINENGINE_TRANSFORM_H_INCLUDED
 
 #include "Component.h"
 
@@ -120,7 +120,7 @@ namespace PokarinEngine
 			return normalMatrix;
 		}
 
-	public: // ---------------------- 方向ベクトル ---------------------
+	public: // ---------------------- 正面ベクトル ---------------------
 
 		/// <summary>
 		/// 正面ベクトルを取得する
@@ -148,7 +148,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// コンポーネントの情報をJson型から取得する
 		/// </summary>
-		/// <param name="[out] data"> 情報を格納しているJson型 </param>
+		/// <param name="[in] data"> 情報を格納しているJson型 </param>
 		void FromJson(const Json& data) override;
 
 	public: // -------------------- ワールド軸の情報 -------------------
@@ -204,4 +204,4 @@ namespace PokarinEngine
 
 } // namespace PokarinEngine
 
-#endif // !TRANSFORM_H_INCLUDED
+#endif // !POKARINENGINE_TRANSFORM_H_INCLUDED
