@@ -6,16 +6,29 @@
 #include "ImGui/imgui.h"
 #include "Json/Json.h"
 
-#include "../Engine.h"
+#include "../GameObject.h"
 
 namespace PokarinEngine
 {
 	/// <summary>
-	/// ライトを解放するデストラクタ
+	/// ライトデータを追加するコンストラクタ
+	/// </summary>
+	Light::Light()
+	{
+		// 平行光源に設定
+		lightData.type = LightManager::LightType::directional;
+
+		// ライトデータを追加する
+		LightManager::AddLightData(lightData);
+	}
+
+	/// <summary>
+	/// ライトデータを削除するデストラクタ
 	/// </summary>
 	Light::~Light()
 	{
-		LightParameter::EraseLightData(lightData);
+		// ライトデータを削除する
+		LightManager::EraseLightData(lightData);
 	}
 
 	/// <summary>
@@ -23,8 +36,7 @@ namespace PokarinEngine
 	/// </summary>
 	void Light::Awake()
 	{
-		lightData.type = LightParameter::Type::directional;
-		LightParameter::AddLightData(lightData);
+
 	}
 
 	/// <summary>
@@ -43,7 +55,7 @@ namespace PokarinEngine
 		lightData.position = owner.transform->position;
 
 		// ポイントライトなら向きは不要なので向きの計算はしない
-		if (lightData.type == LightParameter::Type::pointLight)
+		if (lightData.type == LightManager::LightType::pointLight)
 		{
 			return;
 		}
@@ -111,7 +123,7 @@ namespace PokarinEngine
 	/// <summary>
 	/// コンポーネントの情報をJson型から取得する
 	/// </summary>
-	/// <param name="[out] data"> 情報を格納しているJson型 </param>
+	/// <param name="[in] data"> 情報を格納しているJson型 </param>
 	void Light::FromJson(const Json& data)
 	{
 

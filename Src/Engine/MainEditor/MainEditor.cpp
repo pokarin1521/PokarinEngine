@@ -10,17 +10,14 @@
 
 #include "Toolbar.h"
 
-#include "../Engine.h"
+#include "../Scene.h"
 #include "../GameObject.h"
 #include "../Debug.h"
 
-#include "../Configs/ImGuiConfig.h"
-#include "../Configs/MeshConfig.h"
-
-#include "../ImGuiFontSetter.h"
+#include "../ImGuiHelper.h"
 
 #include "../Window.h"
-#include "../InputManager.h"
+#include "../Input.h"
 #include "../Color.h"
 
 #include <fstream>
@@ -42,7 +39,7 @@ namespace PokarinEngine
 			{
 				if (ImGui::Button("Save"))
 				{
-					engine->GetCurrentScene().SaveScene();
+					currentScene->SaveScene();
 				}
 
 				ImGui::EndMenu();
@@ -53,7 +50,7 @@ namespace PokarinEngine
 			{
 				if (ImGui::Button("Load"))
 				{
-					engine->GetCurrentScene().LoadScene();
+					currentScene->LoadScene();
 				}
 
 				ImGui::EndMenu();
@@ -66,17 +63,19 @@ namespace PokarinEngine
 #pragma region MainEditor
 
 	/// <summary>
+	/// デストラクタ
+	/// </summary>
+	MainEditor::~MainEditor()
+	{
+		// ImGuiの終了
+		ImGuiHelper::Finalize(imGuiContext);
+	}
+
+	/// <summary>
 	/// 初期化
 	/// </summary>
-	/// <param name="[in] e"> エンジンクラスの参照 </param>
-	void MainEditor::Initialize(Engine& e)
+	void MainEditor::Initialize()
 	{
-		// ----------------------------
-		// エンジンを登録
-		// ----------------------------
-
-		engine = &e;
-
 		// ---------------------------
 		// コンテキスト作成
 		// ---------------------------
@@ -100,8 +99,11 @@ namespace PokarinEngine
 		// ImGuiの設定用
 		ImGuiIO& io = ImGui::GetIO();
 
+		// 保存先のファイル名
+		static const char* settingFile = "Settings/imgui.ini";
+
 		// 保存先を設定
-		io.IniFilename = ImGuiConfig::File::setting;
+		io.IniFilename = settingFile;
 
 		// ---------------------------------------
 		// ドッキングウィンドウの有効化
@@ -123,37 +125,42 @@ namespace PokarinEngine
 		// フォントを設定
 		// ----------------------------------
 
-		ImGuiFontSetter::SetFont(io);
+		ImGuiHelper::SetFont(io);
 
-		// ----------------------------
-		// 描画用ビューの初期化
-		// ----------------------------
+		// ----------------------------------
+		// ビューの初期化
+		// ----------------------------------
 
-		// シーンビュー
-		sceneView.Initialize(*engine);
+		// シーンビューの初期化
+		sceneView.Initialize();
 
-		// ゲームビュー
-		gameView.Initialize(*engine);
-
-		// ----------------------------------------
-		// ヒエラルキーウィンドウの初期化
-		// ----------------------------------------
-
-		hierarchy.Initialize(*engine);
+		// ゲームビューの初期化
+		gameView.Initialize();
 
 		// ----------------------------------------
 		// ツールバーの初期化
 		// ----------------------------------------
 
-		Toolbar::Initialize(*engine);
+		Toolbar::Initialize();
 	}
 
 	/// <summary>
 	/// 更新
 	/// </summary>
+	/// <param name="[in] _currentScene"> 現在のシーン </param>
 	/// <param name="[out] isPlayGame"> ゲーム再生中ならtrue </param>
-	void MainEditor::Update(bool& isPlayGame)
+	void MainEditor::Update(const ScenePtr& _currentScene, bool& isPlayGame)
 	{
+		// ------------------------------------
+		// メインエディタの情報を更新する
+		// ------------------------------------
+
+		// 現在のシーンを設定する
+		currentScene = _currentScene;
+
+		// ヒエラルキーで選択中のゲームオブジェクトを設定する
+		selectObject = hierarchy.GetSelectObject();
+
 		// -------------------------
 		// ImGuiフレームの更新
 		// -------------------------
@@ -203,10 +210,10 @@ namespace PokarinEngine
 		gameView.Update();
 
 		// ヒエラルキーウィンドウ
-		hierarchy.Update();
+		hierarchy.Update(currentScene);
 
 		// インスペクターウィンドウ
-		inspector.Update(hierarchy.GetSelectObject());
+		inspector.Update(selectObject);
 
 		// ツールバー
 		Toolbar::Update(isPlayGame);
@@ -235,31 +242,15 @@ namespace PokarinEngine
 	/// </summary>
 	void MainEditor::Render()
 	{
-		// エディタ画面を描画
+		// シーンビューの描画
+		sceneView.Render(currentScene, selectObject);
+
+		// ゲームビューの描画
+		gameView.Render(currentScene);
+
+		// ImGuiの描画
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-	}
-
-	/// <summary>
-	/// 終了
-	/// </summary>
-	void MainEditor::Finalize()
-	{
-		// -----------------
-		// ImGuiの終了
-		// -----------------
-
-		// コンテキストを設定
-		ImGui::SetCurrentContext(imGuiContext);
-
-		ImGui_ImplGlfw_Shutdown();
-		ImGui_ImplOpenGL3_Shutdown();
-
-		// ------------------------
-		// コンテキストの削除
-		// ------------------------
-
-		ImGui::DestroyContext(imGuiContext);
 	}
 
 #pragma endregion

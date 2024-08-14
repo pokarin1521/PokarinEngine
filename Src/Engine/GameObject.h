@@ -1,8 +1,8 @@
 /**
 * @GameObject.h
 */
-#ifndef GAMEOBJECT_H_INCLUDED
-#define GAMEOBJECT_H_INCLUDED
+#ifndef POKARINENGINE_GAMEOBJECT_H_INCLUDED
+#define POKARINENGINE_GAMEOBJECT_H_INCLUDED
 
 #include "Json/UsingNameJson.h"
 
@@ -10,16 +10,14 @@
 #include "Components/Transform.h"
 #include "Components/ComponentAdder.h"
 
-#include "Texture.h"
-
 #include "Math/Vector.h"
 #include "Color.h"
 
-#include "UsingNames/UsingMesh.h"
 #include "UsingNames/UsingNodeEditor.h"
 #include "UsingNames/UsingCollider.h"
+#include "UsingNames/UsingStaticMesh.h"
 
-#include "Configs/MeshConfig.h"
+#include "Mesh/Material.h"
 
 #include <string>
 #include <vector>
@@ -34,7 +32,6 @@ namespace PokarinEngine
 	// ----------------
 
 	class Scene;
-	class Rigidbody;
 
 	/// int型としても使うので、普通の列挙型
 	/// <summary>
@@ -56,11 +53,13 @@ namespace PokarinEngine
 	public: // ---------------- コンストラクタ・デストラクタ ----------------
 
 		GameObject() = default;
-		~GameObject() = default;
+		~GameObject() { OnDestroy(); }
 
 	public: // -------------------------- 禁止事項 --------------------------
 
-		// コピーの禁止
+		/* 識別できなくなるので、禁止する */
+
+		// コピーコンストラクタの禁止
 		GameObject(GameObject&) = delete;
 
 		// 代入の禁止
@@ -189,7 +188,7 @@ namespace PokarinEngine
 	public: // -------------------- コンポーネントの管理 --------------------
 
 		/// <summary>
-		/// ゲームオブジェクトからコンポーネントを削除する
+		/// 削除予定(削除処理が未実行)のコンポーネントを完全に削除する
 		/// </summary>
 		void RemoveDestroyedComponent();
 
@@ -200,12 +199,10 @@ namespace PokarinEngine
 		/// </summary>
 		/// <param name="[in] scene"> 持ち主であるシーン </param>
 		/// <param name="[in] objectID"> 識別番号 </param>
-		/// <param name="[in] meshFile"> スタティックメッシュのファイル名 </param>
 		/// <param name="[in] objectName"> 名前 </param>
 		/// <param name="[in] position"> 位置 </param>
 		/// <param name="[in] rotation"> 回転角度 </param>
-		void Initialize(Scene& scene, int objectID,
-			const std::string& meshFile, const std::string& objectName,
+		void Initialize(Scene& scene, int objectID, const std::string& objectName,
 			const Vector3& position, const Vector3& rotation);
 
 		/// <summary>
@@ -222,7 +219,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// コライダーを描画する
 		/// </summary>
-		void DrawCollider();
+		void DrawCollider() const;
 
 	public: // ---------------------------- エディタ ----------------------------
 
@@ -328,7 +325,7 @@ namespace PokarinEngine
 		StaticMeshPtr staticMesh;
 
 		// ゲームオブジェクト固有のマテリアル配列
-		MaterialList materials;
+		MaterialList materialList;
 
 		// 描画の優先度
 		int renderQueue = renderQueue_geometry;
@@ -381,4 +378,4 @@ namespace PokarinEngine
 
 } // namespace PokarinEngine
 
-#endif // !GAMEOBJECT_H_INCLUDED
+#endif // !POKARINENGINE_GAMEOBJECT_H_INCLUDED

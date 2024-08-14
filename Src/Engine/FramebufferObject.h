@@ -1,10 +1,13 @@
 /**
 * @file FramebufferObject.h
 */
-#ifndef FRAMEBUFFEROBJECT_H_INCLUDED
-#define FRAMEBUFFEROBJECT_H_INCLUDED
+#ifndef POKARINENGINE_FRAMEBUFFEROBJECT_H_INCLUDED
+#define POKARINENGINE_FRAMEBUFFEROBJECT_H_INCLUDED
 
 #include "glad/glad.h"
+
+#include "UsingNames/UsingFramebufferObject.h"
+
 #include "Window.h"
 #include "Debug.h"
 #include "Texture.h"
@@ -19,17 +22,8 @@ namespace PokarinEngine
 	// 前方宣言
 	// -------------------
 
-	class FramebufferObject;
 	class RenderbufferObject;
-	class Engine;
-
-	// --------------------------
-	// 型の別名を定義
-	// --------------------------
-
-	using FramebufferObjectPtr = std::shared_ptr<FramebufferObject>;
-	using RenderbufferObjectPtr = std::shared_ptr<RenderbufferObject>;
-
+	
 	/// <summary>
 	/// FBO(カラーバッファ・深度バッファなどを統括するバッファオブジェクト)
 	/// </summary>
@@ -40,15 +34,9 @@ namespace PokarinEngine
 		/// <summary>
 		/// FBOを作成する
 		/// </summary>
-		/// <param name="[in] engine"> エンジンクラスの参照 </param>
-		/// <param name="[in] _windowID"> ウィンドウ番号 </param>
-		/// <param name="[in] fboWidth"> FBOの幅 </param>
-		/// <param name="[in] fboHeight"> FBOの高さ </param>
-		static FramebufferObjectPtr Create(
-			Engine& engine, WindowID _windowID, GLsizei fboWidth, GLsizei fboHeight)
+		static FramebufferObjectPtr Create()
 		{
-			return std::make_shared<FramebufferObject>(
-				engine, _windowID, fboWidth, fboHeight);
+			return std::make_shared<FramebufferObject>();
 		}
 
 	public: // -------- コンストラクタ・デストラクタ --------
@@ -56,12 +44,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// FBOを作成するコンストラクタ
 		/// </summary>
-		/// <param name="[in] engine"> エンジンクラスの参照 </param>
-		/// <param name="[in] _windowID"> ウィンドウ番号 </param>
-		/// <param name="[in] fboWidth"> FBOの幅 </param>
-		/// <param name="[in] fboHeight"> FBOの高さ </param>
-		FramebufferObject(
-			Engine& engine, WindowID _windowID, GLsizei fboWidth, GLsizei fboHeight);
+		FramebufferObject();
 
 		/// <summary>
 		/// FBOを削除するデストラクタ
@@ -69,6 +52,8 @@ namespace PokarinEngine
 		~FramebufferObject();
 
 	public: // ----------------- 禁止事項 -------------------
+
+		/* 削除用デストラクタを複数回呼ばれないように禁止する */
 
 		// コピーコンストラクタの禁止
 		FramebufferObject(const FramebufferObject&) = delete;
@@ -91,55 +76,40 @@ namespace PokarinEngine
 	public: // -------------- カラーバッファ ---------------
 
 		/// <summary>
-		/// カラーバッファ用テクスチャをクリア
+		/// バックバッファをクリアする
 		/// </summary>
-		/// <param name="Color"> クリア色 </param>
+		/// <param name="[in] Color"> クリア色 </param>
 		void ClearColor(const Color& color);
 
-	public: // ----------------- サイズ --------------------
+	public: // -------------- 識別番号の取得 ---------------
 
-		/// <summary>
-		/// FBOの大きさを設定する
-		/// </summary>
-		/// <param name="[in] fboWidth"> 幅 </param>
-		/// <param name="[in] fboHeight"> 高さ </param>
-		void SetSize(GLsizei fboWidth, GLsizei fboHeight)
-		{
-			width = fboWidth;
-			height = fboHeight;
-		}
-
-	public: // -------------- 管理番号の取得 ---------------
-
-		// 管理番号の取得(GLuint型に変換)
+		// 識別番号の取得(GLuint型に変換)
 		operator GLuint() const { return id; }
 
 	public: // ------------- テクスチャの取得 --------------
 
 		/// <summary>
-		/// 描画後のテクスチャを取得する
+		/// カラーバッファ用テクスチャを取得する
 		/// </summary>
 		/// <returns> カラーバッファ用テクスチャ </returns>
-		TexturePtr GetTexture() { return texture; }
+		TexturePtr GetTexture() const { return texture; }
 
-	private: // ------------------- 情報 --------------------
+	private: // ------------------ 情報 --------------------
 
-		// FBOの管理番号
+		// FBOの識別番号
 		GLuint id = 0;
 
 		// カラーバッファ用テクスチャ
 		TexturePtr texture;
 
 		// 深度バッファ用RBO
-		RenderbufferObjectPtr rbo;
+		std::shared_ptr<RenderbufferObject> rbo;
 
 		// FBOの大きさ
-		GLsizei width = 0, height = 0;
-
-		// ウィンドウ識別番号
-		WindowID windowID;
+		// 16 : 9 で設定
+		GLsizei width = 1280, height = 720;
 	};
 
 } // namespace PokarinEngine
 
-#endif // !FRAMEBUFFEROBJECT_H_INCLUDED
+#endif // !POKARINENGINE_FRAMEBUFFEROBJECT_H_INCLUDED

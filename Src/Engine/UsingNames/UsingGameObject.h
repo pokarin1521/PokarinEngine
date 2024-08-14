@@ -1,8 +1,8 @@
 /**
 * @file GameObjectUsing.h
 */
-#ifndef USINGGAMEOBJECT_H_INCKUDED
-#define USINGGAMEOBJECT_H_INCKUDED
+#ifndef POKARINENGINE_USINGGAMEOBJECT_H_INCKUDED
+#define POKARINENGINE_USINGGAMEOBJECT_H_INCKUDED
 
 #include <memory>
 #include <vector>
@@ -23,4 +23,4 @@ namespace PokarinEngine
 	using GameObjectList = std::vector<GameObjectPtr>;
 }
 
-#endif // !USINGGAMEOBJECT_H_INCKUDED
+#endif // !POKARINENGINE_USINGGAMEOBJECT_H_INCKUDED

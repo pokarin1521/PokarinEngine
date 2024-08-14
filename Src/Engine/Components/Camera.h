@@ -1,23 +1,20 @@
 /**
 * @file Camera.h
 */
-#ifndef CAMERA_H_INCLUDED
-#define CAMERA_H_INCLUDED
+#ifndef POKARINENGINE_CAMERA_H_INCLUDED
+#define POKARINENGINE_CAMERA_H_INCLUDED
 
-#include "Component.h"
+#include "Transform.h"
 
 #include "../Math/Angle.h"
+#include "../Math/Vector.h"
 
-#include "../FramebufferObject.h"
+#include "../UsingNames/UsingStaticMesh.h"
 
 #include <memory>
 
 namespace PokarinEngine
 {
-	class Camera;
-
-	using CameraPtr = std::shared_ptr<Camera>;
-
 	/// <summary>
 	/// カメラ用コンポーネント
 	/// </summary>
@@ -25,61 +22,44 @@ namespace PokarinEngine
 	{
 	public: // ------------------ コンストラクタ・デストラクタ -------------------
 
-		Camera() = default;
-		~Camera() = default;
-
-	public: // ------------------------------ 描画 -------------------------------
-
-		void Draw();
-
-	public: // -------------------------- 視野角の取得 ---------------------------
+		/// <summary>
+		/// カメラを追加するコンストラクタ
+		/// </summary>
+		Camera();
 
 		/// <summary>
-		/// 垂直視野角を取得
+		/// カメラを削除するデストラクタ
 		/// </summary>
-		/// <returns> 垂直視野角(度数法) </returns>
-		float GetFovY() const { return degFovY; }
+		~Camera();
+
+	public: // ----------------------------- コピー ------------------------------
 
 		/// <summary>
-		/// 視野角による拡大率を取得
+		/// 情報をシェーダに設定する
 		/// </summary>
-		/// <returns> 視野角による拡大率の逆数 </returns>
-		float GetFovScale() const { return fovScale; }
+		void SetToShader() const;
+
+	public: // ---------------------------- 描画範囲 -----------------------------
 
 		/// <summary>
-		/// 垂直視野角を設定する
+		/// 描画範囲
 		/// </summary>
-		/// <param name="[in] fovY"> 設定する垂直視野角(度数法) </param>
-		void SetFovY(float fovY)
+		struct DrawRange
 		{
-			// 垂直視野角(度数法)を設定
-			degFovY = fovY;
+			// 最小描画範囲
+			float near = 0.35f;
 
-			// 弧度法に変換
-			radFovY = Radians(fovY);
-
-			// 視野角による拡大率の逆数
-			fovScale = 1 / tan(radFovY / 2);
-		}
-
-	public: // ------------------------- 描画範囲の取得 --------------------------
+			// 最大描画範囲
+			float far = 1000.0f;
+		};
 
 		/// <summary>
-		/// 最小描画範囲を取得する
+		/// 描画範囲を取得する
 		/// </summary>
-		/// <returns> 描画範囲の最小値 </returns>
-		float GetDrawNear() const
+		/// <returns> 描画範囲 </returns>
+		const DrawRange& GetDrawRange() const
 		{
-			return drawRange.near;
-		}
-
-		/// <summary>
-		/// 最大描画範囲を取得する
-		/// </summary>
-		/// <returns> 描画範囲の最大値 </returns>
-		float GetDrawFar() const
-		{
-			return drawRange.far;
+			return drawRange;
 		}
 
 	public: // ------------------------------ Json -------------------------------
@@ -93,8 +73,21 @@ namespace PokarinEngine
 		/// <summary>
 		/// コンポーネントの情報をJson型から取得する
 		/// </summary>
-		/// <param name="[out] data"> 情報を格納しているJson型 </param>
+		/// <param name="[in] data"> 情報を格納しているJson型 </param>
 		void FromJson(const Json& data) override;
+
+	public: // ------------------------- 位置・回転角度 --------------------------
+
+		// 位置・回転角度
+		// 拡大率は使わない
+		TransformPtr transform;
+
+	private: // ---------------------------- 初期化 ------------------------------
+
+		/// <summary>
+		/// ゲームオブジェクトに追加された時の初期化
+		/// </summary>
+		void Awake() override;
 
 	private: // -------------------------- エディタ用 ----------------------------
 
@@ -112,29 +105,17 @@ namespace PokarinEngine
 		float radFovY = Radians(degFovY);
 
 		// 視野角による拡大率の逆数
-		// (視野角による拡大率は常にこの形で使うので、あらかじめ逆数にしておく)
-		float fovScale = 1 / tan(radFovY / 2);
+		// 視野角による拡大率は常にこの形で使うので、あらかじめ逆数にしておく
+		float inverseFovScale = 1 / tan(radFovY / 2);
 
 	private: // ----------------------------- 描画用 -----------------------------
-
-		/// <summary>
-		/// 描画範囲
-		/// </summary>
-		struct DrawRange
-		{
-			// 最小描画範囲
-			float near = 0.35f;
-
-			// 最大描画範囲
-			float far = 1000.0f;
-		};
 
 		// 描画範囲
 		DrawRange drawRange;
 
-		// 描画用FBO
-		FramebufferObjectPtr fbo;
+		// スカイスフィア用モデル
+		StaticMeshPtr skySphere;
 	};
 }
 
-#endif // !CAMERA_H_INCLUDED
+#endif // !POKARINENGINE_CAMERA_H_INCLUDED

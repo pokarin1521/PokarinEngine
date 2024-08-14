@@ -1,8 +1,8 @@
 /**
 * @file ComponentAdder.h
 */
-#ifndef COMPONENTADDER_H_INCLUDED
-#define COMPONENTADDER_H_INCLUDED
+#ifndef POKARINENGINE_COMPONENTADDER_H_INCLUDED
+#define POKARINENGINE_COMPONENTADDER_H_INCLUDED
 
 #include "../UsingNames/UsingComponent.h"
 #include "../UsingNames/UsingGameObject.h"
@@ -76,4 +76,4 @@ namespace PokarinEngine
 	};
 }
 
-#endif // !COMPONENTADDER_H_INCLUDED
+#endif // !POKARINENGINE_COMPONENTADDER_H_INCLUDED

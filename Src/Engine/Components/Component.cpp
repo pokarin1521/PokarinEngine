@@ -23,12 +23,6 @@ namespace PokarinEngine
 			return;
 		}
 
-		// メインカメラは現状削除しないようにする
-		if (&ownerObject->GetOwnerScene().GetMainCameraInfo() == this)
-		{
-			return;
-		}
-
 		// ポップアップ展開用ボタンをヘッダーの右端に表示
 		const float posX = ImGui::GetItemRectSize().x - 20.0f;
 		ImGui::SameLine(posX);

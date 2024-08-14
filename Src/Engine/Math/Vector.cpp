@@ -8,6 +8,32 @@
 
 namespace PokarinEngine
 {
+#pragma region static_zero
+
+	// 全ての値が0
+	const Vector2 Vector2::zero = { 0,0 };
+
+	// 全ての値が0
+	const Vector3 Vector3::zero = { 0,0,0 };
+
+	// 全ての値が0
+	const Vector4 Vector4::zero = { 0,0,0,0 };
+
+#pragma endregion
+
+#pragma region static_one
+
+	// 全ての値が1
+	const Vector2 Vector2::one = { 1,1 };
+
+	// 全ての値が1
+	const Vector3 Vector3::one = { 1,1,1 };
+
+	// 全ての値が1
+	const Vector4 Vector4::one = { 1,1,1,1 };
+
+#pragma endregion
+
 #pragma region Editor
 
 	/// ここでしか使わないので、cppのみに書く

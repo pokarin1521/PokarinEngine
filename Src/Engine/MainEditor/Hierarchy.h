@@ -1,9 +1,10 @@
 /**
 * @file Hierarchy.h
 */
-#ifndef HIERARCHY_H_INCLUDED
-#define HIERARCHY_H_INCLUDED
+#ifndef POKARINENGINE_HIERARCHY_H_INCLUDED
+#define POKARINENGINE_HIERARCHY_H_INCLUDED
 
+#include "../UsingNames/UsingScene.h"
 #include "../UsingNames/UsingGameObject.h"
 
 #include <memory>
@@ -15,25 +16,35 @@ namespace PokarinEngine
 	// 前方宣言
 	// ---------------------
 
-	class Engine;
+	class Scene;
 
 	/// <summary>
 	/// ヒエラルキー(シーン内のオブジェクト管理用ウィンドウ)
 	/// </summary>
 	class Hierarchy
 	{
-	public: // --------------------------- 制御 ----------------------------
+	public: // ---------------- コンストラクタ・デストラクタ ---------------
 
-		/// <summary>
-		/// 初期化
-		/// </summary>
-		/// <param name="[in] engine"> エンジンクラスの参照 </param>
-		void Initialize(Engine& e);
+		Hierarchy() = default;
+		~Hierarchy() = default;
+
+	public: // ------------------------- 禁止事項 --------------------------
+
+		/* エディタ管理がおかしくなるので禁止する */
+
+		// コピーコンストラクタの禁止
+		Hierarchy(const Hierarchy&) = delete;
+
+		// 代入の禁止
+		Hierarchy& operator=(const Hierarchy&) = delete;
+
+	public: // --------------------------- 制御 ----------------------------
 
 		/// <summary>
 		/// 更新
 		/// </summary>
-		void Update();
+		/// <param name="[in] _currentScene"> 現在のシーン </param>
+		void Update(const ScenePtr& _currentScene);
 
 	public: // -------------------- オブジェクトの取得 ---------------------
 
@@ -90,8 +101,8 @@ namespace PokarinEngine
 		// 選択中のオブジェクト
 		GameObjectPtr selectObject;
 
-		// エンジンクラスのポインタ
-		Engine* engine = nullptr;
+		// 現在のシーン
+		ScenePtr currentScene;
 
 		// オブジェクト作成用ポップアップの名前
 		const char* createObjectPopupName = "CreateObject";
@@ -99,4 +110,4 @@ namespace PokarinEngine
 
 } // namespace PokarinEngine
 
-#endif // !HIERARCHY_H_INCLUDED
+#endif // !POKARINENGINE_HIERARCHY_H_INCLUDED

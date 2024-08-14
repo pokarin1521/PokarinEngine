@@ -1,9 +1,10 @@
 /**
 * @file Json.h
 */
-#ifndef JSON_H_INCLUDED
-#define JSON_H_INCLUDED
+#ifndef POKARINENGINE_JSON_H_INCLUDED
+#define POKARINENGINE_JSON_H_INCLUDED
 
+#include "UsingNameJson.h"
 #include "nlohmann/json.hpp"
 
 #include <string>
@@ -62,4 +63,4 @@ namespace PokarinEngine
 	}
 }
 
-#endif // !JSON_H_INCLUDED
+#endif // !POKARINENGINE_JSON_H_INCLUDED

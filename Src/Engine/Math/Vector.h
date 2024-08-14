@@ -1,8 +1,8 @@
 /**
 * @file Vector.h
 */
-#ifndef VECTOR_H_INCLUDED
-#define VECTOR_H_INCLUDED
+#ifndef POKARINENGINE_VECTOR_H_INCLUDED
+#define POKARINENGINE_VECTOR_H_INCLUDED
 
 #include "Json/UsingNameJson.h"
 
@@ -228,36 +228,6 @@ namespace PokarinEngine
 		// 全ての値が1
 		static const Vector4 one;
 	};
-
-	// -------------------------------
-	// static変数定義
-	// -------------------------------
-
-#pragma region Vector_Zero
-
-	// 全ての値が0
-	inline const Vector2 Vector2::zero = { 0,0 };
-
-	// 全ての値が0
-	inline const Vector3 Vector3::zero = { 0,0,0 };
-
-	// 全ての値が0
-	inline const Vector4 Vector4::zero = { 0,0,0,0 };
-
-#pragma endregion
-
-#pragma region Vector_One
-
-	// 全ての値が1
-	inline const Vector2 Vector2::one = { 1,1 };
-
-	// 全ての値が1
-	inline const Vector3 Vector3::one = { 1,1,1 };
-
-	// 全ての値が1
-	inline const Vector4 Vector4::one = { 1,1,1,1 };
-
-#pragma endregion
 
 	// -------------------------------
 	// オペレーター
@@ -886,4 +856,4 @@ namespace PokarinEngine
 
 } // namespace PokarinEngine
 
-#endif // !VECTOR_H_INCLUDED
+#endif // !POKARINENGINE_VECTOR_H_INCLUDED

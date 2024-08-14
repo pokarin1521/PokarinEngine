@@ -5,14 +5,16 @@
 
 #include "Json/Json.h"
 
-#include "Engine.h"
+#include "GameObject.h"
 #include "Random.h"
 #include "Debug.h"
+#include "FramebufferObject.h"
+
+#include "Mesh/Mesh.h"
 
 #include "Components/Light.h"
+#include "Components/Camera.h"
 #include "Components/Colliders/BoxCollider.h"
-
-#include "Configs/ShaderConfig.h"
 
 #include "Collision/Collision.h"
 
@@ -29,18 +31,21 @@ namespace PokarinEngine
 	/// <param name="[in] e"> エンジンクラスの参照 </param>
 	/// <param name="[in] sceneID"> シーン識別番号 </param>
 	/// <param name="[in] sceneName"> シーン名 </param>
-	Scene::Scene(Engine& e, int sceneID, const char* sceneName)
-		:engine(&e), id(sceneID), name(sceneName)
+	Scene::Scene(int sceneID, const char* sceneName)
+		:id(sceneID), name(sceneName)
 	{
-		// メインカメラ作成
+		// カメラの初期位置
 		// オブジェクト生成時に見えるように少し後ろに配置する
-		mainCamera = CreateGameObject("MainCamera", Vector3(0, 0, -5));
-		mainCameraInfo = mainCamera->AddComponent<Camera>();
+		static const Vector3 cameraStartPosition = { 0, 0, -5 };
+
+		// メインカメラ作成
+		auto cameraObject = CreateGameObject("MainCamera", cameraStartPosition);
+		cameraObject->AddComponent<Camera>();
 
 		// 平行光源を作成
 		auto directionalLight = CreateGameObject("Directional Light");
 		std::shared_ptr<Light> lightComponent = directionalLight->AddComponent<Light>();
-		lightComponent->SetType(LightParameter::Type::directional);
+		lightComponent->SetType(LightManager::LightType::directional);
 	}
 
 	/// <summary>
@@ -50,10 +55,9 @@ namespace PokarinEngine
 	/// <param name="[in] name"> オブジェクトの名前 </param>
 	/// <param name="[in] position"> オブジェクトを配置する位置 </param>
 	/// <param name="[in] rotation"> オブジェクトの回転角度 </param>
-	/// <param name="[in] staticMeshFile"> スタティックメッシュのファイル名 </param>
 	/// <returns> 追加したゲームオブジェクトのポインタ </returns>
 	GameObjectPtr Scene::CreateGameObject(const std::string& name,
-		const Vector3& position, const Vector3& rotation, const char* staticMeshFile)
+		const Vector3& position, const Vector3& rotation)
 	{
 		// シーン内のゲームオブジェクト数が最大値に達したら作成しない
 		if (gameObjectList.size() >= gameObjectMax)
@@ -67,8 +71,7 @@ namespace PokarinEngine
 
 		// ゲームオブジェクトの初期化
 		object->Initialize(*this, GetSingleObjectID(),
-			staticMeshFile, name,
-			position, rotation);
+			name, position, rotation);
 
 		// ゲームオブジェクト管理用配列に追加
 		gameObjectList.push_back(object);
@@ -77,27 +80,21 @@ namespace PokarinEngine
 	}
 
 	/// <summary>
-	/// ゲームオブジェクトを複製する
+	/// ゲームオブジェクトをコピーする
 	/// </summary>
-	/// <param name="[in] object"> 複製元のゲームオブジェクト </param>
+	/// <param name="[in] object"> コピー元のゲームオブジェクト </param>
 	void Scene::CopyGameObject(const GameObjectPtr& object)
 	{
-		// メインカメラは複製しない
-		if (object == mainCamera)
-		{
-			return;
-		}
-
-		// 複製元の情報を格納するJson型
+		// コピー元の情報を格納するJson型
 		Json data;
 
-		// 複製元の情報を格納する
+		// コピー元の情報を格納する
 		object->ToJson(data);
 
 		// ゲームオブジェクトを作成
 		GameObjectPtr copyObject = CreateGameObject("Copy Object");
 
-		// 複製元の情報を取得する
+		// コピー元の情報を取得する
 		copyObject->FromJson(data);
 	}
 
@@ -133,49 +130,43 @@ namespace PokarinEngine
 
 #pragma endregion
 
-#pragma region StaticMesh
-
-	/// <summary>
-	/// スタティックメッシュを取得する
-	/// </summary>
-	/// <param name="[in] fileName"> ファイル名 </param>
-	/// <returns> ファイル名が一致するスタティックメッシュ </returns>
-	StaticMeshPtr Scene::GetStaticMesh(const std::string& fileName)
-	{
-		return engine->GetStaticMesh(fileName);
-	}
-
-#pragma endregion
-
 #pragma region Update
 
 	/// <summary>
 	/// ゲームオブジェクトの状態を更新する
 	/// </summary>
-	void Scene::UpdateGameObject()
+	/// <param name="[in] isPlayGame"> ゲーム再生中ならtrue </param>
+	void Scene::Update(bool isPlayGame)
 	{
 		// ゲームオブジェクトを更新
 		for (const auto& gameObject : gameObjectList)
 		{
-			if (!gameObject->IsDestroyed())
+			// 削除済みなら更新しない
+			if (gameObject->IsDestroyed())
 			{
-				gameObject->Update(engine->IsPlayGame());
+				continue;
 			}
+
+			// 更新
+			gameObject->Update(isPlayGame);
 		}
 
-		if (engine->IsPlayGame())
+		if (isPlayGame)
 		{
 			Collision::GameObjectCollision(gameObjectList);
 		}
 
-	} // UpdateGameObject
+		// ゲームオブジェクトの削除状態を確定する
+		RemoveDestroyedGameObject();
+
+	} // Update
 
 #pragma endregion
 
 #pragma region Destroy
 
 	/// <summary>
-	/// シーンから全てのゲームオブジェクトを破棄する
+	/// シーンから全てのゲームオブジェクトを削除する
 	/// </summary>
 	void Scene::ClearGameObject()
 	{
@@ -195,15 +186,9 @@ namespace PokarinEngine
 	/// <summary>
 	/// ゲームオブジェクトを削除する
 	/// </summary>
-	/// <param name="[in] object"> 削除するゲームオブジェクト </param>
+	/// <param name="[in,out] object"> 削除するゲームオブジェクト </param>
 	void Scene::DestroyObject(GameObjectPtr& object)
 	{
-		// メインカメラは削除しない
-		if (object == mainCamera)
-		{
-			return;
-		}
-
 		// -----------------------------------
 		// ゲームオブジェクトを削除
 		// -----------------------------------
@@ -218,7 +203,7 @@ namespace PokarinEngine
 	}
 
 	/// <summary>
-	/// 削除するゲームオブジェクトを完全に削除する
+	/// 削除予定(削除処理が未実行)のゲームオブジェクトを完全に削除する
 	/// </summary>
 	void Scene::RemoveDestroyedGameObject()
 	{
@@ -264,11 +249,11 @@ namespace PokarinEngine
 
 	/// ここでしか使わないので、cppのみに書く
 	/// <summary>
-	/// ゲームオブジェクトのパラメータをGPUにコピーする
+	/// ゲームオブジェクトのパラメータをシェーダに設定する
 	/// </summary>
-	/// <param name="[in] prog"> シェーダプログラムの管理番号 </param>
+	/// <param name="[in] progType"> シェーダプログラムの種類 </param>
 	/// <param name="[in] gameObject"> パラメータをコピーするゲームオブジェクト </param>
-	void CopyGameObjectParameters(GLuint prog, const GameObjectPtr& gameObject)
+	void SetToShader_GameObjectParameters(Shader::ProgType progType, const GameObjectPtr& gameObject)
 	{
 		// 座標変換行列
 		Matrix4x4 transformMatrix = gameObject->transform->GetTransformMatrix();
@@ -277,24 +262,20 @@ namespace PokarinEngine
 		Matrix3x3 normalMatrix = gameObject->transform->GetNormalMatrix();
 
 		// ------------------------------------
-		// パラメータをGPUにコピー
+		// パラメータをシェーダに設定する
 		// ------------------------------------
 
 		// オブジェクトの色
-		glProgramUniform4fv(prog,
-			UniformLocation::color, 1, &gameObject->color.r);
+		Shader::SetVector4(progType, UniformVector4::color, gameObject->color);
 
 		// 座標変換行列
-		glProgramUniformMatrix4fv(
-			prog, UniformLocation::transformMatrix,
-			1, GL_FALSE, &transformMatrix[0].x);
+		Shader::SetMatrix4x4(progType, UniformMatrix4x4::transformMatrix, transformMatrix);
 
-		// 法線変換行列
-		if (prog == Shader::GetProgram(Shader::ProgType::Standard))
+		// 標準シェーダにだけ
+		// 法線変換行列を設定する
+		if (progType == Shader::ProgType::Standard)
 		{
-			glProgramUniformMatrix3fv(
-				prog, UniformLocation::normalMatrix,
-				1, GL_FALSE, &normalMatrix[0].x);
+			Shader::SetMatrix3x3(progType, UniformMatrix3x3::normalMatrix, normalMatrix);
 		}
 	}
 
@@ -302,17 +283,17 @@ namespace PokarinEngine
 	/// <summary>
 	/// ゲームオブジェクトを描画する
 	/// </summary>
-	/// <param name="[in] prog"> シェーダプログラムの管理番号 </param>
+	/// <param name="[in] progType"> シェーダプログラムの種類 </param>
 	/// <param name="[in] begin"> 描画するゲームオブジェクト配列の先頭イテレータ </param>
 	/// <param name="[in] end"> 描画するゲームオブジェクト配列の末尾イテレータ </param>
-	void DrawGameObject(GLuint prog,
+	void DrawGameObject(Shader::ProgType progType,
 		GameObjectList::const_iterator begin, GameObjectList::const_iterator end)
 	{
 		// ------------------------
 		// オブジェクトの描画
 		// ------------------------
 
-		// ゲームオブジェクトを描画
+		// ゲームオブジェクトを描画する
 		for (auto& itr = begin; itr != end; ++itr)
 		{
 			// ゲームオブジェクト
@@ -333,27 +314,27 @@ namespace PokarinEngine
 
 			// -------- ユニフォーム変数にデータをコピー -----------
 
-			// 描画に使うシェーダを指定
-			glUseProgram(prog);
+			// 描画に使うシェーダを設定
+			Shader::UseProgram(progType);
 
-			// パラメータをコピー
-			CopyGameObjectParameters(prog, gameObject);
+			// パラメータをシェーダに設定する
+			SetToShader_GameObjectParameters(progType, gameObject);
 
 			// ------------- 図形を描画 --------------
 
 			// 固有マテリアルがない
-			if (gameObject->materials.empty())
+			if (gameObject->materialList.empty())
 			{
 				// 共有マテリアルを使って
 				// スタティックメッシュを描画
-				DrawMesh(gameObject->staticMesh, prog, gameObject->staticMesh->materials);
+				Mesh::Draw(gameObject->staticMesh, progType, gameObject->staticMesh->GetMaterialList());
 			}
 			// 固有マテリアルがある
 			else
 			{
 				// 固有マテリアルを使って
 				// スタティックメッシュを描画
-				DrawMesh(gameObject->staticMesh, prog, gameObject->materials);
+				Mesh::Draw(gameObject->staticMesh, progType, gameObject->materialList);
 			}
 		}
 	}
@@ -405,17 +386,21 @@ namespace PokarinEngine
 		// 優先度順に描画
 		// ---------------------------------
 
-		// 標準シェーダプログラムの管理番号
-		GLuint progStandard = Shader::GetProgram(Shader::ProgType::Standard);
+		// 標準シェーダ
+		static const auto progStandard = Shader::ProgType::Standard;
 
-		// ライティング無しシェーダプログラムの管理番号
-		GLuint progUnlit = Shader::GetProgram(Shader::ProgType::Unlit);
+		// ライティング無しシェーダ
+		static const auto progUnlit = Shader::ProgType::Unlit;
 
 		// ---------- transparent以前のキューを描画  -----------
 		// ---------- 通常のオブジェクト		     -----------
 
+		// 深度テストを有効化
+		// 深度テストは有効と無効を切り替えることがあるので、念のため有効にしておく
+		glEnable(GL_DEPTH_TEST);
+
 		// 描画
-		DrawGameObject(progUnlit, drawObjectList.begin(), transparentBegin);
+		DrawGameObject(progStandard, drawObjectList.begin(), transparentBegin);
 
 		// ------ transparentからoverlayまでのキューを描画 ------
 		// ------ 半透明なオブジェクト					   ------
@@ -442,13 +427,6 @@ namespace PokarinEngine
 		// 描画
 		// UIにライティングはいらないのでアンリットシェーダを使う
 		DrawGameObject(progUnlit, overlayBegin, drawObjectList.end());
-
-		// ゲームオブジェクトのコライダーを描画
-		// コライダーは深度値関係なく描画しないと不便なので、ここで描画する
-		for (const auto& drawObject : drawObjectList)
-		{
-			drawObject->DrawCollider();
-		}
 	}
 
 #pragma endregion

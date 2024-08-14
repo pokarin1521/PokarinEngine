@@ -1,8 +1,8 @@
 /**
 * @file Inspector.h
 */
-#ifndef INSPECTOR_H_INCLUDED
-#define INSPECTOR_H_INCLUDED
+#ifndef POKARINENGINE_INSPECTOR_H_INCLUDED
+#define POKARINENGINE_INSPECTOR_H_INCLUDED
 
 #include "ImGui/imgui.h"
 
@@ -18,10 +18,20 @@ namespace PokarinEngine
 	/// </summary>
 	class Inspector
 	{
-	public: // ---------------- コンストラクタ・デストラクタ -----------------
+	public: // ----------------- コンストラクタ・デストラクタ ----------------
 
 		Inspector() = default;
 		~Inspector() = default;
+
+	public: // -------------------------- 禁止事項 ---------------------------
+
+		/* エディタ管理がおかしくなるので禁止する */
+
+		// コピーコンストラクタの禁止
+		Inspector(const Inspector&) = delete;
+
+		// 代入の禁止
+		Inspector& operator=(const Inspector&) = delete;
 
 	public: // ---------------------------- 制御 -----------------------------
 
@@ -53,5 +63,5 @@ namespace PokarinEngine
 
 } // namespace PokarinEngine
 
-#endif // !INSPECTOR_H_INCLUDED
+#endif // !POKARINENGINE_INSPECTOR_H_INCLUDED
 

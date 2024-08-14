@@ -1,8 +1,8 @@
 /**
 * @file MainEditor.h
 */
-#ifndef EDITOR_H_INCLUDED
-#define EDITOR_H_INCLUDED
+#ifndef POKARINENGINE_EDITOR_H_INCLUDED
+#define POKARINENGINE_EDITOR_H_INCLUDED
 
 #include "SceneView.h"
 #include "GameView.h"
@@ -14,67 +14,48 @@
 
 namespace PokarinEngine
 {
-	// -------------------
-	// 前方宣言
-	// -------------------
-
-	class Engine;
-	class SceneView;
-	class GameView;
-
 	/// <summary>
-	/// メインエディタ管理用
+	/// メインエディタ管理用クラス
 	/// </summary>
 	class MainEditor
 	{
 	public: // --------------- コンストラクタ・デストラクタ ----------------
 
 		MainEditor() = default;
-		~MainEditor() = default;
+
+		/// <summary>
+		/// デストラクタ
+		/// </summary>
+		~MainEditor();
+
+	public: // -------------------------- 禁止事項 -------------------------
+
+		/* ImGuiコンテキストの管理がおかしくなるので、禁止する */
+
+		// コピーコンストラクタの禁止
+		MainEditor(const MainEditor&) = delete;
+
+		// 代入の禁止
+		MainEditor& operator=(const MainEditor&) = delete;
 
 	public: // ---------------------------- 制御 ---------------------------
 
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		/// <param name="[in] e"> エンジンクラスの参照 </param>
-		void Initialize(Engine& e);
+		void Initialize();
 
 		/// <summary>
 		/// 更新
 		/// </summary>
+		/// <param name="[in] _currentScene"> 現在のシーン </param>
 		/// <param name="[out] isPlayGame"> ゲーム再生中ならtrue </param>
-		void Update(bool& isPlayGame);
+		void Update(const ScenePtr& _currentScene, bool& isPlayGame);
 
 		/// <summary>
 		/// 描画
 		/// </summary>
 		void Render();
-
-		/// <summary>
-		/// 終了
-		/// </summary>
-		void Finalize();
-
-	public: // ------------------------ ビューの取得 -----------------------
-
-		/// <summary>
-		/// シーンビューを取得する
-		/// </summary>
-		/// <returns> シーンビュー </returns>
-		const SceneView& GetSceneView()
-		{
-			return sceneView;
-		}
-
-		/// <summary>
-		/// ゲームビューを取得する
-		/// </summary>
-		/// <returns> ゲームビュー </returns>
-		const GameView& GetGameView()
-		{
-			return gameView;
-		}
 
 	private: // ------------------------ エディタ用 ------------------------
 
@@ -97,18 +78,18 @@ namespace PokarinEngine
 		/// </summary>
 		void PopColor();
 
-	private: // ------------------------ ウィンドウ ------------------------
+	private: // ------------------------- ウィンドウ -----------------------
 
-		// シーンビュー
+		// シーン内の情報を描画するウィンドウ
 		SceneView sceneView;
 
-		// ゲームビュー
+		// ゲーム画面を描画するウィンドウ
 		GameView gameView;
 
-		// ヒエラルキー
+		// シーン内のオブジェクト管理用ウィンドウ
 		Hierarchy hierarchy;
 
-		// インスペクター
+		// シーン内のオブジェクト制御用ウィンドウ
 		Inspector inspector;
 
 	private: // ------------------------- バージョン -----------------------
@@ -124,12 +105,15 @@ namespace PokarinEngine
 		// ImGuiの色設定の数
 		int pushColorCount = 0;
 
-	private: // ------------------------- エンジン用 -----------------------
+	private: // --------------------------- 情報 ---------------------------
 
-		// エンジン
-		Engine* engine = nullptr;
+		// 現在のシーン
+		ScenePtr currentScene;
+
+		// ヒエラルキーで選択中のゲームオブジェクト
+		GameObjectPtr selectObject;
 	};
 
 } // namespace PokarinEngine
 
-#endif // !EDITOR_H_INCLUDED
+#endif // !POKARINENGINE_EDITOR_H_INCLUDED

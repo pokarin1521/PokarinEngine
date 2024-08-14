@@ -28,8 +28,8 @@ layout(location = 1) out vec2 outTexcoord; // テクスチャ座標
 // 座標変換ベクトルの配列
 layout(location = 0) uniform mat4 transformMatrix;
 
-// アスペクト比と視野角による拡大率
-layout(location = 3) uniform vec2 aspectRatioAndScaleFov;
+// アスペクト比の逆数と視野角による拡大率の逆数
+layout(location = 3) uniform vec2 inverse_aspectRatioAndScaleFov;
 
 // カメラの位置
 layout(location = 4) uniform vec3 cameraPosition; 
@@ -135,14 +135,14 @@ void main()
 	// ------------ 縦横の比率を1:1にする	  --------------
 	
 	// CPU側で 1 / アスペクト比 をしているので乗算
-	const float aspectRatio = aspectRatioAndScaleFov.x;
+	const float aspectRatio = inverse_aspectRatioAndScaleFov.x;
 	gl_Position.x *= aspectRatio;
 
 	// --------- x,y座標それぞれを視野角による拡大率で割り -----------
 	// --------- 表示する位置を調整(視野角を反映)		   -----------
 
 	// CUP側で 1 / 視野角による拡大率 をしているので乗算
-	const float scaleFov = aspectRatioAndScaleFov.y;
+	const float scaleFov = inverse_aspectRatioAndScaleFov.y;
 	gl_Position.xy *= scaleFov;
 
 	// -------- 深度値の計算結果が-1～+1になるような ------------
