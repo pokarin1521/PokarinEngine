@@ -19,11 +19,11 @@ layout(location = 2) in vec3 inNormal;   // 法線ベクトル
 // sampler型のユニフォーム変数を使う
 // ユニット番号はbinding識別子で指定
 
-// テクスチャ
-layout(binding = 0) uniform sampler2D texColor;
+// 基本色テクスチャ
+layout(binding = 0) uniform sampler2D baseTexture;
 
-// エミッションテクスチャ
-layout(binding = 1) uniform sampler2D texEmission;
+// 発光色テクスチャ
+layout(binding = 1) uniform sampler2D emissionTexture;
 
 // ----------------------------
 // プログラムからの入力
@@ -35,8 +35,8 @@ layout(binding = 1) uniform sampler2D texEmission;
 // オブジェクトの色
 layout(location = 100) uniform vec4 color;		
 
-// 物体の発光色と
-// エミッションテクスチャの識別番号
+// オブジェクトの発光色と
+// 発光色テクスチャの識別番号
 layout(location = 101) uniform vec4 emission;
 
 // 環境光
@@ -60,7 +60,7 @@ struct Light
 	// 明るさを反映した色, 減衰開始角度
 	vec4 colorAndFalloffAngle[16];	
 	
-	// 座標と範囲(半径)
+	// 位置と範囲(半径)
 	vec4 positionAndRange[16];		
 	
 	// 向き, 最大照射角度
@@ -88,7 +88,7 @@ void main()
 
 	// サプライ変数が参照するユニットに割り当てられたテクスチャから、
 	// テクスチャ座標のピクセル値を読み取って返す
-	vec4 c = texture(texColor, inTexcoord);
+	vec4 c = texture(baseTexture, inTexcoord);
 
 	// ほとんどの画像は、正しい明るさで出力されるように、
 	// 1/2.2乗の明るさで作成されているので、ガンマ値で修正
@@ -293,7 +293,7 @@ void main()
 	if(emission.w > 0)
 	{
 		// テクスチャを反映する
-		outColor.rgb += texture(texEmission, inTexcoord).rgb * emission.rgb;
+		outColor.rgb += texture(emissionTexture, inTexcoord).rgb * emission.rgb;
 	}
 	// エミッションテクスチャがない場合
 	else

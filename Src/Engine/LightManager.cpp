@@ -5,7 +5,6 @@
 
 #include "Components/Camera.h"
 
-#include "ShaderConfig.h"
 #include "Shader/Shader.h"
 
 #include <algorithm>
@@ -54,19 +53,18 @@ namespace PokarinEngine
 
 		/// ここでしか使わないので、cppのみに書く
 		/// <summary>
-		/// 平行光源のライトデータをGPUにコピーする
+		/// 平行光源のライトデータをシェーダに設定する
 		/// </summary>
-		void CopyDirectionalLight()
+		void SetToShader_DirectionalLight()
 		{
-			// 標準シェーダの識別番号
-			static const GLuint progStandard = Shader::GetProgram(Shader::ProgType::Standard);
+			// 標準シェーダ
+			static const Shader::ProgType progStandard = Shader::ProgType::Standard;
 
 			// 平行光源がない場合は
-			// 黒色の光源としてGPUにコピーする
+			// 黒色の光源としてシェーダに設定する
 			if (!directionalLight)
 			{
-				glProgramUniform3fv(progStandard,
-					ShaderConfig::Uniform::directionalLightColor, 1, &Color::black.r);
+				Shader::SetVector3(progStandard, UniformVector3::directionalLight_Color, Color::black);
 
 				return;
 			}
@@ -74,36 +72,35 @@ namespace PokarinEngine
 			// 色
 			const Color color = directionalLight->color * directionalLight->intensity;
 
-			// 色をコピー
-			glProgramUniform3fv(progStandard,
-				ShaderConfig::Uniform::directionalLightColor, 1, &color.r);
+			// 色を設定
+			Shader::SetVector3(progStandard, UniformVector3::directionalLight_Color, color);
 
-			// 向きをコピー
-			glProgramUniform3fv(progStandard,
-				ShaderConfig::Uniform::directionalLightDirection, 1, &directionalLight->direction.x);
+			// 向きを設定
+			Shader::SetVector3(progStandard, UniformVector3::directionalLight_Direction,
+				directionalLight->direction);
 		}
 
 		/// <summary>
-		/// ライト情報をGPUにコピーする
+		/// ライト情報をシェーダに設定する
 		/// </summary>
 		/// <param name="[in] camera"> 使用するカメラ </param>
-		void CopyGPU(const Camera& camera)
+		void SetToShader(const Camera& camera)
 		{
 			// -----------------------------------------------
-			// 平行光源のライトデータをGPUにコピー
+			// 平行光源のライトデータをシェーダに設定する
 			// -----------------------------------------------
-			
-			CopyDirectionalLight();
 
-			// ----------------------------------- 
-			// 環境光のデータをGPUにコピー 
-			// -----------------------------------
+			SetToShader_DirectionalLight();
 
-			// 標準シェーダの識別番号
-			static const GLuint progStandard = Shader::GetProgram(Shader::ProgType::Standard);
+			// -------------------------------------- 
+			// 環境光のデータをシェーダに設定する
+			// --------------------------------------
 
-			glProgramUniform3fv(progStandard,
-				ShaderConfig::Uniform::ambientLight, 1, &ambientLight.r);
+			// 標準シェーダ
+			static const Shader::ProgType progStandard = Shader::ProgType::Standard;
+
+			// 環境光を設定
+			Shader::SetVector3(progStandard, UniformVector3::ambientLight, ambientLight);
 
 			// -------------------------
 			// 使用中ライトを確認
@@ -112,7 +109,7 @@ namespace PokarinEngine
 			// 使用中のライトがなければコピーするライト数を0に設定
 			if (lightList.empty())
 			{
-				glProgramUniform1i(progStandard, ShaderConfig::Uniform::lightCount, 0);
+				Shader::SetInt(progStandard, UniformInt::lightCount, 0);
 
 				return;
 			}
@@ -180,7 +177,7 @@ namespace PokarinEngine
 			// 画面内にライトがない
 			if (distanceList.empty())
 			{
-				glProgramUniform1i(progStandard, ShaderConfig::Uniform::lightCount, 0);
+				Shader::SetInt(progStandard, UniformInt::lightCount, 0);
 				return;
 			}
 
@@ -200,7 +197,7 @@ namespace PokarinEngine
 
 			// 使用するライトの数
 			const int lightCount = static_cast<int>(
-				std::min(distanceList.size(), ShaderConfig::lightMax));
+				std::min(distanceList.size(), Shader::lightMax));
 
 			// ライトの色と減衰開始角度
 			std::vector<Vector4> colorAndFalloffAngle(lightCount);
@@ -211,7 +208,7 @@ namespace PokarinEngine
 			// ライト方向と最大照射角度
 			std::vector<Vector4> directionAndSpotAngle(lightCount);
 
-			// -------- GPUにコピーするライトデータを設定する ---------
+			// -------- シェーダに設定するライトデータを設定する ---------
 
 			for (int i = 0; i < lightCount; ++i)
 			{
@@ -225,31 +222,31 @@ namespace PokarinEngine
 				colorAndFalloffAngle[i] = {
 					color.r, color.g, color.b, lightData->falloffAngle };
 
-				// 座標と範囲(半径)を設定
+				// 位置と範囲(半径)を設定
 				positionAndRange[i] = {
 					lightData->position.x, lightData->position.y, lightData->position.z, lightData->range };
 
-				// ライトの方向と最大照射角度を設定
+				// ライトの向きと最大照射角度を設定
 				directionAndSpotAngle[i] = {
 					lightData->direction.x, lightData->direction.y, lightData->direction.z, lightData->spotAngle };
 			}
 
-			// ----------- GPUにライトデータをコピー ------------
+			// ----------- ライトデータをシェーダに設定する ------------
 
 			// 色と減衰開始角度
-			glProgramUniform4fv(progStandard, ShaderConfig::Uniform::lightColorAndFalloffAngle,
-				lightCount, &colorAndFalloffAngle[0].x);
+			Shader::SetVector4List(progStandard, UniformVector4List::lightColorAndFalloffAngle,
+				colorAndFalloffAngle);
 
-			// 座標と範囲(半径)
-			glProgramUniform4fv(progStandard, ShaderConfig::Uniform::lightPositionAndRange,
-				lightCount, &positionAndRange[0].x);
+			// 位置と範囲(半径)
+			Shader::SetVector4List(progStandard, UniformVector4List::lightPositionAndRange,
+				positionAndRange);
 
-			// 方向と最大照射角度
-			glProgramUniform4fv(progStandard, ShaderConfig::Uniform::lightDirectionAndSpotAngle,
-				lightCount, &directionAndSpotAngle[0].x);
+			// 向きと最大照射角度
+			Shader::SetVector4List(progStandard, UniformVector4List::lightDirectionAndSpotAngle,
+				directionAndSpotAngle);
 
 			// 使用するライトの数
-			glProgramUniform1i(progStandard, ShaderConfig::Uniform::lightCount, lightCount);
+			Shader::SetInt(progStandard, UniformInt::lightCount, lightCount);
 		}
 
 		/// <summary>

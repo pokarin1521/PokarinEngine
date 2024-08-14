@@ -18,11 +18,11 @@ layout(location = 1) in vec2 inTexcoord; // テクスチャ座標
 // sampler型のユニフォーム変数を使う
 // ユニット番号はbinding識別子で指定
 
-// テクスチャ
-layout(binding = 0) uniform sampler2D texColor;
+// 基本色テクスチャ
+layout(binding = 0) uniform sampler2D baseTexture;
 
-// エミッションテクスチャ
-layout(binding = 1) uniform sampler2D texEmission;
+// 発光色テクスチャ
+layout(binding = 1) uniform sampler2D emissionTexture;
 
 // ----------------------------
 // プログラムからの入力
@@ -31,8 +31,8 @@ layout(binding = 1) uniform sampler2D texEmission;
 // オブジェクトの色
 layout(location = 100) uniform vec4 color;		
 
-// 物体の発光色と
-// エミッションテクスチャの識別番号
+// オブジェクトの発光色と
+// 発光色テクスチャの識別番号
 layout(location = 101) uniform vec4 emission;
 
 // ------------------------
@@ -50,7 +50,7 @@ void main()
 
 	// サプライ変数が参照するユニットに割り当てられたテクスチャから、
 	// テクスチャ座標のピクセル値を読み取って返す
-	vec4 c = texture(texColor, inTexcoord);
+	vec4 c = texture(baseTexture, inTexcoord);
 
 	// CRTモニターのガンマ値
 	const float crtGamma = 2.2; 
@@ -70,7 +70,7 @@ void main()
 	if(emission.w > 0)
 	{
 		// テクスチャを反映する
-		outColor.rgb += texture(texEmission, inTexcoord).rgb * emission.rgb;
+		outColor.rgb += texture(emissionTexture, inTexcoord).rgb * emission.rgb;
 	}
 	// エミッションテクスチャがない場合
 	else

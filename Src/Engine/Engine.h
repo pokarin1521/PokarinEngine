@@ -7,6 +7,9 @@
 #include "glad/glad.h"
 
 #include "MainEditor/MainEditor.h"
+#include "NodeEditor/NodeEditorManager.h"
+
+#include "Shader/Shader.h"
 
 #include "UsingNames/UsingScene.h"
 
@@ -120,8 +123,16 @@ namespace PokarinEngine
 
 	private: // ------------------------ メインエディタ -----------------------
 
-		// メインエディタ
+		// メインエディタ管理用
 		MainEditor mainEditor;
+
+		// ノードエディタ管理用
+		NodeEditorManager nodeEditorManager;
+
+	private: // --------------------------- シェーダ --------------------------
+
+		// シェーダ管理用
+		Shader shader;
 
 	private: // ----------------------- ゲーム再生確認用 ----------------------
 

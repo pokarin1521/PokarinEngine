@@ -89,7 +89,7 @@ namespace PokarinEngine
 		/// ライト情報をGPUにコピーする
 		/// </summary>
 		/// <param name="[in] camera"> 使用するカメラ </param>
-		void CopyGPU(const Camera& camera);
+		void SetToShader(const Camera& camera);
 
 		/// <summary>
 		/// ライトデータを追加する

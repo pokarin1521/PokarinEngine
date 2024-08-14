@@ -108,10 +108,10 @@ namespace PokarinEngine
 		fbo->Bind();
 
 		// カメラ情報をGPUにコピーする
-		camera.CopyToGPU();
+		camera.SetToShader();
 
 		// ライト情報をGPUにコピーする
-		LightManager::CopyGPU(camera);
+		LightManager::SetToShader(camera);
 
 		// スカイスフィアを描画する
 		SkySphere::Draw(camera);

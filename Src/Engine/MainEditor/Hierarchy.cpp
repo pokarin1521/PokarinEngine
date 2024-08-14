@@ -136,7 +136,7 @@ namespace PokarinEngine
 				{
 					// テスト用に
 					// ダブルクリックしたオブジェクトの名前をタイトルにする
-					Window::OpenWindow(WindowID::NodeScript, "NodeScript");
+					Window::OpenWindow(WindowID::NodeEditor, "NodeEditorManager");
 					gameObject.OpenNodeEditor();
 				}
 			}

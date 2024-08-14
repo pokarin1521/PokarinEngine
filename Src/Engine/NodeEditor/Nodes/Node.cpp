@@ -38,7 +38,7 @@ namespace PokarinEngine
 		title = nodeTitle;
 
 		// マウスカーソルの位置にノードを設置
-		Vector2 mousePos = Input::Mouse::GetScreenPos(WindowID::NodeScript);
+		Vector2 mousePos = Input::Mouse::GetScreenPos(WindowID::NodeEditor);
 		ImNodes::SetNodeScreenSpacePos(id, ImVec2(mousePos.x, mousePos.y));
 
 		// 初期化

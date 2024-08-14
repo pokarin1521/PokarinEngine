@@ -8,7 +8,6 @@
 
 #include "../Debug.h" 
 #include "../TextureGetter.h"
-#include "../ShaderConfig.h"
 
 namespace PokarinEngine
 {
@@ -44,9 +43,9 @@ namespace PokarinEngine
 	/// メッシュを描画する
 	/// </summary>
 	/// <param name="[in] mesh"> 描画するスタティックメッシュ </param>
-	/// <param name="[in] program"> 使用するシェーダプログラムの識別番号 </param>
+	/// <param name="[in] progType"> 使用するシェーダプログラムの種類 </param>
 	/// <param name="[in] materialList"> 使用するマテリアル配列 </param>
-	void Mesh::Draw(const StaticMeshPtr& mesh, GLuint program, const MaterialList& materialList)
+	void Mesh::Draw(const StaticMeshPtr& mesh, Shader::ProgType progType, const MaterialList& materialList)
 	{
 		// メッシュがなければ何もしない
 		if (!mesh)
@@ -58,10 +57,7 @@ namespace PokarinEngine
 		Color objectColor = Color::white;
 
 		// シェーダからオブジェクトの色を取得
-		if (program)
-		{
-			glGetUniformfv(program, 100, &objectColor.r);
-		}
+		objectColor = Shader::GetVector4(progType, UniformVector4::color);
 
 		/* 1つのOBJファイルには、
 		異なるマテリアルを使う複数の図形を定義することができる
@@ -89,58 +85,60 @@ namespace PokarinEngine
 				// マテリアル取得
 				const Material& material = *materialList[drawParameter.materialNo];
 
-				if (program)
+				// マテリアルを反映したオブジェクトの色
+				const Color color = objectColor * material.baseColor;
+
+				// マテリアルを反映したオブジェクトの色を
+				// シェーダに設定する
+				Shader::SetVector4(progType, UniformVector4::color, color);
+
+				// 発光色テクスチャの識別番号
+				float emissionTextureID = 0;
+
+				// 発光色テクスチャがあるなら識別番号を設定する
+				if (material.emissionTexture)
 				{
-					// マテリアルを反映したオブジェクトの色
-					const Color color = objectColor * material.baseColor;
-
-					// マテリアルを反映したオブジェクトの色を
-					// GPUにコピー
-					glProgramUniform4fv(program, ShaderConfig::Uniform::color, 1, &color.r);
-
-					// 発光色と
-					// エミッションテクスチャの識別番号をGPUにコピー
-					glProgramUniform4f(program, ShaderConfig::Uniform::emissionColor,
-						material.emission.r,
-						material.emission.g,
-						material.emission.b,
-						static_cast<bool>(material.texEmission));
+					emissionTextureID = static_cast<float>(*material.emissionTexture);
 				}
 
+				// 発光色と発光色テクスチャの識別番号
+				Vector4 emission = {
+					material.emission.r, material.emission.g, material.emission.b,
+					emissionTextureID };
+
+				// 発光色と
+				// 発光色テクスチャの識別番号をシェーダに設定する
+				Shader::SetVector4(progType, UniformVector4::emission, emission);
+
 				// マテリアルにテクスチャが設定されているなら
-				if (material.texBaseColor)
+				if (material.baseTexture)
 				{
-					// テクスチャの識別番号
-					const GLuint tex = *material.texBaseColor;
-
 					// 通常の色用テクスチャをバインド
-					glBindTextures(ShaderConfig::Texture::color, 1, &tex);
-
+					Shader::BindTexture(TextureUnit::color, material.baseTexture);
 				}
 				else
 				{
 					// テクスチャがないのでバインド解除
-					glBindTextures(ShaderConfig::Texture::color, 1, 0);
+					Shader::UnBindTexture(TextureUnit::color);
 				}
 
 				// エミッションテクスチャがある
-				if (material.texEmission)
+				if (material.emissionTexture)
 				{
 					// エミッションテクスチャをバインド
-					const GLuint tex = *material.texEmission;
-					glBindTextures(ShaderConfig::Texture::emission, 1, &tex);
+					Shader::BindTexture(TextureUnit::emission, material.emissionTexture);
 				}
 				else
 				{
-					// エミッションテクスチャがないので
-					// バインド解除
-					glBindTextures(ShaderConfig::Texture::emission, 1, 0);
+					// エミッションテクスチャがないのでバインド解除
+					Shader::UnBindTexture(TextureUnit::emission);
 				}
 			}
 
 			// 描画
 			glDrawElementsBaseVertex(
-				drawParameter.mode, drawParameter.count, GL_UNSIGNED_SHORT, drawParameter.indices, drawParameter.baseVertex);
+				drawParameter.mode, drawParameter.count, GL_UNSIGNED_SHORT,
+				drawParameter.indices, drawParameter.baseVertex);
 		}
 
 		// VAOのバインド解除

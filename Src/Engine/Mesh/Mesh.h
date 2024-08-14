@@ -9,6 +9,8 @@
 #include "../Math/Vector.h"
 #include "../Color.h"
 
+#include "../Shader/Shader.h"
+
 #include <string>
 #include <vector>
 #include <memory>
@@ -57,9 +59,9 @@ namespace PokarinEngine
 		/// スタティックメッシュを描画する
 		/// </summary>
 		/// <param name="[in] mesh"> 描画するスタティックメッシュ </param>
-		/// <param name="[in] program"> 使用するシェーダプログラムの識別番号 </param>
+		/// <param name="[in] progType"> 使用するシェーダプログラムの識別番号 </param>
 		/// <param name="[in] materialList"> 使用するマテリアル配列 </param>
-		static void Draw(const StaticMeshPtr& mesh, GLuint program, const MaterialList& materialList);
+		static void Draw(const StaticMeshPtr& mesh, Shader::ProgType progType, const MaterialList& materialList);
 
 	private: // -------------- コンストラクタ・デストラクタ ---------------
 

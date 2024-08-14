@@ -22,7 +22,11 @@ namespace PokarinEngine
 	public: // --------------- コンストラクタ・デストラクタ ----------------
 
 		MainEditor() = default;
-		~MainEditor() = default;
+
+		/// <summary>
+		/// デストラクタ
+		/// </summary>
+		~MainEditor();
 
 	public: // -------------------------- 禁止事項 -------------------------
 
@@ -52,11 +56,6 @@ namespace PokarinEngine
 		/// 描画
 		/// </summary>
 		void Render();
-
-		/// <summary>
-		/// 終了
-		/// </summary>
-		void Finalize();
 
 	private: // ------------------------ エディタ用 ------------------------
 

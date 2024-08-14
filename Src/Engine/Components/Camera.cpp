@@ -7,16 +7,14 @@
 
 #include "ImGui/imgui.h"
 
+#include "../CameraManager.h"
+
 #include "../GameObject.h"
 #include "../Window.h"
 #include "../TextureGetter.h"
+
 #include "../Shader/Shader.h"
-
 #include "../Mesh/Mesh.h"
-
-#include "../ShaderConfig.h"
-
-#include "../CameraManager.h"
 
 namespace PokarinEngine
 {
@@ -50,14 +48,14 @@ namespace PokarinEngine
 	}
 
 	/// <summary>
-	/// GPUに情報をコピーする
+	/// 情報をシェーダに設定する
 	/// </summary>
-	void Camera::CopyToGPU() const
+	void Camera::SetToShader() const
 	{
 		// ----------------------------
 		// 情報を取得する
 		// ----------------------------
-		
+
 		// カメラの位置
 		Vector3 position = transform->position;
 
@@ -70,28 +68,28 @@ namespace PokarinEngine
 		Vector3 rotation = -transform->rotation;
 
 		// ----------------------------
-		// GPUにコピーする
+		// シェーダに設定する
 		// ----------------------------
 
-		// 全てのシェーダプログラム
-		const auto& allProg = Shader::GetAllProgram();
+		// 使用するシェーダプログラムの種類
+		static const Shader::ProgType progTypeList[] = { Shader::ProgType::Standard, Shader::ProgType::Unlit };
 
-		// アスペクト比
-		const float aspectRatio = Window::GetAspectRatio(WindowID::Main);
+		// アスペクト比の逆数
+		const float inverse_aspectRatio = 1 / Window::GetAspectRatio(WindowID::Main);
 
 		// 全てのシェーダプログラムにコピーする
-		for (const auto& [type, prog] : allProg)
+		for (const auto& progType : progTypeList)
 		{
 			// アスペクト比と視野角による拡大率を設定
 			// GPU側での除算を避けるため、逆数にして渡す
-			glProgramUniform2f(prog, ShaderConfig::Uniform::aspectRatioAndScaleFov,
-				1 / aspectRatio, inverseFovScale);
+			Shader::SetVector2(progType, UniformVector2::inverse_aspectRatioAndScaleFov,
+				Vector2(inverse_aspectRatio, inverseFovScale));
 
-			// カメラの位置をGPUにコピー
-			glProgramUniform3fv(prog, ShaderConfig::Uniform::cameraPosition, 1, &position.x);
+			// カメラの位置を設定
+			Shader::SetVector3(progType, UniformVector3::cameraPosition, position);
 
-			// カメラの回転角度をGPUにコピー
-			glProgramUniform3fv(prog, ShaderConfig::Uniform::cameraRotation, 1, &rotation.x);
+			// カメラの回転角度を設定
+			Shader::SetVector3(progType, UniformVector3::cameraRotation, rotation);
 		}
 	}
 

@@ -10,8 +10,8 @@
 
 #include "Math/Matrix.h"
 
-#include "NodeScript/NodeScript.h"
-#include "NodeScript/NodeEditor.h"
+#include "NodeEditor/NodeEditor.h"
+#include "NodeEditor/NodeEditorManager.h"
 
 #include "Scene.h"
 #include "Random.h"
@@ -197,7 +197,7 @@ namespace PokarinEngine
 		}
 
 		// ノードエディタを閉じる
-		NodeScript::CloseNodeEditor(nodeEditor);
+		NodeEditorManager::CloseNodeEditor(nodeEditor);
 	}
 
 	/// <summary>
@@ -229,7 +229,7 @@ namespace PokarinEngine
 	/// </summary>
 	void GameObject::OpenNodeEditor() const
 	{
-		NodeScript::OpenNodeEditor(nodeEditor);
+		NodeEditorManager::OpenNodeEditor(nodeEditor);
 	}
 
 	/// <summary>

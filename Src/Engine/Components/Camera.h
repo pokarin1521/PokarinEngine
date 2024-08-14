@@ -35,9 +35,9 @@ namespace PokarinEngine
 	public: // ----------------------------- コピー ------------------------------
 
 		/// <summary>
-		/// GPUに情報をコピーする
+		/// 情報をシェーダに設定する
 		/// </summary>
-		void CopyToGPU() const;
+		void SetToShader() const;
 
 	public: // ---------------------------- 描画範囲 -----------------------------
 

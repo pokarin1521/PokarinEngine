@@ -14,7 +14,7 @@
 #include "../GameObject.h"
 #include "../Debug.h"
 
-#include "../ImGuiFontSetter.h"
+#include "../ImGuiHelper.h"
 
 #include "../Window.h"
 #include "../Input.h"
@@ -61,6 +61,15 @@ namespace PokarinEngine
 	}
 
 #pragma region MainEditor
+
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
+	MainEditor::~MainEditor()
+	{
+		// ImGuiの終了
+		ImGuiHelper::Finalize(imGuiContext);
+	}
 
 	/// <summary>
 	/// 初期化
@@ -116,7 +125,7 @@ namespace PokarinEngine
 		// フォントを設定
 		// ----------------------------------
 
-		ImGuiFontSetter::SetFont(io);
+		ImGuiHelper::SetFont(io);
 
 		// ----------------------------------
 		// ビューの初期化
@@ -242,28 +251,6 @@ namespace PokarinEngine
 		// ImGuiの描画
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-	}
-
-	/// <summary>
-	/// 終了
-	/// </summary>
-	void MainEditor::Finalize()
-	{
-		// -----------------
-		// ImGuiの終了
-		// -----------------
-
-		// コンテキストを設定
-		ImGui::SetCurrentContext(imGuiContext);
-
-		ImGui_ImplGlfw_Shutdown();
-		ImGui_ImplOpenGL3_Shutdown();
-
-		// ------------------------
-		// コンテキストの削除
-		// ------------------------
-
-		ImGui::DestroyContext(imGuiContext);
 	}
 
 #pragma endregion

@@ -41,10 +41,10 @@ namespace PokarinEngine
 		Color emission = Color::black;
 
 		// 基本色テクスチャ
-		TexturePtr texBaseColor;
+		TexturePtr baseTexture;
 
 		// 発光色テクスチャ
-		TexturePtr texEmission;
+		TexturePtr emissionTexture;
 	};
 }
 

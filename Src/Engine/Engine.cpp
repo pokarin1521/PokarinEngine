@@ -10,8 +10,6 @@
 #include "Time.h"
 #include "Scene.h"
 
-#include "NodeScript/NodeScript.h"
-
 #include "Mesh/Mesh.h"
 
 #include <fstream>
@@ -99,27 +97,27 @@ namespace PokarinEngine
 			// メインウィンドウ
 			if (Window::Begin(WindowID::Main))
 			{
-				Update(); // 更新
-				Render(); // 描画
+				// 更新
+				Update();
+				
+				// 描画
+				Render();
 
 				Window::End();
 			}
 
-			// ノードスクリプトウィンドウ
-			if (Window::Begin(WindowID::NodeScript))
+			// ノードエディタ用ウィンドウ
+			if (Window::Begin(WindowID::NodeEditor))
 			{
-				NodeScript::Update();
-				NodeScript::Render();
+				// 更新
+				nodeEditorManager.Update();
+
+				// 描画
+				nodeEditorManager.Render();
 
 				Window::End();
 			}
 		}
-
-		// エディタを終了
-		mainEditor.Finalize();
-
-		// ノードスクリプトの終了
-		NodeScript::Finalize();
 
 		// GLFWの終了
 		glfwTerminate();
@@ -189,7 +187,7 @@ namespace PokarinEngine
 		// シェーダの初期化
 		// -----------------------
 
-		Shader::Initialize();
+		shader.Initialize();
 
 		// -----------------------------------
 		// シーンがなければ作成
@@ -200,11 +198,11 @@ namespace PokarinEngine
 			currentScene = CreateScene("SampleScene");
 		}
 
-		// ------------------------------------
-		// ノードスクリプトを初期化
-		// ------------------------------------
+		// -----------------------------------------
+		// ノードエディタ管理用クラスを初期化
+		// -----------------------------------------
 
-		NodeScript::Initialize();
+		nodeEditorManager.Initialize();
 
 		return true;
 	}

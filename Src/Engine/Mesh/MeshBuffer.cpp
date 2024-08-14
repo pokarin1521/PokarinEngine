@@ -248,7 +248,7 @@ namespace PokarinEngine
 				if (std::filesystem::exists(fullpath))
 				{
 					// テクスチャを取得する
-					material->texBaseColor = TextureGetter::Get(fullpath.c_str());
+					material->baseTexture = TextureGetter::Get(fullpath.c_str());
 				}
 				// 存在しない
 				else
@@ -282,7 +282,7 @@ namespace PokarinEngine
 				if (std::filesystem::exists(filename))
 				{
 					// エミッションテクスチャを読み込む
-					material->texEmission = TextureGetter::Get(filename.c_str());
+					material->emissionTexture = TextureGetter::Get(filename.c_str());
 				}
 				// ファイルが存在しない
 				else
@@ -300,7 +300,7 @@ namespace PokarinEngine
 		// 基本色テクスチャがない場合は、
 		// 他のオブジェクトのテクスチャが適用されるのを防ぐために
 		// 白色のテクスチャで代用する
-		if (!materialList[0]->texBaseColor)
+		if (!materialList[0]->baseTexture)
 		{
 			// テクスチャのファイル名
 			const char* path = "Res/Textures/White.tga";
@@ -309,7 +309,7 @@ namespace PokarinEngine
 			if (std::filesystem::exists(path))
 			{
 				// テクスチャを読み込む
-				materialList[0]->texBaseColor = TextureGetter::Get(path);
+				materialList[0]->baseTexture = TextureGetter::Get(path);
 			}
 			// 存在しない
 			else

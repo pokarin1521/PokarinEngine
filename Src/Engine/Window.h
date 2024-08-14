@@ -17,7 +17,7 @@ namespace PokarinEngine
 	enum class WindowID
 	{
 		Main,   	 // メイン
-		NodeScript,  // ノードスクリプト用
+		NodeEditor,  // ノードエディタ用
 	};
 
 	/// <summary>

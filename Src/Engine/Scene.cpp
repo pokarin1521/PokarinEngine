@@ -16,8 +16,6 @@
 #include "Components/Camera.h"
 #include "Components/Colliders/BoxCollider.h"
 
-#include "ShaderConfig.h"
-
 #include "Collision/Collision.h"
 
 #include <algorithm>
@@ -251,11 +249,11 @@ namespace PokarinEngine
 
 	/// ここでしか使わないので、cppのみに書く
 	/// <summary>
-	/// ゲームオブジェクトのパラメータをGPUにコピーする
+	/// ゲームオブジェクトのパラメータをシェーダに設定する
 	/// </summary>
-	/// <param name="[in] prog"> シェーダプログラムの識別番号 </param>
+	/// <param name="[in] progType"> シェーダプログラムの種類 </param>
 	/// <param name="[in] gameObject"> パラメータをコピーするゲームオブジェクト </param>
-	void CopyGameObjectParameters(GLuint prog, const GameObjectPtr& gameObject)
+	void SetToShader_GameObjectParameters(Shader::ProgType progType, const GameObjectPtr& gameObject)
 	{
 		// 座標変換行列
 		Matrix4x4 transformMatrix = gameObject->transform->GetTransformMatrix();
@@ -264,24 +262,20 @@ namespace PokarinEngine
 		Matrix3x3 normalMatrix = gameObject->transform->GetNormalMatrix();
 
 		// ------------------------------------
-		// パラメータをGPUにコピー
+		// パラメータをシェーダに設定する
 		// ------------------------------------
 
 		// オブジェクトの色
-		glProgramUniform4fv(prog,
-			ShaderConfig::Uniform::color, 1, &gameObject->color.r);
+		Shader::SetVector4(progType, UniformVector4::color, gameObject->color);
 
 		// 座標変換行列
-		glProgramUniformMatrix4fv(
-			prog, ShaderConfig::Uniform::transformMatrix,
-			1, GL_FALSE, &transformMatrix[0].x);
+		Shader::SetMatrix4x4(progType, UniformMatrix4x4::transformMatrix, transformMatrix);
 
-		// 法線変換行列
-		if (prog == Shader::GetProgram(Shader::ProgType::Standard))
+		// 標準シェーダにだけ
+		// 法線変換行列を設定する
+		if (progType == Shader::ProgType::Standard)
 		{
-			glProgramUniformMatrix3fv(
-				prog, ShaderConfig::Uniform::normalMatrix,
-				1, GL_FALSE, &normalMatrix[0].x);
+			Shader::SetMatrix3x3(progType, UniformMatrix3x3::normalMatrix, normalMatrix);
 		}
 	}
 
@@ -289,10 +283,10 @@ namespace PokarinEngine
 	/// <summary>
 	/// ゲームオブジェクトを描画する
 	/// </summary>
-	/// <param name="[in] prog"> シェーダプログラムの識別番号 </param>
+	/// <param name="[in] progType"> シェーダプログラムの種類 </param>
 	/// <param name="[in] begin"> 描画するゲームオブジェクト配列の先頭イテレータ </param>
 	/// <param name="[in] end"> 描画するゲームオブジェクト配列の末尾イテレータ </param>
-	void DrawGameObject(GLuint prog,
+	void DrawGameObject(Shader::ProgType progType,
 		GameObjectList::const_iterator begin, GameObjectList::const_iterator end)
 	{
 		// ------------------------
@@ -320,11 +314,11 @@ namespace PokarinEngine
 
 			// -------- ユニフォーム変数にデータをコピー -----------
 
-			// 描画に使うシェーダを指定
-			glUseProgram(prog);
+			// 描画に使うシェーダを設定
+			Shader::UseProgram(progType);
 
-			// パラメータをコピー
-			CopyGameObjectParameters(prog, gameObject);
+			// パラメータをシェーダに設定する
+			SetToShader_GameObjectParameters(progType, gameObject);
 
 			// ------------- 図形を描画 --------------
 
@@ -333,14 +327,14 @@ namespace PokarinEngine
 			{
 				// 共有マテリアルを使って
 				// スタティックメッシュを描画
-				Mesh::Draw(gameObject->staticMesh, prog, gameObject->staticMesh->GetMaterialList());
+				Mesh::Draw(gameObject->staticMesh, progType, gameObject->staticMesh->GetMaterialList());
 			}
 			// 固有マテリアルがある
 			else
 			{
 				// 固有マテリアルを使って
 				// スタティックメッシュを描画
-				Mesh::Draw(gameObject->staticMesh, prog, gameObject->materialList);
+				Mesh::Draw(gameObject->staticMesh, progType, gameObject->materialList);
 			}
 		}
 	}
@@ -392,11 +386,11 @@ namespace PokarinEngine
 		// 優先度順に描画
 		// ---------------------------------
 
-		// 標準シェーダプログラムの識別番号
-		GLuint progStandard = Shader::GetProgram(Shader::ProgType::Standard);
+		// 標準シェーダ
+		static const auto progStandard = Shader::ProgType::Standard;
 
-		// ライティング無しシェーダプログラムの識別番号
-		GLuint progUnlit = Shader::GetProgram(Shader::ProgType::Unlit);
+		// ライティング無しシェーダ
+		static const auto progUnlit = Shader::ProgType::Unlit;
 
 		// ---------- transparent以前のキューを描画  -----------
 		// ---------- 通常のオブジェクト		     -----------

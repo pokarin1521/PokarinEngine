@@ -7,7 +7,6 @@
 #include "../../Color.h"
 #include "../../Shader/Shader.h"
 #include "../../Mesh/Mesh.h"
-#include "../../ShaderConfig.h"
 
 namespace PokarinEngine
 {
@@ -51,24 +50,18 @@ namespace PokarinEngine
 	/// </summary>
 	void Collider::Draw()
 	{
-		// ライティング無しシェーダの識別番号
-		GLuint progUnlit = Shader::GetProgram(Shader::ProgType::Unlit);
+		// ライティング無しシェーダ
+		Shader::ProgType progUnlit = Shader::ProgType::Unlit;
 
 		// 描画に使うシェーダを指定
-		glUseProgram(progUnlit);
+		Shader::UseProgram(progUnlit);
 
-		// 色をGPUにコピー
-		// 緑色で描画する
-		glProgramUniform4fv(progUnlit,
-			ShaderConfig::Uniform::color, 1, &Color::green.r);
+		// 色をシェーダに設定する
+		// 緑色に設定
+		Shader::SetVector4(progUnlit, UniformVector4::color, Color::green);
 
-		// 座標変換行列
-		const Matrix4x4 transformMatrix = GetTransformMatrix();
-
-		// 座標変換行列をGPUにコピー
-		glProgramUniformMatrix4fv(
-			progUnlit, ShaderConfig::Uniform::transformMatrix,
-			1, GL_FALSE, &transformMatrix[0].x);
+		// 座標変換行列をシェーダに設定する
+		Shader::SetMatrix4x4(progUnlit, UniformMatrix4x4::transformMatrix, GetTransformMatrix());
 
 		// 共有マテリアルを使って
 		// スタティックメッシュを描画

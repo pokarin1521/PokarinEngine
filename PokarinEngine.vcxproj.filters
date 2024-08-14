@@ -48,9 +48,6 @@
     <Filter Include="Src\Engine\Shader">
       <UniqueIdentifier>{a376dd51-c5aa-4df8-bff3-adc70662e1bb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Engine\Editor">
-      <UniqueIdentifier>{f59e6974-afa4-458f-8a38-22c0355897c0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Res\Shader">
       <UniqueIdentifier>{6ec76ba0-0fdb-4946-9d6f-b30ac6ec87dc}</UniqueIdentifier>
     </Filter>
@@ -63,9 +60,6 @@
     <Filter Include="Src\Engine\UsingNames">
       <UniqueIdentifier>{ac4c34a3-edba-4f73-88d8-ddc39ece82f8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Engine\Editor\NodeEditor">
-      <UniqueIdentifier>{bcd28468-805a-45b1-b4a6-8de85bead9be}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Src\Engine\Buffer">
       <UniqueIdentifier>{10df0642-2191-4d62-94de-36b1f226edfd}</UniqueIdentifier>
     </Filter>
@@ -77,21 +71,6 @@
     </Filter>
     <Filter Include="Src\Engine\Math">
       <UniqueIdentifier>{926ce579-cc08-49dc-9858-952380a41782}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Engine\Editor\NodeEditor\Nodes">
-      <UniqueIdentifier>{39bb6f7b-df77-4d45-bee3-a716f123675e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Engine\Editor\NodeEditor\Nodes\Event">
-      <UniqueIdentifier>{e7b6aee8-8ce0-4afc-a924-9eaaa7bb6408}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Engine\Editor\NodeEditor\Nodes\Functional">
-      <UniqueIdentifier>{b2033307-da80-4a1e-b23b-be2e3aedb751}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Engine\Editor\MainEditor">
-      <UniqueIdentifier>{d84850c5-c533-41c1-9686-bacc869b5a17}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Engine\Editor\NodeEditor\Pin">
-      <UniqueIdentifier>{3bd75335-8b3c-4b8d-806b-51d2de309991}</UniqueIdentifier>
     </Filter>
     <Filter Include="Src\Engine\Time">
       <UniqueIdentifier>{ebad3738-f9c0-4f35-975b-0b49c11b71a2}</UniqueIdentifier>
@@ -129,6 +108,27 @@
     <Filter Include="Src\Engine\LightManager">
       <UniqueIdentifier>{719d773c-9e98-4380-b5cf-a346a915f007}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Engine\ImGuiHelper">
+      <UniqueIdentifier>{dba7318d-6e15-418a-a8fe-684fd23e0efe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Engine\MainEditor">
+      <UniqueIdentifier>{d84850c5-c533-41c1-9686-bacc869b5a17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Engine\NodeEditor">
+      <UniqueIdentifier>{bcd28468-805a-45b1-b4a6-8de85bead9be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Engine\NodeEditor\Nodes">
+      <UniqueIdentifier>{39bb6f7b-df77-4d45-bee3-a716f123675e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Engine\NodeEditor\Nodes\Event">
+      <UniqueIdentifier>{e7b6aee8-8ce0-4afc-a924-9eaaa7bb6408}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Engine\NodeEditor\Nodes\Functional">
+      <UniqueIdentifier>{b2033307-da80-4a1e-b23b-be2e3aedb751}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Engine\NodeEditor\Pin">
+      <UniqueIdentifier>{3bd75335-8b3c-4b8d-806b-51d2de309991}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Main.cpp">
@@ -155,9 +155,6 @@
     <ClCompile Include="Src\Engine\Components\Rigidbody.cpp">
       <Filter>Src\Engine\Components\Rigidbody</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Engine\Shader\Shader.cpp">
-      <Filter>Src\Engine\Shader</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Engine\FramebufferObject.cpp">
       <Filter>Src\Engine\Buffer</Filter>
     </ClCompile>
@@ -173,29 +170,23 @@
     <ClCompile Include="Src\Engine\Input.cpp">
       <Filter>Src\Engine\Input</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Engine\NodeScript\NodeEditor.cpp">
-      <Filter>Src\Engine\Editor\NodeEditor</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Engine\MainEditor\GameView.cpp">
-      <Filter>Src\Engine\Editor\MainEditor</Filter>
+      <Filter>Src\Engine\MainEditor</Filter>
     </ClCompile>
     <ClCompile Include="Src\Engine\MainEditor\Hierarchy.cpp">
-      <Filter>Src\Engine\Editor\MainEditor</Filter>
+      <Filter>Src\Engine\MainEditor</Filter>
     </ClCompile>
     <ClCompile Include="Src\Engine\MainEditor\Inspector.cpp">
-      <Filter>Src\Engine\Editor\MainEditor</Filter>
+      <Filter>Src\Engine\MainEditor</Filter>
     </ClCompile>
     <ClCompile Include="Src\Engine\MainEditor\MainEditor.cpp">
-      <Filter>Src\Engine\Editor\MainEditor</Filter>
+      <Filter>Src\Engine\MainEditor</Filter>
     </ClCompile>
     <ClCompile Include="Src\Engine\MainEditor\SceneView.cpp">
-      <Filter>Src\Engine\Editor\MainEditor</Filter>
+      <Filter>Src\Engine\MainEditor</Filter>
     </ClCompile>
     <ClCompile Include="Src\Engine\Components\Camera.cpp">
       <Filter>Src\Engine\Components\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Engine\NodeScript\NodeScript.cpp">
-      <Filter>Src\Engine\Editor\NodeEditor</Filter>
     </ClCompile>
     <ClCompile Include="Src\Engine\LightManager.cpp">
       <Filter>Src\Engine\LightManager</Filter>
@@ -203,26 +194,14 @@
     <ClCompile Include="Src\Engine\Components\Colliders\SphereCollider.cpp">
       <Filter>Src\Engine\Components\Colliders</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Engine\NodeScript\Nodes\Node.cpp">
-      <Filter>Src\Engine\Editor\NodeEditor\Nodes</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Engine\Time.cpp">
       <Filter>Src\Engine\Time</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Engine\NodeScript\Nodes\Functional\AddWorldRotationNode.cpp">
-      <Filter>Src\Engine\Editor\NodeEditor\Nodes\Functional</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Engine\NodeScript\Nodes\Functional\AddWorldPositionNode.cpp">
-      <Filter>Src\Engine\Editor\NodeEditor\Nodes\Functional</Filter>
     </ClCompile>
     <ClCompile Include="Src\Engine\Math\Matrix.cpp">
       <Filter>Src\Engine\Math</Filter>
     </ClCompile>
     <ClCompile Include="Src\Engine\MainEditor\Toolbar.cpp">
-      <Filter>Src\Engine\Editor\MainEditor</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Engine\NodeScript\NodeCreator.cpp">
-      <Filter>Src\Engine\Editor\NodeEditor</Filter>
+      <Filter>Src\Engine\MainEditor</Filter>
     </ClCompile>
     <ClCompile Include="Src\Engine\Components\Component.cpp">
       <Filter>Src\Engine\Components</Filter>
@@ -290,6 +269,30 @@
     <ClCompile Include="Src\Engine\CameraManager.cpp">
       <Filter>Src\Engine\CameraManager</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Engine\ImGuiHelper.cpp">
+      <Filter>Src\Engine\ImGuiHelper</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\Shader\Shader.cpp">
+      <Filter>Src\Engine\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\NodeEditor\Nodes\Node.cpp">
+      <Filter>Src\Engine\NodeEditor\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\NodeEditor\Nodes\Functional\AddWorldPositionNode.cpp">
+      <Filter>Src\Engine\NodeEditor\Nodes\Functional</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\NodeEditor\Nodes\Functional\AddWorldRotationNode.cpp">
+      <Filter>Src\Engine\NodeEditor\Nodes\Functional</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\NodeEditor\NodeCreator.cpp">
+      <Filter>Src\Engine\NodeEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\NodeEditor\NodeEditor.cpp">
+      <Filter>Src\Engine\NodeEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\NodeEditor\NodeEditorManager.cpp">
+      <Filter>Src\Engine\NodeEditor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Res\Shader\Standard.frag">
@@ -343,9 +346,6 @@
     <ClInclude Include="Src\Engine\Components\Rigidbody.h">
       <Filter>Src\Engine\Components\Rigidbody</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Engine\Shader\Shader.h">
-      <Filter>Src\Engine\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Engine\FramebufferObject.h">
       <Filter>Src\Engine\Buffer</Filter>
     </ClInclude>
@@ -361,29 +361,23 @@
     <ClInclude Include="Src\Engine\Input.h">
       <Filter>Src\Engine\Input</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Engine\NodeScript\NodeEditor.h">
-      <Filter>Src\Engine\Editor\NodeEditor</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Engine\NodeScript\NodeScript.h">
-      <Filter>Src\Engine\Editor\NodeEditor</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Engine\UsingNames\UsingGameObject.h">
       <Filter>Src\Engine\UsingNames</Filter>
     </ClInclude>
     <ClInclude Include="Src\Engine\MainEditor\GameView.h">
-      <Filter>Src\Engine\Editor\MainEditor</Filter>
+      <Filter>Src\Engine\MainEditor</Filter>
     </ClInclude>
     <ClInclude Include="Src\Engine\MainEditor\Hierarchy.h">
-      <Filter>Src\Engine\Editor\MainEditor</Filter>
+      <Filter>Src\Engine\MainEditor</Filter>
     </ClInclude>
     <ClInclude Include="Src\Engine\MainEditor\Inspector.h">
-      <Filter>Src\Engine\Editor\MainEditor</Filter>
+      <Filter>Src\Engine\MainEditor</Filter>
     </ClInclude>
     <ClInclude Include="Src\Engine\MainEditor\MainEditor.h">
-      <Filter>Src\Engine\Editor\MainEditor</Filter>
+      <Filter>Src\Engine\MainEditor</Filter>
     </ClInclude>
     <ClInclude Include="Src\Engine\MainEditor\SceneView.h">
-      <Filter>Src\Engine\Editor\MainEditor</Filter>
+      <Filter>Src\Engine\MainEditor</Filter>
     </ClInclude>
     <ClInclude Include="Src\Engine\Components\Camera.h">
       <Filter>Src\Engine\Components\Camera</Filter>
@@ -400,38 +394,14 @@
     <ClInclude Include="Src\Engine\Components\Colliders\Collider.h">
       <Filter>Src\Engine\Components\Colliders</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Engine\NodeScript\Nodes\Event\EventUpdateNode.h">
-      <Filter>Src\Engine\Editor\NodeEditor\Nodes\Event</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Engine\UsingNames\UsingNodeEditor.h">
       <Filter>Src\Engine\UsingNames</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Engine\NodeScript\Nodes\Node.h">
-      <Filter>Src\Engine\Editor\NodeEditor\Nodes</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Engine\NodeScript\Nodes\Event\EventNode.h">
-      <Filter>Src\Engine\Editor\NodeEditor\Nodes\Event</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Engine\NodeScript\Nodes\Functional\FunctionalNode.h">
-      <Filter>Src\Engine\Editor\NodeEditor\Nodes\Functional</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Engine\NodeScript\Pin\PinType.h">
-      <Filter>Src\Engine\Editor\NodeEditor\Pin</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Engine\NodeScript\Pin\Pin.h">
-      <Filter>Src\Engine\Editor\NodeEditor\Pin</Filter>
     </ClInclude>
     <ClInclude Include="Src\Engine\Time.h">
       <Filter>Src\Engine\Time</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Engine\NodeScript\Nodes\Functional\AddWorldRotationNode.h">
-      <Filter>Src\Engine\Editor\NodeEditor\Nodes\Functional</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Engine\NodeScript\Nodes\Functional\AddWorldPositionNode.h">
-      <Filter>Src\Engine\Editor\NodeEditor\Nodes\Functional</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Engine\MainEditor\Toolbar.h">
-      <Filter>Src\Engine\Editor\MainEditor</Filter>
+      <Filter>Src\Engine\MainEditor</Filter>
     </ClInclude>
     <ClInclude Include="Src\Engine\Collision\CollisionType.h">
       <Filter>Src\Engine\Collision</Filter>
@@ -499,15 +469,6 @@
     <ClInclude Include="Src\Library\ImGui\imstb_truetype.h">
       <Filter>Src\Library\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Library\Json\Json.h">
-      <Filter>Src\Library\Json</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Library\Json\UsingNameJson.h">
-      <Filter>Src\Library\Json</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Library\Json\nlohmann\json.hpp">
-      <Filter>Src\Library\Json\nlohmann</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Library\IconFont\IconFont.h">
       <Filter>Src\Library\IconFont</Filter>
     </ClInclude>
@@ -544,17 +505,59 @@
     <ClInclude Include="Src\Engine\Color.h">
       <Filter>Src\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Engine\ImGuiFontSetter.h">
-      <Filter>Src\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Engine\ShaderConfig.h">
-      <Filter>Src\Engine</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Engine\CameraManager.h">
       <Filter>Src\Engine\CameraManager</Filter>
     </ClInclude>
     <ClInclude Include="Src\Engine\UsingNames\UsingStaticMesh.h">
       <Filter>Src\Engine\UsingNames</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Library\Json\Json.h">
+      <Filter>Src\Library\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Library\Json\UsingNameJson.h">
+      <Filter>Src\Library\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Library\Json\nlohmann\json.hpp">
+      <Filter>Src\Library\Json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Library\Json\nlohmann\json_fwd.hpp">
+      <Filter>Src\Library\Json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\ImGuiHelper.h">
+      <Filter>Src\Engine\ImGuiHelper</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\Shader\Shader.h">
+      <Filter>Src\Engine\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\NodeEditor\Nodes\Node.h">
+      <Filter>Src\Engine\NodeEditor\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\NodeEditor\Nodes\Event\EventUpdateNode.h">
+      <Filter>Src\Engine\NodeEditor\Nodes\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\NodeEditor\Nodes\Event\EventNode.h">
+      <Filter>Src\Engine\NodeEditor\Nodes\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\NodeEditor\Nodes\Functional\AddWorldPositionNode.h">
+      <Filter>Src\Engine\NodeEditor\Nodes\Functional</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\NodeEditor\Nodes\Functional\AddWorldRotationNode.h">
+      <Filter>Src\Engine\NodeEditor\Nodes\Functional</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\NodeEditor\Nodes\Functional\FunctionalNode.h">
+      <Filter>Src\Engine\NodeEditor\Nodes\Functional</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\NodeEditor\Pin\Pin.h">
+      <Filter>Src\Engine\NodeEditor\Pin</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\NodeEditor\Pin\PinType.h">
+      <Filter>Src\Engine\NodeEditor\Pin</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\NodeEditor\NodeEditor.h">
+      <Filter>Src\Engine\NodeEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\NodeEditor\NodeEditorManager.h">
+      <Filter>Src\Engine\NodeEditor</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

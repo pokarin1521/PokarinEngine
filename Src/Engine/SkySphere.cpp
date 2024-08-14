@@ -8,8 +8,6 @@
 #include "Math/Matrix.h"
 #include "Components/Camera.h"
 
-#include "ShaderConfig.h"
-
 namespace PokarinEngine
 {
 	/// <summary>
@@ -64,17 +62,17 @@ namespace PokarinEngine
 			// -------------------------------------
 
 			// ライティング無しのシェーダ
-			static const GLuint progUnlit = Shader::GetProgram(Shader::ProgType::Unlit);
+			static const Shader::ProgType progUnlit = Shader::ProgType::Unlit;
 
 			// 空にライティングすると不自然なので
 			// アンリットシェーダで描画
-			glUseProgram(progUnlit);
+			Shader::UseProgram(progUnlit);
 
 			// 深度バッファへの書き込みを禁止
 			glDepthMask(GL_FALSE);
 
 			// ----------------------------------------
-			// 座標変換行列をGPUにコピーする
+			// 座標変換行列をシェーダに設定する
 			// ----------------------------------------
 
 			/* スカイスフィアは移動と回転はしないので拡大率だけを設定する
@@ -102,29 +100,24 @@ namespace PokarinEngine
 				{     0,     0,     0,     1 },
 			};
 
-			// 座標変換行列をGPUにコピー
-			glProgramUniformMatrix4fv(progUnlit, ShaderConfig::Uniform::transformMatrix,
-				1, GL_FALSE, &transformMatrix[0].x);
+			// 座標変換行列をシェーダに設定する
+			Shader::SetMatrix4x4(progUnlit, UniformMatrix4x4::transformMatrix, transformMatrix);
 
 			// -----------------------------------
-			// 色をGPUメモリにコピー
+			// 色をシェーダに設定する
 			// -----------------------------------
 
 			// 色はマテリアルカラーで調整するので白を設定
 			// (実際に描画される色は「オブジェクトカラー」と「マテリアルカラー」の乗算)
-			static const Color color = Color::white;
-			glProgramUniform4fv(progUnlit, ShaderConfig::Uniform::color, 1, &color.r);
+			Shader::SetVector4(progUnlit, UniformVector4::color, Color::white);
 
-			// -----------------------------------
-			// カメラの座標をGPUにコピー
-			// -----------------------------------
-
-			camera.CopyToGPU();
+			// -------------------------------------
+			// カメラの座標をシェーダに設定する
+			// -------------------------------------
 
 			// スカイスフィアは常にカメラを中心に描画したいので、
 			// カメラを一時的に原点に移動させる
-			glProgramUniform3fv(progUnlit, ShaderConfig::Uniform::cameraPosition,
-				1, &Vector3::zero.x);
+			Shader::SetVector3(progUnlit, UniformVector3::cameraPosition, Vector3::zero);
 
 			// -----------------------------------
 			// スカイスフィアを描画する
@@ -133,14 +126,15 @@ namespace PokarinEngine
 			// スカイスフィアを描画する
 			Mesh::Draw(skySphere, progUnlit, skySphere->GetMaterialList());
 
-			// カメラパラメータをGPUにコピーし直す
-			camera.CopyToGPU();
+			// カメラの位置を戻したいので
+			// カメラパラメータをシェーダに設定し直す
+			camera.SetToShader();
 
 			// 深度バッファへの書き込みを許可
 			glDepthMask(GL_TRUE);
 
 			// 標準シェーダに戻す
-			glUseProgram(Shader::GetProgram(Shader::ProgType::Standard));
+			Shader::UseProgram(progUnlit);
 		}
 	}
 }
