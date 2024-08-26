@@ -12,7 +12,9 @@
 
 #include "../UsingNames/UsingNodeEditor.h"
 
-#include "Pin/PinType.h"
+#include "../Random.h"
+
+#include "Pin/Pin.h"
 
 #include <string>
 #include <unordered_map>
@@ -28,7 +30,6 @@ namespace PokarinEngine
 	class GameObject;
 	class Node;
 	class EventNode;
-	class Pin;
 
 	/// <summary>
 	/// ノードでオブジェクトに対する処理を編集する画面
@@ -41,7 +42,6 @@ namespace PokarinEngine
 
 		~NodeEditor()
 		{
-			Finalize();
 			ImNodes::EditorContextFree(nodeEditorContext);
 		}
 
@@ -76,10 +76,36 @@ namespace PokarinEngine
 		/// <summary>
 		/// ノードのピンを作成する
 		/// </summary>
-		/// <param name="[in] pinID"> ピンの持ち主になるノードの識別番号 </param>
-		/// <param name="[in] pinType"> 作成するピンの種類 </param>
+		/// <typeparam name="T"> 作成するピンクラス </typeparam>
+		/// <param name="[in] pin"> ピンの持ち主になるノード </param>
+		/// <param name="[in] pinAttribute"> ピンの入出力属性 </param>
 		/// <returns> 作成したピンの識別番号 </returns>
-		int CreatePin(int nodeID, PinType pinType);
+		template <class T>
+		std::shared_ptr<T> CreatePin(Node& node, PinAttribute pinAttribute)
+		{
+			// ピン以外ならnullptr
+			if constexpr (!std::is_base_of_v<Pin, T>)
+			{
+				return nullptr;
+			}
+
+			// 識別番号
+			int singleID = Random::Range(INT_MIN, INT_MAX);
+
+			// 識別番号を追加する
+			// 重複している場合は追加できないので再度番号を取得する
+			while (!pinList.emplace(singleID, nullptr).second)
+			{
+				singleID = Random::Range(INT_MIN, INT_MAX);
+			}
+
+			// ピンを作成して追加する
+			auto pin = std::make_shared<T>(node, singleID, pinAttribute);
+			pinList[singleID] = pin;
+
+			// 作成したピンを返す
+			return pin;
+		}
 
 	public: // ---------------------- 情報の取得 -----------------------
 
@@ -115,10 +141,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// ノードエディタが開いているか取得する
 		/// </summary>
-		/// <returns>
-		/// <para> true : 開いている </para>
-		/// <para> false : 開いていない </para>
-		/// </returns>
+		/// <returns> ノードエディタが開いているならtrue </returns>
 		bool IsOpen() const
 		{
 			return isOpen;
@@ -134,15 +157,15 @@ namespace PokarinEngine
 
 	private: // ----------------------- 型の別名を定義 -------------------------
 
-		// <入力用ピンの識別番号, 出力用ピンの識別番号>
-		using LinkPair = std::pair<int, int>;
+		// <入力用ピン, 出力用ピン>
+		using LinkPair = std::pair<PinPtr, PinPtr>;
 
-		// <リンク識別番号, リンクの組>
+		// <リンク識別番号, リンクしているピンの組>
 		using LinkPairList = std::unordered_map<int, LinkPair>;
 
-		using NodePtr = std::shared_ptr<Node>;
 		using EventNodePtr = std::shared_ptr<EventNode>;
-		using PinPtr = std::shared_ptr<Pin>;
+
+		using NodePtr = std::shared_ptr<Node>;
 
 		// <識別番号, ノード>
 		using NodeList = std::unordered_map<int, NodePtr>;
@@ -220,8 +243,8 @@ namespace PokarinEngine
 		/// <summary>
 		/// ノードを削除する
 		/// </summary>
-		/// <param name="[in] nodeID"> 削除するノードの識別番号 </param>
-		void DestroyNode(int nodeID);
+		/// <param name="[in] node"> 削除するノード </param>
+		void DestroyNode(const NodePtr& node);
 
 	private: // ------------------------- ノード制御用 -------------------------
 
@@ -254,13 +277,6 @@ namespace PokarinEngine
 		/// <param name="[in] linkPairID"> 削除するリンクの識別番号 </param>
 		void DestroyLink(int linkPairID);
 
-	private: // --------------------------- 終了処理 ---------------------------
-
-		/// <summary>
-		/// 終了処理
-		/// </summary>
-		void Finalize();
-
 	private: // ------------------------- ノード管理用 -------------------------
 
 		// ノード管理用配列
@@ -273,6 +289,7 @@ namespace PokarinEngine
 		PinList pinList;
 
 		// リンクしているピンの識別番号を管理する配列
+		// <リンク識別番号, リンクしているピンの組>
 		LinkPairList linkPairList;
 
 	private: // --------------------- ノードエディタの情報 ---------------------

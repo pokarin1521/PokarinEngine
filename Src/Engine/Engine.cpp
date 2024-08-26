@@ -12,6 +12,7 @@
 
 #include "Mesh/Mesh.h"
 
+#include <GLFW/glfw3.h>
 #include <fstream>
 #include <filesystem>
 #include <vector>
@@ -128,10 +129,7 @@ namespace PokarinEngine
 	/// <summary>
 	/// ゲームエンジンを初期化する
 	/// </summary>
-	/// <returns>
-	/// <para> true : 正常に初期化された </para>
-	/// <para> false : エラーが発生した </para>
-	/// </returns>
+	/// <returns> 正常に初期化されたらtrue </returns>
 	bool Engine::Initialize()
 	{
 		// ---------------

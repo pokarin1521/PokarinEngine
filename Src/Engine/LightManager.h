@@ -75,10 +75,10 @@ namespace PokarinEngine
 
 			// スポットライトの最大照射角度
 			// 0以下なら点光源として扱う
-			float spotAngle = Radians(30);
+			float spotAngle = DegToRad(30);
 
 			// スポットライトの減衰開始角度
-			float falloffAngle = Radians(20);
+			float falloffAngle = DegToRad(20);
 		};
 
 		// ------------------

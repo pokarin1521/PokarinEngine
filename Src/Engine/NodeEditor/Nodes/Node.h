@@ -4,13 +4,15 @@
 #ifndef POKARINENGINE_NODE_H_INCLUDED
 #define POKARINENGINE_NODE_H_INCLUDED
 
-#include "../../UsingNames/UsingNodeEditor.h"
+#include "../NodeEditor.h"
+
 #include "../../UsingNames/UsingGameObject.h"
 
-#include "../Pin/PinType.h"
+#include "../Pin/Pin.h"
 
 #include <string>
 #include <memory>
+#include <unordered_set>
 
 namespace PokarinEngine
 {
@@ -49,23 +51,12 @@ namespace PokarinEngine
 		/// <summary>
 		/// 実行処理
 		/// </summary>
-		void Run();
+		virtual void Run() = 0;
 
 		/// <summary>
 		/// ノードを表示する
 		/// </summary>
 		void Render();
-
-	public: // ------------------------- 次のノードを設定 -------------------------
-
-		/// <summary>
-		/// 次に実行するノードを設定する
-		/// </summary>
-		/// <param name="[in] node"> 次に実行するノード </param>
-		void SetNextNode(Node* node)
-		{
-			nextNode = node;
-		}
 
 	public: // ------------------------- ノードの識別番号 -------------------------
 
@@ -87,50 +78,24 @@ namespace PokarinEngine
 			return std::to_string(id);
 		}
 
+	public: // ------------------------------ リンク -----------------------------
+
+		// リンク識別番号の管理用配列
+		std::unordered_set<int> linkIDList;
+
 	protected: // ------------------------- ピン作成用 ---------------------------
 
 		/// <summary>
 		/// ピンを作成する
 		/// </summary>
-		/// <param name="[in] pinType"> ピンの種類 </param>
+		/// <typeparam name="T"> 作成するピンクラス </typeparam>
+		/// <param name="[in] pinAttribute"> ピンの入出力属性 </param>
 		/// <returns> 作成したピンの識別番号 </returns>
-		int CreatePin(PinType pinType);
-
-	protected: // ------------------------- ピン設定用 ---------------------------
-
-		/// <summary>
-		/// ピンの入出力属性
-		/// </summary>
-		enum class PinAttribute
+		template <class T>
+		std::shared_ptr<T> CreatePin(PinAttribute pinAttribute)
 		{
-			Input,  // 入力用
-			Output, // 出力用
-		};
-
-		/// <summary>
-		/// データピンの表示を開始する
-		/// </summary>
-		/// <param name="[in] pinID"> ピンの識別番号 </param>
-		/// <param name="[in] pinAttribute"> ピンの属性 </param>
-		void BeginDataPin(int pinID, PinAttribute pinAttribute);
-
-		/// <summary>
-		/// 実行ピンの表示を開始する
-		/// </summary>
-		/// <param name="[in] pinID"> ピンの識別番号 </param>
-		/// <param name="[in] pinAttribute"> ピンの属性 </param>
-		void BeginRunPin(int pinID, PinAttribute pinAttribute);
-
-		/// <summary>
-		/// ピンの表示を終了する
-		/// </summary>
-		/// <param name="[in] pinAttribute"> ピンの属性 </param>
-		void EndPin(PinAttribute pinAttribute);
-
-		/// <summary>
-		/// 次に設定するピンを同じ行に表示する
-		/// </summary>
-		void PinSameLin();
+			return ownerEditor->CreatePin<T>(*this, pinAttribute);
+		}
 
 	protected: // ---------------------- ゲームオブジェクト ----------------------
 
@@ -139,44 +104,6 @@ namespace PokarinEngine
 		/// </summary>
 		/// <returns> 持ち主であるゲームオブジェクト </returns>
 		GameObject& GetOnwerObject();
-
-	private: // --------------------------- ピンの設定 ---------------------------
-
-		/// <summary>;
-		/// ピンの形
-		/// </summary>
-		enum class PinShape;
-
-		/// <summary>
-		/// ピンの設定を開始する
-		/// </summary>
-		/// <param name="[in] pinID"> ピンの識別番号 </param>
-		/// <param name="[in] pinAttribute"> ピンの属性 </param>
-		/// <param name="[in] pinShape"> ピンの形 </param>
-		void BeginPin(int pinID, PinAttribute pinAttribute, PinShape pinShape);
-
-	private: // ------------------------------ 実行 ------------------------------
-
-		/// <summary>
-		/// 次のノードの処理を実行する
-		/// </summary>
-		void RunNextNode()
-		{
-			// 次のノードが設定されているなら実行する
-			if (nextNode)
-			{
-				nextNode->Run();
-			}
-		}
-
-		/// <summary>
-		/// ノード別の実行処理
-		/// </summary>
-		/// <returns>
-		/// <para> true : 次のノードの処理を実行する </para>
-		/// <para> false : 次のノードの処理を実行しない </para>
-		/// </returns>
-		virtual bool RunNode() = 0;
 
 	private: // ----------------------------- 初期化 -----------------------------
 
@@ -210,9 +137,6 @@ namespace PokarinEngine
 
 		// 持ち主であるノードエディタ
 		NodeEditor* ownerEditor = nullptr;
-
-		// 次に実行するノード
-		Node* nextNode = nullptr;
 	};
 
 } // namespace PokarinEngine

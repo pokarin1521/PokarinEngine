@@ -9,6 +9,8 @@
 #include "../UsingNames/UsingComponent.h"
 #include "../UsingNames/UsingGameObject.h"
 
+#include "../Math/Vector.h"
+
 #include <string>
 
 namespace PokarinEngine
@@ -164,6 +166,15 @@ namespace PokarinEngine
 		/// <returns> 持ち主であるゲームオブジェクト </returns>
 		GameObject& GetOwnerObject() { return *ownerObject; }
 
+	protected: // --------------------------- エディタ用 -----------------------------
+
+		/// <summary>
+		/// Vector3型の値をドラッグ操作可能なテキストでエディタに表示する
+		/// </summary>
+		/// <param name="[in] name"> 値の名前 </param>
+		/// <param name="[in, out] data"> 値 </param>
+		void DragText(const std::string& name, Vector3& data);
+
 	private: // ------------------------------- 初期化 -------------------------------
 
 		/// 持ち主と自身以外にアクセスしない場合
@@ -181,7 +192,7 @@ namespace PokarinEngine
 	private: // ----------------------------- エディタ用 ------------------------------
 
 		/// <summary>
-		/// 情報を編集できるように表示する
+		/// コンポーネントの情報を編集できるように表示する
 		/// </summary>
 		virtual void InfoEditor() = 0;
 

@@ -8,6 +8,8 @@
 
 #include "../../../Math/Vector.h"
 
+#include "../../Pin/DataPin.h"
+
 namespace PokarinEngine
 {
 	/// <summary>
@@ -38,7 +40,7 @@ namespace PokarinEngine
 		/// </summary>
 		void CreateDataPin() override
 		{
-			inputRotationPin = CreatePin(PinType::Data);
+			inputDegreePin = CreatePin<DataPin<Vector3>>(PinAttribute::Input);
 		}
 
 		/// <summary>
@@ -48,11 +50,8 @@ namespace PokarinEngine
 
 	private: // ------------------------------ 情報 -----------------------------
 
-		// 回転角度入力用データピンの識別番号
-		int inputRotationPin = 0;
-
-		// 回転量(度数法)
-		Vector3 rotationDeg = { 0, 0, 0 };
+		// 回転量(度数法)入力用データピン
+		DataPinPtr<Vector3> inputDegreePin;
 	};
 }
 

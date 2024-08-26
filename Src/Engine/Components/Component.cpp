@@ -8,6 +8,7 @@
 
 #include "../GameObject.h"
 #include "../Scene.h"
+#include "../ImGuiHelper.h"
 
 namespace PokarinEngine
 {
@@ -78,5 +79,19 @@ namespace PokarinEngine
 		{
 			InfoEditor();
 		}
+	}
+
+	/// <summary>
+	/// Vector3型の値をドラッグ操作可能なテキストでエディタに表示する
+	/// </summary>
+	/// <param name="[in] name"> 値の名前 </param>
+	/// <param name="[in, out] data"> 値 </param>
+	void Component::DragText(const std::string& name, Vector3& data)
+	{
+		// テキストの幅
+		static const float textWidth = 90.0f;
+
+		// エディタに表示
+		ImGuiHelper::DragText(name, GetID_String(), textWidth, data);
 	}
 }

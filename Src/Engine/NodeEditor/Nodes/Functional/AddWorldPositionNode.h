@@ -6,6 +6,8 @@
 
 #include "FunctionalNode.h"
 
+#include "../../Pin/DataPin.h"
+
 #include "../../../Math/Vector.h"
 
 namespace PokarinEngine
@@ -36,10 +38,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// データピンを作成する
 		/// </summary>
-		void CreateDataPin() override
-		{
-			inputPositionPin = CreatePin(PinType::Data);
-		}
+		void CreateDataPin() override;
 
 		/// <summary>
 		/// データピンを表示する
@@ -48,11 +47,8 @@ namespace PokarinEngine
 
 	private: // ------------------------------ 情報 -----------------------------
 
-		// 回転角度入力用データピンの識別番号
-		int inputPositionPin = 0;
-
-		// 移動量
-		Vector3 translate = { 0, 0, 0 };
+		// 移動量入力用データピン
+		DataPinPtr<Vector3> inputTranslatePin;
 	};
 }
 

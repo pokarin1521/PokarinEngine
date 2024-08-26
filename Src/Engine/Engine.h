@@ -13,7 +13,6 @@
 
 #include "UsingNames/UsingScene.h"
 
-#include <GLFW/glfw3.h>
 #include <string>
 #include <vector>
 #include <memory>
@@ -69,10 +68,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// 作成中のゲームが再生中か取得する
 		/// </summary>
-		/// <returns>
-		/// <para> true : ゲームが再生中 </para>
-		/// <para> false : ゲームが再生されていない </para>
-		/// </returns>
+		/// <returns> ゲーム再生中ならtrue </returns>
 		bool IsPlayGame()
 		{
 			return isPlayGame;
@@ -83,10 +79,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// ゲームエンジンを初期化する
 		/// </summary>
-		/// <returns>
-		/// <para> 0 : 正常に初期化された </para>
-		/// <para> 0以外 : エラーが発生した </para>
-		/// </returns>
+		/// <returns> 正常に初期化されたらtrue </returns>
 		bool Initialize();
 
 		/// <summary>

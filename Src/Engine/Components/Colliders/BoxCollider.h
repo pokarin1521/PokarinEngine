@@ -85,9 +85,9 @@ namespace PokarinEngine
 	private: // ---------------- エディタ用 -----------------
 
 		/// <summary>
-		/// 情報を編集できるように表示する
+		/// コライダー別の情報を編集できるように表示する
 		/// </summary>
-		void InfoEditor() override;
+		void ColliderInfoEditor() override;
 	};
 }
 

@@ -51,7 +51,25 @@ namespace PokarinEngine
 			Sphere, // 球体
 		};
 
-	public: // ------------- コライダーの機能 -------------
+	public: // ------------------ 取得 -------------------
+
+		/// <summary>
+		/// 重複可能か取得する
+		/// </summary>
+		/// <returns> 重複可能ならtrue </returns>
+		bool IsTrigger() const
+		{
+			return isTrigger;
+		}
+
+		/// <summary>
+		/// 動かないか取得する
+		/// </summary>
+		/// <returns> 動かないならtrue </returns>
+		bool IsStatic() const
+		{
+			return isStatic;
+		}
 
 		/// <summary>
 		/// 図形の種類を取得する
@@ -59,34 +77,18 @@ namespace PokarinEngine
 		virtual Type GetType() const = 0;
 
 		/// <summary>
-		/// コライダーを移動させる
-		/// </summary>
-		/// <param name="[in] translate"> 移動量 </param> 
-		virtual void AddPosition(const Vector3& translate) = 0;
-
-		/// <summary>
 		/// 座標変換したコライダーを取得する
 		/// </summary>
 		/// <returns> 座標変換したコライダー </returns>
 		virtual ColliderPtr GetTransformedCollider() const = 0;
 
-	public: // ------------- コライダーの情報 -------------
+	public: // ------------------ 移動 -------------------
 
-		// true = 重複を許可
-		// false = 重複を禁止
-		bool isTrigger = false;
-
-		// true = 動かない物体
-		// false = 動く物体
-		bool isStatic = false;
-
-		// スタティックメッシュ
-		StaticMeshPtr staticMesh;
-
-	protected: // ------------- エディタ用 ----------------
-
-		// ドラッグ操作用スライダーの幅
-		const float sliderWidth = 90.0f;
+		/// <summary>
+		/// コライダーを移動させる
+		/// </summary>
+		/// <param name="[in] translate"> 移動量 </param> 
+		virtual void AddPosition(const Vector3& translate) = 0;
 
 	private: // ----------------- 初期化 ------------------
 
@@ -102,6 +104,29 @@ namespace PokarinEngine
 		/// </summary>
 		/// <returns> 座標変換行列 </returns>
 		virtual Matrix4x4 GetTransformMatrix() const = 0;
+
+	private: // --------------- エディタ用 ----------------
+
+		/// <summary>
+		/// 情報を編集できるように表示する
+		/// </summary>
+		void InfoEditor() final override;
+
+		/// <summary>
+		/// コライダー別の情報を編集できるように表示する
+		/// </summary>
+		virtual void ColliderInfoEditor() = 0;
+
+	private: // ------------ コライダーの情報 -------------
+
+		// 重複可能ならtrue
+		bool isTrigger = false;
+
+		// 動かないならtrue
+		bool isStatic = false;
+
+		// スタティックメッシュ
+		StaticMeshPtr staticMesh;
 	};
 
 } // namespace PokarinEngine

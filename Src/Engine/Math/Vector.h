@@ -132,18 +132,6 @@ namespace PokarinEngine
 		/// <returns> 単位ベクトル </returns>
 		inline Vector3 Normalize() const;
 
-	public: // ----------------------- エディタ -----------------------
-
-		/// <summary>
-		///	エディタに情報をドラッグ操作用スライダーで表示する
-		/// </summary>
-		/// <param name="[in] title"> 表示するタイトル </param>
-		/// <param name="[in] id_string"> 識別番号の文字列 </param>
-		/// <param name="[in] startX"> 表示の開始位置(X座標) </param>
-		/// <param name="[in] width"> 表示するスライダーの幅 </param>
-		void RenderDrag(const std::string& title, const std::string& id_string,
-			const float width, const float startX = 0);
-
 	public: // ------------------------- Json -------------------------
 
 		/// <summary>

@@ -4,6 +4,7 @@
 #include "BoxCollider.h"
 
 #include "../../GameObject.h"
+#include "../../ImGuiHelper.h"
 
 namespace PokarinEngine
 {
@@ -80,14 +81,14 @@ namespace PokarinEngine
 	}
 
 	/// <summary>
-	/// 情報を編集できるように表示する
+	/// コライダー別の情報を編集できるように表示する
 	/// </summary>
-	void BoxCollider::InfoEditor()
+	void BoxCollider::ColliderInfoEditor()
 	{
 		// 中心座標を表示
-		box.center.RenderDrag("Center", GetID_String(), sliderWidth);
+		DragText("Center", box.center);
 
 		// 大きさを表示
-		box.size.RenderDrag("Size", GetID_String(), sliderWidth);
+		DragText("Size", box.size);
 	}
 }

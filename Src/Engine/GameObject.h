@@ -274,10 +274,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// 物理挙動用コンポーネントを持っているか取得する
 		/// </summary>
-		/// <returns>
-		/// <para> true : 持っている </para>
-		/// <para> false : 持っていない </para>
-		/// </returns>
+		/// <returns> Rigidbodyコンポーネントを持っているならtrue </returns>
 		bool HasRigidbody()
 		{
 			return rigidbody != nullptr;
@@ -338,7 +335,7 @@ namespace PokarinEngine
 		/// <returns> 重複しない識別番号 </returns>
 		int GetSingleComponentID();
 
-	private: // ---------------------------- 更新 ------------------------------
+	private: // ----------------------------- 更新 -----------------------------
 
 		/// <summary>
 		/// ゲームオブジェクトにあるコンポーネントを更新する
@@ -346,7 +343,7 @@ namespace PokarinEngine
 		/// <param name="[in] isPlayGame"> 作成中のゲームが再生中ならtrue </param>
 		void UpdateComponent(bool isPlayGame);
 
-	private: // --------------------------- 管理用 -----------------------------
+	private: // ---------------------------- 管理用 ----------------------------
 
 		// 削除されたらtrue
 		bool isDestroyed = false;
@@ -354,17 +351,17 @@ namespace PokarinEngine
 		// 識別番号
 		int id = 0;
 
-	private: // --------------------------- シーン -----------------------------
+	private: // ---------------------------- シーン ----------------------------
 
 		// 持ち主であるシーン
 		Scene* ownerScene = nullptr;
 
-	private: // ----------------------- ノードエディタ -------------------------
+	private: // ------------------------ ノードエディタ ------------------------
 
 		// ノードエディタ
 		NodeEditorPtr nodeEditor;
 
-	private: // ----------------------- コンポーネント -------------------------
+	private: // ------------------------ コンポーネント ------------------------
 
 		// コンポーネント管理用配列
 		std::vector<ComponentPtr> componentList;

@@ -102,7 +102,7 @@ namespace PokarinEngine
 		float degFovY = 60;
 
 		// ‚’¼‹–ìŠp(ŒÊ“x–@)
-		float radFovY = Radians(degFovY);
+		float radFovY = DegToRad(degFovY);
 
 		// ‹–ìŠp‚É‚æ‚éŠg‘å—¦‚Ì‹t”
 		// ‹–ìŠp‚É‚æ‚éŠg‘å—¦‚Íí‚É‚±‚ÌŒ`‚Åg‚¤‚Ì‚ÅA‚ ‚ç‚©‚¶‚ß‹t”‚É‚µ‚Ä‚¨‚­
