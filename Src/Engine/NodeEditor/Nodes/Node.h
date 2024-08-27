@@ -78,11 +78,19 @@ namespace PokarinEngine
 			return std::to_string(id);
 		}
 
-	public: // ------------------------------ リンク -----------------------------
+	public: // ---------------------------- ピンの取得 ---------------------------
 
-		// リンク識別番号の管理用配列
-		std::unordered_set<int> linkIDList;
-
+		/// <summary>
+		/// 持っている全てのピンのリンクを解除する
+		/// </summary>
+		void UnLinkAllPin()
+		{
+			for (auto& pin : pinList)
+			{
+				pin->UnLinkAll();
+			}
+		}
+ 
 	protected: // ------------------------- ピン作成用 ---------------------------
 
 		/// <summary>
@@ -94,7 +102,12 @@ namespace PokarinEngine
 		template <class T>
 		std::shared_ptr<T> CreatePin(PinAttribute pinAttribute)
 		{
-			return ownerEditor->CreatePin<T>(*this, pinAttribute);
+			// ピンを作成し、配列に追加する
+			auto pin = ownerEditor->CreatePin<T>(*this, pinAttribute);
+			pinList.push_back(pin);
+			
+			// 作成したピンを返す
+			return pin;
 		}
 
 	protected: // ---------------------- ゲームオブジェクト ----------------------
@@ -137,6 +150,9 @@ namespace PokarinEngine
 
 		// 持ち主であるノードエディタ
 		NodeEditor* ownerEditor = nullptr;
+
+		// ピン管理用配列
+		std::vector<PinPtr> pinList;
 	};
 
 } // namespace PokarinEngine

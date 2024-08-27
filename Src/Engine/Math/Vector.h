@@ -60,7 +60,7 @@ namespace PokarinEngine
 
 	public: // ------------------------- î•ñ -------------------------
 
-		float x, y;
+		float x = 0, y = 0;
 
 		// —v‘f”
 		static constexpr int size = 2;
@@ -153,7 +153,7 @@ namespace PokarinEngine
 
 	public: // ------------------------- î•ñ -------------------------
 
-		float x, y, z;
+		float x = 0, y = 0, z = 0;
 
 		// —v‘f”
 		static constexpr int size = 3;
@@ -205,7 +205,7 @@ namespace PokarinEngine
 
 	public: // ------------------------- î•ñ -------------------------
 
-		float x, y, z, w;
+		float x = 0, y = 0, z = 0, w = 0;
 
 		// —v‘f”
 		static constexpr int size = 4;

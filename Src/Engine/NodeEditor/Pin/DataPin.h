@@ -37,15 +37,25 @@ namespace PokarinEngine
 
 		~DataPin() = default;
 
-	public: // --------------------- ピンの種類 ---------------------
+	public: // --------------------- ピンの情報 ---------------------
 
 		/// <summary>
 		/// ピンの種類を取得する
 		/// </summary>
 		/// <returns> ピンの種類 </returns>
-		PinType GetType() const override
+		PinType GetType() const
 		{
 			return PinType::Data;
+		}
+
+		/// <summary>
+		/// ピンの型を取得する
+		/// </summary>
+		/// <returns> ピンの型(typeid) </returns>
+		std::type_index GetClass() const override
+		{
+			// 特定の型と比較する場合があるので、thisポインタではなく型を指定する
+			return typeid(DataPin<T>);
 		}
 
 	public: // ----------------------- リンク -----------------------
@@ -53,10 +63,11 @@ namespace PokarinEngine
 		/// <summary>
 		/// ピン同士をリンクさせる
 		/// </summary>
-		/// <param name="pin"> リンクさせるピン </param>
-		void LinkPin(Pin& pin)
+		/// <param name="[in] linkID"> リンク識別番号 </param>
+		/// <param name="[in] pin"> リンクさせるピン </param>
+		void Link(int linkID, Pin& pin)
 		{
-			linkList.emplace(&pin);
+			linkList.emplace(linkID, &pin);
 		}
 
 	public: // ------------------------- 値 -------------------------

@@ -286,6 +286,7 @@ namespace PokarinEngine
 		NodeList eventNodeList;
 
 		// ピン管理用配列
+		// <識別番号, ピン>
 		PinList pinList;
 
 		// リンクしているピンの識別番号を管理する配列

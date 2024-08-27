@@ -132,11 +132,7 @@ namespace PokarinEngine
 	/// <param name="[in] node"> 削除するノード </param>
 	void NodeEditor::DestroyNode(const NodePtr& node)
 	{
-		// リンクしているピンの組を削除する
-		for (int linkID : node->linkIDList)
-		{
-			linkPairList.erase(linkID);
-		}
+		node->UnLinkAllPin();
 
 		// 削除するノードの識別番号
 		int nodeID = node->GetID();
@@ -206,8 +202,8 @@ namespace PokarinEngine
 			// 出力用ピン
 			const PinPtr outputPin = pinList[outputPinID];
 
-			// ピンの種類が同じ場合のみリンクを許可する
-			if (inputPin->GetType() == outputPin->GetType())
+			// ピンの型が同じ場合のみリンクする
+			if (inputPin->GetClass() == outputPin->GetClass())
 			{
 				// リンクするピンの組を追加
 				AddLinkPair(LinkPair(inputPin, outputPin));
@@ -234,18 +230,25 @@ namespace PokarinEngine
 	/// </summary>
 	void NodeEditor::RenderLink()
 	{
-		// ピンの識別番号
-		static int inputPinID = 0, outputPinID = 0;
-
 		// リンク済みのピン同士を線で繋げる
-		for (auto& [linkID, linkPair] : linkPairList)
+		for (const auto& [pinID, pin] : pinList)
 		{
-			// ピンの識別番号を取得
-			inputPinID = linkPair.first->GetID();
-			outputPinID = linkPair.second->GetID();
+			// 入力用ピンから出力用ピンに線を繋げたいので、
+			// 入力用ピンでないなら次のピンへ
+			if (pin->GetAttribute() != PinAttribute::Input)
+			{
+				continue;
+			}
 
-			// リンク状態を可視化
-			ImNodes::Link(linkID, inputPinID, outputPinID);
+			// リンク中のピン配列
+			const auto& linkPinList = pin->GetLinkList();
+
+			// [リンク識別番号, リンク中の出力用ピン]
+			for (const auto& [linkID, outputPin] : linkPinList)
+			{
+				// リンク状態を可視化
+				ImNodes::Link(linkID, pin->GetID(), outputPin->GetID());
+			}
 		}
 	}
 
@@ -255,14 +258,14 @@ namespace PokarinEngine
 	/// <param name="[in] linkPair"> 追加する組 </param>
 	void NodeEditor::AddLinkPair(const LinkPair& linkPair)
 	{
-		// 識別番号
-		int singleID = Random::Range(INT_MIN, INT_MAX);
+		// リンク識別番号
+		int linkID = Random::Range(INT_MIN, INT_MAX);
 
 		// 識別番号を追加する
 		// 重複している場合は追加できないので再度番号を取得する
-		while (!linkPairList.emplace(singleID, linkPair).second)
+		while (!linkPairList.emplace(linkID, linkPair).second)
 		{
-			singleID = Random::Range(INT_MIN, INT_MAX);
+			linkID = Random::Range(INT_MIN, INT_MAX);
 		}
 
 		// 入力用ピン
@@ -271,17 +274,9 @@ namespace PokarinEngine
 		// 出力用ピン
 		const PinPtr outputPin = linkPair.second;
 
-		// ノードにリンク識別番号を追加する
-		inputPin->GetOwnerNode().linkIDList.emplace(singleID);
-		outputPin->GetOwnerNode().linkIDList.emplace(singleID);
-
-		// 追加する組が実行ピン同士
-		if (inputPin->GetType() == PinType::Run)
-		{
-			// ピンのリンク処理を実行
-			inputPin->LinkPin(*outputPin);
-			outputPin->LinkPin(*inputPin);
-		}
+		// ピンのリンク処理を実行
+		inputPin->Link(linkID, *outputPin);
+		outputPin->Link(linkID, *inputPin);
 	}
 
 	/// <summary>
@@ -298,17 +293,14 @@ namespace PokarinEngine
 
 		// 削除するリンクが実行ピン同士のものなら
 		// ピン同士のリンクを解除する
-		// (同じ種類でなければリンクできないので片方だけ確認する)
 		if (inputPin->GetType() == PinType::Run)
 		{
-			inputPin->UnLinkPin(*outputPin);
-			outputPin->UnLinkPin(*inputPin);
+			inputPin->UnLink(linkID);
+			outputPin->UnLink(linkID);
 		}
 
 		// リンクを削除
 		linkPairList.erase(linkID);
-		inputPin->GetOwnerNode().linkIDList.erase(linkID);
-		outputPin->GetOwnerNode().linkIDList.erase(linkID);
 	}
 
 #pragma endregion

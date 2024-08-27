@@ -32,15 +32,25 @@ namespace PokarinEngine
 
 		~RunPin() = default;
 
-	public: // --------------------- ピンの種類 ---------------------
+	public: // --------------------- ピンの情報 ---------------------
 
 		/// <summary>
 		/// ピンの種類を取得する
 		/// </summary>
 		/// <returns> ピンの種類 </returns>
-		PinType GetType() const override
+		PinType GetType() const
 		{
-			return  PinType::Run;
+			return PinType::Run;
+		}
+
+		/// <summary>
+		/// ピンの型を取得する
+		/// </summary>
+		/// <returns> ピンの型(typeid) </returns>
+		std::type_index GetClass() const override
+		{
+			// 特定の型と比較する場合があるので、thisポインタではなく型を指定する
+			return  typeid(RunPin);
 		}
 
 	public: // ----------------------- リンク -----------------------
@@ -48,8 +58,9 @@ namespace PokarinEngine
 		/// <summary>
 		/// ピン同士をリンクした時の処理
 		/// </summary>
-		/// <param name="pin"> リンクさせるピン </param>
-		void LinkPin(Pin& pin) override;
+		/// <param name="[in] linkID"> リンク識別番号 </param>
+		/// <param name="[in] pin"> リンクさせるピン </param>
+		void Link(int linkID, Pin& pin) override;
 
 		/// <summary>
 		/// <para> リンク先のノードを実行する </para>

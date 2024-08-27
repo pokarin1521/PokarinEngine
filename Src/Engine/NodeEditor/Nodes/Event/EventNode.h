@@ -32,10 +32,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// ノード別の実行処理
 		/// </summary>
-		/// <returns>
-		/// <para> true : 次のノードを実行する </para>
-		/// <para> false : 次のノードを実行しない </para>
-		/// </returns>
+		/// <returns> 次のノードを実行するならtrue </returns>
 		virtual bool RunNode() = 0;
 
 		/// <summary>
