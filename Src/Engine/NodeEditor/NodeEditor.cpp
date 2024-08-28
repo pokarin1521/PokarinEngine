@@ -105,17 +105,21 @@ namespace PokarinEngine
 	}
 
 	/// <summary>
+	/// 情報を全削除する
+	/// </summary>
+	void NodeEditor::Clear()
+	{
+		nodeList.clear();
+		pinList.clear();
+		linkPairList.clear();
+	}
+
+	/// <summary>
 	/// 情報をJson型に格納する
 	/// </summary>
 	/// <param name="[out] data"> 情報を格納するJson型 </param>
 	void NodeEditor::ToJson(Json& data) const
 	{
-		const std::string fileName = "My project/Settings/" + ownerObject->name + ".ini";
-
-		ImNodes::SaveEditorStateToIniFile(nodeEditorContext, fileName.c_str());
-
-		return;
-
 		// ---------------------------------
 		// ノード情報を格納する
 		// ---------------------------------
@@ -147,7 +151,7 @@ namespace PokarinEngine
 		// リンク情報を格納する
 		// --------------------------------
 
-		// data["LinkPairList"] = linkPairList;
+		data["LinkPairList"] = linkPairList;
 	}
 
 	/// <summary>
@@ -156,6 +160,31 @@ namespace PokarinEngine
 	/// <param name="[in] data"> 情報を格納しているJson型 </param>
 	void NodeEditor::FromJson(const Json& data)
 	{
+		// 情報を全削除する
+		Clear();
+
+		// ピンを追加し直す前のピン配列
+		PinList beforePinList = pinList;
+
+		// FromJson()
+
+		// ピンを追加し直せるように全削除する
+		pinList.clear();
+
+		// ピン識別番号が変わっている可能性があるので、
+		// ピンを配列に追加し直す
+		for (auto& [pinID, pin] : beforePinList)
+		{
+			pinList.emplace(pin->GetID(), pin);
+		}
+
+		linkPairList = data["LinkPairList"];
+
+		// ピン同士をリンク
+		for (auto& [linkID, linkPair] : linkPairList)
+		{
+			LinkPin(linkID, linkPair);
+		}
 	}
 
 #pragma endregion
@@ -262,7 +291,7 @@ namespace PokarinEngine
 			if (inputPin->GetClass() == outputPin->GetClass())
 			{
 				// リンクするピンの組を追加
-				AddLinkPair(inputPin, outputPin);
+				AddLinkPair(LinkPair(inputPinID, outputPinID));
 			}
 		}
 	}
@@ -327,42 +356,55 @@ namespace PokarinEngine
 	/// <summary>
 	/// リンクする組を追加する
 	/// </summary>
-	/// <param name="[in] inputPin"> 入力用ピン </param>
-	/// <param name="[in] outputPin"> 出力用ピン </param>
-	void NodeEditor::AddLinkPair(const PinPtr& inputPin, const PinPtr& outputPin)
+	/// <param name="[in] linkPair"> リンクの組 </param>
+	void NodeEditor::AddLinkPair(const LinkPair& linkPair)
 	{
 		// リンク識別番号
 		int linkID = Random::Range(INT_MIN, INT_MAX);
 
 		// リンクの識別番号と組を追加する
 		// 重複している場合は追加できないので再度番号を取得する
-		while (!linkIDList.emplace(linkID).second)
+		while (!linkPairList.emplace(linkID, linkPair).second)
 		{
 			linkID = Random::Range(INT_MIN, INT_MAX);
 		}
 
-		// ピンのリンク処理を実行
+		// ピン同士をリンク
+		LinkPin(linkID, linkPair);
+	}
+
+	/// <summary>
+	/// ピン同士をリンクする
+	/// </summary>
+	/// <param name="[in] linkID"> リンク識別番号 </param>
+	/// <param name="[in] linkPair"> リンクする組 </param>
+	void NodeEditor::LinkPin(int linkID, const LinkPair& linkPair)
+	{
+		// 入力用ピン
+		PinPtr inputPin = pinList[linkPair.first];
+
+		// 出力用ピン
+		PinPtr outputPin = pinList[linkPair.second];
+
 		inputPin->Link(linkID, *outputPin);
 		outputPin->Link(linkID, *inputPin);
 	}
 
 	/// <summary>
-	/// 指定した組のリンクを削除する
+	/// 指定した組のリンクを解除する
 	/// </summary>
-	/// <param name="[in] linkID"> 削除するリンクの識別番号 </param>
-	void NodeEditor::DestroyLink(int linkID)
+	/// <param name="[in] linkID"> 解除するリンクの識別番号 </param>
+	void NodeEditor::UnLinkPin(int linkID)
 	{
-		// 入力用ピンの識別番号
-		const int inputPinID = linkPairList[linkID].first;
-
-		// 出力用ピンの識別番号
-		const int outputPinID = linkPairList[linkID].second;
+		// リンクの組
+		// <入力用ピンの識別番号, 出力用ピンの識別番号>
+		LinkPair linkPair = linkPairList[linkID];
 
 		// 入力用ピン
-		const PinPtr inputPin = pinList[inputPinID];
+		const PinPtr inputPin = pinList[linkPair.first];
 
 		// 出力用ピン
-		const PinPtr outputPin = pinList[outputPinID];
+		const PinPtr outputPin = pinList[linkPair.second];
 
 		// 削除するリンクが実行ピン同士のものなら
 		// ピン同士のリンクを解除する
@@ -372,8 +414,8 @@ namespace PokarinEngine
 			outputPin->UnLink(linkID);
 		}
 
-		// 配列から識別番号を削除する
-		linkIDList.erase(linkID);
+		// 配列から削除する
+		linkPairList.erase(linkID);
 	}
 
 #pragma endregion

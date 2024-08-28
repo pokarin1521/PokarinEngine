@@ -285,15 +285,28 @@ namespace PokarinEngine
 		/// <summary>
 		/// リンクする組を追加する
 		/// </summary>
-		/// <param name="[in] inputPin"> 入力用ピン </param>
-		/// <param name="[in] outputPin"> 出力用ピン </param>
-		void AddLinkPair(const PinPtr& inputPin, const PinPtr& outputPin);
+		/// <param name="[in] linkPair"> リンクの組 </param>
+		void AddLinkPair(const LinkPair& linkPair);
 
 		/// <summary>
-		/// 指定した組のリンクを削除する
+		/// ピン同士をリンクする
 		/// </summary>
-		/// <param name="[in] linkPairID"> 削除するリンクの識別番号 </param>
-		void DestroyLink(int linkPairID);
+		/// <param name="[in] linkID"> リンク識別番号 </param>
+		/// <param name="[in] linkPair"> リンクする組 </param>
+		void LinkPin(int linkID, const LinkPair& linkPair);
+
+		/// <summary>
+		/// ピン同士のリンクを解除する
+		/// </summary>
+		/// <param name="[in] linkID"> 解除するリンクの識別番号 </param>
+		void UnLinkPin(int linkID);
+
+	private: // ---------------------------- 全削除 ----------------------------
+
+		/// <summary>
+		/// 情報を全削除する
+		/// </summary>
+		void Clear();
 
 	private: // ------------------------- ノード管理用 -------------------------
 
@@ -311,9 +324,6 @@ namespace PokarinEngine
 		// リンク管理用配列
 		// <リンク識別番号, <入力用ピンの識別番号, 出力用ピンの識別番号>>
 		LinkPairList linkPairList;
-
-		// リンク識別番号の管理用配列
-		std::unordered_set<int> linkIDList;
 
 	private: // --------------------- ノードエディタの情報 ---------------------
 

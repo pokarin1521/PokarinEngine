@@ -59,6 +59,12 @@ namespace PokarinEngine
 	/// <param name="[in] linkID"> ƒŠƒ“ƒN¯•Ê”Ô† </param>
 	void Pin::UnLink(int linkID)
 	{
+		// ‰ğœÏ‚İ‚ÌƒŠƒ“ƒN‚È‚ç‰½‚à‚µ‚È‚¢
+		if (linkList.find(linkID) == linkList.end())
+		{
+			return;
+		}
+
 		// ƒŠƒ“ƒN‰ğœ
 		linkList[linkID]->linkList.erase(linkID);
 		linkList.erase(linkID);
