@@ -282,6 +282,8 @@ namespace PokarinEngine
 
 		// コンポーネント識別番号の管理用配列
 		data["ComponentIDList"] = stringIDList;
+
+		nodeEditor->ToJson(data);
 	}
 
 	/// <summary>

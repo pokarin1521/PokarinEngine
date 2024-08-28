@@ -25,8 +25,8 @@ namespace PokarinEngine
 	/// </summary>
 	/// <param name="[in] nodeEditor"> 持ち主であるノードエディタ </param>
 	/// <param name="[in] nodeID"> ノードの識別番号 </param>
-	/// <param name="[in] nodeTitle"> ノードのタイトル </param>
-	void Node::CreateNode(NodeEditor& nodeEditor, int nodeID, const std::string& nodeTitle)
+	/// <param name="[in] nodeName"> ノードの名前 </param>
+	void Node::CreateNode(NodeEditor& nodeEditor, int nodeID, const std::string& nodeName)
 	{
 		// 持ち主であるノードエディタを設定
 		ownerEditor = &nodeEditor;
@@ -35,7 +35,7 @@ namespace PokarinEngine
 		id = nodeID;
 
 		// タイトルを設定する
-		title = nodeTitle;
+		name = nodeName;
 
 		// マウスカーソルの位置にノードを設置
 		Vector2 mousePos = Input::Mouse::GetScreenPos(WindowID::NodeEditor);
@@ -50,8 +50,9 @@ namespace PokarinEngine
 	/// </summary>
 	void Node::RenderTitle()
 	{
+		// 名前をタイトルとして表示する
 		ImNodes::BeginNodeTitleBar();
-		ImGui::Text(title.c_str());
+		ImGui::Text(name.c_str());
 		ImNodes::EndNodeTitleBar();
 	}
 

@@ -100,7 +100,7 @@ namespace PokarinEngine
 		ImGuiIO& io = ImGui::GetIO();
 
 		// 保存先のファイル名
-		static const char* settingFile = "Settings/imgui.ini";
+		static const char* settingFile = "My project/Settings/imgui.ini";
 
 		// 保存先を設定
 		io.IniFilename = settingFile;

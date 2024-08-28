@@ -1,9 +1,9 @@
 {
   "Scene": "SampleScene",
-  "-654237640": {
+  "-1061559072": {
     "Name": "MainCamera",
     "StaticMeshFile": "null",
-    "191677169": {
+    "2091846095": {
       "Name": "Transform",
       "Position": {
         "x": 0.0,
@@ -21,18 +21,18 @@
         "z": 1.0
       }
     },
-    "344382930": {
+    "-967474270": {
       "Name": "Camera"
     },
     "ComponentIDList": [
-      "191677169",
-      "344382930"
+      "2091846095",
+      "-967474270"
     ]
   },
-  "1801384571": {
+  "131576386": {
     "Name": "Directional Light",
     "StaticMeshFile": "null",
-    "1440418784": {
+    "-1738066060": {
       "Name": "Transform",
       "Position": {
         "x": 0.0,
@@ -50,51 +50,18 @@
         "z": 1.0
       }
     },
-    "-575279552": {
+    "-1434578529": {
       "Name": "Light"
     },
     "ComponentIDList": [
-      "1440418784",
-      "-575279552"
+      "-1738066060",
+      "-1434578529"
     ]
   },
-  "1315417601": {
+  "-1491435485": {
     "Name": "Cube",
     "StaticMeshFile": "Res/MeshData/Basic/Cube/Cube.obj",
-    "1308263145": {
-      "Name": "Transform",
-      "Position": {
-        "x": 0.0,
-        "y": 5.0,
-        "z": 0.0
-      },
-      "Rotation": {
-        "x": 0.0,
-        "y": 0.0,
-        "z": 0.0
-      },
-      "Scale": {
-        "x": 1.0,
-        "y": 1.0,
-        "z": 1.0
-      }
-    },
-    "-1192316828": {
-      "Name": "Box Collider"
-    },
-    "601788038": {
-      "Name": "Rigidbody"
-    },
-    "ComponentIDList": [
-      "1308263145",
-      "-1192316828",
-      "601788038"
-    ]
-  },
-  "-1304939411": {
-    "Name": "Sphere",
-    "StaticMeshFile": "Res/MeshData/Basic/Sphere/Sphere.obj",
-    "467682344": {
+    "-1054194785": {
       "Name": "Transform",
       "Position": {
         "x": 0.0,
@@ -112,18 +79,13 @@
         "z": 1.0
       }
     },
-    "1939918959": {
-      "Name": "Sphere Collider"
-    },
     "ComponentIDList": [
-      "467682344",
-      "1939918959"
+      "-1054194785"
     ]
   },
   "ObjectIDList": [
-    "-654237640",
-    "1801384571",
-    "1315417601",
-    "-1304939411"
+    "-1061559072",
+    "131576386",
+    "-1491435485"
   ]
 }

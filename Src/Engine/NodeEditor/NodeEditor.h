@@ -10,6 +10,8 @@
 #include "ImGui/imnodes.h"
 #include "ImGui/imnodes_internal.h"
 
+#include "Json/UsingNameJson.h"
+
 #include "../UsingNames/UsingNodeEditor.h"
 
 #include "../Random.h"
@@ -17,9 +19,10 @@
 #include "Pin/Pin.h"
 
 #include <string>
-#include <unordered_map>
 #include <memory>
-#include <cassert>
+#include <unordered_set>
+#include <unordered_map>
+#include <functional>
 
 namespace PokarinEngine
 {
@@ -36,7 +39,7 @@ namespace PokarinEngine
 	/// </summary>
 	class NodeEditor
 	{
-	public: // -------------- コンストラクタ・デストラクタ --------------
+	public: // ----------------- コンストラクタ・デストラクタ ------------------
 
 		NodeEditor(GameObject& gameObject);
 
@@ -45,7 +48,7 @@ namespace PokarinEngine
 			ImNodes::EditorContextFree(nodeEditorContext);
 		}
 
-	public: // ----------------------- 禁止事項 ------------------------
+	public: // --------------------------- 禁止事項 ----------------------------
 
 		/* 持ち主が同じノードエディタが複数あると困るので、禁止する */
 
@@ -55,7 +58,7 @@ namespace PokarinEngine
 		// 代入の禁止
 		NodeEditor& operator=(const NodeEditor&) = delete;
 
-	public: // ------------------------- 制御 --------------------------
+	public: // ----------------------------- 制御 ------------------------------
 
 		/// <summary>
 		/// ノードの処理を実行する
@@ -71,7 +74,7 @@ namespace PokarinEngine
 		/// </returns>
 		bool Update();
 
-	public: // ----------------- ノードの入出力用ピン ------------------
+	public: // ---------------------- ノードの入出力用ピン ---------------------
 
 		/// <summary>
 		/// ノードのピンを作成する
@@ -107,7 +110,7 @@ namespace PokarinEngine
 			return pin;
 		}
 
-	public: // ---------------------- 情報の取得 -----------------------
+	public: // -------------------------- 情報の取得 ---------------------------
 
 		/// <summary>
 		/// ImGuiウィンドウを取得する
@@ -136,7 +139,7 @@ namespace PokarinEngine
 			return *ownerObject;
 		}
 
-	public: // ---------------------- 状態の制御 -----------------------
+	public: // -------------------------- 状態の制御 ---------------------------
 
 		/// <summary>
 		/// ノードエディタが開いているか取得する
@@ -155,12 +158,26 @@ namespace PokarinEngine
 			isOpen = true;
 		}
 
+	public: // ----------------------------- Json ------------------------------
+
+		/// <summary>
+		/// 情報をJson型に格納する
+		/// </summary>
+		/// <param name="[out] data"> 情報を格納するJson型 </param>
+		void ToJson(Json& data) const;
+
+		/// <summary>
+		/// 情報をJson型から取得する
+		/// </summary>
+		/// <param name="[in] data"> 情報を格納しているJson型 </param>
+		void FromJson(const Json& data);
+
 	private: // ----------------------- 型の別名を定義 -------------------------
 
-		// <入力用ピン, 出力用ピン>
-		using LinkPair = std::pair<PinPtr, PinPtr>;
+		// <入力用ピンの識別番号, 出力用ピンの識別番号>
+		using LinkPair = std::pair<int, int>;
 
-		// <リンク識別番号, リンクしているピンの組>
+		// <リンク識別番号, <入力用ピンの識別番号, 出力用ピンの識別番号>>
 		using LinkPairList = std::unordered_map<int, LinkPair>;
 
 		using EventNodePtr = std::shared_ptr<EventNode>;
@@ -176,24 +193,24 @@ namespace PokarinEngine
 		// <識別番号, イベントノード>
 		using EventNodeList = std::unordered_map<int, EventNodePtr>;
 
+		// <ノードの名前, ノード作成用関数>
+		using CreateNodeFuncList = std::unordered_map<std::string, std::function<void(NodeEditor&, const std::string&)>>;
+
 	private: // ------------------------- ノード作成用 -------------------------
 
 		/// <summary>
 		/// ノード作成用ボタンの処理
 		/// </summary>
 		/// <typeparam name="T"> ノードクラス </typeparam>
-		/// <param name="[in] nodeTitle"> ノードのタイトル </param>
+		/// <param name="[in] nodeName"> ノードの名前 </param>
 		template <class T>
-		void CreateNodeButton(const std::string& nodeTitle)
+		void CreateNodeButton(const std::string& nodeName)
 		{
-			// タイトルが設定されてるか確認
-			assert(!nodeTitle.empty());
-
 			// ノード作成用ボタン
-			if (ImGui::Button(nodeTitle.c_str()))
+			if (ImGui::Button(nodeName.c_str()))
 			{
 				// 押されたらノード作成
-				CreateNode<T>(nodeTitle);
+				CreateNode<T>(nodeName);
 
 				// ポップアップを閉じる
 				ImGui::CloseCurrentPopup();
@@ -204,9 +221,9 @@ namespace PokarinEngine
 		/// ノード作成用ボタンの処理
 		/// </summary>
 		/// <typeparam name="T"> ノードクラス </typeparam>
-		/// <param name="[in] nodeTitle"> ノードのタイトル </param>
+		/// <param name="[in] nodeName"> ノードの名前 </param>
 		template <class T>
-		void CreateNode(const std::string& nodeTitle)
+		void CreateNode(const std::string& nodeName)
 		{
 			// ノード
 			auto node = std::make_shared<T>();
@@ -221,7 +238,7 @@ namespace PokarinEngine
 			}
 
 			// 作成時の処理を実行
-			node->CreateNode(*this, nodeID, nodeTitle);
+			node->CreateNode(*this, nodeID, nodeName);
 		}
 
 		/// <summary>
@@ -256,9 +273,9 @@ namespace PokarinEngine
 	private: // ----------------------- ピン同士のリンク -----------------------
 
 		/// <summary>
-		/// ピン同士のリンク状態を更新する
+		/// ピン同士のリンク作成状態を更新する
 		/// </summary>
-		void UpdateLink();
+		void UpdateCreatedLink();
 
 		/// <summary>
 		/// ピン同士のリンク状態を表示する
@@ -268,8 +285,9 @@ namespace PokarinEngine
 		/// <summary>
 		/// リンクする組を追加する
 		/// </summary>
-		/// <param name="[in] linkPair"> 追加する組 </param>
-		void AddLinkPair(const LinkPair& linkPair);
+		/// <param name="[in] inputPin"> 入力用ピン </param>
+		/// <param name="[in] outputPin"> 出力用ピン </param>
+		void AddLinkPair(const PinPtr& inputPin, const PinPtr& outputPin);
 
 		/// <summary>
 		/// 指定した組のリンクを削除する
@@ -280,6 +298,7 @@ namespace PokarinEngine
 	private: // ------------------------- ノード管理用 -------------------------
 
 		// ノード管理用配列
+		// <識別番号, ノード>
 		NodeList nodeList;
 
 		// イベントノード管理用配列
@@ -289,9 +308,12 @@ namespace PokarinEngine
 		// <識別番号, ピン>
 		PinList pinList;
 
-		// リンクしているピンの識別番号を管理する配列
-		// <リンク識別番号, リンクしているピンの組>
+		// リンク管理用配列
+		// <リンク識別番号, <入力用ピンの識別番号, 出力用ピンの識別番号>>
 		LinkPairList linkPairList;
+
+		// リンク識別番号の管理用配列
+		std::unordered_set<int> linkIDList;
 
 	private: // --------------------- ノードエディタの情報 ---------------------
 
@@ -315,6 +337,9 @@ namespace PokarinEngine
 
 		// ノード作成用ポップアップの名前
 		const char* createNodePopup = "CreateNode";
+
+		// ノード作成用関数の配列
+		static CreateNodeFuncList createNodeFuncList;
 	};
 
 } // namespace PokarinEngine

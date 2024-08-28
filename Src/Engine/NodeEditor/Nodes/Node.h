@@ -43,8 +43,8 @@ namespace PokarinEngine
 		/// </summary>
 		/// <param name="[in] nodeEditor"> 持ち主であるノードエディタ </param>
 		/// <param name="[in] nodeID"> ノードの識別番号 </param>
-		/// <param name="[in] nodeTitle"> ノードのタイトル </param>
-		void CreateNode(NodeEditor& nodeEditor, int nodeID, const std::string& nodeTitle);
+		/// <param name="[in] nodeName"> ノードの名前 </param>
+		void CreateNode(NodeEditor& nodeEditor, int nodeID, const std::string& nodeName);
 
 	public: // ------------------------------- 制御 -------------------------------
 
@@ -78,6 +78,17 @@ namespace PokarinEngine
 			return std::to_string(id);
 		}
 
+	public: // ---------------------------- 名前の取得 ---------------------------
+
+		/// <summary>
+		/// 名前を取得する
+		/// </summary>
+		/// <returns> 名前 </returns>
+		const std::string& GetName() const
+		{
+			return name;
+		}
+
 	public: // ---------------------------- ピンの取得 ---------------------------
 
 		/// <summary>
@@ -90,6 +101,20 @@ namespace PokarinEngine
 				pin->UnLinkAll();
 			}
 		}
+
+	public: // ------------------------------- Json ------------------------------
+
+		/// <summary>
+		/// 情報をJson型に格納する
+		/// </summary>
+		/// <param name="[out] json"> 情報を格納するJson型 </param>
+		void ToJson(Json& json) const {}
+
+		/// <summary>
+		/// 情報をJson型から取得する
+		/// </summary>
+		/// <param name="[in] json"> 情報を格納しているJson型 </param>
+		void FromJson(const Json& json) {}
  
 	protected: // ------------------------- ピン作成用 ---------------------------
 
@@ -145,8 +170,8 @@ namespace PokarinEngine
 		// ノードの識別番号
 		int id = 0;
 
-		// ノードのタイトル
-		std::string title = "";
+		// ノードの名前
+		std::string name = "";
 
 		// 持ち主であるノードエディタ
 		NodeEditor* ownerEditor = nullptr;
