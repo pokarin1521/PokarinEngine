@@ -134,7 +134,7 @@ namespace PokarinEngine
 			// 物理挙動用コンポーネントなら保持
 			if constexpr (std::is_base_of_v<Rigidbody, T>)
 			{
-				rigidbody = component;
+				hasRigidbody = true;
 			}
 
 			return component;
@@ -271,30 +271,19 @@ namespace PokarinEngine
 			return std::to_string(id);
 		}
 
-		/// <summary>
-		/// 物理挙動用コンポーネントを持っているか取得する
-		/// </summary>
-		/// <returns> Rigidbodyコンポーネントを持っているならtrue </returns>
-		bool HasRigidbody()
-		{
-			return rigidbody != nullptr;
-		}
-
-	public: // ----------------------------- 保存 ------------------------------
+	public: // ----------------------------- Json ------------------------------
 
 		/// <summary>
 		/// ゲームオブジェクトの情報をJson型に格納する
 		/// </summary>
-		/// <param name="[out] data"> 情報を格納するJson型 </param>
-		void ToJson(Json& data) const;
-
-	public: // --------------------------- 読み込み ----------------------------
+		/// <param name="[out] json"> 情報を格納するJson型 </param>
+		void ToJson(Json& json) const;
 
 		/// <summary>
 		/// ゲームオブジェクトの情報をJson型から取得する
 		/// </summary>
-		/// <param name="[in] data"> 情報を格納しているJson型 </param>
-		void FromJson(const Json& data);
+		/// <param name="[in] json"> 情報を格納しているJson型 </param>
+		void FromJson(const Json& json);
 
 	public: // -------------------------- 基本の情報 ---------------------------
 
@@ -303,6 +292,9 @@ namespace PokarinEngine
 
 		// 物体の色
 		Color color = Color::white;
+
+		// 物理挙動用コンポーネントを持っているならtrue
+		bool hasRigidbody = false;
 
 		// 地面に着地しているならtrue
 		bool isGrounded = false;
@@ -368,9 +360,6 @@ namespace PokarinEngine
 
 		// コンポーネント識別番号の管理用配列
 		std::unordered_set<int> componentIDList;
-
-		// 物理挙動用コンポーネント
-		RigidbodyPtr rigidbody;
 	};
 
 } // namespace PokarinEngine

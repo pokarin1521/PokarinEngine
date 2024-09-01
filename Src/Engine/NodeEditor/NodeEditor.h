@@ -80,11 +80,12 @@ namespace PokarinEngine
 		/// ノードのピンを作成する
 		/// </summary>
 		/// <typeparam name="T"> 作成するピンクラス </typeparam>
-		/// <param name="[in] pin"> ピンの持ち主になるノード </param>
+		/// <param name="[in] node"> ピンの持ち主になるノード </param>
+		/// <param name="[in] pinName"> ピンの名前 </param>
 		/// <param name="[in] pinAttribute"> ピンの入出力属性 </param>
 		/// <returns> 作成したピンの識別番号 </returns>
 		template <class T>
-		std::shared_ptr<T> CreatePin(Node& node, PinAttribute pinAttribute)
+		std::shared_ptr<T> CreatePin(Node& node, const std::string& pinName, PinAttribute pinAttribute)
 		{
 			// ピン以外ならnullptr
 			if constexpr (!std::is_base_of_v<Pin, T>)
@@ -92,19 +93,19 @@ namespace PokarinEngine
 				return nullptr;
 			}
 
-			// 識別番号
-			int singleID = Random::Range(INT_MIN, INT_MAX);
+			// ピン識別番号
+			int pinID = Random::Range(INT_MIN, INT_MAX);
 
-			// 識別番号を追加する
+			// ピン識別番号を追加する
 			// 重複している場合は追加できないので再度番号を取得する
-			while (!pinList.emplace(singleID, nullptr).second)
+			while (!pinList.emplace(pinID, nullptr).second)
 			{
-				singleID = Random::Range(INT_MIN, INT_MAX);
+				pinID = Random::Range(INT_MIN, INT_MAX);
 			}
 
 			// ピンを作成して追加する
-			auto pin = std::make_shared<T>(node, singleID, pinAttribute);
-			pinList[singleID] = pin;
+			auto pin = std::make_shared<T>(node, pinID, pinName, pinAttribute);
+			pinList[pinID] = pin;
 
 			// 作成したピンを返す
 			return pin;
@@ -163,14 +164,14 @@ namespace PokarinEngine
 		/// <summary>
 		/// 情報をJson型に格納する
 		/// </summary>
-		/// <param name="[out] data"> 情報を格納するJson型 </param>
-		void ToJson(Json& data) const;
+		/// <param name="[out] json"> 情報を格納するJson型 </param>
+		void ToJson(Json& json) const;
 
 		/// <summary>
 		/// 情報をJson型から取得する
 		/// </summary>
-		/// <param name="[in] data"> 情報を格納しているJson型 </param>
-		void FromJson(const Json& data);
+		/// <param name="[in] json"> 情報を格納しているJson型 </param>
+		void FromJson(const Json& json);
 
 	private: // ----------------------- 型の別名を定義 -------------------------
 
@@ -194,7 +195,8 @@ namespace PokarinEngine
 		using EventNodeList = std::unordered_map<int, EventNodePtr>;
 
 		// <ノードの名前, ノード作成用関数>
-		using CreateNodeFuncList = std::unordered_map<std::string, std::function<void(NodeEditor&, const std::string&)>>;
+		using CreateNodeFuncList = std::unordered_map<
+			std::string, std::function<NodePtr(NodeEditor&, const std::string&, int)>>;
 
 	private: // ------------------------- ノード作成用 -------------------------
 
@@ -207,7 +209,8 @@ namespace PokarinEngine
 		void CreateNodeButton(const std::string& nodeName)
 		{
 			// ノード作成用ボタン
-			if (ImGui::Button(nodeName.c_str()))
+			// ポップアップならメニュー用のボタンの方が見栄えがいいので、こちらを使う
+			if (ImGui::MenuItem(nodeName.c_str()))
 			{
 				// 押されたらノード作成
 				CreateNode<T>(nodeName);
@@ -223,13 +226,14 @@ namespace PokarinEngine
 		/// <typeparam name="T"> ノードクラス </typeparam>
 		/// <param name="[in] nodeName"> ノードの名前 </param>
 		template <class T>
-		void CreateNode(const std::string& nodeName)
+		NodePtr CreateNode(const std::string& nodeName, int nodeID = 0)
 		{
 			// ノード
 			auto node = std::make_shared<T>();
-
-			// 重複しないノードの識別番号
-			int nodeID = AddNode(node);
+			
+			// 指定された識別番号での追加を試みて
+			// 実際に設定された識別番号を代入する
+			nodeID = AddNode(node, nodeID);
 
 			// イベントノードなら配列に追加する
 			if constexpr (std::is_base_of_v<EventNode, T>)
@@ -239,6 +243,8 @@ namespace PokarinEngine
 
 			// 作成時の処理を実行
 			node->CreateNode(*this, nodeID, nodeName);
+
+			return node;
 		}
 
 		/// <summary>
@@ -252,8 +258,9 @@ namespace PokarinEngine
 		/// ノードを追加する
 		/// </summary>
 		/// <param name="[in] node"> 追加するノード </param>
+		/// <param name="[in] nodeID"> 追加するノードの識別番号 </param>
 		/// <returns> 追加したノードの識別番号 </returns>
-		int AddNode(const NodePtr& node);
+		int AddNode(const NodePtr& node, int nodeID = 0);
 
 	private: // ------------------------- ノード削除用 -------------------------
 

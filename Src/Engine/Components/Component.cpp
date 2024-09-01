@@ -91,7 +91,10 @@ namespace PokarinEngine
 		// テキストの幅
 		static const float textWidth = 90.0f;
 
+		// テキストのX位置
+		static const float textPosX = 90.0f;
+
 		// エディタに表示
-		ImGuiHelper::DragText(name, GetID_String(), textWidth, data);
+		ImGuiHelper::DragText(name, GetID_String(), textWidth, data, textPosX);
 	}
 }

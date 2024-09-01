@@ -305,9 +305,6 @@
     <ClCompile Include="Src\Engine\NodeEditor\Nodes\Event\EventNode.cpp">
       <Filter>Src\Engine\NodeEditor\Nodes\Event</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Engine\NodeEditor\Pin\DataPin.cpp">
-      <Filter>Src\Engine\NodeEditor\Pin</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Res\Shader\Standard.frag">
@@ -576,6 +573,9 @@
     </ClInclude>
     <ClInclude Include="Src\Engine\NodeEditor\Pin\DataPin.h">
       <Filter>Src\Engine\NodeEditor\Pin</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\UsingNames\UsingDataPin.h">
+      <Filter>Src\Engine\UsingNames</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

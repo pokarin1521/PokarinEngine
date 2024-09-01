@@ -80,15 +80,6 @@ namespace PokarinEngine
 	public: // --------------------- アイテム ----------------------
 
 		/// <summary>
-		/// ImGuiのボタンを表示する
-		/// </summary>
-		/// <param name="[in] label"> ボタンの識別名 </param>
-		/// <param name="[in] color"> ボタンの色 </param>
-		/// <param name="[in] size"> ボタンの大きさ </param>
-		/// <returns> ボタンが押されたらtrue </returns>
-		static bool Button(const char* label, const Color& color, const ImVec2& size = { 0, 0 });
-
-		/// <summary>
 		/// float型の値をドラッグ操作可能なテキストで表示する
 		/// </summary>
 		/// <param name="[in] name"> 値の名前 </param>
@@ -96,10 +87,11 @@ namespace PokarinEngine
 		/// <param name="[in] ShowName"> 名前を表示するならtrue </param>
 		/// <param name="[in] width"> テキストの幅 </param>
 		/// <param name="[in,out] data"> 表示する値 </param>
+		/// <param name="[in] posX"> テキストのX位置 </param>
 		static void DragText(const std::string& name, const std::string& id_string,
-			float width, float& data)
+			float width, float& data, float posX = 0)
 		{
-			Drag<float>(name, id_string, width, data);
+			Drag<float>(name, id_string, width, data, posX);
 		}
 
 		/// <summary>
@@ -109,10 +101,11 @@ namespace PokarinEngine
 		/// <param name="[in] id_string"> 識別番号(文字列) </param>
 		/// <param name="[in] width"> テキストの幅 </param>
 		/// <param name="[in,out] data"> 表示する値 </param>
+		/// <param name="[in] posX"> テキストのX位置 </param>
 		static void DragText(const std::string& name, const std::string& id_string,
-			float width, Vector3& data)
+			float width, Vector3& data, float posX = 0)
 		{
-			Drag<Vector3>(name, id_string, width, data);
+			Drag<Vector3>(name, id_string, width, data, posX);
 		}
 
 	private: // ----------- コンストラクタ・デストラクタ -----------
@@ -132,9 +125,10 @@ namespace PokarinEngine
 		/// <param name="[in] id_string"> 識別番号(文字列) </param>
 		/// <param name="[in] width"> テキストの幅 </param>
 		/// <param name="[in,out] data"> 値 </param>
+		/// <param name="[in] posX"> テキストのX位置 </param>
 		template <typename T>
 		static void Drag(const std::string& name, const std::string& id_string,
-			float width, T& data)
+			float width, T& data, float posX = 0)
 		{
 			// 識別名
 			// 非表示にしたいので##を付ける
@@ -162,7 +156,7 @@ namespace PokarinEngine
 		/// </summary>
 		template <>
 		static void Drag<Vector3>(const std::string& name, const std::string& id_string,
-			float width, Vector3& data)
+			float width, Vector3& data, float posX)
 		{
 			// 識別名
 			// 非表示にしたいので##を付ける
@@ -171,6 +165,12 @@ namespace PokarinEngine
 			// 同じ行に名前を表示する
 			ImGui::Text(name.c_str());
 			ImGui::SameLine();
+
+			// 位置が指定されているなら設定する
+			if (posX != 0)
+			{
+				ImGui::SetCursorPosX(posX);
+			}
 
 			// スライダーの幅設定を開始
 			ImGui::PushItemWidth(width);

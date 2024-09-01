@@ -56,14 +56,14 @@ namespace PokarinEngine
 		/// <summary>
 		/// コンポーネントの情報をJson型に格納する
 		/// </summary>
-		/// <param name="[out] Json"> 情報を格納するJson型 </param>
-		void ToJson(Json& data) const override;
+		/// <param name="[out] json"> 情報を格納するJson型 </param>
+		void ToJson(Json& json) const override;
 
 		/// <summary>
 		/// コンポーネントの情報をJson型から取得する
 		/// </summary>
-		/// <param name="[in] data"> 情報を格納しているJson型 </param>
-		void FromJson(const Json& data) override;
+		/// <param name="[in] json"> 情報を格納しているJson型 </param>
+		void FromJson(const Json& json) override;
 
 	private: // ---------------- エディタ用 ----------------
 

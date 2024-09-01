@@ -1,9 +1,9 @@
 {
   "Scene": "SampleScene",
-  "-1061559072": {
+  "704494165": {
     "Name": "MainCamera",
     "StaticMeshFile": "null",
-    "2091846095": {
+    "1557711661": {
       "Name": "Transform",
       "Position": {
         "x": 0.0,
@@ -21,18 +21,22 @@
         "z": 1.0
       }
     },
-    "-967474270": {
+    "919171553": {
       "Name": "Camera"
     },
     "ComponentIDList": [
-      "2091846095",
-      "-967474270"
-    ]
+      "1557711661",
+      "919171553"
+    ],
+    "NodeEditor": {
+      "NodeIDList": [],
+      "LinkPairList": []
+    }
   },
-  "131576386": {
+  "-1335575379": {
     "Name": "Directional Light",
     "StaticMeshFile": "null",
-    "-1738066060": {
+    "-1867348783": {
       "Name": "Transform",
       "Position": {
         "x": 0.0,
@@ -50,18 +54,22 @@
         "z": 1.0
       }
     },
-    "-1434578529": {
+    "-185812689": {
       "Name": "Light"
     },
     "ComponentIDList": [
-      "-1738066060",
-      "-1434578529"
-    ]
+      "-1867348783",
+      "-185812689"
+    ],
+    "NodeEditor": {
+      "NodeIDList": [],
+      "LinkPairList": []
+    }
   },
-  "-1491435485": {
+  "-1741741061": {
     "Name": "Cube",
     "StaticMeshFile": "Res/MeshData/Basic/Cube/Cube.obj",
-    "-1054194785": {
+    "-1777879889": {
       "Name": "Transform",
       "Position": {
         "x": 0.0,
@@ -70,7 +78,7 @@
       },
       "Rotation": {
         "x": 0.0,
-        "y": 0.0,
+        "y": 3.8397138118743896,
         "z": 0.0
       },
       "Scale": {
@@ -80,12 +88,50 @@
       }
     },
     "ComponentIDList": [
-      "-1054194785"
-    ]
+      "-1777879889"
+    ],
+    "NodeEditor": {
+      "-770176614": {
+        "Name": "EventUpdate",
+        "outputRunPin-770176614": {
+          "ID": 1740111302
+        }
+      },
+      "399126008": {
+        "Name": "AddWorldRotation",
+        "inputRunPin399126008": {
+          "ID": 2074569676
+        },
+        "outputRunPin399126008": {
+          "ID": 903437794
+        },
+        "inputDegreePin399126008": {
+          "ID": -1080385562,
+          "Data": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          }
+        }
+      },
+      "NodeIDList": [
+        "-770176614",
+        "399126008"
+      ],
+      "LinkPairList": [
+        [
+          1609615424,
+          [
+            2074569676,
+            1740111302
+          ]
+        ]
+      ]
+    }
   },
   "ObjectIDList": [
-    "-1061559072",
-    "131576386",
-    "-1491435485"
+    "704494165",
+    "-1335575379",
+    "-1741741061"
   ]
 }

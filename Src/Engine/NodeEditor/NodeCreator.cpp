@@ -11,7 +11,7 @@
 namespace PokarinEngine
 {
 	NodeEditor::CreateNodeFuncList NodeEditor::createNodeFuncList = {
-		{ "EventUpdate", &NodeEditor::CreateNode<EventUpdateNode> },
+		{ "EventUpdate", &NodeEditor::CreateNode<EventUpdateNode>},
 		{ "AddWorldPosition", &NodeEditor::CreateNode<AddWorldPositionNode> },
 		{ "AddWorldRotation", &NodeEditor::CreateNode<AddWorldRotationNode> },
 	};

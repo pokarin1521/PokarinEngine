@@ -4,6 +4,8 @@
 #ifndef POKARINENGINE_PIN_H_INCLUDED
 #define POKARINENGINE_PIN_H_INCLUDED
 
+#include "Json/UsingNameJson.h"
+
 #include <memory>
 #include <unordered_map>
 #include <typeindex>
@@ -48,8 +50,8 @@ namespace PokarinEngine
 	{
 	public: // ------------------- コンストラクタ・デストラクタ --------------------
 
-		Pin(Node& node, int pinID, PinAttribute pinAttribute)
-			:ownerNode(&node), id(pinID), attribute(pinAttribute) {}
+		Pin(Node& node, int pinID, const std::string& pinName, PinAttribute pinAttribute)
+			:ownerNode(&node), id(pinID), name(pinName), attribute(pinAttribute) {}
 
 		~Pin() = default;
 
@@ -68,9 +70,9 @@ namespace PokarinEngine
 		/// <summary>
 		/// ピンの表示を終了する
 		/// </summary>
-		void End() const;	
+		void End() const;
 
-	public: // ----------------------------- 情報の取得 ----------------------------
+	public: // -------------------------------- 種類 -------------------------------
 
 		/// <summary>
 		/// ピンの種類を取得する
@@ -93,6 +95,8 @@ namespace PokarinEngine
 			return attribute;
 		}
 
+	public: // ------------------------------- 持ち主 ------------------------------
+
 		/// <summary>
 		/// 持ち主であるノードを取得する
 		/// </summary>
@@ -102,14 +106,7 @@ namespace PokarinEngine
 			return *ownerNode;
 		}
 
-		/// <summary>
-		/// リンク中のピン配列を取得する
-		/// </summary>
-		/// <returns> [リンク識別番号, リンク中のピン] </returns>
-		const LinkList& GetLinkList() const
-		{
-			return linkList;
-		}
+	public: // ------------------------------ 識別番号 -----------------------------
 
 		/// <summary>
 		/// 識別番号を取得する
@@ -120,7 +117,27 @@ namespace PokarinEngine
 			return id;
 		}
 
+	public: // -------------------------------- 名前 -------------------------------
+
+		/// <summary>
+		/// 名前を取得する
+		/// </summary>
+		/// <returns> ピンの名前 </returns>
+		const std::string& GetName() const
+		{
+			return name;
+		}
+
 	public: // ------------------------------- リンク ------------------------------
+
+		/// <summary>
+		/// リンク中のピン配列を取得する
+		/// </summary>
+		/// <returns> [リンク識別番号, リンク中のピン] </returns>
+		const LinkList& GetLinkList() const
+		{
+			return linkList;
+		}
 
 		/// <summary>
 		/// ピンをリンクさせる
@@ -140,11 +157,39 @@ namespace PokarinEngine
 		/// </summary>
 		void UnLinkAll();
 
+	public: // -------------------------------- Json -------------------------------
+
+		/// <summary>
+		/// 情報をJson型に格納する
+		/// </summary>
+		/// <param name="[out] json"> 情報を格納するJson型 </param>
+		void ToJson(Json& json) const;
+
+		/// <summary>
+		/// 情報をJson型から取得する
+		/// </summary>
+		/// <param name="[in] json"> 情報を格納しているJson型 </param>
+		void FromJson(const Json& json);
+
 	protected: // ------------------------ リンク中のピン --------------------------
 
 		// リンク中のピン管理用配列
 		// <リンク識別番号, リンク中のピン>
 		LinkList linkList;
+
+	private: // ------------------------------- Json -------------------------------
+
+		/// <summary>
+		/// ピン別の情報をJson型に格納する
+		/// </summary>
+		/// <param name="[out] json"> 情報を格納するJson型 </param>
+		virtual void PinToJson(Json& json) const {}
+
+		/// <summary>
+		/// ピン別の情報をJson型から取得する
+		/// </summary>
+		/// <param name="[in] json"> 情報を格納しているJson型 </param>
+		virtual void PinFromJson(const Json& json) {}
 
 	private: // ------------------------------- 情報 -------------------------------
 
@@ -153,6 +198,9 @@ namespace PokarinEngine
 
 		// 識別番号
 		int id = 0;
+
+		// 名前
+		std::string name = "";
 
 		// ピンの入出力属性
 		PinAttribute attribute = PinAttribute::Input;

@@ -38,11 +38,8 @@ namespace PokarinEngine
 		/// <summary>
 		/// データピンを作成する
 		/// </summary>
-		void CreateDataPin() override
-		{
-			inputDegreePin = CreatePin<DataPin<Vector3>>(PinAttribute::Input);
-		}
-
+		void CreateDataPin() override;
+			
 		/// <summary>
 		/// データピンを表示する
 		/// </summary>

@@ -88,7 +88,7 @@ namespace PokarinEngine
 		/// </summary>
 		/// <param name="[in] kindName"> 作成するゲームオブジェクトの種類 </param>
 		/// <param name="[in] staticMeshFile"> スタティックメッシュのファイル名 </param>
-		void CreateObjectButton(const char* typeName, const char* staticMeshFile);
+		void CreateObjectButton(const char* typeName, const char* staticMeshFile = nullptr);
 
 	private: // --------------------------- 情報 ---------------------------
 

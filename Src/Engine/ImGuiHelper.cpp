@@ -137,31 +137,4 @@ namespace PokarinEngine
 		// アイコン用フォントを追加
 		io.Fonts->AddFontFromFileTTF(iconFontFile, fontSize, &fontConfig, icons_ranges);
 	}
-
-	/// <summary>
-	/// ImGuiのボタンを表示する
-	/// </summary>
-	/// <param name="[in] label"> ボタンの識別名 </param>
-	/// <param name="[in] color"> ボタンの色 </param>
-	/// <param name="[in] size"> ボタンの大きさ </param>
-	/// <returns>
-	/// <para> true : ボタンが押された </para>
-	/// <para> false : ボタンが押されていない </para>
-	/// </returns>
-	bool ImGuiHelper::Button(const char* label, const Color& color, const ImVec2& size)
-	{
-		// PushColorとPopColorの間に呼ばれる可能性があるので、
-		// 意図しない色設定の終了を避けるためにライブラリの関数を使う
-
-		// ボタンの色を設定
-		ImGui::PushStyleColor(ImGuiCol_::ImGuiCol_Button, color);
-
-		// ボタンを表示
-		// ボタンが押されたらtrue
-		bool isPressed = ImGui::Button(label, size);
-
-		ImGui::PopStyleColor();
-
-		return isPressed;
-	}
 }

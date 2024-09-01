@@ -112,14 +112,14 @@ namespace PokarinEngine
 		/// <summary>
 		/// ƒRƒ“ƒ|[ƒlƒ“ƒg‚Ìî•ñ‚ğJsonŒ^‚ÉŠi”[‚·‚é
 		/// </summary>
-		/// <param name="[out] Json"> î•ñ‚ğŠi”[‚·‚éJsonŒ^ </param>
-		virtual void ToJson(Json& data) const = 0;
+		/// <param name="[out] json"> î•ñ‚ğŠi”[‚·‚éJsonŒ^ </param>
+		virtual void ToJson(Json& json) const = 0;
 
 		/// <summary>
 		/// ƒRƒ“ƒ|[ƒlƒ“ƒg‚Ìî•ñ‚ğJsonŒ^‚©‚çæ“¾‚·‚é
 		/// </summary>
-		/// <param name="[in] data"> î•ñ‚ğŠi”[‚µ‚Ä‚¢‚éJsonŒ^ </param>
-		virtual void FromJson(const Json& data) = 0;
+		/// <param name="[in] json"> î•ñ‚ğŠi”[‚µ‚Ä‚¢‚éJsonŒ^ </param>
+		virtual void FromJson(const Json& json) = 0;
 
 	public: // --------------------------------- –¼‘O --------------------------------
 

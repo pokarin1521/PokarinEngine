@@ -19,7 +19,7 @@
 namespace PokarinEngine
 {
 	/// <summary>
-	/// カメラを追加するコンストラクタ
+	/// コンストラクタ
 	/// </summary>
 	Camera::Camera()
 	{
@@ -28,7 +28,7 @@ namespace PokarinEngine
 	}
 
 	/// <summary>
-	/// カメラを削除するデストラクタ
+	/// デストラクタ
 	/// </summary>
 	Camera::~Camera()
 	{
@@ -104,8 +104,8 @@ namespace PokarinEngine
 	/// <summary>
 	/// コンポーネントの情報をJson型に格納する
 	/// </summary>
-	/// <param name="[out] Json"> 情報を格納するJson型 </param>
-	void Camera::ToJson(Json& data) const
+	/// <param name="[out] json"> 情報を格納するJson型 </param>
+	void Camera::ToJson(Json& json) const
 	{
 
 	}
@@ -113,8 +113,8 @@ namespace PokarinEngine
 	/// <summary>
 	/// コンポーネントの情報をJson型から取得する
 	/// </summary>
-	/// <param name="[in] data"> 情報を格納しているJson型 </param>
-	void Camera::FromJson(const Json& data)
+	/// <param name="[in] json"> 情報を格納しているJson型 </param>
+	void Camera::FromJson(const Json& json)
 	{
 
 	}

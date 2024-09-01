@@ -65,8 +65,8 @@ namespace PokarinEngine
 	/// <summary>
 	/// ƒRƒ“ƒ|[ƒlƒ“ƒg‚Ìî•ñ‚ğJsonŒ^‚ÉŠi”[‚·‚é
 	/// </summary>
-	/// <param name="[out] Json"> î•ñ‚ğŠi”[‚·‚éJsonŒ^ </param>
-	void BoxCollider::ToJson(Json& data) const
+	/// <param name="[out] json"> î•ñ‚ğŠi”[‚·‚éJsonŒ^ </param>
+	void BoxCollider::ToJson(Json& json) const
 	{
 
 	}
@@ -74,8 +74,8 @@ namespace PokarinEngine
 	/// <summary>
 	/// ƒRƒ“ƒ|[ƒlƒ“ƒg‚Ìî•ñ‚ğJsonŒ^‚©‚çæ“¾‚·‚é
 	/// </summary>
-	/// <param name="[out] data"> î•ñ‚ğŠi”[‚µ‚Ä‚¢‚éJsonŒ^ </param>
-	void BoxCollider::FromJson(const Json& data)
+	/// <param name="[out] json"> î•ñ‚ğŠi”[‚µ‚Ä‚¢‚éJsonŒ^ </param>
+	void BoxCollider::FromJson(const Json& json)
 	{
 
 	}

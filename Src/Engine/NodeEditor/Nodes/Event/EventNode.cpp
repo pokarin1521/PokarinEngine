@@ -14,7 +14,7 @@ namespace PokarinEngine
 		if (RunNode())
 		{
 			// リンク先のノードを実行
-			runOutputPin->RunLinkNode();
+			outputRunPin->RunLinkNode();
 		}
 	}
 
@@ -24,7 +24,7 @@ namespace PokarinEngine
 	void EventNode::Initialize()
 	{
 		// 実行ピンを作成する
-		runOutputPin = CreatePin<RunPin>(PinAttribute::Output);
+		outputRunPin = CreatePin<RunPin>("outputRunPin", PinAttribute::Output);
 
 		// データピンを作成する
 		CreateDataPin();
@@ -36,8 +36,8 @@ namespace PokarinEngine
 	void EventNode::RenderPin()
 	{
 		// 実行ピンを表示する
-		runOutputPin->Begin();
-		runOutputPin->End();
+		outputRunPin->Begin();
+		outputRunPin->End();
 
 		// データピンを表示する
 		RenderDataPin();

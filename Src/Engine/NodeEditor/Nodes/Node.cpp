@@ -6,6 +6,8 @@
 #include "ImGui/imgui.h"
 #include "ImGui/imnodes.h"
 
+#include "Json/Json.h"
+
 #include "../NodeEditor.h"
 #include "../Pin/Pin.h"
 
@@ -65,6 +67,43 @@ namespace PokarinEngine
 		RenderTitle();
 		RenderPin();
 		ImNodes::EndNode();
+	}
+
+	/// <summary>
+	/// ‚Á‚Ä‚¢‚é‘S‚Ä‚Ìƒsƒ“‚ÌƒŠƒ“ƒN‚ğ‰ğœ‚·‚é
+	/// </summary>
+	void Node::UnLinkAllPin()
+	{
+		for (auto& pin : pinList)
+		{
+			pin->UnLinkAll();
+		}
+	}
+
+	/// <summary>
+	/// î•ñ‚ğJsonŒ^‚ÉŠi”[‚·‚é
+	/// </summary>
+	/// <param name="[out] json"> î•ñ‚ğŠi”[‚·‚éJsonŒ^ </param>
+	void Node::ToJson(Json& json) const
+	{
+		// ƒsƒ“î•ñ‚ğŠi”[‚·‚é
+		for (auto& pin : pinList)
+		{
+			pin->ToJson(json[pin->GetName()]);
+		}
+	}
+
+	/// <summary>
+	/// î•ñ‚ğJsonŒ^‚©‚çæ“¾‚·‚é
+	/// </summary>
+	/// <param name="[in] json"> î•ñ‚ğŠi”[‚µ‚Ä‚¢‚éJsonŒ^ </param>
+	void Node::FromJson(const Json& json)
+	{
+		// ƒsƒ“î•ñ‚ğæ“¾‚·‚é
+		for (auto& pin : pinList)
+		{
+			pin->FromJson(json[pin->GetName()]);
+		}
 	}
 
 #pragma endregion

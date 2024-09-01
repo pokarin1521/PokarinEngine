@@ -36,25 +36,23 @@ namespace PokarinEngine
 #pragma region Json
 
 	/// <summary>
-	/// î•ñ‚ğJsonŒ^‚ÉŠi”[‚·‚é
+	/// Vector3Œ^‚©‚çJsonŒ^‚Ö‚Ì•ÏŠ·
 	/// </summary>
-	/// <param name="[out] data"> î•ñ‚ğŠi”[‚·‚éJsonŒ^ </param>
-	void Vector3::ToJson(Json& data) const
+	void to_json(Json& json, const Vector3& v)
 	{
-		data["x"] = x;
-		data["y"] = y;
-		data["z"] = z;
+		json["x"] = v.x;
+		json["y"] = v.y;
+		json["z"] = v.z;
 	}
 
 	/// <summary>
-	/// î•ñ‚ğJsonŒ^‚©‚çæ“¾‚·‚é
+	/// JsonŒ^‚©‚çVector3Œ^‚Ö‚Ì•ÏŠ·
 	/// </summary>
-	/// <param name="[in] data"> î•ñ‚ğŠi”[‚µ‚Ä‚¢‚éJsonŒ^ </param>
-	void Vector3::FromJson(const Json& data)
+	void from_json(const Json& json, Vector3& v)
 	{
-		x = data["x"];
-		y = data["y"];
-		z = data["z"];
+		json["x"].get_to(v.x);
+		json["y"].get_to(v.y);
+		json["z"].get_to(v.z);
 	}
 
 #pragma endregion

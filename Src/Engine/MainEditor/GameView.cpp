@@ -55,12 +55,6 @@ namespace PokarinEngine
 			// ウィンドウを終了
 			ImGui::End();
 		}
-
-		// -------------------------------
-		// カラーバッファをクリア
-		// -------------------------------
-
-		//fbo->ClearColor(Color::black);
 	}
 
 	/// <summary>
@@ -73,20 +67,16 @@ namespace PokarinEngine
 		// 後々エディタ画面で番号を指定できるようにする
 		const Camera* camera = CameraManager::GetCamera(0);
 
-		// カメラがないなら描画しない
-		if (!camera)
-		{
-			return;
-		}
-		
-		// FBOが作成されていないなら描画しない
-		if (!fbo)
-		{
-			return;
-		}
-
 		// FBOをバインドする
 		fbo->Bind();
+
+		// カメラ、FBOがないなら描画しない
+		if (!camera || !fbo)
+		{
+			// FBOのバインドを解除する
+			fbo->UnBind();
+			return;
+		}
 
 		// カメラ情報をGPUにコピーする
 		camera->SetToShader();

@@ -37,7 +37,7 @@ namespace PokarinEngine
 			// ファイル関係のメニュー
 			if (ImGui::BeginMenu("File"))
 			{
-				if (ImGui::Button("Save"))
+				if (ImGui::MenuItem("Save"))
 				{
 					currentScene->SaveScene();
 				}
@@ -48,7 +48,7 @@ namespace PokarinEngine
 			// ファイル関係のメニュー
 			if (ImGui::BeginMenu("File"))
 			{
-				if (ImGui::Button("Load"))
+				if (ImGui::MenuItem("Load"))
 				{
 					currentScene->LoadScene();
 				}

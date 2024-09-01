@@ -39,4 +39,12 @@ namespace PokarinEngine
 		owner.transform->position += velocity * deltaTime;
 	}
 
+	/// <summary>
+	/// íœ‚Ìˆ—
+	/// </summary>
+	void Rigidbody::OnDestroy()
+	{
+		GetOwnerObject().hasRigidbody = false;
+	}
+
 } // namespace PokarinEngine

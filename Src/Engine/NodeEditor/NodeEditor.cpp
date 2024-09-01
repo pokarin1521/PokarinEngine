@@ -117,16 +117,16 @@ namespace PokarinEngine
 	/// <summary>
 	/// 情報をJson型に格納する
 	/// </summary>
-	/// <param name="[out] data"> 情報を格納するJson型 </param>
-	void NodeEditor::ToJson(Json& data) const
+	/// <param name="[out] json"> 情報を格納するJson型 </param>
+	void NodeEditor::ToJson(Json& json) const
 	{
 		// ---------------------------------
 		// ノード情報を格納する
 		// ---------------------------------
 
 		// ノード識別番号(文字列)の配列
-		std::vector<std::string> nodeIDList;
-		nodeIDList.reserve(nodeList.size());
+		std::vector<std::string> nodeIDList_string;
+		nodeIDList_string.reserve(nodeList.size());
 
 		for (const auto& [noeID, node] : nodeList)
 		{
@@ -134,51 +134,82 @@ namespace PokarinEngine
 			const std::string id_string = node->GetID_String();
 
 			// ノードの名前を格納
-			data[id_string]["Name"] = node->GetName();
+			json[id_string]["Name"] = node->GetName();
 
 			// ノード別の情報を格納
-			node->ToJson(data);
+			node->ToJson(json[id_string]);
 
 			// 後でまとめて格納できるように
 			// ノード識別番号(文字列)を配列に追加
-			nodeIDList.push_back(id_string);
+			nodeIDList_string.push_back(id_string);
 		}
 
 		// ノード識別番号の配列を格納
-		data["NodeIDList"] = nodeIDList;
+		json["NodeIDList"] = nodeIDList_string;
 
 		// --------------------------------
 		// リンク情報を格納する
 		// --------------------------------
 
-		data["LinkPairList"] = linkPairList;
+		json["LinkPairList"] = linkPairList;
 	}
 
 	/// <summary>
 	/// 情報をJson型から取得する
 	/// </summary>
-	/// <param name="[in] data"> 情報を格納しているJson型 </param>
-	void NodeEditor::FromJson(const Json& data)
+	/// <param name="[in] json"> 情報を格納しているJson型 </param>
+	void NodeEditor::FromJson(const Json& json)
 	{
+		// --------------------------
 		// 情報を全削除する
+		// --------------------------
+
 		Clear();
+
+		// ----------------------------------
+		// ノードの情報を取得する
+		// ----------------------------------
+
+		// ノード識別番号(文字列)の配列
+		auto nodeIDList_string = json["NodeIDList"].get<std::vector<std::string>>();
+
+		for (std::string id_string : nodeIDList_string)
+		{
+			// ノードの名前
+			const auto nodeName = json[id_string]["Name"].get<std::string>();
+
+			// 名前に対応したノードを追加する
+			// ピン情報の取得ができるように格納時の識別番号をそのまま使う
+			NodePtr node = createNodeFuncList[nodeName](*this, nodeName, std::stoi(id_string));
+
+			// 追加したノードの情報をJson型から取得する
+			node->FromJson(json[id_string]);
+		}
+
+		// -----------------------------------
+		// ピン配列を更新する
+		// -----------------------------------
 
 		// ピンを追加し直す前のピン配列
 		PinList beforePinList = pinList;
 
-		// FromJson()
-
 		// ピンを追加し直せるように全削除する
 		pinList.clear();
 
-		// ピン識別番号が変わっている可能性があるので、
-		// ピンを配列に追加し直す
+		// ピンはノードを作成した時点で作成されるので、
+		// 作成後に識別番号を再設定する
+		// なので、ピン配列に追加し直すことで対応する
 		for (auto& [pinID, pin] : beforePinList)
 		{
 			pinList.emplace(pin->GetID(), pin);
 		}
 
-		linkPairList = data["LinkPairList"];
+		// --------------------------------------
+		// リンク情報を取得する
+		// --------------------------------------
+
+		// リンク配列を取得する
+		json["LinkPairList"].get_to(linkPairList);
 
 		// ピン同士をリンク
 		for (auto& [linkID, linkPair] : linkPairList)
@@ -195,11 +226,18 @@ namespace PokarinEngine
 	/// ノードを追加する
 	/// </summary>
 	/// <param name="[in] node"> 追加するノード </param>
+	/// <param name="[in] nodeID"> 追加するノードの識別番号 </param>
 	/// <returns> 追加したノードの識別番号 </returns>
-	int NodeEditor::AddNode(const NodePtr& node)
+	int NodeEditor::AddNode(const NodePtr& node, int nodeID)
 	{
 		// 識別番号
 		int singleID = Random::Range(INT_MIN, INT_MAX);
+
+		// 0以外が指定されているなら、指定された番号での追加を試みる
+		if (nodeID != 0)
+		{
+			singleID = nodeID;
+		}
 
 		// 識別番号を追加する
 		// 重複している場合は追加できないので再度番号を取得する

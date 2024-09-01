@@ -76,6 +76,7 @@ namespace PokarinEngine
 	/// <param name="[out] gameObject"> ゲームオブジェクト </param>
 	void ComponentAdder::RenderList(GameObjectPtr gameObject)
 	{
+		AddButton<Camera>(gameObject);
 		AddButton<Rigidbody>(gameObject);
 		AddButton<Light>(gameObject);
 		AddButton<BoxCollider>(gameObject);

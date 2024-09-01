@@ -6,7 +6,7 @@
 
 #include "FunctionalNode.h"
 
-#include "../../Pin/DataPin.h"
+#include "../../../UsingNames/UsingDataPin.h"
 
 #include "../../../Math/Vector.h"
 
@@ -45,7 +45,7 @@ namespace PokarinEngine
 		/// </summary>
 		void RenderDataPin() override;
 
-	private: // ------------------------------ 情報 -----------------------------
+	private: // ------------------------------ 情報 ------------------------------
 
 		// 移動量入力用データピン
 		DataPinPtr<Vector3> inputTranslatePin;

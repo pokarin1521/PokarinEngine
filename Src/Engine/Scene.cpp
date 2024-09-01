@@ -443,11 +443,10 @@ namespace PokarinEngine
 		// ---------------------------------------
 
 		// 保存するデータ
-		Json data;
+		Json json;
 
 		// シーンの名前
-		data["Scene"] = name;
-
+		json["Scene"] = name;
 
 		// ----------------------------------------------------
 		// ゲームオブジェクトの情報をJson型に格納する
@@ -461,12 +460,12 @@ namespace PokarinEngine
 		// ゲームオブジェクトの情報を格納
 		for (const auto& gameObject : gameObjectList)
 		{
-			gameObject->ToJson(data[gameObject->GetID_String()]);
+			gameObject->ToJson(json[gameObject->GetID_String()]);
 			stringIDList.push_back(gameObject->GetID_String());
 		}
 
 		// ゲームオブジェクト識別番号の配列を格納
-		data["ObjectIDList"] = stringIDList;
+		json["ObjectIDList"] = stringIDList;
 
 		// ----------------------------------------------
 		// Jsonファイルに情報を保存する
@@ -479,7 +478,7 @@ namespace PokarinEngine
 		const std::string fileName = GetFileName();
 
 		// 保存
-		JsonFile::Save(fileName, data);
+		JsonFile::Save(fileName, json);
 	}
 
 	/// <summary>
@@ -507,23 +506,29 @@ namespace PokarinEngine
 		// ---------------------------------------
 
 		// 情報を格納するJson型
-		Json data;
+		Json json;
 
 		// シーンの情報を読み込む
-		JsonFile::Load(GetFileName(), data);
+		JsonFile::Load(GetFileName(), json);
+
+		// 名前を設定
+		json["Scene"].get_to(name);
 
 		// ---------------------------------------------
 		// ゲームオブジェクトの情報を読み込む
 		// ---------------------------------------------
 
+		// オブジェクト識別番号(文字列)の配列
+		const auto objectIDList_string = json["ObjectIDList"].get<std::vector<std::string>>();
+
 		// ゲームオブジェクトの識別番号(文字列)
-		for (const std::string& objectID_string : data["ObjectIDList"])
+		for (const std::string& objectID_string : objectIDList_string)
 		{
 			// ゲームオブジェクトを作成
 			GameObjectPtr gameObject = CreateGameObject("New Object");
 
 			// 識別番号に対応した情報を読み込む
-			gameObject->FromJson(data[objectID_string]);
+			gameObject->FromJson(json[objectID_string]);
 		}
 	}
 

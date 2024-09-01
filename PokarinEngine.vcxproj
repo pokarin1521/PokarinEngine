@@ -197,7 +197,6 @@
     <ClCompile Include="Src\Engine\NodeEditor\Nodes\Functional\AddWorldRotationNode.cpp" />
     <ClCompile Include="Src\Engine\NodeEditor\Nodes\Functional\FunctionalNode.cpp" />
     <ClCompile Include="Src\Engine\NodeEditor\Nodes\Node.cpp" />
-    <ClCompile Include="Src\Engine\NodeEditor\Pin\DataPin.cpp" />
     <ClCompile Include="Src\Engine\NodeEditor\Pin\Pin.cpp" />
     <ClCompile Include="Src\Engine\NodeEditor\Pin\RunPin.cpp" />
     <ClCompile Include="Src\Engine\Random.cpp" />
@@ -286,6 +285,7 @@
     <ClInclude Include="Src\Engine\Time.h" />
     <ClInclude Include="Src\Engine\UsingNames\UsingCollider.h" />
     <ClInclude Include="Src\Engine\UsingNames\UsingComponent.h" />
+    <ClInclude Include="Src\Engine\UsingNames\UsingDataPin.h" />
     <ClInclude Include="Src\Engine\UsingNames\UsingFramebufferObject.h" />
     <ClInclude Include="Src\Engine\UsingNames\UsingGameObject.h" />
     <ClInclude Include="Src\Engine\UsingNames\UsingNodeEditor.h" />

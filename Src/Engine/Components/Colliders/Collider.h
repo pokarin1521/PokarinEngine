@@ -33,7 +33,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// 更新
 		/// </summary>
-		void Update() override;
+		void Update() override final;
 
 		/// <summary>
 		/// 描画
@@ -95,7 +95,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// ゲームオブジェクトに追加された時の初期化
 		/// </summary>
-		void Awake() override;
+		void Awake() override final;
 
 	private: // -------------- 座標変換行列 ---------------
 
@@ -110,7 +110,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// 情報を編集できるように表示する
 		/// </summary>
-		void InfoEditor() final override;
+		void InfoEditor() override final;
 
 		/// <summary>
 		/// コライダー別の情報を編集できるように表示する

@@ -34,6 +34,14 @@ namespace PokarinEngine
 	}
 
 	/// <summary>
+	/// データピンを作成する
+	/// </summary>
+	void AddWorldRotationNode::CreateDataPin()
+	{
+		inputDegreePin = CreatePin<DataPin<Vector3>>("inputDegreePin", PinAttribute::Input);
+	}
+
+	/// <summary>
 	/// データピンを表示する
 	/// </summary>
 	void AddWorldRotationNode::RenderDataPin()

@@ -132,20 +132,6 @@ namespace PokarinEngine
 		/// <returns> ’PˆÊƒxƒNƒgƒ‹ </returns>
 		inline Vector3 Normalize() const;
 
-	public: // ------------------------- Json -------------------------
-
-		/// <summary>
-		/// î•ñ‚ğJsonŒ^‚ÉŠi”[‚·‚é
-		/// </summary>
-		/// <param name="[out] data"> î•ñ‚ğŠi”[‚·‚éJsonŒ^ </param>
-		void ToJson(Json& data) const;
-
-		/// <summary>
-		/// î•ñ‚ğJsonŒ^‚©‚çæ“¾‚·‚é
-		/// </summary>
-		/// <param name="[in] data"> î•ñ‚ğŠi”[‚µ‚Ä‚¢‚éJsonŒ^ </param>
-		void FromJson(const Json& data);
-
 	public: // ---------------------- “Yš‰‰Zq ----------------------
 
 		float& operator[](size_t i) { return *(&x + i); }
@@ -839,6 +825,16 @@ namespace PokarinEngine
 		Vector3 v = { x, y, z };
 		return v / Length();
 	}
+
+	/// <summary>
+	/// Vector3Œ^‚©‚çJsonŒ^‚Ö‚Ì•ÏŠ·
+	/// </summary>
+	void to_json(Json& json, const Vector3& v);
+
+	/// <summary>
+	/// JsonŒ^‚©‚çVector3Œ^‚Ö‚Ì•ÏŠ·
+	/// </summary>
+	void from_json(const Json& json, Vector3& v);
 
 #pragma endregion
 

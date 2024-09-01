@@ -42,7 +42,7 @@ namespace PokarinEngine
 	{
 		// 持ち主であるゲームオブジェクトが
 		// 物理挙動用コンポーネントを持っていたら衝突時に動くようにする
-		isStatic = !GetOwnerObject().HasRigidbody();
+		isStatic = !GetOwnerObject().hasRigidbody;
 	}
 
 	/// <summary>

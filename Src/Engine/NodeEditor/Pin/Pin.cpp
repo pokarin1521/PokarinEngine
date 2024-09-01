@@ -5,6 +5,8 @@
 
 #include "ImGui/imnodes.h"
 
+#include "Json/Json.h"
+
 #include "../Nodes/Node.h"
 
 namespace PokarinEngine
@@ -84,5 +86,31 @@ namespace PokarinEngine
 		{
 			UnLink(id);
 		}
+	}
+
+	/// <summary>
+	/// î•ñ‚ğJsonŒ^‚ÉŠi”[‚·‚é
+	/// </summary>
+	/// <param name="[out] json"> î•ñ‚ğŠi”[‚·‚éJsonŒ^ </param>
+	void Pin::ToJson(Json& json) const
+	{
+		// ¯•Ê”Ô†‚ğŠi”[‚·‚é
+		json["ID"] = id;
+
+		// ƒsƒ“•Ê‚Ìî•ñ‚ğŠi”[‚·‚é
+		PinToJson(json);
+	}
+
+	/// <summary>
+	/// î•ñ‚ğJsonŒ^‚©‚çæ“¾‚·‚é
+	/// </summary>
+	/// <param name="[in] json"> î•ñ‚ğŠi”[‚µ‚Ä‚¢‚éJsonŒ^ </param>
+	void Pin::FromJson(const Json& json)
+	{
+		// ¯•Ê”Ô†‚ğæ“¾‚·‚é
+		json["ID"].get_to(id);
+
+		// ƒsƒ“•Ê‚Ìî•ñ‚ğæ“¾‚·‚é
+		PinFromJson(json);
 	}
 }

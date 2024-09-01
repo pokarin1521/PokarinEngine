@@ -3,6 +3,10 @@
 */
 #include "AddWorldPositionNode.h"
 
+#include "Json/Json.h"
+
+#include "../../Pin/DataPin.h"
+
 #include "../../../GameObject.h"
 #include "../../../Time.h"
 #include "../../../ImGuiHelper.h"
@@ -33,7 +37,7 @@ namespace PokarinEngine
 	/// </summary>
 	void AddWorldPositionNode::CreateDataPin() 
 	{
-		inputTranslatePin = CreatePin<DataPin<Vector3>>(PinAttribute::Input);
+		inputTranslatePin = CreatePin<DataPin<Vector3>>("inputTranslatePin", PinAttribute::Input);
 	}
 
 	/// <summary>

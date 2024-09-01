@@ -144,20 +144,6 @@ namespace PokarinEngine
 	/// </summary>
 	void Transform::InfoEditor()
 	{
-		// --------------------------------------
-		// 表示の開始位置と幅を設定
-		// --------------------------------------
-
-		// ドラッグ操作用スライダーのImGuiウィンドウ幅に対する割合
-		static const float sliderRatio = 6.0f;
-
-		// ドラッグ操作用スライダーの幅
-		// ImGuiウィンドウの幅に合わせる
-		const float sliderWidth = ImGui::GetWindowWidth() / sliderRatio;
-
-		// 値表示の開始位置
-		static const float startX = 90.0f;
-
 		// -----------------------
 		// 位置
 		// -----------------------
@@ -188,27 +174,27 @@ namespace PokarinEngine
 	/// <summary>
 	/// コンポーネントの情報をJson型に格納する
 	/// </summary>
-	/// <param name="[out] Json"> 情報を格納するJson型 </param>
-	void Transform::ToJson(Json& data) const
+	/// <param name="[out] json"> 情報を格納するJson型 </param>
+	void Transform::ToJson(Json& json) const
 	{
 		// ------------------------------------
 		// 情報をJsonに格納する
 		// ------------------------------------
 
-		position.ToJson(data["Position"]);
-		rotation.ToJson(data["Rotation"]);
-		scale.ToJson(data["Scale"]);
+		json["Position"] = position;
+		json["Rotation"] = rotation;
+		json["Scale"] = scale;
 	}
 
 	/// <summary>
 	/// コンポーネントの情報をJson型から取得する
 	/// </summary>
-	/// <param name="[in] data"> 情報を格納しているJson型 </param>
-	void Transform::FromJson(const Json& data)
+	/// <param name="[in] json"> 情報を格納しているJson型 </param>
+	void Transform::FromJson(const Json& json)
 	{
-		position.FromJson(data["Position"]);
-		rotation.FromJson(data["Rotation"]);
-		scale.FromJson(data["Scale"]);
+		json["Position"].get_to(position);
+		json["Rotation"].get_to(rotation);
+		json["Scale"].get_to(scale);
 	}
 
 } // namespace PokarinEngine

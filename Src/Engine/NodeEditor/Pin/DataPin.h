@@ -4,26 +4,13 @@
 #ifndef POKARINENGINE_DATAPIN_H_INCLUDED
 #define POKARINENGINE_DATAPIN_H_INCLUDED
 
-#include "Pin.h"
+#include "Json/Json.h"
 
-#include "ImGui/imgui.h"
+#include "Pin.h"
+#include "../../UsingNames/UsingDataPin.h"
 
 namespace PokarinEngine
 {
-	// ---------------------
-	// ‘O•ûéŒ¾
-	// ---------------------
-
-	template <class T>
-	class DataPin;
-
-	// ---------------------------
-	// Œ^‚Ì•Ê–¼‚ğ’è‹`
-	// ---------------------------
-
-	template <class T>
-	using DataPinPtr = std::shared_ptr<DataPin<T>>;
-
 	/// <summary>
 	/// ’l—pƒsƒ“
 	/// </summary>
@@ -68,6 +55,26 @@ namespace PokarinEngine
 		void Link(int linkID, Pin& pin)
 		{
 			linkList.emplace(linkID, &pin);
+		}
+
+	public: // ------------------------ Json ------------------------
+
+		/// <summary>
+		/// î•ñ‚ğJsonŒ^‚ÉŠi”[‚·‚é
+		/// </summary>
+		/// <param name="[out] json"> î•ñ‚ğŠi”[‚·‚éJsonŒ^ </param>
+		void PinToJson(Json& json) const override
+		{	
+			json["Data"] = data;
+		}
+
+		/// <summary>
+		/// î•ñ‚ğJsonŒ^‚©‚çæ“¾‚·‚é
+		/// </summary>
+		/// <param name="[in] json"> î•ñ‚ğŠi”[‚µ‚Ä‚¢‚éJsonŒ^ </param>
+		void PinFromJson(const Json& json) override
+		{
+			json["Data"].get_to(data);
 		}
 
 	public: // ------------------------- ’l -------------------------

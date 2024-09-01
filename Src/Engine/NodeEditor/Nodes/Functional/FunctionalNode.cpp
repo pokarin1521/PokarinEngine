@@ -3,33 +3,35 @@
 */
 #include "FunctionalNode.h"
 
+#include "Json/Json.h"
+
 namespace PokarinEngine
 {
 	/// <summary>
 	/// 実行処理
 	/// </summary>
-	void FunctionalNode::Run() 
+	void FunctionalNode::Run()
 	{
 		if (RunNode())
 		{
-			runOutputPin->RunLinkNode();
+			outputRunPin->RunLinkNode();
 		}
 	}
 
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void FunctionalNode::Initialize() 
+	void FunctionalNode::Initialize()
 	{
 		// --------------------------------
 		// 実行ピンを作成する
 		// --------------------------------
 
 		// 入力用
-		runInputPin = CreatePin<RunPin>(PinAttribute::Input);
+		inputRunPin = CreatePin<RunPin>("inputRunPin", PinAttribute::Input);
 
 		// 出力用
-		runOutputPin = CreatePin<RunPin>(PinAttribute::Output);
+		outputRunPin = CreatePin<RunPin>("outputRunPin", PinAttribute::Output);
 
 		// --------------------------------
 		// データピンを作成する
@@ -48,12 +50,12 @@ namespace PokarinEngine
 		// ------------------------------
 
 		// 入力用
-		runInputPin->Begin();
-		runInputPin->End();
+		inputRunPin->Begin();
+		inputRunPin->End();
 
 		// 出力用
-		runOutputPin->Begin();
-		runOutputPin->End();
+		outputRunPin->Begin();
+		outputRunPin->End();
 
 		// -----------------------------
 		// データピンを表示する

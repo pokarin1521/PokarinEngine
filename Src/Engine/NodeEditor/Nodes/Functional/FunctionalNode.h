@@ -31,7 +31,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// 初期化
 		/// </summary>
-		void Initialize() final override;
+		void Initialize() override final;
 
 		/// <summary>
 		/// ノード別の実行処理
@@ -45,7 +45,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// ピンを表示する
 		/// </summary>
-		void RenderPin() final override;
+		void RenderPin() override final;
 
 		/// <summary>
 		/// データピンを作成する
@@ -60,10 +60,10 @@ namespace PokarinEngine
 	private: // ---------------------------- 実行ピン ----------------------------
 
 		// 入力用実行ピン
-		RunPinPtr runInputPin;
+		RunPinPtr inputRunPin;
 
 		// 出力用実行ピン
-		RunPinPtr runOutputPin;
+		RunPinPtr outputRunPin;
 	};
 }
 

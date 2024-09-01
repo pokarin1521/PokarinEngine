@@ -6,6 +6,8 @@
 
 #include "../NodeEditor.h"
 
+#include "Json/UsingNameJson.h"
+
 #include "../../UsingNames/UsingGameObject.h"
 
 #include "../Pin/Pin.h"
@@ -29,7 +31,7 @@ namespace PokarinEngine
 	public: // ----------------------------- 禁止事項 -----------------------------
 
 		/* 識別できなくなるので、禁止する */
-		
+
 		// コピーコンストラクタの禁止
 		Node(const Node&) = delete;
 
@@ -94,13 +96,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// 持っている全てのピンのリンクを解除する
 		/// </summary>
-		void UnLinkAllPin()
-		{
-			for (auto& pin : pinList)
-			{
-				pin->UnLinkAll();
-			}
-		}
+		void UnLinkAllPin();
 
 	public: // ------------------------------- Json ------------------------------
 
@@ -108,29 +104,31 @@ namespace PokarinEngine
 		/// 情報をJson型に格納する
 		/// </summary>
 		/// <param name="[out] json"> 情報を格納するJson型 </param>
-		void ToJson(Json& json) const {}
+		void ToJson(Json& json) const;
 
 		/// <summary>
 		/// 情報をJson型から取得する
 		/// </summary>
 		/// <param name="[in] json"> 情報を格納しているJson型 </param>
-		void FromJson(const Json& json) {}
- 
+		void FromJson(const Json& json);
+
 	protected: // ------------------------- ピン作成用 ---------------------------
 
 		/// <summary>
 		/// ピンを作成する
 		/// </summary>
 		/// <typeparam name="T"> 作成するピンクラス </typeparam>
+		/// <param name="[in] pinName"> ピンの名前 </param>
 		/// <param name="[in] pinAttribute"> ピンの入出力属性 </param>
 		/// <returns> 作成したピンの識別番号 </returns>
 		template <class T>
-		std::shared_ptr<T> CreatePin(PinAttribute pinAttribute)
+		std::shared_ptr<T> CreatePin(const std::string& pinName, PinAttribute pinAttribute)
 		{
 			// ピンを作成し、配列に追加する
-			auto pin = ownerEditor->CreatePin<T>(*this, pinAttribute);
+			// 識別できるように名前にノードの識別番号を足しておく
+			auto pin = ownerEditor->CreatePin<T>(*this, pinName + GetID_String(), pinAttribute);
 			pinList.push_back(pin);
-			
+
 			// 作成したピンを返す
 			return pin;
 		}
@@ -163,9 +161,6 @@ namespace PokarinEngine
 		void RenderTitle();
 
 	private: // ------------------------------ 情報 ------------------------------
-
-		// ノードの識別番号が設定済みならtrue
-		bool isSetID = false;
 
 		// ノードの識別番号
 		int id = 0;

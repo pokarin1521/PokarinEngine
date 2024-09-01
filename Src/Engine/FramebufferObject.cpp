@@ -76,8 +76,12 @@ namespace PokarinEngine
 		// ビューポートをFBOの大きさで設定
 		glViewport(0, 0, width, height);
 
+		// クリア色を黒色に設定
+		Color black = Color::black;
+		glClearColor(black.r, black.g, black.b, black.a);
+
 		// 深度バッファをクリア
-		glClear(GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
 	/// <summary>
@@ -86,33 +90,6 @@ namespace PokarinEngine
 	void FramebufferObject::UnBind() const
 	{
 		// FBOのバインド解除
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-		// OpenGLメインウィンドウの大きさを取得
-		GLsizei windowWidth = 0, windowHeight = 0;
-		Window::GetWindowSize(WindowID::Main, windowWidth, windowHeight);
-
-		// ビューポートをOpenGLメインウィンドウの大きさに戻す
-		glViewport(0, 0, windowWidth, windowHeight);
-	}
-
-	/// <summary>
-	/// バックバッファをクリアする
-	/// </summary>
-	/// <param name="[in] color"> クリア色 </param>
-	void FramebufferObject::ClearColor(const Color& color)
-	{
-		// バインド
-		glBindFramebuffer(GL_FRAMEBUFFER, id);
-
-		// クリア色を設定する
-		glClearColor(color.r, color.g, color.b, color.a);
-
-		// バックバッファをクリア
-		// 今回はカラーバッファと深度バッファを指定
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		// バインド解除
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
