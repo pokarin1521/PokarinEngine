@@ -89,7 +89,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)IMGUI_IMPL_OPENGL_LOADER_GLAD</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(ProjectDir)Src/Library;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -108,7 +108,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)IMGUI_IMPL_OPENGL_LOADER_GLAD</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(ProjectDir)Src/Library;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -127,7 +127,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)IMGUI_IMPL_OPENGL_LOADER_GLAD</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(ProjectDir)Src/Library;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -146,7 +146,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)IMGUI_IMPL_OPENGL_LOADER_GLAD</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(ProjectDir)Src/Library;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -192,9 +192,13 @@
     <ClCompile Include="Src\Engine\NodeEditor\NodeCreator.cpp" />
     <ClCompile Include="Src\Engine\NodeEditor\NodeEditor.cpp" />
     <ClCompile Include="Src\Engine\NodeEditor\NodeEditorManager.cpp" />
+    <ClCompile Include="Src\Engine\NodeEditor\Nodes\Event\EventNode.cpp" />
     <ClCompile Include="Src\Engine\NodeEditor\Nodes\Functional\AddWorldPositionNode.cpp" />
     <ClCompile Include="Src\Engine\NodeEditor\Nodes\Functional\AddWorldRotationNode.cpp" />
+    <ClCompile Include="Src\Engine\NodeEditor\Nodes\Functional\FunctionalNode.cpp" />
     <ClCompile Include="Src\Engine\NodeEditor\Nodes\Node.cpp" />
+    <ClCompile Include="Src\Engine\NodeEditor\Pin\Pin.cpp" />
+    <ClCompile Include="Src\Engine\NodeEditor\Pin\RunPin.cpp" />
     <ClCompile Include="Src\Engine\Random.cpp" />
     <ClCompile Include="Src\Engine\RenderbufferObject.cpp" />
     <ClCompile Include="Src\Engine\Scene.cpp" />
@@ -268,8 +272,9 @@
     <ClInclude Include="Src\Engine\NodeEditor\Nodes\Functional\AddWorldRotationNode.h" />
     <ClInclude Include="Src\Engine\NodeEditor\Nodes\Functional\FunctionalNode.h" />
     <ClInclude Include="Src\Engine\NodeEditor\Nodes\Node.h" />
+    <ClInclude Include="Src\Engine\NodeEditor\Pin\DataPin.h" />
     <ClInclude Include="Src\Engine\NodeEditor\Pin\Pin.h" />
-    <ClInclude Include="Src\Engine\NodeEditor\Pin\PinType.h" />
+    <ClInclude Include="Src\Engine\NodeEditor\Pin\RunPin.h" />
     <ClInclude Include="Src\Engine\Random.h" />
     <ClInclude Include="Src\Engine\RenderbufferObject.h" />
     <ClInclude Include="Src\Engine\Scene.h" />
@@ -280,6 +285,7 @@
     <ClInclude Include="Src\Engine\Time.h" />
     <ClInclude Include="Src\Engine\UsingNames\UsingCollider.h" />
     <ClInclude Include="Src\Engine\UsingNames\UsingComponent.h" />
+    <ClInclude Include="Src\Engine\UsingNames\UsingDataPin.h" />
     <ClInclude Include="Src\Engine\UsingNames\UsingFramebufferObject.h" />
     <ClInclude Include="Src\Engine\UsingNames\UsingGameObject.h" />
     <ClInclude Include="Src\Engine\UsingNames\UsingNodeEditor.h" />

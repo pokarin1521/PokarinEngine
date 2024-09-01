@@ -26,8 +26,6 @@ namespace PokarinEngine
 		// FBOを作成する
 		fbo = FramebufferObject::Create();
 
-		camera.transform = std::make_shared<Transform>();
-
 		// カメラの初期位置を設定する
 		camera.transform->position = cameraStartPos;
 	}
@@ -52,7 +50,7 @@ namespace PokarinEngine
 			// ウィンドウ内で右クリックしたら
 			// カメラ操作を開始する
 			if (ImGui::IsWindowHovered() &&
-				ImGui::IsKeyPressed(ImGuiKey_MouseRight, false))
+				Input::GetKeyDown(KeyCode::MouseRight))
 			{
 				isControlCamera = true;
 				startMousePos = Input::Mouse::GetScreenPos(WindowID::Main);
@@ -72,7 +70,7 @@ namespace PokarinEngine
 				CameraRotateControl();
 
 				// 右ボタンを離したら操作を解除する
-				isControlCamera = !ImGui::IsKeyReleased(ImGuiKey_MouseRight);
+				isControlCamera = !Input::GetKeyUp(KeyCode::MouseRight);
 			}
 
 			// FBOが作成されているか確認
@@ -89,12 +87,6 @@ namespace PokarinEngine
 			// ウィンドウを終了
 			ImGui::End();
 		}
-
-		// ----------------------------------
-		// カラーバッファをクリア
-		// ----------------------------------
-
-		//fbo->ClearColor(Color::black);
 	}
 
 	/// <summary>

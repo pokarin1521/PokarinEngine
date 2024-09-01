@@ -134,7 +134,7 @@ namespace PokarinEngine
 			// 物理挙動用コンポーネントなら保持
 			if constexpr (std::is_base_of_v<Rigidbody, T>)
 			{
-				rigidbody = component;
+				hasRigidbody = true;
 			}
 
 			return component;
@@ -271,33 +271,19 @@ namespace PokarinEngine
 			return std::to_string(id);
 		}
 
-		/// <summary>
-		/// 物理挙動用コンポーネントを持っているか取得する
-		/// </summary>
-		/// <returns>
-		/// <para> true : 持っている </para>
-		/// <para> false : 持っていない </para>
-		/// </returns>
-		bool HasRigidbody()
-		{
-			return rigidbody != nullptr;
-		}
-
-	public: // ----------------------------- 保存 ------------------------------
+	public: // ----------------------------- Json ------------------------------
 
 		/// <summary>
 		/// ゲームオブジェクトの情報をJson型に格納する
 		/// </summary>
-		/// <param name="[out] data"> 情報を格納するJson型 </param>
-		void ToJson(Json& data) const;
-
-	public: // --------------------------- 読み込み ----------------------------
+		/// <param name="[out] json"> 情報を格納するJson型 </param>
+		void ToJson(Json& json) const;
 
 		/// <summary>
 		/// ゲームオブジェクトの情報をJson型から取得する
 		/// </summary>
-		/// <param name="[in] data"> 情報を格納しているJson型 </param>
-		void FromJson(const Json& data);
+		/// <param name="[in] json"> 情報を格納しているJson型 </param>
+		void FromJson(const Json& json);
 
 	public: // -------------------------- 基本の情報 ---------------------------
 
@@ -306,6 +292,9 @@ namespace PokarinEngine
 
 		// 物体の色
 		Color color = Color::white;
+
+		// 物理挙動用コンポーネントを持っているならtrue
+		bool hasRigidbody = false;
 
 		// 地面に着地しているならtrue
 		bool isGrounded = false;
@@ -338,7 +327,7 @@ namespace PokarinEngine
 		/// <returns> 重複しない識別番号 </returns>
 		int GetSingleComponentID();
 
-	private: // ---------------------------- 更新 ------------------------------
+	private: // ----------------------------- 更新 -----------------------------
 
 		/// <summary>
 		/// ゲームオブジェクトにあるコンポーネントを更新する
@@ -346,7 +335,7 @@ namespace PokarinEngine
 		/// <param name="[in] isPlayGame"> 作成中のゲームが再生中ならtrue </param>
 		void UpdateComponent(bool isPlayGame);
 
-	private: // --------------------------- 管理用 -----------------------------
+	private: // ---------------------------- 管理用 ----------------------------
 
 		// 削除されたらtrue
 		bool isDestroyed = false;
@@ -354,26 +343,23 @@ namespace PokarinEngine
 		// 識別番号
 		int id = 0;
 
-	private: // --------------------------- シーン -----------------------------
+	private: // ---------------------------- シーン ----------------------------
 
 		// 持ち主であるシーン
 		Scene* ownerScene = nullptr;
 
-	private: // ----------------------- ノードエディタ -------------------------
+	private: // ------------------------ ノードエディタ ------------------------
 
 		// ノードエディタ
 		NodeEditorPtr nodeEditor;
 
-	private: // ----------------------- コンポーネント -------------------------
+	private: // ------------------------ コンポーネント ------------------------
 
 		// コンポーネント管理用配列
 		std::vector<ComponentPtr> componentList;
 
 		// コンポーネント識別番号の管理用配列
 		std::unordered_set<int> componentIDList;
-
-		// 物理挙動用コンポーネント
-		RigidbodyPtr rigidbody;
 	};
 
 } // namespace PokarinEngine

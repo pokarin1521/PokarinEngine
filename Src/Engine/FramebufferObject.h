@@ -73,14 +73,6 @@ namespace PokarinEngine
 		/// </summary>
 		void UnBind() const;
 
-	public: // -------------- カラーバッファ ---------------
-
-		/// <summary>
-		/// バックバッファをクリアする
-		/// </summary>
-		/// <param name="[in] Color"> クリア色 </param>
-		void ClearColor(const Color& color);
-
 	public: // -------------- 識別番号の取得 ---------------
 
 		// 識別番号の取得(GLuint型に変換)

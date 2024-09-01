@@ -235,29 +235,29 @@ namespace PokarinEngine
 	/// <summary>
 	/// ゲームオブジェクトの情報をJson型に格納する
 	/// </summary>
-	/// <param name="[out] data"> 情報を格納するJson型 </param>
-	void GameObject::ToJson(Json& data) const
+	/// <param name="[out] json"> 情報を格納するJson型 </param>
+	void GameObject::ToJson(Json& json) const
 	{
 		// -----------------------------------------------
-		// ゲームオブジェクトの情報をJson型に格納する
+		// ゲームオブジェクトの情報を格納する
 		// -----------------------------------------------
 
 		// 名前
-		data["Name"] = name;
+		json["Name"] = name;
 
 		// スタティックメッシュのファイル名
 		// なければ「null」にする
 		if (staticMesh)
 		{
-			data["StaticMeshFile"] = staticMesh->GetFileName();
+			json["StaticMeshFile"] = staticMesh->GetFileName();
 		}
 		else
 		{
-			data["StaticMeshFile"] = "null";
+			json["StaticMeshFile"] = "null";
 		}
 
 		// -------------------------------------------
-		// コンポーネントの情報をJson型に格納する
+		// コンポーネントの情報を格納する
 		// -------------------------------------------
 
 		// コンポーネント識別番号(文字列)の配列
@@ -271,51 +271,66 @@ namespace PokarinEngine
 			const std::string id_string = component->GetID_String();
 
 			// コンポーネントの名前
-			data[id_string]["Name"] = component->GetName();
+			json[id_string]["Name"] = component->GetName();
 
 			// 各コンポーネントの情報
-			component->ToJson(data[id_string]);
+			component->ToJson(json[id_string]);
 
 			// 識別番号
 			stringIDList.push_back(component->GetID_String());
 		}
 
 		// コンポーネント識別番号の管理用配列
-		data["ComponentIDList"] = stringIDList;
+		json["ComponentIDList"] = stringIDList;
+
+		// -------------------------------------------
+		// ノードエディタの情報を格納する
+		// -------------------------------------------
+
+		nodeEditor->ToJson(json["NodeEditor"]);
 	}
 
 	/// <summary>
 	/// ゲームオブジェクトの情報をJson型から取得する
 	/// </summary>
-	/// <param name="[in] data"> 情報を格納しているJson型 </param>
-	void GameObject::FromJson(const Json& data)
+	/// <param name="[in] json"> 情報を格納しているJson型 </param>
+	void GameObject::FromJson(const Json& json)
 	{
 		// --------------------------------------------------
-		// ゲームオブジェクトの情報をJson型から取得する
+		// ゲームオブジェクトの情報を取得する
 		// --------------------------------------------------
 
 		// 名前
-		name = data["Name"];
+		json["Name"].get_to(name);
 
 		// スタティックメッシュのファイル名
-		const std::string& fileName = data["StaticMeshFile"];
+		const auto fileName = json["StaticMeshFile"].get<std::string>();
 		staticMesh = Mesh::GetStaticMesh(fileName);
 
 		// --------------------------------------------------
-		// コンポーネントの情報をJson型から取得する
+		// コンポーネントの情報を取得する
 		// --------------------------------------------------
 
-		for (const std::string& id_string : data["ComponentIDList"])
+		// コンポーネント識別番号(文字列)の配列
+		const auto componentIDList_string = json["ComponentIDList"].get<std::vector<std::string>>();
+
+		for (const std::string& id_string : componentIDList_string)
 		{
 			// コンポーネントの名前
-			const std::string componentName = data[id_string]["Name"];
+			const auto componentName = json[id_string]["Name"].get<std::string>();
 
 			// 名前に対応したコンポーネントを追加
 			ComponentPtr component = ComponentAdder::AddComponent(componentName, *this);
 
 			// 追加したコンポーネントの情報をJson型から取得
-			component->FromJson(data[id_string]);
+			component->FromJson(json[id_string]);
 		}
+
+		// -------------------------------------------
+		// ノードエディタの情報を取得する
+		// -------------------------------------------
+
+		nodeEditor->FromJson(json["NodeEditor"]);
 	}
 
 	/// <summary>

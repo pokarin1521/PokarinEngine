@@ -37,7 +37,7 @@ namespace PokarinEngine
 			// ファイル関係のメニュー
 			if (ImGui::BeginMenu("File"))
 			{
-				if (ImGui::Button("Save"))
+				if (ImGui::MenuItem("Save"))
 				{
 					currentScene->SaveScene();
 				}
@@ -48,7 +48,7 @@ namespace PokarinEngine
 			// ファイル関係のメニュー
 			if (ImGui::BeginMenu("File"))
 			{
-				if (ImGui::Button("Load"))
+				if (ImGui::MenuItem("Load"))
 				{
 					currentScene->LoadScene();
 				}
@@ -100,7 +100,7 @@ namespace PokarinEngine
 		ImGuiIO& io = ImGui::GetIO();
 
 		// 保存先のファイル名
-		static const char* settingFile = "Settings/imgui.ini";
+		static const char* settingFile = "My project/Settings/imgui.ini";
 
 		// 保存先を設定
 		io.IniFilename = settingFile;

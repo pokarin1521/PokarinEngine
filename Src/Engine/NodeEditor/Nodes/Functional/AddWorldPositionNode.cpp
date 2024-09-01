@@ -3,8 +3,13 @@
 */
 #include "AddWorldPositionNode.h"
 
+#include "Json/Json.h"
+
+#include "../../Pin/DataPin.h"
+
 #include "../../../GameObject.h"
 #include "../../../Time.h"
+#include "../../../ImGuiHelper.h"
 
 namespace PokarinEngine
 {
@@ -20,11 +25,19 @@ namespace PokarinEngine
 		// ゲームオブジェクト
 		GameObject& gameObject = GetOnwerObject();
 
-		// 加算値の分だけ移動させる
-		gameObject.transform->position += translate;
+		// 指定された分だけ移動させる
+		gameObject.transform->position += inputTranslatePin->data;
 
 		// 次のノードを実行する
 		return true;
+	}
+
+	/// <summary>
+	/// データピンを作成する
+	/// </summary>
+	void AddWorldPositionNode::CreateDataPin() 
+	{
+		inputTranslatePin = CreatePin<DataPin<Vector3>>("inputTranslatePin", PinAttribute::Input);
 	}
 
 	/// <summary>
@@ -32,16 +45,15 @@ namespace PokarinEngine
 	/// </summary>
 	void AddWorldPositionNode::RenderDataPin()
 	{
-		// データピンの表示を開始
-		BeginDataPin(inputPositionPin, PinAttribute::Input);
+		// 移動量ピンの表示を開始
+		inputTranslatePin->Begin();
 
-		// スライダーの幅
 		static const float sliderWidth = 50.0f;
 
 		// 移動量を表示
-		translate.RenderDrag("Translate", GetID_String(), sliderWidth);
+		ImGuiHelper::DragText("Translate", GetID_String(), sliderWidth, inputTranslatePin->data);
 
-		// データピンの表示を終了
-		EndPin(PinAttribute::Input);
+		// 移動量ピンの表示を終了
+		inputTranslatePin->End();
 	}
 }

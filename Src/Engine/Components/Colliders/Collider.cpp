@@ -42,7 +42,7 @@ namespace PokarinEngine
 	{
 		// 持ち主であるゲームオブジェクトが
 		// 物理挙動用コンポーネントを持っていたら衝突時に動くようにする
-		isStatic = !GetOwnerObject().HasRigidbody();
+		isStatic = !GetOwnerObject().hasRigidbody;
 	}
 
 	/// <summary>
@@ -66,5 +66,21 @@ namespace PokarinEngine
 		// 共有マテリアルを使って
 		// スタティックメッシュを描画
 		Mesh::Draw(staticMesh, progUnlit, staticMesh->GetMaterialList());
+	}
+
+	/// <summary>
+	/// 情報を編集できるように表示する
+	/// </summary>
+	void Collider::InfoEditor()
+	{
+		// 重複チェックボックス用の識別名
+		// 識別番号は非表示にしたいので##を付ける
+		const std::string isTriggerLabel = "IsTrigger##" + GetID_String();
+
+		// 重複
+		ImGui::Checkbox(isTriggerLabel.c_str(), &isTrigger);
+
+		// コライダー別の情報
+		ColliderInfoEditor();
 	}
 }

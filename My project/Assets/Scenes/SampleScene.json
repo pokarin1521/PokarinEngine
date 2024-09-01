@@ -1,9 +1,9 @@
 {
   "Scene": "SampleScene",
-  "-654237640": {
+  "704494165": {
     "Name": "MainCamera",
     "StaticMeshFile": "null",
-    "191677169": {
+    "1557711661": {
       "Name": "Transform",
       "Position": {
         "x": 0.0,
@@ -21,18 +21,22 @@
         "z": 1.0
       }
     },
-    "344382930": {
+    "919171553": {
       "Name": "Camera"
     },
     "ComponentIDList": [
-      "191677169",
-      "344382930"
-    ]
+      "1557711661",
+      "919171553"
+    ],
+    "NodeEditor": {
+      "NodeIDList": [],
+      "LinkPairList": []
+    }
   },
-  "1801384571": {
+  "-1335575379": {
     "Name": "Directional Light",
     "StaticMeshFile": "null",
-    "1440418784": {
+    "-1867348783": {
       "Name": "Transform",
       "Position": {
         "x": 0.0,
@@ -50,51 +54,22 @@
         "z": 1.0
       }
     },
-    "-575279552": {
+    "-185812689": {
       "Name": "Light"
     },
     "ComponentIDList": [
-      "1440418784",
-      "-575279552"
-    ]
+      "-1867348783",
+      "-185812689"
+    ],
+    "NodeEditor": {
+      "NodeIDList": [],
+      "LinkPairList": []
+    }
   },
-  "1315417601": {
+  "-1741741061": {
     "Name": "Cube",
     "StaticMeshFile": "Res/MeshData/Basic/Cube/Cube.obj",
-    "1308263145": {
-      "Name": "Transform",
-      "Position": {
-        "x": 0.0,
-        "y": 5.0,
-        "z": 0.0
-      },
-      "Rotation": {
-        "x": 0.0,
-        "y": 0.0,
-        "z": 0.0
-      },
-      "Scale": {
-        "x": 1.0,
-        "y": 1.0,
-        "z": 1.0
-      }
-    },
-    "-1192316828": {
-      "Name": "Box Collider"
-    },
-    "601788038": {
-      "Name": "Rigidbody"
-    },
-    "ComponentIDList": [
-      "1308263145",
-      "-1192316828",
-      "601788038"
-    ]
-  },
-  "-1304939411": {
-    "Name": "Sphere",
-    "StaticMeshFile": "Res/MeshData/Basic/Sphere/Sphere.obj",
-    "467682344": {
+    "-1777879889": {
       "Name": "Transform",
       "Position": {
         "x": 0.0,
@@ -103,7 +78,7 @@
       },
       "Rotation": {
         "x": 0.0,
-        "y": 0.0,
+        "y": 3.8397138118743896,
         "z": 0.0
       },
       "Scale": {
@@ -112,18 +87,51 @@
         "z": 1.0
       }
     },
-    "1939918959": {
-      "Name": "Sphere Collider"
-    },
     "ComponentIDList": [
-      "467682344",
-      "1939918959"
-    ]
+      "-1777879889"
+    ],
+    "NodeEditor": {
+      "-770176614": {
+        "Name": "EventUpdate",
+        "outputRunPin-770176614": {
+          "ID": 1740111302
+        }
+      },
+      "399126008": {
+        "Name": "AddWorldRotation",
+        "inputRunPin399126008": {
+          "ID": 2074569676
+        },
+        "outputRunPin399126008": {
+          "ID": 903437794
+        },
+        "inputDegreePin399126008": {
+          "ID": -1080385562,
+          "Data": {
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+          }
+        }
+      },
+      "NodeIDList": [
+        "-770176614",
+        "399126008"
+      ],
+      "LinkPairList": [
+        [
+          1609615424,
+          [
+            2074569676,
+            1740111302
+          ]
+        ]
+      ]
+    }
   },
   "ObjectIDList": [
-    "-654237640",
-    "1801384571",
-    "1315417601",
-    "-1304939411"
+    "704494165",
+    "-1335575379",
+    "-1741741061"
   ]
 }

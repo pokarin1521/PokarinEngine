@@ -60,7 +60,7 @@ namespace PokarinEngine
 
 	public: // ------------------------- 情報 -------------------------
 
-		float x, y;
+		float x = 0, y = 0;
 
 		// 要素数
 		static constexpr int size = 2;
@@ -132,32 +132,6 @@ namespace PokarinEngine
 		/// <returns> 単位ベクトル </returns>
 		inline Vector3 Normalize() const;
 
-	public: // ----------------------- エディタ -----------------------
-
-		/// <summary>
-		///	エディタに情報をドラッグ操作用スライダーで表示する
-		/// </summary>
-		/// <param name="[in] title"> 表示するタイトル </param>
-		/// <param name="[in] id_string"> 識別番号の文字列 </param>
-		/// <param name="[in] startX"> 表示の開始位置(X座標) </param>
-		/// <param name="[in] width"> 表示するスライダーの幅 </param>
-		void RenderDrag(const std::string& title, const std::string& id_string,
-			const float width, const float startX = 0);
-
-	public: // ------------------------- Json -------------------------
-
-		/// <summary>
-		/// 情報をJson型に格納する
-		/// </summary>
-		/// <param name="[out] data"> 情報を格納するJson型 </param>
-		void ToJson(Json& data) const;
-
-		/// <summary>
-		/// 情報をJson型から取得する
-		/// </summary>
-		/// <param name="[in] data"> 情報を格納しているJson型 </param>
-		void FromJson(const Json& data);
-
 	public: // ---------------------- 添字演算子 ----------------------
 
 		float& operator[](size_t i) { return *(&x + i); }
@@ -165,7 +139,7 @@ namespace PokarinEngine
 
 	public: // ------------------------- 情報 -------------------------
 
-		float x, y, z;
+		float x = 0, y = 0, z = 0;
 
 		// 要素数
 		static constexpr int size = 3;
@@ -217,7 +191,7 @@ namespace PokarinEngine
 
 	public: // ------------------------- 情報 -------------------------
 
-		float x, y, z, w;
+		float x = 0, y = 0, z = 0, w = 0;
 
 		// 要素数
 		static constexpr int size = 4;
@@ -851,6 +825,16 @@ namespace PokarinEngine
 		Vector3 v = { x, y, z };
 		return v / Length();
 	}
+
+	/// <summary>
+	/// Vector3型からJson型への変換
+	/// </summary>
+	void to_json(Json& json, const Vector3& v);
+
+	/// <summary>
+	/// Json型からVector3型への変換
+	/// </summary>
+	void from_json(const Json& json, Vector3& v);
 
 #pragma endregion
 

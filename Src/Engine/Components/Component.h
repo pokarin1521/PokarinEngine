@@ -9,6 +9,8 @@
 #include "../UsingNames/UsingComponent.h"
 #include "../UsingNames/UsingGameObject.h"
 
+#include "../Math/Vector.h"
+
 #include <string>
 
 namespace PokarinEngine
@@ -110,14 +112,14 @@ namespace PokarinEngine
 		/// <summary>
 		/// コンポーネントの情報をJson型に格納する
 		/// </summary>
-		/// <param name="[out] Json"> 情報を格納するJson型 </param>
-		virtual void ToJson(Json& data) const = 0;
+		/// <param name="[out] json"> 情報を格納するJson型 </param>
+		virtual void ToJson(Json& json) const = 0;
 
 		/// <summary>
 		/// コンポーネントの情報をJson型から取得する
 		/// </summary>
-		/// <param name="[in] data"> 情報を格納しているJson型 </param>
-		virtual void FromJson(const Json& data) = 0;
+		/// <param name="[in] json"> 情報を格納しているJson型 </param>
+		virtual void FromJson(const Json& json) = 0;
 
 	public: // --------------------------------- 名前 --------------------------------
 
@@ -164,6 +166,15 @@ namespace PokarinEngine
 		/// <returns> 持ち主であるゲームオブジェクト </returns>
 		GameObject& GetOwnerObject() { return *ownerObject; }
 
+	protected: // --------------------------- エディタ用 -----------------------------
+
+		/// <summary>
+		/// Vector3型の値をドラッグ操作可能なテキストでエディタに表示する
+		/// </summary>
+		/// <param name="[in] name"> 値の名前 </param>
+		/// <param name="[in, out] data"> 値 </param>
+		void DragText(const std::string& name, Vector3& data);
+
 	private: // ------------------------------- 初期化 -------------------------------
 
 		/// 持ち主と自身以外にアクセスしない場合
@@ -181,7 +192,7 @@ namespace PokarinEngine
 	private: // ----------------------------- エディタ用 ------------------------------
 
 		/// <summary>
-		/// 情報を編集できるように表示する
+		/// コンポーネントの情報を編集できるように表示する
 		/// </summary>
 		virtual void InfoEditor() = 0;
 

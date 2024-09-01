@@ -114,8 +114,8 @@ namespace PokarinEngine
 	/// <summary>
 	/// ƒRƒ“ƒ|[ƒlƒ“ƒg‚Ìî•ñ‚ğJsonŒ^‚ÉŠi”[‚·‚é
 	/// </summary>
-	/// <param name="[out] Json"> î•ñ‚ğŠi”[‚·‚éJsonŒ^ </param>
-	void Light::ToJson(Json& data) const
+	/// <param name="[out] json"> î•ñ‚ğŠi”[‚·‚éJsonŒ^ </param>
+	void Light::ToJson(Json& json) const
 	{
 
 	}
@@ -123,8 +123,8 @@ namespace PokarinEngine
 	/// <summary>
 	/// ƒRƒ“ƒ|[ƒlƒ“ƒg‚Ìî•ñ‚ğJsonŒ^‚©‚çæ“¾‚·‚é
 	/// </summary>
-	/// <param name="[in] data"> î•ñ‚ğŠi”[‚µ‚Ä‚¢‚éJsonŒ^ </param>
-	void Light::FromJson(const Json& data)
+	/// <param name="[in] json"> î•ñ‚ğŠi”[‚µ‚Ä‚¢‚éJsonŒ^ </param>
+	void Light::FromJson(const Json& json)
 	{
 
 	}

@@ -6,6 +6,8 @@
 #include "ImGui/imgui.h"
 #include "ImGui/imnodes.h"
 
+#include "Json/Json.h"
+
 #include "../NodeEditor.h"
 #include "../Pin/Pin.h"
 
@@ -25,8 +27,8 @@ namespace PokarinEngine
 	/// </summary>
 	/// <param name="[in] nodeEditor"> 持ち主であるノードエディタ </param>
 	/// <param name="[in] nodeID"> ノードの識別番号 </param>
-	/// <param name="[in] nodeTitle"> ノードのタイトル </param>
-	void Node::CreateNode(NodeEditor& nodeEditor, int nodeID, const std::string& nodeTitle)
+	/// <param name="[in] nodeName"> ノードの名前 </param>
+	void Node::CreateNode(NodeEditor& nodeEditor, int nodeID, const std::string& nodeName)
 	{
 		// 持ち主であるノードエディタを設定
 		ownerEditor = &nodeEditor;
@@ -35,7 +37,7 @@ namespace PokarinEngine
 		id = nodeID;
 
 		// タイトルを設定する
-		title = nodeTitle;
+		name = nodeName;
 
 		// マウスカーソルの位置にノードを設置
 		Vector2 mousePos = Input::Mouse::GetScreenPos(WindowID::NodeEditor);
@@ -46,25 +48,13 @@ namespace PokarinEngine
 	}
 
 	/// <summary>
-	/// 実行処理
-	/// </summary>
-	void Node::Run()
-	{
-		// ノード別の処理を実行
-		if (RunNode())
-		{
-			// 次のノードが設定されているので、実行
-			RunNextNode();
-		}
-	}
-
-	/// <summary>
 	/// タイトルを表示する
 	/// </summary>
 	void Node::RenderTitle()
 	{
+		// 名前をタイトルとして表示する
 		ImNodes::BeginNodeTitleBar();
-		ImGui::Text(title.c_str());
+		ImGui::Text(name.c_str());
 		ImNodes::EndNodeTitleBar();
 	}
 
@@ -79,99 +69,41 @@ namespace PokarinEngine
 		ImNodes::EndNode();
 	}
 
-#pragma endregion
-
-#pragma region CreatePin
-
 	/// <summary>
-	/// ピンを作成する
+	/// 持っている全てのピンのリンクを解除する
 	/// </summary>
-	/// <param name="[in] pinType"> ピンの種類 </param>
-	/// <returns> 作成したピンの識別番号 </returns>
-	int Node::CreatePin(PinType pinType)
+	void Node::UnLinkAllPin()
 	{
-		return ownerEditor->CreatePin(id, pinType);
-	}
-
-#pragma endregion
-
-#pragma region RenderPin
-
-	/// <summary>
-	/// ピンの形
-	/// </summary>
-	enum class Node::PinShape
-	{
-		Triangle = ImNodesPinShape_TriangleFilled,
-		Circle = ImNodesPinShape_CircleFilled,
-	};
-
-	/// <summary>
-	/// ピンの表示を開始する
-	/// </summary>
-	/// <param name="[in] pinID"> ピンの識別番号 </param>
-	/// <param name="[in] pinAttribute"> ピンの属性 </param>
-	/// <param name="[in] pinShape"> ピンの形 </param>
-	void Node::BeginPin(int pinID, PinAttribute pinAttribute, PinShape pinShape)
-	{
-		// 入力用ピン
-		if (pinAttribute == PinAttribute::Input)
+		for (auto& pin : pinList)
 		{
-			ImNodes::BeginInputAttribute(pinID, ImNodesPinShape(pinShape));
-		}
-		// 出力用ピン
-		else
-		{
-			ImNodes::BeginOutputAttribute(pinID, ImNodesPinShape(pinShape));
+			pin->UnLinkAll();
 		}
 	}
 
 	/// <summary>
-	/// データピンの表示を開始する
+	/// 情報をJson型に格納する
 	/// </summary>
-	/// <param name="[in] pinID"> ピンの識別番号 </param>
-	/// <param name="[in] pinAttribute"> ピンの属性 </param>
-	void Node::BeginDataPin(int pinID, PinAttribute pinAttribute)
+	/// <param name="[out] json"> 情報を格納するJson型 </param>
+	void Node::ToJson(Json& json) const
 	{
-		BeginPin(pinID, pinAttribute, PinShape::Circle);
-	}
-
-	/// <summary>
-	/// 実行ピンの表示を開始する
-	/// </summary>
-	/// <param name="[in] pinID"> ピンの識別番号 </param>
-	/// <param name="[in] pinAttribute"> ピンの属性 </param>
-	void Node::BeginRunPin(int pinID, PinAttribute pinAttribute)
-	{
-		BeginPin(pinID, pinAttribute, PinShape::Triangle);
-	}
-
-	/// <summary>
-	/// ピンの表示を終了する
-	/// </summary>
-	/// <param name="[in] pinAttribute"> ピンの属性 </param>
-	void Node::EndPin(PinAttribute pinAttribute)
-	{
-		// 入力用ピン
-		if (pinAttribute == PinAttribute::Input)
+		// ピン情報を格納する
+		for (auto& pin : pinList)
 		{
-			ImNodes::EndInputAttribute();
-		}
-		// 出力用ピン
-		else
-		{
-			ImNodes::EndOutputAttribute();
+			pin->ToJson(json[pin->GetName()]);
 		}
 	}
 
 	/// <summary>
-	/// 次に設定するピンを同じ行に表示する
+	/// 情報をJson型から取得する
 	/// </summary>
-	void Node::PinSameLin()
+	/// <param name="[in] json"> 情報を格納しているJson型 </param>
+	void Node::FromJson(const Json& json)
 	{
-		// ピン同士の間隔
-		static const float spacing = 0;
-		ImGui::SameLine(0, spacing);
+		// ピン情報を取得する
+		for (auto& pin : pinList)
+		{
+			pin->FromJson(json[pin->GetName()]);
+		}
 	}
 
 #pragma endregion

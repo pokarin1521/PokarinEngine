@@ -18,11 +18,32 @@ namespace PokarinEngine
 	namespace JsonFile
 	{
 		/// <summary>
+		/// Jsonファイルに保存する
+		/// </summary>
+		/// <param name="[in] fileName"> 保存先のファイル名 </param>
+		/// <param name="[in] json"> 情報を格納しているJson型 </param>
+		inline void Save(const std::string& fileName, const Json& json)
+		{
+			// 保存先ファイル
+			std::ofstream file;
+
+			// 上書きモードで開く
+			file.open(fileName, std::ios::out);
+
+			// ファイルに保存
+			// ファイルが無かったら生成される
+			file << json.dump(2);
+
+			// ファイルを閉じる
+			file.close();
+		}
+
+		/// <summary>
 		/// Jsonファイルを読み込む
 		/// </summary>
 		/// <param name="[in] fileName"> 読み込むファイル名 </param>
-		/// <param name="[out] data"> 読み込んだデータ </param>
-		inline void Load(const std::string& fileName, Json& data)
+		/// <param name="[out] json"> 情報を格納するJson型 </param>
+		inline void Load(const std::string& fileName, Json& json)
 		{
 			// 読み込み先のファイル
 			std::ifstream file;
@@ -33,31 +54,10 @@ namespace PokarinEngine
 			// ファイルが開けたら読み込む
 			if (file)
 			{
-				file >> data;
+				file >> json;
 			}
 
 			// 開いたファイルを閉じる
-			file.close();
-		}
-
-		/// <summary>
-		/// Jsonファイルに保存する
-		/// </summary>
-		/// <param name="[in] fileName"> 保存先のファイル名 </param>
-		/// <param name="[in] data"> データ </param>
-		inline void Save(const std::string& fileName, const Json& data)
-		{
-			// 保存先ファイル
-			std::ofstream file;
-
-			// 上書きモードで開く
-			file.open(fileName, std::ios::out);
-
-			// ファイルに保存
-			// ファイルが無かったら生成される
-			file << data.dump(2);
-
-			// ファイルを閉じる
 			file.close();
 		}
 	}

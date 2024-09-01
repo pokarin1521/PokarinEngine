@@ -9,9 +9,9 @@
 #include "../Math/Vector.h"
 #include "../Math/Matrix.h"
 
-#include <vector>
 #include <string>
 #include <cmath>
+#include <unordered_set>
 
 namespace PokarinEngine
 {
@@ -64,41 +64,8 @@ namespace PokarinEngine
 		/// <summary>
 		/// 親オブジェクトを設定する
 		/// </summary>
-		/// <param name="[out] parent"> 
-		/// <para> 親にするゲームオブジェクトのトランスフォーム </para>
-		/// <para> nullptrを指定すると親子関係を解除する </para>
-		/// </param>
-		void SetParent(Transform* parent);
-
-		/// <summary>
-		/// 親オブジェクトを設定する
-		/// </summary>
-		/// <param name="[out] parent"> 
-		/// <para> 親にするゲームオブジェクトのトランスフォーム </para>
-		/// <para> nullptrを指定すると親子関係を解除する </para>
-		/// </param>
-		void SetParent(const TransformPtr& parent);
-
-	public: // ---------------------- 子オブジェクトの取得 ----------------------
-
-		/// <summary>
-		/// 子オブジェクトの数を取得する
-		/// </summary>
-		/// <returns> 子オブジェクトの数 </returns>
-		size_t GetChildCount() const
-		{
-			return children.size();
-		}
-
-		/// <summary>
-		/// 子オブジェクトを取得する
-		/// </summary>
-		/// <param name="[in] index"> 子オブジェクトの要素番号 </param>
-		/// <returns> index番の子オブジェクトのトランスフォーム </returns>
-		Transform* GetChild(size_t index) const
-		{
-			return children[index];
-		}
+		/// <param name="[in,out] parent"> 親にするゲームオブジェクトのTransform </param>
+		void SetParent(Transform* _parent);
 
 	public: // --------------------- 変換行列の取得・設定 ----------------------
 
@@ -142,14 +109,14 @@ namespace PokarinEngine
 		/// <summary>
 		/// コンポーネントの情報をJson型に格納する
 		/// </summary>
-		/// <param name="[out] Json"> 情報を格納するJson型 </param>
-		void ToJson(Json& data) const override;
+		/// <param name="[out] json"> 情報を格納するJson型 </param>
+		void ToJson(Json& json) const override;
 
 		/// <summary>
 		/// コンポーネントの情報をJson型から取得する
 		/// </summary>
-		/// <param name="[in] data"> 情報を格納しているJson型 </param>
-		void FromJson(const Json& data) override;
+		/// <param name="[in] json"> 情報を格納しているJson型 </param>
+		void FromJson(const Json& json) override;
 
 	public: // -------------------- ワールド軸の情報 -------------------
 
@@ -187,11 +154,11 @@ namespace PokarinEngine
 
 		/* 循環参照を防ぐために生ポインタで管理する */
 
-		// 親オブジェクトのトランスフォーム
+		// 親オブジェクトのTransform
 		Transform* parent = nullptr;
 
-		// 子オブジェクトのトランスフォーム
-		std::vector<Transform*> children;
+		// 子オブジェクトのTransform管理用配列
+		std::unordered_set<Transform*> children;
 
 	private: // ----------------------- 変換行列 -----------------------
 

@@ -77,7 +77,7 @@ namespace PokarinEngine
 		{
 			// ゲームオブジェクト作成ポップアップ用ボタン
 			// 黒色で表示
-			if (ImGui::Button("Object +", ImVec4(0,0,0,0)))
+			if (ImGui::Button("Object +", ImVec4(0, 0, 0, 0)))
 			{
 				// ボタンを押した時に
 				// ゲームオブジェクト作成用ポップアップを展開する
@@ -194,7 +194,7 @@ namespace PokarinEngine
 #pragma endregion
 
 #pragma region CreateObject
-	
+
 	/// <summary>
 	/// ゲームオブジェクト作成用ポップアップの処理
 	/// </summary>
@@ -217,16 +217,19 @@ namespace PokarinEngine
 		// 3Dオブジェクト作成用メニュー
 		if (ImGui::BeginMenu("3D Object"))
 		{
-			// 直方体生成用ボタン
+			// メッシュがないオブジェクト作成用ボタン
+			CreateObjectButton("Empty");
+
+			// 直方体作成用ボタン
 			CreateObjectButton("Cube", "Res/MeshData/Basic/Cube/Cube.obj");
 
-			// 球体生成用ボタン
+			// 球体作成用ボタン
 			CreateObjectButton("Sphere", "Res/MeshData/Basic/Sphere/Sphere.obj");
 
-			// 板生成用ボタン
+			// 板作成用ボタン
 			CreateObjectButton("Plane", "Res/MeshData/Basic/Plane/Plane.obj");
 
-			// ロボット生成用ボタン
+			// ロボット作成用ボタン
 			CreateObjectButton("Robot", "Res/MeshData/Robot/Robot.obj");
 
 			ImGui::EndMenu();
@@ -247,7 +250,8 @@ namespace PokarinEngine
 	void Hierarchy::CreateObjectButton(const char* typeName, const char* staticMeshFile)
 	{
 		// オブジェクト作成用ボタン
-		if (ImGui::Button(typeName, Color::black))
+		// ポップアップならメニュー用のボタンの方が見栄えがいいので、こちらを使う
+		if (ImGui::MenuItem(typeName))
 		{
 			// ボタンが押されたので
 			// 現在のシーンにオブジェクトを作成
@@ -255,7 +259,10 @@ namespace PokarinEngine
 				typeName, Vector3(0), Vector3(0));
 
 			// スタティックメッシュを設定
-			object->staticMesh = Mesh::GetStaticMesh(staticMeshFile);
+			if (staticMeshFile)
+			{
+				object->staticMesh = Mesh::GetStaticMesh(staticMeshFile);
+			}
 		}
 	}
 

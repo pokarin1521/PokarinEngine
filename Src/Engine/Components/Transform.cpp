@@ -10,9 +10,6 @@
 
 #include <fstream>
 
-// Vector3型のfor文
-#define ForVector3() for(int i = 0; i < 3; ++i)
-
 namespace PokarinEngine
 {
 	/// <summary>
@@ -45,10 +42,7 @@ namespace PokarinEngine
 	/// <summary>
 	/// 親オブジェクトを設定する
 	/// </summary>
-	/// <param name="[out] parent"> 
-	/// <para> 親にするゲームオブジェクトのトランスフォーム </para>
-	/// <para> nullptrを指定すると親子関係を解除する </para>
-	/// </param>
+	/// <param name="[in,out] parent"> 親にするゲームオブジェクトのTransform </param>
 	void Transform::SetParent(Transform* _parent)
 	{
 		// ------------------------------------------
@@ -66,45 +60,22 @@ namespace PokarinEngine
 
 		if (parent)
 		{
-			// 親が持つ子オブジェクト配列
-			auto& c = parent->children;
-
-			// 自分の位置を検索
-			auto itr = std::find(c.begin(), c.end(), this);
-
-			// 自分が子オブジェクトとして登録されている
-			if (itr != c.end())
-			{
-				// 配列から自分を削除
-				c.erase(itr);
-			}
+			// 子オブジェクトに設定していた自身を削除する
+			parent->children.erase(this);
 		}
 
 		// ---------------------------
 		// 新たな親子関係を設定
 		// ---------------------------
 
-		// 新たな親の存在確認
 		if (_parent)
 		{
-			// 親子関係を設定
-			_parent->children.push_back(this);
+			// 子オブジェクトとして自身を追加する
+			_parent->children.emplace(this);
 		}
 
 		// 親オブジェクトに設定
-		this->parent = parent;
-	}
-
-	/// <summary>
-	/// 親オブジェクトを設定する
-	/// </summary>
-	/// <param name="[out] parent"> 
-	/// <para> 親にするゲームオブジェクトのトランスフォーム </para>
-	/// <para> nullptrを指定すると親子関係を解除する </para>
-	/// </param>
-	void Transform::SetParent(const TransformPtr& parent)
-	{
-		SetParent(parent.get());
+		parent = _parent;
 	}
 
 	/// <summary>
@@ -112,53 +83,19 @@ namespace PokarinEngine
 	/// </summary>
 	void Transform::ClampInfo()
 	{
-		// -------------------------------
-		// 位置を制限
-		// -------------------------------
-
-		// 位置の最大値
+		// 位置・回転角度(度数法)・拡大率の最大値
 		// Unityを参考に10万で設定する
-		static const float positionMax = 100000;
+		static const float clampMax = 100000;
 
-		// 位置を±10万の範囲になるように制限する
-		ForVector3()
+		// 回転角度(弧度法)の最大値
+		static const float radiansClampMax = DegToRad(clampMax);
+
+		// 位置・回転角度・拡大率を±10万の範囲になるように制限する
+		for (int i = 0; i < Vector3::size; ++i)
 		{
-			position[i] = std::clamp(position[i], -positionMax, positionMax);
-		}
-
-		// -------------------------------
-		// 回転角度を制限
-		// -------------------------------
-
-		// 回転角度の最大値
-		static const float rotationMax = Radians(360.0f);
-
-		// 回転角度を±360度の範囲になるように制限する
-		ForVector3()
-		{
-			if (std::abs(rotation[i]) > rotationMax)
-			{
-				// 周回数
-				int laps = static_cast<int>(rotation[i] / rotationMax);
-
-				// 周回数に応じて回転角度の最大値を減らすことで、
-				// 制限したうえでの適切な数値を求める
-				rotation[i] -= rotationMax * laps;
-			}
-		}
-
-		// -------------------------------
-		// 拡大率
-		// -------------------------------
-
-		// 拡大率の最大値
-		// 位置と同じにしておく
-		static const float scaleMax = 100000;
-
-		// 拡大率を±10万の範囲になるように制限する
-		ForVector3()
-		{
-			scale[i] = std::clamp(scale[i], -scaleMax, scaleMax);
+			position[i] = std::clamp(position[i], -clampMax, clampMax);
+			rotation[i] = std::clamp(rotation[i], -radiansClampMax, radiansClampMax);
+			scale[i] = std::clamp(scale[i], -clampMax, clampMax);
 		}
 	}
 
@@ -207,74 +144,57 @@ namespace PokarinEngine
 	/// </summary>
 	void Transform::InfoEditor()
 	{
-		// --------------------------------------
-		// 表示の開始位置と幅を設定
-		// --------------------------------------
-
-		// ドラッグ操作用スライダーのImGuiウィンドウ幅に対する割合
-		static const float sliderRatio = 6.0f;
-
-		// ドラッグ操作用スライダーの幅
-		// ImGuiウィンドウの幅に合わせる
-		const float sliderWidth = ImGui::GetWindowWidth() / sliderRatio;
-
-		// 値表示の開始位置
-		static const float startX = 90.0f;
-
 		// -----------------------
 		// 位置
 		// -----------------------
 
-		// 識別番号の文字列
-		const std::string id_string = GetID_String();
-
 		// 位置
-		position.RenderDrag("Position", id_string, sliderWidth, startX);
+		DragText("Position", position);
 
 		// ----------------------------
 		// 回転角度(度数法)
 		// ----------------------------
 
 		// 回転角度(度数法)
-		Vector3 rotationDeg = Degrees(rotation);
+		Vector3 rotationDeg = RadToDeg(rotation);
 
 		// 分かりやすいように度数法で表示
-		rotationDeg.RenderDrag("Rotation", id_string, sliderWidth, startX);
+		DragText("Rotation", rotationDeg);
 
 		// 弧度法に変換
-		rotation = Radians(rotationDeg);
+		rotation = DegToRad(rotationDeg);
 
 		// ----------------------------
 		// 拡大率
 		// ----------------------------
 
-		scale.RenderDrag("Scale", id_string, sliderWidth, startX);
+		DragText("Scale", scale);
 	}
 
 	/// <summary>
 	/// コンポーネントの情報をJson型に格納する
 	/// </summary>
-	/// <param name="[out] Json"> 情報を格納するJson型 </param>
-	void Transform::ToJson(Json& data) const
+	/// <param name="[out] json"> 情報を格納するJson型 </param>
+	void Transform::ToJson(Json& json) const
 	{
 		// ------------------------------------
 		// 情報をJsonに格納する
 		// ------------------------------------
 
-		position.ToJson(data["Position"]);
-		rotation.ToJson(data["Rotation"]);
-		scale.ToJson(data["Scale"]);
+		json["Position"] = position;
+		json["Rotation"] = rotation;
+		json["Scale"] = scale;
 	}
 
 	/// <summary>
 	/// コンポーネントの情報をJson型から取得する
 	/// </summary>
-	/// <param name="[in] data"> 情報を格納しているJson型 </param>
-	void Transform::FromJson(const Json& data)
+	/// <param name="[in] json"> 情報を格納しているJson型 </param>
+	void Transform::FromJson(const Json& json)
 	{
-		position.FromJson(data["Position"]);
-		rotation.FromJson(data["Rotation"]);
-		scale.FromJson(data["Scale"]);
+		json["Position"].get_to(position);
+		json["Rotation"].get_to(rotation);
+		json["Scale"].get_to(scale);
 	}
 
 } // namespace PokarinEngine

@@ -153,7 +153,7 @@ namespace PokarinEngine
 			ならば「衝突面はワールド座標系の水平に近い」と言える */
 
 			// 床とみなす角度
-			static const float cosGround = cos(Radians(30));
+			static const float cosGround = cos(DegToRad(30));
 
 			// 貫通ベクトルが下方向を向いている
 			// (下方向でない場合は、計算するだけ無駄なので計算前に判定する)
@@ -223,7 +223,7 @@ namespace PokarinEngine
 				for (auto& colB : colliderListB)
 				{
 					// スタティックコライダー同士は衝突しない
-					if (colA.origin->isStatic && colB.origin->isStatic)
+					if (colA.origin->IsStatic() && colB.origin->IsStatic())
 					{
 						continue;
 					}
@@ -252,10 +252,10 @@ namespace PokarinEngine
 						// ----------------------------------------------
 
 						// 両方が重複可能なコライダーでないことを確認
-						if (!colA.origin->isTrigger && !colB.origin->isTrigger)
+						if (!colA.origin->IsTrigger() && !colB.origin->IsTrigger())
 						{
 							// Aは動かないので、Bを移動させる
-							if (colA.origin->isStatic)
+							if (colA.origin->IsStatic())
 							{
 								/* AがBにぶつかった際の処理なので、
 								AがBに貫通した分、
@@ -266,7 +266,7 @@ namespace PokarinEngine
 									colliderListB, gameObjectB);
 							}
 							// Bは動かないので、Aを移動させる
-							else if (colB.origin->isStatic)
+							else if (colB.origin->IsStatic())
 							{
 								/* AがBにぶつかった際の処理なので、
 								AがBに貫通した分、

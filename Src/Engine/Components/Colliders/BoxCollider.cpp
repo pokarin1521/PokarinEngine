@@ -4,6 +4,7 @@
 #include "BoxCollider.h"
 
 #include "../../GameObject.h"
+#include "../../ImGuiHelper.h"
 
 namespace PokarinEngine
 {
@@ -64,8 +65,8 @@ namespace PokarinEngine
 	/// <summary>
 	/// コンポーネントの情報をJson型に格納する
 	/// </summary>
-	/// <param name="[out] Json"> 情報を格納するJson型 </param>
-	void BoxCollider::ToJson(Json& data) const
+	/// <param name="[out] json"> 情報を格納するJson型 </param>
+	void BoxCollider::ToJson(Json& json) const
 	{
 
 	}
@@ -73,21 +74,21 @@ namespace PokarinEngine
 	/// <summary>
 	/// コンポーネントの情報をJson型から取得する
 	/// </summary>
-	/// <param name="[out] data"> 情報を格納しているJson型 </param>
-	void BoxCollider::FromJson(const Json& data)
+	/// <param name="[out] json"> 情報を格納しているJson型 </param>
+	void BoxCollider::FromJson(const Json& json)
 	{
 
 	}
 
 	/// <summary>
-	/// 情報を編集できるように表示する
+	/// コライダー別の情報を編集できるように表示する
 	/// </summary>
-	void BoxCollider::InfoEditor()
+	void BoxCollider::ColliderInfoEditor()
 	{
 		// 中心座標を表示
-		box.center.RenderDrag("Center", GetID_String(), sliderWidth);
+		DragText("Center", box.center);
 
 		// 大きさを表示
-		box.size.RenderDrag("Size", GetID_String(), sliderWidth);
+		DragText("Size", box.size);
 	}
 }

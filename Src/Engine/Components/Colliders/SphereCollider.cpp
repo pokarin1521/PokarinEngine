@@ -89,26 +89,14 @@ namespace PokarinEngine
 	}
 
 	/// <summary>
-	/// 情報を編集できるように表示する
+	/// コライダー別の情報を編集できるように表示する
 	/// </summary>
-	void SphereCollider::InfoEditor()
+	void SphereCollider::ColliderInfoEditor()
 	{
-		// ---------------------
-		// 重複
-		// ---------------------
-
-		ImGui::Checkbox("Is Trigger", &isTrigger);
-
-		// ---------------------
 		// 中心座標
-		// ---------------------
+		DragText("Center", sphere.center);
 
-		sphere.center.RenderDrag("Center", GetID_String(), sliderWidth);
-
-		// ---------------------
 		// 大きさ
-		// ---------------------
-
 		ImGui::DragFloat("Radius##SphereCollider", &sphere.radius);
 	}
 }

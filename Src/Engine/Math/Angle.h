@@ -16,7 +16,7 @@ namespace PokarinEngine
 	/// </summary>
 	/// <param name="[in] deg"> 角度(度数法) </param>
 	/// <returns> 角度(弧度法) </returns>
-	constexpr float Radians(float deg)
+	constexpr float DegToRad(float deg)
 	{
 		return deg * pi / 180.0f;
 	}
@@ -26,9 +26,9 @@ namespace PokarinEngine
 	/// </summary>
 	/// <param name="[in] deg"> 角度(度数法) </param>
 	/// <returns> 角度(弧度法) </returns>
-	constexpr Vector3 Radians(const Vector3& deg)
+	constexpr Vector3 DegToRad(const Vector3& deg)
 	{
-		return Vector3(Radians(deg.x), Radians(deg.y), Radians(deg.z));
+		return Vector3(DegToRad(deg.x), DegToRad(deg.y), DegToRad(deg.z));
 	}
 
 	/// <summary>
@@ -36,7 +36,7 @@ namespace PokarinEngine
 	/// </summary>
 	/// <param name="[in] rad"> 角度(弧度法) </param>
 	/// <returns> 角度(度数法) </returns>
-	constexpr float Degrees(float rad)
+	constexpr float RadToDeg(float rad)
 	{
 		return rad * 180.0f / pi;
 	}
@@ -46,9 +46,9 @@ namespace PokarinEngine
 	/// </summary>
 	/// <param name="[in] rad"> 角度(弧度法) </param>
 	/// <returns> 角度(度数法) </returns>
-	constexpr Vector3 Degrees(const Vector3& rad)
+	constexpr Vector3 RadToDeg(const Vector3& rad)
 	{
-		return Vector3(Degrees(rad.x), Degrees(rad.y), Degrees(rad.z));
+		return Vector3(RadToDeg(rad.x), RadToDeg(rad.y), RadToDeg(rad.z));
 	}
 }
 
