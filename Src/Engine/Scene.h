@@ -6,6 +6,8 @@
 
 #include "Shader/Shader.h"
 
+#include "Json/UsingNameJson.h"
+
 #include "UsingNames/UsingScene.h"
 #include "UsingNames/UsingGameObject.h"
 #include "UsingNames/UsingFramebufferObject.h"
@@ -69,7 +71,7 @@ namespace PokarinEngine
 	public: // ------------------------- シーン制御 --------------------------
 
 		/// <summary>
-		/// シーン内の状態を更新する
+		/// 更新
 		/// </summary>
 		/// <param name="[in] isPlayGame"> ゲーム再生中ならtrue </param>
 		void Update(bool isPlayGame);
@@ -157,6 +159,32 @@ namespace PokarinEngine
 		/// </summary>
 		void RemoveDestroyedGameObject();
 
+	private: // ---------------------------- Json ----------------------------
+
+		/// <summary>
+		/// シーンの情報をJson型に格納する
+		/// </summary>
+		/// <param name="[out] json"> 情報を格納するJson型 </param>
+		void ToJson(Json& json) const;
+
+		/// <summary>
+		/// シーンの情報をJson型から取得する
+		/// </summary>
+		/// <param name="[in] json"> 情報を格納しているJson型 </param>
+		void FromJson(const Json& json);
+
+		/// <summary>
+		/// ゲーム再生直前の情報をJson型に格納する
+		/// </summary>
+		/// <param name="[out] json"> 情報を格納するJson型 </param>
+		void PreviousToJson(Json& json);
+
+		/// <summary>
+		/// ゲーム再生直前の情報をJson型から取得する
+		/// </summary>
+		/// <param name="[in] json"> 情報を格納しているJson型 </param>
+		void PreviousFromJson(const Json& json);
+
 	private: // --------------------- ゲームオブジェクト ---------------------
 
 		// ゲームオブジェクト管理用配列
@@ -180,6 +208,9 @@ namespace PokarinEngine
 
 		// 保存先のフォルダ
 		const std::string folderName = "My project/Assets/Scenes/";
+
+		// ゲーム再生直前のオブジェクト数
+		size_t previousObjectCount = 0;
 	};
 
 } // namespace PokarinEngine

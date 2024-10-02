@@ -5,6 +5,8 @@
 
 #include "ImGui/imgui.h"
 
+#include "Json/Json.h"
+
 #include "../../GameObject.h"
 
 namespace PokarinEngine
@@ -40,7 +42,7 @@ namespace PokarinEngine
 		// --------------------------------------
 		// ‚¿å‚ÌÀ•W•ÏŠ·s—ñ‚ğ•ª‰ğ‚·‚é
 		// --------------------------------------
-		
+
 		// ‚¿å‚Å‚ ‚éƒQ[ƒ€ƒIƒuƒWƒFƒNƒg‚ÌÀ•WE‰ñ“]EŠg‘å—¦
 		TransformPtr transform = GetOwnerObject().transform;
 
@@ -70,7 +72,7 @@ namespace PokarinEngine
 		const Vector3 scale = Matrix4x4::Scale(transformMatrix);
 
 		// X,Y,Z‚ÌŠg‘å—¦‚ÅÅ‘å‚Ì’l
-		const float maxScale = std::max({ scale.x, scale.y, scale.z });
+		const float maxScale = std::max(std::max(scale.x, scale.y), scale.z);
 
 		// Šg‘å—¦‚ğ”½‰f‚µ‚½”¼Œa
 		const float radius = sphere.radius * maxScale;
@@ -96,7 +98,33 @@ namespace PokarinEngine
 		// ’†SÀ•W
 		DragText("Center", sphere.center);
 
-		// ‘å‚«‚³
-		ImGui::DragFloat("Radius##SphereCollider", &sphere.radius);
+		// ”¼Œa
+		DragText("Radius", sphere.radius);
+	}
+
+	/// <summary>
+	/// ƒRƒ“ƒ|[ƒlƒ“ƒg‚Ìî•ñ‚ğJsonŒ^‚ÉŠi”[‚·‚é
+	/// </summary>
+	/// <param name="[out] json"> î•ñ‚ğŠi”[‚·‚éJsonŒ^ </param>
+	void SphereCollider::ColliderToJson(Json& json) const
+	{
+		// ’†SÀ•W‚ğŠi”[
+		json["Center"] = sphere.center;
+
+		// ”¼Œa‚ğŠi”[
+		json["Radius"] = sphere.radius;
+	}
+
+	/// <summary>
+	/// ƒRƒ“ƒ|[ƒlƒ“ƒg‚Ìî•ñ‚ğJsonŒ^‚©‚çæ“¾‚·‚é
+	/// </summary>
+	/// <param name="[in] json"> î•ñ‚ğŠi”[‚µ‚Ä‚¢‚éJsonŒ^ </param>
+	void SphereCollider::ColliderFromJson(const Json& json)
+	{
+		// ’†SÀ•W‚ğæ“¾
+		json["Center"].get_to(sphere.center);
+		
+		// ”¼Œa‚ğæ“¾
+		json["Radius"].get_to(sphere.radius);
 	}
 }

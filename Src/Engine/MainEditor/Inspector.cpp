@@ -18,7 +18,7 @@ namespace PokarinEngine
 	void Inspector::RenderName()
 	{
 		// 選択中オブジェクトの名前
-		std::string selectObjectName = selectObject->name;
+		std::string selectObjectName = selectObject->GetName();
 
 		// オブジェクト名を入力するテキスト欄
 		// ##でテキストを非表示する
@@ -27,14 +27,14 @@ namespace PokarinEngine
 		{
 			// 新しい名前が入力されている
 			if (selectObjectName[0] != '\0' &&
-				selectObjectName != selectObject->name)
+				selectObjectName != selectObject->GetName())
 			{
 				// 終端位置
 				size_t endLine = selectObjectName.find_first_of('\0');
 
 				// 名前を変更
 				// 余計な空白が入ると困るので、最初の\0までを渡す
-				selectObject->name = selectObjectName.substr(0, endLine);
+				selectObject->SetName(selectObjectName.substr(0, endLine));
 			}
 		}
 	}

@@ -27,42 +27,6 @@
 namespace PokarinEngine
 {
 	/// <summary>
-	/// メインメニュー
-	/// </summary>
-	void MainEditor::MainMenu()
-	{
-		// メインメニュー作成
-		ImGui::BeginMainMenuBar();
-		{
-			// ファイル関係のメニュー
-			if (ImGui::BeginMenu("File"))
-			{
-				if (ImGui::MenuItem("Save"))
-				{
-					currentScene->SaveScene();
-				}
-
-				ImGui::EndMenu();
-			}
-			
-			// ファイル関係のメニュー
-			if (ImGui::BeginMenu("File"))
-			{
-				if (ImGui::MenuItem("Load"))
-				{
-					currentScene->LoadScene();
-				}
-
-				ImGui::EndMenu();
-			}
-
-			ImGui::EndMainMenuBar();
-		}
-	}
-
-#pragma region MainEditor
-
-	/// <summary>
 	/// デストラクタ
 	/// </summary>
 	MainEditor::~MainEditor()
@@ -182,10 +146,10 @@ namespace PokarinEngine
 		// ウィンドウの背景色を設定
 		// -------------------------------------
 
-		PushColor(ImGuiCol_::ImGuiCol_WindowBg, Color::gray);
-		PushColor(ImGuiCol_::ImGuiCol_Tab, Color::gray);
-		PushColor(ImGuiCol_::ImGuiCol_TabUnfocusedActive, Color::gray);
-		PushColor(ImGuiCol_::ImGuiCol_TitleBgActive, Color::black);
+		ImGuiHelper::PushColor(ImGuiCol_::ImGuiCol_WindowBg, Color::gray);
+		ImGuiHelper::PushColor(ImGuiCol_::ImGuiCol_Tab, Color::gray);
+		ImGuiHelper::PushColor(ImGuiCol_::ImGuiCol_TabUnfocusedActive, Color::gray);
+		ImGuiHelper::PushColor(ImGuiCol_::ImGuiCol_TitleBgActive, Color::black);
 
 		// --------------------------------------------------------------
 		// 画面全体でウィンドウをドッキングできるようにする
@@ -197,7 +161,7 @@ namespace PokarinEngine
 		// メインメニュー
 		// ------------------------------
 
-		MainMenu();
+		mainMenu.Update(*currentScene);
 
 		// -------------------------------------------
 		// エディタ内ウィンドウ・ビューの更新
@@ -234,7 +198,7 @@ namespace PokarinEngine
 		// 色関係の設定を終了
 		// ------------------------------------
 
-		PopColor();
+		ImGuiHelper::PopColor();
 	}
 
 	/// <summary>
@@ -252,39 +216,5 @@ namespace PokarinEngine
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	}
-
-#pragma endregion
-
-#pragma region ImGuiColor
-
-	/// <summary>
-	/// ImGuiの色設定を開始する
-	/// </summary>
-	/// <param name="[in] style"> 色を設定したい項目 </param>
-	/// <param name="[in] styleColor"> 設定する色 </param>
-	void MainEditor::PushColor(ImGuiCol style, const Color& styleColor)
-	{
-		ImVec4 color = { styleColor.r,styleColor.g,styleColor.b,styleColor.a };
-
-		// 色設定を開始
-		ImGui::PushStyleColor(style, color);
-
-		// 設定数をカウント
-		pushColorCount++;
-	}
-
-	/// <summary>
-	/// ImGuiの色設定を終了する
-	/// </summary>
-	void MainEditor::PopColor()
-	{
-		// 色設定を終了
-		ImGui::PopStyleColor(pushColorCount);
-
-		// 設定数をリセット
-		pushColorCount = 0;
-	}
-
-#pragma endregion
 
 } // namespace PokarinEngine

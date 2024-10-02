@@ -172,6 +172,15 @@ namespace PokarinEngine
 	}
 
 	/// <summary>
+	/// ウィンドウを閉じたときの処理
+	/// </summary>
+	void NodeEditorManager::ClosedWindow()
+	{
+		// 開いているノードエディタを全て閉じる
+		openEditorList.clear();
+	}
+
+	/// <summary>
 	/// ノードエディタを開く
 	/// </summary>
 	/// <param name="[in] nodeEditor"> ノードエディタ </param>
@@ -202,14 +211,6 @@ namespace PokarinEngine
 	/// </summary>
 	void NodeEditorManager::UpdateNodeEditor()
 	{
-		// ノードエディタ用ウィンドウが閉じられたら
-		// 全てのノードエディタウィンドウを閉じる
-		if (Window::IsClosed(WindowID::NodeEditor))
-		{
-			openEditorList.clear();
-			return;
-		}
-
 		// ------------------------------------
 		// ノードエディタを更新
 		// ------------------------------------

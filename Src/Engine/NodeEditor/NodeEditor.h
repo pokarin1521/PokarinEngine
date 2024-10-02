@@ -123,6 +123,15 @@ namespace PokarinEngine
 		}
 
 		/// <summary>
+		/// 持ち主であるゲームオブジェクトを取得する
+		/// </summary>
+		/// <returns> 持ち主であるゲームオブジェクト </returns>
+		GameObject& GetOwnerObject()
+		{
+			return *ownerObject;
+		}
+
+		/// <summary>
 		/// 名前を取得する
 		/// </summary>
 		/// <returns> ノードエディタの名前 </returns>
@@ -131,14 +140,12 @@ namespace PokarinEngine
 			return name.c_str();
 		}
 
+	public: // -------------------------- 名前の更新 ---------------------------
+
 		/// <summary>
-		/// 持ち主であるゲームオブジェクトを取得する
+		/// ノードエディタの名前を更新する(ゲームオブジェクトの名前を変更するときに呼び出す)
 		/// </summary>
-		/// <returns> 持ち主であるゲームオブジェクト </returns>
-		GameObject& GetOwnerObject()
-		{
-			return *ownerObject;
-		}
+		void UpdateName();
 
 	public: // -------------------------- 状態の制御 ---------------------------
 
@@ -230,7 +237,7 @@ namespace PokarinEngine
 		{
 			// ノード
 			auto node = std::make_shared<T>();
-			
+
 			// 指定された識別番号での追加を試みて
 			// 実際に設定された識別番号を代入する
 			nodeID = AddNode(node, nodeID);

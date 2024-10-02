@@ -137,4 +137,20 @@ namespace PokarinEngine
 		// アイコン用フォントを追加
 		io.Fonts->AddFontFromFileTTF(iconFontFile, fontSize, &fontConfig, icons_ranges);
 	}
+
+	/// <summary>
+	/// bool型をチェックボックスで表示する
+	/// </summary>
+	/// <param name="[in] name"> 値の名前 </param>
+	/// <param name="[in] id_string"> 識別番号(文字列) </param>
+	/// <param name="[in,out] data"> 表示する値 </param>
+	void ImGuiHelper::CheckBox(const std::string& name, const std::string& id_string, bool& data)
+	{
+		// 識別名
+		// 番号は非表示にしたいので「##」を付ける
+		const std::string label = name + "##" + id_string;
+
+		// チェックボックスで表示する
+		ImGui::Checkbox(label.c_str(), &data);
+	}
 }

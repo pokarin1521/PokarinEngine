@@ -4,12 +4,21 @@
 #ifndef POKARINENGINE_COLOR_H_INCLUDED
 #define POKARINENGINE_COLOR_H_INCLUDED
 
-#include "ImGui/imgui.h"
+// --------------------------
+// 前方宣言
+// --------------------------
 
-#include "Math/Vector.h"
+struct ImVec4;
 
 namespace PokarinEngine
 {
+	// ------------------------
+	// 前方宣言
+	// ------------------------
+
+	struct Vector3;
+	struct Vector4;
+
 	/// <summary>
 	/// 色
 	/// </summary>
@@ -28,8 +37,7 @@ namespace PokarinEngine
 		/// <summary>
 		/// Vector4型で初期化するコンストラクタ
 		/// </summary>
-		constexpr Color(const Vector4& v)
-			: r(v.x), g(v.y), b(v.z), a(v.w) {}
+		Color(const Vector4& v);
 
 		/// <summary>
 		/// float型で初期化するコンストラクタ
@@ -40,13 +48,13 @@ namespace PokarinEngine
 	public: // ------------------------- 変換 -------------------------
 
 		// ImVec4型に変換
-		operator ImVec4() const { return ImVec4(r, g, b, a); }
-
-		// Vector4型に変換
-		operator Vector4() const { return Vector4(r, g, b, a); }
+		operator ImVec4() const;
 
 		// Vector3型に変換
-		operator Vector3() const { return Vector3(r, g, b); }
+		operator Vector3() const;
+
+		// Vector4型に変換		 
+		operator Vector4() const;
 
 	public: // ---------------------- 添字演算子 ----------------------
 
@@ -58,7 +66,7 @@ namespace PokarinEngine
 		// 赤・青・緑・透明度
 		// 「0.0 ～ 1.0」で指定
 		float r = 0, g = 0, b = 0, a = 0;
-		 
+
 	public: // ------------------------ 基本色 ------------------------
 
 		// 白色
@@ -85,8 +93,8 @@ namespace PokarinEngine
 	inline const Color Color::black = { 0, 0, 0, 1.0f };
 
 	// 灰色
-	inline const Color Color::gray = { 0.2f, 0.2f, 0.2f, 1.0f };	
-	
+	inline const Color Color::gray = { 0.2f, 0.2f, 0.2f, 1.0f };
+
 	// 緑色
 	inline const Color Color::green = { 0.0f, 1.0f, 0.0f, 1.0f };
 

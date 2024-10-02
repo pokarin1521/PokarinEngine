@@ -108,6 +108,7 @@ namespace PokarinEngine
 	/// </summary>
 	void Light::InfoEditor()
 	{
+		// 現状、変更の必要がないので保留
 		ImGui::Text("DirectionalLight");
 	}
 
@@ -117,7 +118,7 @@ namespace PokarinEngine
 	/// <param name="[out] json"> 情報を格納するJson型 </param>
 	void Light::ToJson(Json& json) const
 	{
-
+		// 現状、変更ができないので格納する情報がない
 	}
 
 	/// <summary>
@@ -126,7 +127,7 @@ namespace PokarinEngine
 	/// <param name="[in] json"> 情報を格納しているJson型 </param>
 	void Light::FromJson(const Json& json)
 	{
-
+		// 現状、変更ができないので取得する情報がない
 	}
 
 } // namespace PokarinEngine

@@ -23,6 +23,189 @@
 
 namespace PokarinEngine
 {
+#pragma region GameObject
+
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <param name="[in] scene"> 持ち主であるシーン </param>
+	/// <param name="[in] objectID"> 識別番号 </param>
+	/// <param name="[in] objectName"> 名前 </param>
+	/// <param name="[in] position"> 位置 </param>
+	/// <param name="[in] rotation"> 回転角度 </param>
+	void GameObject::Initialize(Scene& scene, int objectID, const std::string& objectName,
+		const Vector3& position, const Vector3& rotation)
+	{
+		// ----------------------------------
+		// 情報の設定
+		// ----------------------------------
+
+		// 持ち主であるシーンを登録
+		ownerScene = &scene;
+
+		// 識別番号を設定
+		id = objectID;
+
+		// 名前を設定
+		name = objectName;
+
+		// スタティックメッシュがあるなら固有マテリアルを設定
+		if (staticMesh)
+		{
+			// 共有マテリアルのコピーを
+			// 固有マテリアルとして設定する
+			materialList = staticMesh->CopyMaterialList();
+		}
+
+		// ------------------------------------
+		// コンポーネントの追加
+		// ------------------------------------
+
+		// 位置などの制御用コンポーネントを追加
+		if (!transform)
+		{
+			transform = AddComponent<Transform>();
+		}
+
+		// ノードエディタを作成
+		if (!nodeEditor)
+		{
+			nodeEditor = std::make_shared<NodeEditor>(*this);
+		}
+
+		// --------------------------------------
+		// 位置・回転角度の設定
+		// --------------------------------------
+
+		transform->position = position;
+		transform->rotation = rotation;
+	}
+
+	/// <summary>
+	/// ゲーム再生時の初期化
+	/// </summary>
+	void GameObject::Initialize_PlayGame()
+	{
+		// コンポーネントのゲーム再生時の初期化処理を実行する
+		for (auto& component : componentList)
+		{
+			component->Initialize_PlayGame();
+		}
+	}
+
+	/// <summary>
+	/// 更新
+	/// </summary>
+	/// <param name="[in] isPlayGame"> 作成中のゲームが再生中ならtrue </param>
+	void GameObject::Update(bool isPlayGame)
+	{
+		// コンポーネントの更新
+		UpdateComponent(isPlayGame);
+
+		// ゲームが再生されたら実行する
+		if (isPlayGame)
+		{
+			// ノードエディタで設定したノードの実行
+			nodeEditor->Run();
+		}
+	}
+
+	/// <summary>
+	/// 削除
+	/// </summary>
+	void GameObject::OnDestroy()
+	{
+		// コンポーネントを削除
+		for (auto& component : componentList)
+		{
+			component->OnDestroy();
+		}
+
+		// ノードエディタを閉じる
+		NodeEditorManager::CloseNodeEditor(nodeEditor);
+	}
+
+	/// <summary>
+	/// 名前を設定する
+	/// </summary>
+	/// <param name="[in] newName"> 新しい名前 </param>
+	void GameObject::SetName(const std::string& newName)
+	{
+		// 新しい名前を設定する
+		name = newName;
+
+		// 新しい名前に対応できるように、ノードエディタの名前を更新する
+		nodeEditor->UpdateName();
+	}
+
+#pragma endregion
+
+#pragma region Component
+
+	/// <summary>
+	/// ゲームオブジェクトにあるコンポーネントを更新する
+	/// </summary>
+	/// <param name="[in] isPlayGame"> 作成中のゲームが再生中ならtrue </param>
+	void GameObject::UpdateComponent(bool isPlayGame)
+	{
+		// 前回更新時にゲームが再生されていたならtrue
+		static bool isPlayGame_previous = false;
+
+		// コンポーネントのStartを１度だけ実行
+		// 途中で追加されることを想定して、Update内で実行
+		for (auto& component : componentList)
+		{
+			component->Initialize();
+		}
+
+		// コンポーネントを更新
+		for (auto& component : componentList)
+		{
+			// 更新
+			component->Update();
+
+			// ゲーム再生中でないので
+			// ゲーム再生中の更新は行わない
+			if (!isPlayGame)
+			{
+				continue;
+			}
+
+			// ゲーム再生中の更新
+			component->Update_PlayGame();
+		}
+
+		// ゲームの再生状況を更新
+		isPlayGame_previous = isPlayGame;
+
+		// コンポーネントの削除を確定させる
+		RemoveDestroyedComponent();
+	}
+
+	/// <summary>
+	/// コライダーを描画する
+	/// </summary>
+	void GameObject::DrawCollider() const
+	{
+		// コライダーを描画する
+		for (auto& collider : colliderList)
+		{
+			collider->Draw();
+		}
+	}
+
+	/// <summary>
+	/// コンポーネントをエディタに表示する
+	/// </summary>
+	void GameObject::RenderComponent()
+	{
+		// コンポーネントを表示
+		for (auto& component : componentList)
+		{
+			component->RenderInfo();
+		}
+	}
+
 	/// <summary>
 	/// 削除予定(削除処理が未実行)のコンポーネントを完全に削除する
 	/// </summary>
@@ -83,146 +266,27 @@ namespace PokarinEngine
 	}
 
 	/// <summary>
-	/// 初期化
+	/// コンポーネント識別番号を取得する
 	/// </summary>
-	/// <param name="[in] scene"> 持ち主であるシーン </param>
-	/// <param name="[in] objectID"> 識別番号 </param>
-	/// <param name="[in] objectName"> 名前 </param>
-	/// <param name="[in] position"> 位置 </param>
-	/// <param name="[in] rotation"> 回転角度 </param>
-	void GameObject::Initialize(Scene& scene, int objectID, const std::string& objectName,
-		const Vector3& position, const Vector3& rotation)
+	/// <returns> 重複しない識別番号 </returns>
+	int GameObject::GetSingleComponentID()
 	{
-		// ----------------------------------
-		// 情報の設定
-		// ----------------------------------
+		// コンポーネント識別番号
+		int componentID = Random::Range(INT_MIN, INT_MAX);
 
-		// 持ち主であるシーンを登録
-		ownerScene = &scene;
-
-		// 識別番号を設定
-		id = objectID;
-
-		// 名前を設定
-		name = objectName;
-
-		// スタティックメッシュがあるなら固有マテリアルを設定
-		if (staticMesh)
+		// コンポーネント識別番号を追加
+		// 重複している場合は、再取得する
+		while (!componentIDList.emplace(componentID).second)
 		{
-			// 共有マテリアルのコピーを
-			// 固有マテリアルとして設定する
-			materialList = staticMesh->CopyMaterialList();
+			componentID = Random::Range(INT_MIN, INT_MAX);
 		}
 
-		// ------------------------------------
-		// コンポーネントの追加
-		// ------------------------------------
-
-		// 位置などの制御用コンポーネントを追加
-		if (!transform)
-		{
-			transform = AddComponent<Transform>();
-		}
-
-		// ノードエディタを作成
-		if (!nodeEditor)
-		{
-			nodeEditor = std::make_shared<NodeEditor>(*this);
-		}
-
-		// --------------------------------------
-		// 位置・回転角度の設定
-		// --------------------------------------
-
-		transform->position = position;
-		transform->rotation = rotation;
+		return componentID;
 	}
 
-	/// <summary>
-	/// 更新
-	/// </summary>
-	/// <param name="[in] isPlayGame"> 作成中のゲームが再生中ならtrue </param>
-	void GameObject::Update(bool isPlayGame)
-	{
-		// コンポーネントの更新
-		UpdateComponent(isPlayGame);
+#pragma endregion
 
-		// ゲームが再生されたら実行する
-		if (isPlayGame)
-		{
-			// ノードエディタで設定したノードの実行
-			nodeEditor->Run();
-		}
-	}
-
-	/// <summary>
-	/// ゲームオブジェクトにあるコンポーネントを更新する
-	/// </summary>
-	/// <param name="[in] isPlayGame"> 作成中のゲームが再生中ならtrue </param>
-	void GameObject::UpdateComponent(bool isPlayGame)
-	{
-		// コンポーネントのStartを１度だけ実行
-		// 途中で追加されることを想定して、Update内で実行
-		for (auto& component : componentList)
-		{
-			component->Initialize();
-		}
-
-		// コンポーネントを更新
-		for (auto& component : componentList)
-		{
-			// 更新
-			component->Update();
-
-			// ゲーム再生中の更新処理
-			if (isPlayGame)
-			{
-				component->Update_PlayGame();
-			}
-		}
-
-		// コンポーネントの削除を確定させる
-		RemoveDestroyedComponent();
-	}
-
-	/// <summary>
-	/// 削除
-	/// </summary>
-	void GameObject::OnDestroy()
-	{
-		// コンポーネントを削除
-		for (auto& component : componentList)
-		{
-			component->OnDestroy();
-		}
-
-		// ノードエディタを閉じる
-		NodeEditorManager::CloseNodeEditor(nodeEditor);
-	}
-
-	/// <summary>
-	/// コライダーを描画する
-	/// </summary>
-	void GameObject::DrawCollider() const
-	{
-		// コライダーを描画する
-		for (auto& collider : colliderList)
-		{
-			collider->Draw();
-		}
-	}
-
-	/// <summary>
-	/// コンポーネントをエディタに表示する
-	/// </summary>
-	void GameObject::RenderComponent()
-	{
-		// コンポーネントを表示
-		for (auto& component : componentList)
-		{
-			component->RenderInfo();
-		}
-	}
+#pragma region NodeEditor
 
 	/// <summary>
 	/// ノードエディタを開く
@@ -231,6 +295,10 @@ namespace PokarinEngine
 	{
 		NodeEditorManager::OpenNodeEditor(nodeEditor);
 	}
+
+#pragma endregion
+
+#pragma region Json
 
 	/// <summary>
 	/// ゲームオブジェクトの情報をJson型に格納する
@@ -301,7 +369,7 @@ namespace PokarinEngine
 		// --------------------------------------------------
 
 		// 名前
-		json["Name"].get_to(name);
+		SetName(json["Name"].get<std::string>());
 
 		// スタティックメッシュのファイル名
 		const auto fileName = json["StaticMeshFile"].get<std::string>();
@@ -334,22 +402,28 @@ namespace PokarinEngine
 	}
 
 	/// <summary>
-	/// コンポーネント識別番号を取得する
+	/// ゲーム再生直前の情報をJson型から取得する
 	/// </summary>
-	/// <returns> 重複しない識別番号 </returns>
-	int GameObject::GetSingleComponentID()
+	/// <param name="[in] json"> 情報を格納しているJson型 </param>
+	void GameObject::PreviousFromJson(const Json& json)
 	{
-		// コンポーネント識別番号
-		int componentID = Random::Range(INT_MIN, INT_MAX);
+		// -------------------------------------------
+		// ゲームオブジェクトの情報を取得する
+		// -------------------------------------------
 
-		// コンポーネント識別番号を追加
-		// 重複している場合は、再取得する
-		while (!componentIDList.emplace(componentID).second)
+		// 名前
+		SetName(json["Name"].get<std::string>());
+
+		// -------------------------------------------
+		// コンポーネントの情報を取得する
+		// -------------------------------------------
+
+		for (auto& component : componentList)
 		{
-			componentID = Random::Range(INT_MIN, INT_MAX);
+			component->FromJson(json[component->GetID_String()]);
 		}
-
-		return componentID;
 	}
 
-} // namespace PokarinEngine
+#pragma endregion
+
+}

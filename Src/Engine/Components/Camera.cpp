@@ -98,7 +98,8 @@ namespace PokarinEngine
 	/// </summary>
 	void Camera::InfoEditor()
 	{
-		ImGui::Text("Camera Information");
+		// 現状、変更の必要がないので保留
+		ImGui::Text("Camera");
 	}
 
 	/// <summary>
@@ -107,7 +108,7 @@ namespace PokarinEngine
 	/// <param name="[out] json"> 情報を格納するJson型 </param>
 	void Camera::ToJson(Json& json) const
 	{
-
+		// 現状、変更ができないので格納することがない
 	}
 
 	/// <summary>
@@ -116,6 +117,6 @@ namespace PokarinEngine
 	/// <param name="[in] json"> 情報を格納しているJson型 </param>
 	void Camera::FromJson(const Json& json)
 	{
-
+		// 現状、変更ができないので取得することがない
 	}
 }

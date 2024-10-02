@@ -3,6 +3,8 @@
 */
 #include "Vector.h"
 
+#include "ImGui/imgui.h"
+
 #include "Json/Json.h"
 
 namespace PokarinEngine
@@ -33,7 +35,47 @@ namespace PokarinEngine
 
 #pragma endregion
 
-#pragma region Json
+#pragma region Vector2
+
+	/// <summary>
+	/// ImVec2Œ^‚Å‰Šú‰»‚·‚éƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	/// </summary>
+	/// <param name="v"></param>
+	Vector2::Vector2(const ImVec2& v)
+		:x(v.x), y(v.y)
+	{
+
+	}
+
+	/// <summary>
+	/// ImVec2Œ^‚É•ÏŠ·
+	/// </summary>
+	Vector2::operator ImVec2() const
+	{
+		return ImVec2(x, y);
+	}
+
+	/// <summary>
+	/// Vector2Œ^‚©‚çJsonŒ^‚Ö‚Ì•ÏŠ·
+	/// </summary>
+	void to_json(Json& json, const Vector2& v)
+	{
+		json["x"] = v.x;
+		json["y"] = v.y;
+	}
+
+	/// <summary>
+	/// JsonŒ^‚©‚çVector2Œ^‚Ö‚Ì•ÏŠ·
+	/// </summary>
+	void from_json(const Json& json, Vector2& v)
+	{
+		json["x"].get_to(v.x);
+		json["y"].get_to(v.y);
+	}
+
+#pragma endregion
+
+#pragma region Vector3
 
 	/// <summary>
 	/// Vector3Œ^‚©‚çJsonŒ^‚Ö‚Ì•ÏŠ·

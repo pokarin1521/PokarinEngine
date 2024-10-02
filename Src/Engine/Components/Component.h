@@ -70,6 +70,11 @@ namespace PokarinEngine
 		}
 
 		/// <summary>
+		/// 作成中のゲーム再生時の初期化処理
+		/// </summary>
+		virtual void Initialize_PlayGame() {}
+
+		/// <summary>
 		/// 毎フレーム呼び出される
 		/// </summary>
 		virtual void Update() {}
@@ -78,6 +83,11 @@ namespace PokarinEngine
 		/// 作成中のゲームが再生中の時に毎フレーム呼び出される
 		/// </summary>
 		virtual void Update_PlayGame() {}
+
+		/// <summary>
+		/// 作成中のゲーム停止時の終了処理
+		/// </summary>
+		virtual void Finalize_StopGame() {}
 
 		/// <summary>
 		/// ゲームオブジェクトが削除されるときに呼び出される
@@ -169,6 +179,13 @@ namespace PokarinEngine
 	protected: // --------------------------- エディタ用 -----------------------------
 
 		/// <summary>
+		/// float型の値をドラッグ操作可能なテキストでエディタに表示する
+		/// </summary>
+		/// <param name="[in] name"> 値の名前 </param>
+		/// <param name="[in, out] data"> 値 </param>
+		void DragText(const std::string& name, float& data);
+
+		/// <summary>
 		/// Vector3型の値をドラッグ操作可能なテキストでエディタに表示する
 		/// </summary>
 		/// <param name="[in] name"> 値の名前 </param>
@@ -220,6 +237,14 @@ namespace PokarinEngine
 
 		// 識別番号
 		int id = 0;
+
+	private: // ----------------------------- エディタ用 ------------------------------
+
+		// テキストの幅
+		const float textWidth = 90.0f;
+
+		// テキストのX位置
+		const float textPosX = 90.0f;
 	};
 
 } // namespace PokarinEngine

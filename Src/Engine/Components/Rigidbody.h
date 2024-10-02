@@ -37,6 +37,11 @@ namespace PokarinEngine
 	public: // -------------- コンポーネント制御 ---------------
 
 		/// <summary>
+		/// ゲーム再生時の初期化処理
+		/// </summary>
+		void Initialize_PlayGame() override;
+
+		/// <summary>
 		/// ゲーム再生中の更新
 		/// </summary>
 		void Update_PlayGame() override;
@@ -52,15 +57,22 @@ namespace PokarinEngine
 		/// コンポーネントの情報をJson型に格納する
 		/// </summary>
 		/// <param name="[out] json"> 情報を格納するJson型 </param>
-		void ToJson(Json& json) const override {}
+		void ToJson(Json& json) const override;
 
 		/// <summary>
 		/// コンポーネントの情報をJson型から取得する
 		/// </summary>
 		/// <param name="[in] json"> 情報を格納しているJson型 </param>
-		void FromJson(const Json& json) override {}
+		void FromJson(const Json& json) override;
 
-	public: // -------------------- 情報 -----------------------
+	private: // --------------- エディタ用 -----------------
+
+		/// <summary>
+		/// 情報を編集できるように表示する
+		/// </summary>
+		void InfoEditor() override;
+
+	private: // ------------------ 情報 --------------------
 
 		// 重力加速度
 		const float gravity = 9.81f;
@@ -71,12 +83,8 @@ namespace PokarinEngine
 		// 速度
 		Vector3 velocity = { 0, 0, 0 };
 
-	private: // --------------- エディタ用 -----------------
-
-		/// <summary>
-		/// 情報を編集できるように表示する
-		/// </summary>
-		void InfoEditor() override {}
+		// 重力を有効にするならtrue
+		bool useGravity = true;
 	};
 
 } // namespace PokarinEngine

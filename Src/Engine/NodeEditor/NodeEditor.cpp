@@ -20,11 +20,10 @@ namespace PokarinEngine
 	/// コンストラクタ
 	/// </summary>
 	NodeEditor::NodeEditor(GameObject& gameObject)
-		: ownerObject(&gameObject), name(gameObject.name)
+		: ownerObject(&gameObject)
 	{
-		// ノードエディタの名前を設定
-		// 分かりやすいように「持ち主の名前 + #持ち主の識別番号」にする
-		name += " #" + std::to_string(gameObject.GetID());
+		// 持ち主であるゲームオブジェクトが設定されたので、名前を更新する
+		UpdateName();
 
 		// コンテキスト作成
 		nodeEditorContext = ImNodes::EditorContextCreate();
@@ -115,11 +114,28 @@ namespace PokarinEngine
 	}
 
 	/// <summary>
+	/// ノードエディタの名前を更新する(ゲームオブジェクトの名前を変更するときに呼び出す)
+	/// </summary>
+	void NodeEditor::UpdateName()
+	{
+		// ノードエディタの名前を設定
+		// 分かりやすいように「持ち主の名前 + #持ち主の識別番号」にする
+		name = ownerObject->GetName() + " #" + std::to_string(ownerObject->GetID());
+	}
+
+	/// <summary>
 	/// 情報をJson型に格納する
 	/// </summary>
 	/// <param name="[out] json"> 情報を格納するJson型 </param>
 	void NodeEditor::ToJson(Json& json) const
 	{
+		// -------------------------------------------------------
+		// 使用するノードエディタコンテキストを設定する
+		// -------------------------------------------------------
+		
+		// ノード位置を取得できるように、使用するコンテキストを設定する
+		ImNodes::EditorContextSet(nodeEditorContext);
+
 		// ---------------------------------
 		// ノード情報を格納する
 		// ---------------------------------
@@ -128,13 +144,17 @@ namespace PokarinEngine
 		std::vector<std::string> nodeIDList_string;
 		nodeIDList_string.reserve(nodeList.size());
 
-		for (const auto& [noeID, node] : nodeList)
+		for (const auto& [nodeID, node] : nodeList)
 		{
 			// ノード識別番号(文字列)
 			const std::string id_string = node->GetID_String();
 
 			// ノードの名前を格納
 			json[id_string]["Name"] = node->GetName();
+
+			// ノードの位置を格納
+			Vector2 nodePos = ImNodes::GetNodeGridSpacePos(nodeID);
+			json[id_string]["Position"] = nodePos;
 
 			// ノード別の情報を格納
 			node->ToJson(json[id_string]);
@@ -166,6 +186,13 @@ namespace PokarinEngine
 
 		Clear();
 
+		// -------------------------------------------------------
+		// 使用するノードエディタコンテキストを設定する
+		// -------------------------------------------------------
+
+		// ノード位置を設定できるように、使用するコンテキストを設定する
+		ImNodes::EditorContextSet(nodeEditorContext);
+
 		// ----------------------------------
 		// ノードの情報を取得する
 		// ----------------------------------
@@ -175,15 +202,22 @@ namespace PokarinEngine
 
 		for (std::string id_string : nodeIDList_string)
 		{
+			// ノード識別番号
+			int nodeID = std::stoi(id_string);
+
 			// ノードの名前
 			const auto nodeName = json[id_string]["Name"].get<std::string>();
 
 			// 名前に対応したノードを追加する
 			// ピン情報の取得ができるように格納時の識別番号をそのまま使う
-			NodePtr node = createNodeFuncList[nodeName](*this, nodeName, std::stoi(id_string));
+			NodePtr node = createNodeFuncList[nodeName](*this, nodeName, nodeID);
 
 			// 追加したノードの情報をJson型から取得する
 			node->FromJson(json[id_string]);
+
+			// ノードの位置を取得
+			Vector2 nodePos = json[id_string]["Position"].get<Vector2>();
+			ImNodes::SetNodeGridSpacePos(nodeID, nodePos);
 		}
 
 		// -----------------------------------

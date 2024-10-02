@@ -82,13 +82,27 @@ namespace PokarinEngine
 		/// <returns> 座標変換したコライダー </returns>
 		virtual ColliderPtr GetTransformedCollider() const = 0;
 
-	public: // ------------------ 移動 -------------------
+	public: // ------------------- 移動 ------------------
 
 		/// <summary>
 		/// コライダーを移動させる
 		/// </summary>
 		/// <param name="[in] translate"> 移動量 </param> 
 		virtual void AddPosition(const Vector3& translate) = 0;
+
+	public: // ------------------- Json -------------------
+
+		/// <summary>
+		/// コンポーネントの情報をJson型に格納する
+		/// </summary>
+		/// <param name="[out] json"> 情報を格納するJson型 </param>
+		void ToJson(Json& json) const override final;
+
+		/// <summary>
+		/// コンポーネントの情報をJson型から取得する
+		/// </summary>
+		/// <param name="[in] json"> 情報を格納しているJson型 </param>
+		void FromJson(const Json& json) override final;
 
 	private: // ----------------- 初期化 ------------------
 
@@ -116,6 +130,20 @@ namespace PokarinEngine
 		/// コライダー別の情報を編集できるように表示する
 		/// </summary>
 		virtual void ColliderInfoEditor() = 0;
+
+	private: // ------------------ Json -------------------
+
+		/// <summary>
+		/// コンポーネントの情報をJson型に格納する
+		/// </summary>
+		/// <param name="[out] json"> 情報を格納するJson型 </param>
+		virtual void ColliderToJson(Json& json) const = 0;
+
+		/// <summary>
+		/// コンポーネントの情報をJson型から取得する
+		/// </summary>
+		/// <param name="[in] json"> 情報を格納しているJson型 </param>
+		virtual void ColliderFromJson(const Json& json) = 0;
 
 	private: // ------------ コライダーの情報 -------------
 
