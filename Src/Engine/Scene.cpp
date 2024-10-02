@@ -5,6 +5,8 @@
 
 #include "Json/Json.h"
 
+#include "JsonFile.h"
+
 #include "GameObject.h"
 #include "Random.h"
 #include "Debug.h"
@@ -133,11 +135,38 @@ namespace PokarinEngine
 #pragma region Update
 
 	/// <summary>
-	/// ゲームオブジェクトの状態を更新する
+	/// 更新
 	/// </summary>
 	/// <param name="[in] isPlayGame"> ゲーム再生中ならtrue </param>
 	void Scene::Update(bool isPlayGame)
 	{
+		// ゲーム再生直前の情報格納用
+		static Json previousSceneData;
+
+		// 前回更新時にゲームが再生されていたならtrue
+		static bool isPlayGame_previous = false;
+
+		// 今回の更新でゲーム再生が始まる場合
+		if (!isPlayGame_previous && isPlayGame)
+		{
+			// ゲーム再生直前の情報を格納する
+			PreviousToJson(previousSceneData);
+
+			// ゲームオブジェクトの
+			// ゲーム再生時の初期化処理を実行する
+			for (auto& gameObject : gameObjectList)
+			{
+				gameObject->Initialize_PlayGame();
+			}
+		}
+
+		// 今回の更新でゲーム再生が終わる場合
+		if (isPlayGame_previous && !isPlayGame)
+		{
+			// ゲーム再生直前の情報を取得する
+			PreviousFromJson(previousSceneData);
+		}
+
 		// ゲームオブジェクトを更新
 		for (const auto& gameObject : gameObjectList)
 		{
@@ -156,10 +185,12 @@ namespace PokarinEngine
 			Collision::GameObjectCollision(gameObjectList);
 		}
 
+		// ゲームの再生状況を更新
+		isPlayGame_previous = isPlayGame;
+
 		// ゲームオブジェクトの削除状態を確定する
 		RemoveDestroyedGameObject();
-
-	} // Update
+	}
 
 #pragma endregion
 
@@ -442,30 +473,11 @@ namespace PokarinEngine
 		// シーンの情報をJson型に格納する
 		// ---------------------------------------
 
-		// 保存するデータ
+		// 情報を格納するJson型
 		Json json;
 
-		// シーンの名前
-		json["Scene"] = name;
-
-		// ----------------------------------------------------
-		// ゲームオブジェクトの情報をJson型に格納する
-		// ----------------------------------------------------
-
-		// ゲームオブジェクト識別番号(文字列)の配列
-		// リストの順番を維持するためにvector型にする
-		std::vector<std::string> stringIDList;
-		stringIDList.reserve(gameObjectList.size());
-
-		// ゲームオブジェクトの情報を格納
-		for (const auto& gameObject : gameObjectList)
-		{
-			gameObject->ToJson(json[gameObject->GetID_String()]);
-			stringIDList.push_back(gameObject->GetID_String());
-		}
-
-		// ゲームオブジェクト識別番号の配列を格納
-		json["ObjectIDList"] = stringIDList;
+		// 情報を格納する
+		ToJson(json);
 
 		// ----------------------------------------------
 		// Jsonファイルに情報を保存する
@@ -511,11 +523,65 @@ namespace PokarinEngine
 		// シーンの情報を読み込む
 		JsonFile::Load(GetFileName(), json);
 
+		// ---------------------------------------
+		// 情報を取得する
+		// ---------------------------------------
+
+		FromJson(json);
+	}
+
+#pragma endregion
+
+#pragma region Json
+
+	/// <summary>
+	/// シーンの情報をJson型に格納する
+	/// </summary>
+	/// <param name="[out] json"> 情報を格納するJson型 </param>
+	void Scene::ToJson(Json& json) const
+	{
+		// ---------------------------------------
+		// シーンの情報をJson型に格納する
+		// ---------------------------------------
+
+		// シーンの名前
+		json["Scene"] = name;
+
+		// ----------------------------------------------------
+		// ゲームオブジェクトの情報をJson型に格納する
+		// ----------------------------------------------------
+
+		// ゲームオブジェクト識別番号(文字列)の配列
+		// リストの順番を維持するためにvector型にする
+		std::vector<std::string> stringIDList;
+		stringIDList.reserve(gameObjectList.size());
+
+		// ゲームオブジェクトの情報を格納
+		for (const auto& gameObject : gameObjectList)
+		{
+			gameObject->ToJson(json[gameObject->GetID_String()]);
+			stringIDList.push_back(gameObject->GetID_String());
+		}
+
+		// ゲームオブジェクト識別番号の配列を格納
+		json["ObjectIDList"] = stringIDList;
+	}
+
+	/// <summary>
+	/// シーンの情報をJson型から取得する
+	/// </summary>
+	/// <param name="[in] json"> 情報を格納しているJson型 </param>
+	void Scene::FromJson(const Json& json)
+	{
+		// ----------------------------------------------
+		// シーンの情報を取得する
+		// ----------------------------------------------
+
 		// 名前を設定
 		json["Scene"].get_to(name);
 
 		// ---------------------------------------------
-		// ゲームオブジェクトの情報を読み込む
+		// ゲームオブジェクトの情報を取得する
 		// ---------------------------------------------
 
 		// オブジェクト識別番号(文字列)の配列
@@ -529,6 +595,51 @@ namespace PokarinEngine
 
 			// 識別番号に対応した情報を読み込む
 			gameObject->FromJson(json[objectID_string]);
+		}
+	}
+
+	/// <summary>
+	/// ゲーム再生直前の情報をJson型に格納する
+	/// </summary>
+	/// <param name="[out] json"> 情報を格納するJson型 </param>
+	void Scene::PreviousToJson(Json& json)
+	{
+		// ゲーム再生直前のオブジェクト数を設定
+		previousObjectCount = gameObjectList.size();
+
+		ToJson(json);
+	}
+
+	/// <summary>
+	/// シーン内のゲームオブジェクトの情報をJson型から取得する
+	/// </summary>
+	/// <param name="[in] json"> 情報を格納しているJson型 </param>
+	void Scene::PreviousFromJson(const Json& json)
+	{
+		// ------------------------------------
+		// シーンの情報を取得する
+		// ------------------------------------
+
+		json["Scene"].get_to(name);
+
+		// ゲーム再生中に追加したゲームオブジェクトを削除する
+		for (size_t i = previousObjectCount; i < gameObjectList.size(); ++i)
+		{
+			gameObjectList[i]->OnDestroy();
+		}
+
+		// -----------------------------------------
+		// ゲームオブジェクトの情報を取得する
+		// -----------------------------------------
+
+		// ゲーム再生直前の数に戻す
+		gameObjectList.resize(previousObjectCount);
+
+		// ゲームオブジェクトの識別番号(文字列)
+		for (auto& gameObject : gameObjectList)
+		{
+			// 識別番号に対応した情報を読み込む
+			gameObject->PreviousFromJson(json[gameObject->GetID_String()]);
 		}
 	}
 

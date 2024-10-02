@@ -129,6 +129,12 @@
     <Filter Include="Src\Engine\NodeEditor\Pin">
       <UniqueIdentifier>{3bd75335-8b3c-4b8d-806b-51d2de309991}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Engine\Color">
+      <UniqueIdentifier>{e5e5e6b3-5dba-4ef6-971d-75c9db558354}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Engine\JsonFile">
+      <UniqueIdentifier>{450c8d54-28f5-4564-81ef-ef5bfea450ef}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Main.cpp">
@@ -248,9 +254,6 @@
     <ClCompile Include="Src\Library\ImGui\imgui_widgets.cpp">
       <Filter>Src\Library\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Library\ImGui\ImGuizmo.cpp">
-      <Filter>Src\Library\ImGui</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Library\ImGui\imnodes.cpp">
       <Filter>Src\Library\ImGui</Filter>
     </ClCompile>
@@ -304,6 +307,15 @@
     </ClCompile>
     <ClCompile Include="Src\Engine\NodeEditor\Nodes\Event\EventNode.cpp">
       <Filter>Src\Engine\NodeEditor\Nodes\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\Color.cpp">
+      <Filter>Src\Engine\Color</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\JsonFile.cpp">
+      <Filter>Src\Engine\JsonFile</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Engine\MainEditor\MainMenu.cpp">
+      <Filter>Src\Engine\MainEditor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -463,9 +475,6 @@
     <ClInclude Include="Src\Library\ImGui\imgui_internal.h">
       <Filter>Src\Library\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Library\ImGui\ImGuizmo.h">
-      <Filter>Src\Library\ImGui</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Library\ImGui\imnodes.h">
       <Filter>Src\Library\ImGui</Filter>
     </ClInclude>
@@ -513,9 +522,6 @@
     </ClInclude>
     <ClInclude Include="Src\Engine\SkySphere.h">
       <Filter>Src\Engine\SkySphere</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Engine\Color.h">
-      <Filter>Src\Engine</Filter>
     </ClInclude>
     <ClInclude Include="Src\Engine\CameraManager.h">
       <Filter>Src\Engine\CameraManager</Filter>
@@ -576,6 +582,15 @@
     </ClInclude>
     <ClInclude Include="Src\Engine\UsingNames\UsingDataPin.h">
       <Filter>Src\Engine\UsingNames</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\Color.h">
+      <Filter>Src\Engine\Color</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\JsonFile.h">
+      <Filter>Src\Engine\JsonFile</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Engine\MainEditor\MainMenu.h">
+      <Filter>Src\Engine\MainEditor</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

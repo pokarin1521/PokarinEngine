@@ -206,6 +206,11 @@ namespace PokarinEngine
 			const Vector3& position, const Vector3& rotation);
 
 		/// <summary>
+		/// ゲーム再生時の初期化
+		/// </summary>
+		void Initialize_PlayGame();
+
+		/// <summary>
 		/// 更新
 		/// </summary>
 		/// <param name="[in] isPlayGame"> 作成中のゲームが再生中ならtrue </param>
@@ -271,6 +276,23 @@ namespace PokarinEngine
 			return std::to_string(id);
 		}
 
+		/// <summary>
+		/// 名前を取得する
+		/// </summary>
+		/// <returns> 名前 </returns>
+		const std::string& GetName() const
+		{
+			return name;
+		}
+
+	public: // -------------------------- 名前の設定 ---------------------------
+
+		/// <summary>
+		/// 名前を設定する
+		/// </summary>
+		/// <param name="[in] newName"> 新しい名前 </param>
+		void SetName(const std::string& newName);
+
 	public: // ----------------------------- Json ------------------------------
 
 		/// <summary>
@@ -284,6 +306,12 @@ namespace PokarinEngine
 		/// </summary>
 		/// <param name="[in] json"> 情報を格納しているJson型 </param>
 		void FromJson(const Json& json);
+
+		/// <summary>
+		/// ゲーム再生直前の情報をJson型から取得する
+		/// </summary>
+		/// <param name="[in] json"> 情報を格納しているJson型 </param>
+		void PreviousFromJson(const Json& json);
 
 	public: // -------------------------- 基本の情報 ---------------------------
 
@@ -301,9 +329,6 @@ namespace PokarinEngine
 
 		// コライダー管理用配列
 		std::vector<ColliderPtr> colliderList;
-
-		// オブジェクトの名前
-		std::string name = "";
 
 		// オブジェクト名の最大文字数
 		const size_t nameSize = 32;
@@ -335,13 +360,16 @@ namespace PokarinEngine
 		/// <param name="[in] isPlayGame"> 作成中のゲームが再生中ならtrue </param>
 		void UpdateComponent(bool isPlayGame);
 
-	private: // ---------------------------- 管理用 ----------------------------
+	private: // ----------------------------- 情報 -----------------------------
 
 		// 削除されたらtrue
 		bool isDestroyed = false;
 
 		// 識別番号
 		int id = 0;
+
+		// オブジェクトの名前
+		std::string name = "";
 
 	private: // ---------------------------- シーン ----------------------------
 

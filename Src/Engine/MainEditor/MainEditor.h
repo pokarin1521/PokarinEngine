@@ -8,6 +8,7 @@
 #include "GameView.h"
 #include "Hierarchy.h"
 #include "Inspector.h"
+#include "MainMenu.h"
 
 #include <memory>
 #include <vector>
@@ -57,27 +58,6 @@ namespace PokarinEngine
 		/// </summary>
 		void Render();
 
-	private: // ------------------------ エディタ用 ------------------------
-
-		/// <summary>
-		/// メインメニュー
-		/// </summary>
-		void MainMenu();
-
-	private: // ------------------------- 色設定用 -------------------------
-
-		/// <summary>
-		/// ImGuiの色設定を開始する
-		/// </summary>
-		/// <param name="[in] style"> 色を設定したい項目 </param>
-		/// <param name="[in] styleColor"> 設定する色 </param>
-		void PushColor(ImGuiCol style, const Color& styleColor);
-
-		/// <summary>
-		/// ImGuiの色設定を終了する
-		/// </summary>
-		void PopColor();
-
 	private: // ------------------------- ウィンドウ -----------------------
 
 		// シーン内の情報を描画するウィンドウ
@@ -91,6 +71,11 @@ namespace PokarinEngine
 
 		// シーン内のオブジェクト制御用ウィンドウ
 		Inspector inspector;
+
+	private: // ----------------------- メインメニュー ---------------------
+
+		// メインメニュー
+		MainMenu mainMenu;
 
 	private: // ------------------------- バージョン -----------------------
 

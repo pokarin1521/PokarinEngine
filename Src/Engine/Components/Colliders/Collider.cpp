@@ -3,10 +3,13 @@
 */
 #include "Collider.h"
 
+#include "Json/Json.h"
+
 #include "../../GameObject.h"
 #include "../../Color.h"
 #include "../../Shader/Shader.h"
 #include "../../Mesh/Mesh.h"
+#include "../../ImGuiHelper.h"
 
 namespace PokarinEngine
 {
@@ -73,14 +76,36 @@ namespace PokarinEngine
 	/// </summary>
 	void Collider::InfoEditor()
 	{
-		// 重複チェックボックス用の識別名
-		// 識別番号は非表示にしたいので##を付ける
-		const std::string isTriggerLabel = "IsTrigger##" + GetID_String();
+		// 重複の可否を表示する
+		ImGuiHelper::CheckBox("IsTrigger", GetID_String(), isTrigger);
 
-		// 重複
-		ImGui::Checkbox(isTriggerLabel.c_str(), &isTrigger);
-
-		// コライダー別の情報
+		// コライダー別の情報を表示する
 		ColliderInfoEditor();
+	}
+
+	/// <summary>
+	/// コンポーネントの情報をJson型に格納する
+	/// </summary>
+	/// <param name="[out] json"> 情報を格納するJson型 </param>
+	void Collider::ToJson(Json& json) const
+	{
+		// 重複の可否を格納
+		json["IsTrigger"] = isTrigger;
+
+		// コライダー別の情報を格納
+		ColliderToJson(json);
+	}
+
+	/// <summary>
+	/// コンポーネントの情報をJson型から取得する
+	/// </summary>
+	/// <param name="[in] json"> 情報を格納しているJson型 </param>
+	void Collider::FromJson(const Json& json)
+	{
+		// 重複の可否を取得
+		json["IsTrigger"].get_to(isTrigger);
+
+		// コライダー別の情報を取得
+		ColliderFromJson(json);
 	}
 }

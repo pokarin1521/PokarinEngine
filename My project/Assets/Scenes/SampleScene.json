@@ -1,9 +1,9 @@
 {
   "Scene": "SampleScene",
-  "704494165": {
+  "-84397281": {
     "Name": "MainCamera",
     "StaticMeshFile": "null",
-    "1557711661": {
+    "-970438933": {
       "Name": "Transform",
       "Position": {
         "x": 0.0,
@@ -21,22 +21,22 @@
         "z": 1.0
       }
     },
-    "919171553": {
+    "-1747755172": {
       "Name": "Camera"
     },
     "ComponentIDList": [
-      "1557711661",
-      "919171553"
+      "-970438933",
+      "-1747755172"
     ],
     "NodeEditor": {
       "NodeIDList": [],
       "LinkPairList": []
     }
   },
-  "-1335575379": {
+  "774422401": {
     "Name": "Directional Light",
     "StaticMeshFile": "null",
-    "-1867348783": {
+    "1425251208": {
       "Name": "Transform",
       "Position": {
         "x": 0.0,
@@ -54,31 +54,31 @@
         "z": 1.0
       }
     },
-    "-185812689": {
+    "906952640": {
       "Name": "Light"
     },
     "ComponentIDList": [
-      "-1867348783",
-      "-185812689"
+      "1425251208",
+      "906952640"
     ],
     "NodeEditor": {
       "NodeIDList": [],
       "LinkPairList": []
     }
   },
-  "-1741741061": {
+  "-1490290111": {
     "Name": "Cube",
     "StaticMeshFile": "Res/MeshData/Basic/Cube/Cube.obj",
-    "-1777879889": {
+    "-2084022857": {
       "Name": "Transform",
       "Position": {
         "x": 0.0,
-        "y": 0.0,
+        "y": 3.0,
         "z": 0.0
       },
       "Rotation": {
         "x": 0.0,
-        "y": 3.8397138118743896,
+        "y": 0.0,
         "z": 0.0
       },
       "Scale": {
@@ -87,51 +87,82 @@
         "z": 1.0
       }
     },
+    "-571787057": {
+      "Name": "Box Collider",
+      "IsTrigger": false,
+      "Center": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "Size": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0
+      }
+    },
+    "-1423183084": {
+      "Name": "Rigidbody",
+      "UseGravity": true
+    },
     "ComponentIDList": [
-      "-1777879889"
+      "-2084022857",
+      "-571787057",
+      "-1423183084"
     ],
     "NodeEditor": {
-      "-770176614": {
-        "Name": "EventUpdate",
-        "outputRunPin-770176614": {
-          "ID": 1740111302
-        }
+      "NodeIDList": [],
+      "LinkPairList": []
+    }
+  },
+  "1439828832": {
+    "Name": "Cube",
+    "StaticMeshFile": "Res/MeshData/Basic/Cube/Cube.obj",
+    "-769879420": {
+      "Name": "Transform",
+      "Position": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
       },
-      "399126008": {
-        "Name": "AddWorldRotation",
-        "inputRunPin399126008": {
-          "ID": 2074569676
-        },
-        "outputRunPin399126008": {
-          "ID": 903437794
-        },
-        "inputDegreePin399126008": {
-          "ID": -1080385562,
-          "Data": {
-            "x": 0.0,
-            "y": 1.0,
-            "z": 0.0
-          }
-        }
+      "Rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
       },
-      "NodeIDList": [
-        "-770176614",
-        "399126008"
-      ],
-      "LinkPairList": [
-        [
-          1609615424,
-          [
-            2074569676,
-            1740111302
-          ]
-        ]
-      ]
+      "Scale": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0
+      }
+    },
+    "1482031963": {
+      "Name": "Box Collider",
+      "IsTrigger": false,
+      "Center": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "Size": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0
+      }
+    },
+    "ComponentIDList": [
+      "-769879420",
+      "1482031963"
+    ],
+    "NodeEditor": {
+      "NodeIDList": [],
+      "LinkPairList": []
     }
   },
   "ObjectIDList": [
-    "704494165",
-    "-1335575379",
-    "-1741741061"
+    "-84397281",
+    "774422401",
+    "-1490290111",
+    "1439828832"
   ]
 }

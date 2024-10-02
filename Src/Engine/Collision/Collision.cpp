@@ -203,7 +203,7 @@ namespace PokarinEngine
 			// 組み合わせに対応する交差判定関数を選ぶための配列
 			static const FuncType funcList[2][2] = {
 				{
-					NotImplemented<BoxCollider, BoxCollider>,
+					CallIntersect<BoxCollider, BoxCollider>,
 					CallIntersect<BoxCollider, SphereCollider>,
 				},
 				{
@@ -222,12 +222,6 @@ namespace PokarinEngine
 				// コライダー(衝突される側)
 				for (auto& colB : colliderListB)
 				{
-					// スタティックコライダー同士は衝突しない
-					if (colA.origin->IsStatic() && colB.origin->IsStatic())
-					{
-						continue;
-					}
-
 					// 貫通ベクトル
 					Vector3 penetration = Vector3(0);
 
@@ -276,7 +270,7 @@ namespace PokarinEngine
 								ApplyPenetration(-penetration,
 									colliderListA, gameObjectA);
 							}
-							// 両方動かないので、均等に移動させる
+							// 両方動かないか、両方動くので均等に移動させる
 							else
 							{
 								// 貫通ベクトルの半分

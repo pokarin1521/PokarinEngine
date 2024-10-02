@@ -112,7 +112,7 @@ namespace PokarinEngine
 				const GameObject& gameObject = *gameObjectList[i];
 
 				// ゲームオブジェクトの名前
-				std::string objectName = gameObject.name;
+				std::string objectName = gameObject.GetName();
 
 				// 重複しないように識別番号を追加
 				// ##で非表示にする

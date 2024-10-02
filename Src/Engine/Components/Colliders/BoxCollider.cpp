@@ -3,6 +3,8 @@
 */
 #include "BoxCollider.h"
 
+#include "Json/Json.h"
+
 #include "../../GameObject.h"
 #include "../../ImGuiHelper.h"
 
@@ -27,7 +29,7 @@ namespace PokarinEngine
 		collider->box.center = Matrix4x4::Translate(transformMatrix);
 
 		// 大きさを取得する
-		collider->box.size = Matrix4x4::Scale(transformMatrix);
+		collider->box.scale = Matrix4x4::Scale(transformMatrix);
 
 		// 軸ベクトルと大きさを変換する
 		for (int i = 0; i < Vector3::size; ++i)
@@ -56,28 +58,10 @@ namespace PokarinEngine
 		const Vector3 center = Vector3(transformMatrix * Vector4(box.center, 1));
 
 		// 拡大率を反映した大きさ
-		Vector3 size = box.size * Matrix4x4::Scale(transformMatrix);
+		Vector3 size = box.scale * Matrix4x4::Scale(transformMatrix);
 
 		// 座標変換行列を作成して設定する
 		return Matrix4x4::CreateTransformMatrix(center, transform->rotation, size);
-	}
-
-	/// <summary>
-	/// コンポーネントの情報をJson型に格納する
-	/// </summary>
-	/// <param name="[out] json"> 情報を格納するJson型 </param>
-	void BoxCollider::ToJson(Json& json) const
-	{
-
-	}
-
-	/// <summary>
-	/// コンポーネントの情報をJson型から取得する
-	/// </summary>
-	/// <param name="[out] json"> 情報を格納しているJson型 </param>
-	void BoxCollider::FromJson(const Json& json)
-	{
-
 	}
 
 	/// <summary>
@@ -88,7 +72,33 @@ namespace PokarinEngine
 		// 中心座標を表示
 		DragText("Center", box.center);
 
-		// 大きさを表示
-		DragText("Size", box.size);
+		// 拡大率を表示
+		DragText("Scale", box.scale);
+	}
+
+	/// <summary>
+	/// コンポーネントの情報をJson型に格納する
+	/// </summary>
+	/// <param name="[out] json"> 情報を格納するJson型 </param>
+	void BoxCollider::ColliderToJson(Json& json) const
+	{
+		// 中心座標を格納
+		json["Center"] = box.center;
+		
+		// 大きさを格納
+		json["Size"] = box.scale;
+	}
+
+	/// <summary>
+	/// コンポーネントの情報をJson型から取得する
+	/// </summary>
+	/// <param name="[out] json"> 情報を格納しているJson型 </param>
+	void BoxCollider::ColliderFromJson(const Json& json)
+	{
+		// 中心座標を取得 
+		json["Center"].get_to(box.center);
+		
+		// 大きさを取得
+		json["Size"].get_to(box.scale);
 	}
 }

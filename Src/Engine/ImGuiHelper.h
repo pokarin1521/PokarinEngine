@@ -77,7 +77,17 @@ namespace PokarinEngine
 		/// <param name="[out] io"> 設定対象 </param>
 		static void SetFont(ImGuiIO& io);
 
-	public: // --------------------- アイテム ----------------------
+	public: // ----------------- チェックボックス ------------------
+
+		/// <summary>
+		/// bool型の値をチェックボックスで表示する
+		/// </summary>
+		/// <param name="[in] name"> 値の名前 </param>
+		/// <param name="[in] id_string"> 識別番号(文字列) </param>
+		/// <param name="[in,out] data"> 表示する値 </param>
+		static void CheckBox(const std::string& name, const std::string& id_string, bool& data);
+
+	public: // ------------------ ドラッグ操作用 -------------------
 
 		/// <summary>
 		/// float型の値をドラッグ操作可能なテキストで表示する

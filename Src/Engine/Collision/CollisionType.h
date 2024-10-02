@@ -26,8 +26,8 @@ namespace PokarinEngine
 			Vector3 axis[Vector3::size] = {
 				{ 1, 0, 0 },{ 0, 1, 0 }, { 0, 0, 1 } };
 
-			// ‘å‚«‚³
-			Vector3 size = Vector3::one;
+			// Šg‘å—¦
+			Vector3 scale = Vector3::one;
 		};
 
 		/// <summary>

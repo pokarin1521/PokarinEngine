@@ -64,6 +64,13 @@ namespace PokarinEngine
 		/// </summary>
 		void Render();
 
+	public: // -------------------- 閉じたときの処理 --------------------
+
+		/// <summary>
+		/// ウィンドウを閉じたときの処理
+		/// </summary>
+		static void ClosedWindow();
+
 	public: // ------------------ ノードエディタの開閉 ------------------
 
 		/// <summary>

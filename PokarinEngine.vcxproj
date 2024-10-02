@@ -49,7 +49,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -163,6 +163,7 @@
     <ClCompile Include="Src\Engine\CameraManager.cpp" />
     <ClCompile Include="Src\Engine\Collision\Collision.cpp" />
     <ClCompile Include="Src\Engine\Collision\Intersect.cpp" />
+    <ClCompile Include="Src\Engine\Color.cpp" />
     <ClCompile Include="Src\Engine\Components\Camera.cpp" />
     <ClCompile Include="Src\Engine\Components\Colliders\BoxCollider.cpp" />
     <ClCompile Include="Src\Engine\Components\Colliders\Collider.cpp" />
@@ -178,11 +179,13 @@
     <ClCompile Include="Src\Engine\GameObject.cpp" />
     <ClCompile Include="Src\Engine\ImGuiHelper.cpp" />
     <ClCompile Include="Src\Engine\Input.cpp" />
+    <ClCompile Include="Src\Engine\JsonFile.cpp" />
     <ClCompile Include="Src\Engine\LightManager.cpp" />
     <ClCompile Include="Src\Engine\MainEditor\GameView.cpp" />
     <ClCompile Include="Src\Engine\MainEditor\Hierarchy.cpp" />
     <ClCompile Include="Src\Engine\MainEditor\Inspector.cpp" />
     <ClCompile Include="Src\Engine\MainEditor\MainEditor.cpp" />
+    <ClCompile Include="Src\Engine\MainEditor\MainMenu.cpp" />
     <ClCompile Include="Src\Engine\MainEditor\SceneView.cpp" />
     <ClCompile Include="Src\Engine\MainEditor\Toolbar.cpp" />
     <ClCompile Include="Src\Engine\Math\Matrix.cpp" />
@@ -209,7 +212,6 @@
     <ClCompile Include="Src\Engine\Window.cpp" />
     <ClCompile Include="Src\Library\glad\glad.c" />
     <ClCompile Include="Src\Library\ImGui\imgui.cpp" />
-    <ClCompile Include="Src\Library\ImGui\ImGuizmo.cpp" />
     <ClCompile Include="Src\Library\ImGui\imgui_demo.cpp" />
     <ClCompile Include="Src\Library\ImGui\imgui_draw.cpp" />
     <ClCompile Include="Src\Library\ImGui\imgui_impl_glfw.cpp" />
@@ -248,11 +250,13 @@
     <ClInclude Include="Src\Engine\GameObject.h" />
     <ClInclude Include="Src\Engine\ImGuiHelper.h" />
     <ClInclude Include="Src\Engine\Input.h" />
+    <ClInclude Include="Src\Engine\JsonFile.h" />
     <ClInclude Include="Src\Engine\LightManager.h" />
     <ClInclude Include="Src\Engine\MainEditor\GameView.h" />
     <ClInclude Include="Src\Engine\MainEditor\Hierarchy.h" />
     <ClInclude Include="Src\Engine\MainEditor\Inspector.h" />
     <ClInclude Include="Src\Engine\MainEditor\MainEditor.h" />
+    <ClInclude Include="Src\Engine\MainEditor\MainMenu.h" />
     <ClInclude Include="Src\Engine\MainEditor\SceneView.h" />
     <ClInclude Include="Src\Engine\MainEditor\Toolbar.h" />
     <ClInclude Include="Src\Engine\Math\Angle.h" />
@@ -298,7 +302,6 @@
     <ClInclude Include="Src\Library\IconFont\IconFont.h" />
     <ClInclude Include="Src\Library\ImGui\imconfig.h" />
     <ClInclude Include="Src\Library\ImGui\imgui.h" />
-    <ClInclude Include="Src\Library\ImGui\ImGuizmo.h" />
     <ClInclude Include="Src\Library\ImGui\imgui_impl_glfw.h" />
     <ClInclude Include="Src\Library\ImGui\imgui_impl_opengl3.h" />
     <ClInclude Include="Src\Library\ImGui\imgui_impl_opengl3_loader.h" />

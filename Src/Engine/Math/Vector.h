@@ -9,6 +9,12 @@
 #include <string>
 #include <cmath>
 
+// ---------------------------
+// 前方宣言
+// ---------------------------
+
+struct ImVec2;
+
 namespace PokarinEngine
 {
 	// ----------------------------
@@ -34,12 +40,18 @@ namespace PokarinEngine
 		Vector2() = default;
 
 		/// <summary>
-		/// Vec3型で初期化するコンストラクタ
+		/// ImVec2型で初期化するコンストラクタ
+		/// </summary>
+		/// <param name="v"></param>
+		Vector2(const ImVec2& v);
+
+		/// <summary>
+		/// Vector3型で初期化するコンストラクタ
 		/// </summary>
 		explicit constexpr Vector2(const Vector3& v);
 
 		/// <summary>
-		/// Vec4型で初期化するコンストラクタ
+		/// Vector4型で初期化するコンストラクタ
 		/// </summary>
 		explicit constexpr Vector2(const Vector4& v);
 
@@ -57,6 +69,11 @@ namespace PokarinEngine
 
 		float& operator[](size_t i) { return *(&x + i); }
 		float operator[](size_t i)const { return *(&x + i); }
+
+	public: // ------------------------- 変換 -------------------------
+
+		// ImVec2型に変換
+		operator ImVec2() const;
 
 	public: // ------------------------- 情報 -------------------------
 
@@ -113,6 +130,14 @@ namespace PokarinEngine
 		/// <param name="[in] b"> ベクトルB </param>
 		/// <returns> ベクトルの内積 </returns>
 		static float Dot(const Vector3& a, const Vector3& b);
+
+		/// <summary>
+		/// ベクトルの外積を求める
+		/// </summary>
+		/// <param name="[in] a"> ベクトルA </param>
+		/// <param name="[in] b"> ベクトルB </param>
+		/// <returns> ベクトルの外積 </returns>
+		static Vector3 Cross(const Vector3& a, const Vector3& b);
 
 		/// <summary>
 		/// ベクトルの大きさ(2乗値)を求める
@@ -772,6 +797,16 @@ namespace PokarinEngine
 
 	}
 
+	/// <summary>
+	/// Vector2型からJson型への変換
+	/// </summary>
+	void to_json(Json& json, const Vector2& v);
+
+	/// <summary>
+	/// Json型からVector2型への変換
+	/// </summary>
+	void from_json(const Json& json, Vector2& v);
+
 #pragma endregion
 
 #pragma region Vec3_Function
@@ -795,6 +830,20 @@ namespace PokarinEngine
 	inline float Vector3::Dot(const Vector3& a, const Vector3& b)
 	{
 		return a.x * b.x + a.y * b.y + a.z * b.z;
+	}
+
+	/// <summary>
+	/// ベクトルの外積を求める
+	/// </summary>
+	/// <param name="[in] a"> ベクトルA </param>
+	/// <param name="[in] b"> ベクトルB </param>
+	/// <returns> ベクトルの外積 </returns>
+	inline Vector3 Vector3::Cross(const Vector3& a, const Vector3& b)
+	{
+		return {
+			a.y * b.z - a.z * b.y,
+			a.z * b.x - a.x * b.z,
+			a.x * b.y - a.y * b.x };
 	}
 
 	/// <summary>

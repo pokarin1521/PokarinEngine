@@ -8,6 +8,8 @@
 
 #include "Debug.h"
 
+#include "NodeEditor/NodeEditorManager.h"
+
 #include <string>
 #include <vector>
 #include <unordered_map>
@@ -247,6 +249,13 @@ namespace PokarinEngine
 				glfwHideWindow(window);
 			}
 
+			// ノードエディタ用ウィンドウを閉じたのなら
+			// 専用の処理を実行する
+			if (IsClosed(WindowID::NodeEditor))
+			{
+				NodeEditorManager::ClosedWindow();
+			}
+
 			// ウィンドウの使用を終了
 			glfwMakeContextCurrent(nullptr);
 		}
@@ -268,7 +277,7 @@ namespace PokarinEngine
 			}
 
 			// ウィンドウが非表示ならtrue
-			return !glfwGetWindowAttrib(&GetWindow(windowID), GLFW_VISIBLE);
+			return !glfwGetWindowAttrib(windowList[windowID], GLFW_VISIBLE);
 		}
 
 		/// <summary>

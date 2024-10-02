@@ -39,7 +39,7 @@ namespace PokarinEngine
 		// カラーバッファ用テクスチャを割り当てる
 		glNamedFramebufferTexture(id, GL_COLOR_ATTACHMENT0, *texture, 0);
 
-		// 深度バッファ用テクスチャを割り当てる
+		// 深度バッファ用レンダーバッファを割り当てる
 		glNamedFramebufferRenderbuffer(
 			id, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, *rbo);
 

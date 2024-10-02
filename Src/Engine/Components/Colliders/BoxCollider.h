@@ -55,20 +55,6 @@ namespace PokarinEngine
 			return box;
 		}
 
-	public: // ------------------- Json ---------------------
-
-		/// <summary>
-		/// コンポーネントの情報をJson型に格納する
-		/// </summary>
-		/// <param name="[out] json"> 情報を格納するJson型 </param>
-		void ToJson(Json& json) const override;
-
-		/// <summary>
-		/// コンポーネントの情報をJson型から取得する
-		/// </summary>
-		/// <param name="[in] json"> 情報を格納しているJson型 </param>
-		void FromJson(const Json& json) override;
-
 	public: // ------------------- 情報 ---------------------
 
 		// 図形(有向境界ボックス)
@@ -88,6 +74,20 @@ namespace PokarinEngine
 		/// コライダー別の情報を編集できるように表示する
 		/// </summary>
 		void ColliderInfoEditor() override;
+
+	private: // ------------------- Json --------------------
+
+		/// <summary>
+		/// コンポーネントの情報をJson型に格納する
+		/// </summary>
+		/// <param name="[out] json"> 情報を格納するJson型 </param>
+		void ColliderToJson(Json& json) const override;
+
+		/// <summary>
+		/// コンポーネントの情報をJson型から取得する
+		/// </summary>
+		/// <param name="[in] json"> 情報を格納しているJson型 </param>
+		void ColliderFromJson(const Json& json) override;
 	};
 }
 
